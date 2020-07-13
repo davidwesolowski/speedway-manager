@@ -1,0 +1,101 @@
+.welcome-box {
+	grid-column: center-start / center-end;
+
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: 10rem 1fr;
+	padding: 1rem;
+
+	&__img {
+		grid-column: 1 / -1;
+		grid-row: 1 / -1;
+		background-image: url(/img/warsaw_venue.jpg);
+		background-size: cover;
+		filter: opacity(0.2);
+	}
+
+	&__head {
+		color: #fff;
+		grid-column: 1 / -1;
+		grid-row: 1 / 2;
+		text-align: center;
+		width: 50rem;
+		height: 7rem;
+		margin: 0 auto;
+		color: #fff;
+		filter: opacity(1);
+	}
+
+	&__logo {
+		background-image: linear-gradient(
+			to bottom,
+			rgb(255, 255, 255) 0%,
+			rgb(255, 255, 255) 50%,
+			rgb(220, 24, 38) 50%
+		);
+		background-size: contain;
+		filter: opacity(1);
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+		height: 70%;
+		font-size: 4rem;
+		font-family: 'Bebas Neue', cursive;
+		font-weight: 500;
+	}
+
+	&__preview {
+		grid-row: 2 / 3;
+		grid-column: 1 / -1;
+
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+		grid-column-gap: 2rem;
+		padding: 0 2rem;
+		filter: opacity(1);
+	}
+
+	&__card {
+		border-radius: 1rem;
+		border-bottom: #fff 1px solid;
+		border-left: #fff 1px solid;
+		border-right: #fff 1px solid;
+		border: #fff 1px solid;
+
+		display: grid;
+		grid-template-columns: min-content 1fr;
+		grid-gap: 1rem;
+		justify-items: center;
+
+		font-family: 'Bebas Neue', cursive;
+		padding: 1rem;
+	}
+
+	&__icon {
+		width: 2.5rem;
+		height: 2.5rem;
+		grid-column: 1 / 2;
+		grid-row: 1 / 2;
+
+		&-1,
+		&-3 {
+			fill: #ffd700;
+		}
+
+		&-2 {
+			fill: #d0f5fe;
+		}
+	}
+
+	&__text {
+		grid-column: 2 / 3;
+		grid-row: 1 / 2;
+		letter-spacing: 1.5px;
+	}
+
+	&__description {
+		grid-column: 1 / -1;
+		font-size: 1rem;
+		font-family: 'Poppins', sans-serif;
+	}
+}

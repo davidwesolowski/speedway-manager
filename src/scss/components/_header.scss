@@ -1,0 +1,34 @@
+.header {
+	grid-row: 1 / 2;
+	grid-column: full-start / full-end;
+	background-color: $color-primary-light;
+
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	font-size: 1.4rem;
+	color: #fff;
+
+	&__nav {
+		display: flex;
+		justify-content: center;
+		list-style: none;
+		flex: 0 1 60%;
+	}
+
+	&__item {
+		&:not(:last-child) {
+			margin-right: 1.5rem;
+		}
+	}
+
+	&__link {
+		color: #fff;
+		text-decoration: none;
+	}
+
+	&__login {
+		padding: 1rem;
+	}
+}

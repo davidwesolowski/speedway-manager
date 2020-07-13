@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Poppins:wght@300;500&display=swap');
+
+*,
+*::before,
+*::after {
+	padding: 0;
+	margin: 0;
+	box-sizing: inherit;
+}
+
+body {
+	font-size: 62.5%;
+	font-weight: 300;
+	background-color: $color-primary;
+	color: #fff;
+}
+
+#root {
+	display: grid;
+	grid-template-rows: 3rem minmax(calc(100vh - 6rem), 1fr) 3rem;
+	grid-template-columns:
+		[full-start] minmax(3rem, 10rem)
+		[center-start] 1fr [center-end] minmax(3rem, 10rem)
+		[full-end];
+}
