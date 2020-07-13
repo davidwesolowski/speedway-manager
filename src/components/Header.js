@@ -22,7 +22,7 @@ const Header = () => {
 					</Link>
 				</li>
 			</ul>
-			<Link to="/" className="header__link header__login">
+			<Link to="/login" className="header__link header__login">
 				Zaloguj
 			</Link>
 		</header>
