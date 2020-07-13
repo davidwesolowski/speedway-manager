@@ -1,19 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Header from './Header';
-import WelcomePage from './WelcomePage';
-import Footer from './Footer';
+import AppRoute from '../route/AppRoute';
 
 const App = () => {
-	return (
-		<Router>
-			<Header />
-			<Switch>
-				<Route path="/" exact component={WelcomePage} />
-			</Switch>
-			<Footer />
-		</Router>
-	);
+	return <AppRoute />;
 };
 
 export default App;
