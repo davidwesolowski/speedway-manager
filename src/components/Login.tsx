@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import {
 	Paper,
 	Typography,
@@ -12,7 +12,29 @@ import {
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
+interface IStateUser {
+	email: string;
+	password: string;
+}
+
 const Login: FunctionComponent = () => {
+	const [userData, setUserData] = useState<IStateUser>({
+		email: '',
+		password: ''
+	});
+
+	const handleOnChange = (name: string) => (
+		event: React.ChangeEvent<HTMLInputElement>
+	) => {
+		event.persist();
+		if (event.target) {
+			setUserData((prevUserData: IStateUser) => ({
+				...prevUserData,
+				[name]: event.target.value
+			}));
+		}
+	};
+
 	return (
 		<div className="login-container">
 			<div className="login-container__img"></div>
@@ -27,11 +49,17 @@ const Login: FunctionComponent = () => {
 				<div className="login-contaier__form-box">
 					<form className="login-container__form">
 						<FormControl className="login-container__form-field">
-							<TextField label="Adres e-mail" />
+							<TextField
+								label="Adres e-mail"
+								value={userData.email}
+								onChange={handleOnChange('email')}
+							/>
 						</FormControl>
 						<FormControl className="login-container__form-field">
 							<TextField
 								label="Hasło"
+								value={userData.password}
+								onChange={handleOnChange('password')}
 								InputProps={{
 									endAdornment: (
 										<InputAdornment position="end">
