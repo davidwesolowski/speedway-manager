@@ -15,12 +15,14 @@ import { Link } from 'react-router-dom';
 interface IStateUser {
 	email: string;
 	password: string;
+	showPassword: boolean;
 }
 
 const Login: FunctionComponent = () => {
 	const [userData, setUserData] = useState<IStateUser>({
 		email: '',
-		password: ''
+		password: '',
+		showPassword: false
 	});
 
 	const handleOnChange = (name: string) => (
@@ -33,6 +35,13 @@ const Login: FunctionComponent = () => {
 				[name]: event.target.value
 			}));
 		}
+	};
+
+	const handleClickShowPassword = () => {
+		setUserData((prevUserData: IStateUser) => ({
+			...prevUserData,
+			showPassword: !prevUserData.showPassword
+		}));
 	};
 
 	return (
@@ -59,13 +68,23 @@ const Login: FunctionComponent = () => {
 							<TextField
 								label="Hasło"
 								value={userData.password}
+								type={
+									userData.showPassword ? 'text' : 'password'
+								}
 								onChange={handleOnChange('password')}
 								InputProps={{
 									endAdornment: (
 										<InputAdornment position="end">
-											<IconButton>
-												<MdVisibility />
-												<MdVisibilityOff />
+											<IconButton
+												onClick={
+													handleClickShowPassword
+												}
+											>
+												{userData.showPassword ? (
+													<MdVisibility />
+												) : (
+													<MdVisibilityOff />
+												)}
 											</IconButton>
 										</InputAdornment>
 									)
