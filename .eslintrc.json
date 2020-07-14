@@ -11,7 +11,8 @@
 	"rules": {
 		"react/prop-types": "off",
 		"react-hooks/rules-of-hooks": "error",
-		"no-console": "warn"
+		"no-console": "warn",
+		"@typescript-eslint/no-var-requires": 0
 	},
 	"parser": "@typescript-eslint/parser",
 	"plugins": ["react", "import", "jsx-a11y", "react-hooks"],
