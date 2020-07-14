@@ -7,7 +7,7 @@ const modeConfig = mode => require(`./built-utils/webpack.${mode}`)();
 module.exports = ({ mode, presets }) => {
 	return webpackMerge(
 		{
-			entry: './src/index.js',
+			entry: './src/index.tsx',
 			output: {
 				filename: 'bundle.js',
 				path: path.join(__dirname, 'public/dist')
@@ -28,6 +28,9 @@ module.exports = ({ mode, presets }) => {
 						exclude: /node_modules/
 					}
 				]
+			},
+			resolve: {
+				extensions: ['.tsx', '.ts', '.jsx', '.js']
 			},
 			plugins: [new webpack.ProgressPlugin()]
 		},
