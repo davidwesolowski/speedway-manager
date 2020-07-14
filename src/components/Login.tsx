@@ -60,6 +60,7 @@ const Login: FunctionComponent = () => {
 						<FormControl className="login-container__form-field">
 							<TextField
 								label="Adres e-mail"
+								required
 								value={userData.email}
 								onChange={handleOnChange('email')}
 							/>
@@ -67,6 +68,7 @@ const Login: FunctionComponent = () => {
 						<FormControl className="login-container__form-field">
 							<TextField
 								label="Hasło"
+								required
 								value={userData.password}
 								type={
 									userData.showPassword ? 'text' : 'password'
