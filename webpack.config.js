@@ -23,8 +23,8 @@ module.exports = ({ mode, presets }) => {
 						use: ['style-loader', 'css-loader', 'sass-loader']
 					},
 					{
-						test: /\.js$/,
-						use: 'babel-loader',
+						test: /\.tsx?$/,
+						use: 'ts-loader',
 						exclude: /node_modules/
 					}
 				]
