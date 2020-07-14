@@ -4,15 +4,17 @@
 		"plugin:import/errors",
 		"plugin:react/recommended",
 		"plugin:jsx-a11y/recommended",
+		"plugin:@typescript-eslint/recommended",
 		"prettier",
 		"prettier/react"
 	],
 	"rules": {
 		"react/prop-types": "off",
 		"react-hooks/rules-of-hooks": "error",
-		"no-console": "warn"
+		"no-console": "warn",
+		"@typescript-eslint/no-var-requires": 0
 	},
-	"parser": "babel-eslint",
+	"parser": "@typescript-eslint/parser",
 	"plugins": ["react", "import", "jsx-a11y", "react-hooks"],
 	"parserOptions": {
 		"ecmaVersion": 2018,
@@ -29,6 +31,11 @@
 	"settings": {
 		"react": {
 			"version": "detect"
+		},
+		"import/resolver": {
+			"node": {
+				"extensions": [".ts", ".tsx", ".js", ".jsx"]
+			}
 		}
 	}
 }
