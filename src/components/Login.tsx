@@ -7,12 +7,12 @@ import {
 	InputAdornment,
 	TextField,
 	IconButton,
-	Button,
-	FormHelperText
+	Button
 } from '@material-ui/core';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import validateLoginData from '../validation/validateLoginData';
+import { ValidationErrorItem } from '@hapi/joi';
 
 interface IStateUser {
 	email: string;
@@ -20,11 +20,33 @@ interface IStateUser {
 	showPassword: boolean;
 }
 
+interface IValidateData {
+	email: {
+		message: string;
+		error: boolean;
+	};
+	password: {
+		message: string;
+		error: boolean;
+	};
+}
+
 const Login: FunctionComponent = () => {
 	const [userData, setUserData] = useState<IStateUser>({
 		email: '',
 		password: '',
 		showPassword: false
+	});
+
+	const [validatedData, setValidatedData] = useState<IValidateData>({
+		email: {
+			message: '',
+			error: false
+		},
+		password: {
+			message: '',
+			error: false
+		}
 	});
 
 	const handleOnChange = (name: string) => (
@@ -48,11 +70,34 @@ const Login: FunctionComponent = () => {
 
 	const handleOnSubmit = (event: React.FormEvent) => {
 		event.preventDefault();
-		const { error } = validateLoginData({
+		const validationResponse = validateLoginData({
 			email: userData.email,
 			password: userData.password
 		});
-		console.log(error);
+		if (validationResponse.error) {
+			setValidatedData(() => ({
+				email: {
+					message: '',
+					error: false
+				},
+				password: {
+					message: '',
+					error: false
+				}
+			}));
+			validationResponse.error.details.forEach(
+				(errorItem: ValidationErrorItem): any => {
+					setValidatedData((prev: IValidateData) => ({
+						...prev,
+						[errorItem.path[0]]: {
+							message: errorItem.message,
+							error: true
+						}
+					}));
+				}
+			);
+		}
+		console.log('tutaj', validatedData);
 	};
 
 	return (
@@ -75,17 +120,28 @@ const Login: FunctionComponent = () => {
 							<TextField
 								label="Adres e-mail"
 								required
+								error={validatedData.email.error}
 								value={userData.email}
+								helperText={
+									validatedData.email.error
+										? validatedData.email.message
+										: ''
+								}
 								autoComplete="username"
 								onChange={handleOnChange('email')}
 							/>
-							<FormHelperText>Tekst</FormHelperText>
 						</FormControl>
 						<FormControl className="login-container__form-field">
 							<TextField
 								label="Hasło"
 								required
 								value={userData.password}
+								error={validatedData.password.error}
+								helperText={
+									validatedData.password.error
+										? validatedData.password.message
+										: ''
+								}
 								autoComplete="current-password"
 								type={
 									userData.showPassword ? 'text' : 'password'
@@ -109,7 +165,6 @@ const Login: FunctionComponent = () => {
 									)
 								}}
 							/>
-							<FormHelperText>Tekst</FormHelperText>
 						</FormControl>
 						<Button className="btn" type="submit">
 							Zaloguj
