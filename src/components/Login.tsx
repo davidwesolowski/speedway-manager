@@ -7,10 +7,12 @@ import {
 	InputAdornment,
 	TextField,
 	IconButton,
-	Button
+	Button,
+	FormHelperText
 } from '@material-ui/core';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { Link } from 'react-router-dom';
+import validateLoginData from '../validation/validateLoginData';
 
 interface IStateUser {
 	email: string;
@@ -44,6 +46,15 @@ const Login: FunctionComponent = () => {
 		}));
 	};
 
+	const handleOnSubmit = (event: React.FormEvent) => {
+		event.preventDefault();
+		const { error } = validateLoginData({
+			email: userData.email,
+			password: userData.password
+		});
+		console.log(error);
+	};
+
 	return (
 		<div className="login-container">
 			<div className="login-container__img"></div>
@@ -56,20 +67,26 @@ const Login: FunctionComponent = () => {
 				</Typography>
 				<Divider />
 				<div className="login-contaier__form-box">
-					<form className="login-container__form">
+					<form
+						className="login-container__form"
+						onSubmit={handleOnSubmit}
+					>
 						<FormControl className="login-container__form-field">
 							<TextField
 								label="Adres e-mail"
 								required
 								value={userData.email}
+								autoComplete="username"
 								onChange={handleOnChange('email')}
 							/>
+							<FormHelperText>Tekst</FormHelperText>
 						</FormControl>
 						<FormControl className="login-container__form-field">
 							<TextField
 								label="Hasło"
 								required
 								value={userData.password}
+								autoComplete="current-password"
 								type={
 									userData.showPassword ? 'text' : 'password'
 								}
@@ -92,8 +109,11 @@ const Login: FunctionComponent = () => {
 									)
 								}}
 							/>
+							<FormHelperText>Tekst</FormHelperText>
 						</FormControl>
-						<Button className="btn">Zaloguj</Button>
+						<Button className="btn" type="submit">
+							Zaloguj
+						</Button>
 						<Link
 							to="/rejestracja"
 							className="login-container__register-link"
