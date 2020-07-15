@@ -21,6 +21,16 @@
 		z-index: 1000;
 		min-width: 45vw;
 		padding: 3rem 2rem;
+
+		@media only screen and (max-width: $bp-md) {
+			min-width: 55vw;
+			padding: 2rem 1rem;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			min-width: 65vw;
+			padding: 1rem 0.5rem;
+		}
 	}
 
 	&__login_heading {
@@ -48,5 +58,6 @@
 		text-decoration: none !important;
 		align-self: flex-end;
 		font-size: 1.2rem;
+		color: $color-primary;
 	}
 }
