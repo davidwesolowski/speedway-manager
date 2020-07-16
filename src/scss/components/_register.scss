@@ -38,4 +38,16 @@
 		margin-bottom: $xs-margin !important;
 		letter-spacing: 1px !important;
 	}
+
+	&__form {
+		display: flex;
+		flex-direction: column;
+		width: 80%;
+		margin: 0 auto;
+		margin-top: $s-margin;
+
+		&-field {
+			margin-bottom: $xs-margin !important;
+		}
+	}
 }
