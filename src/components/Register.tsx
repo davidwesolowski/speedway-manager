@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import {
 	Paper,
@@ -12,7 +12,21 @@ import {
 } from '@material-ui/core';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 
+interface IUserState {
+	email: string;
+	username: string;
+	password: string;
+	repPassword: string;
+}
+
 const Register: FunctionComponent<RouteComponentProps> = props => {
+	const [userData, setUserData] = useState<IUserState>({
+		email: '',
+		username: '',
+		password: '',
+		repPassword: ''
+	});
+
 	return (
 		<div className="register-container">
 			<div className="register-container__img"></div>
@@ -43,7 +57,7 @@ const Register: FunctionComponent<RouteComponentProps> = props => {
 						<TextField
 							label="Hasło"
 							required
-							autoComplete="current-password"
+							autoComplete="new-password"
 							InputProps={{
 								endAdornment: (
 									<InputAdornment position="end">
@@ -60,7 +74,7 @@ const Register: FunctionComponent<RouteComponentProps> = props => {
 						<TextField
 							label="Powtórz hasło"
 							required
-							autoComplete="current-password"
+							autoComplete="new-password"
 							InputProps={{
 								endAdornment: (
 									<InputAdornment position="end">
