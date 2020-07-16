@@ -20,6 +20,10 @@ interface IStateUser {
 	showPassword: boolean;
 }
 
+interface IUser {
+	email: string;
+	password: string;
+}
 interface IValidateData {
 	email: {
 		message: string;
