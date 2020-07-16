@@ -6,8 +6,11 @@ import {
 	Divider,
 	FormControl,
 	TextField,
-	Button
+	Button,
+	InputAdornment,
+	IconButton
 } from '@material-ui/core';
+import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 
 const Register: FunctionComponent<RouteComponentProps> = props => {
 	return (
@@ -41,6 +44,16 @@ const Register: FunctionComponent<RouteComponentProps> = props => {
 							label="Hasło"
 							required
 							autoComplete="current-password"
+							InputProps={{
+								endAdornment: (
+									<InputAdornment position="end">
+										<IconButton>
+											<MdVisibility />
+											<MdVisibilityOff />
+										</IconButton>
+									</InputAdornment>
+								)
+							}}
 						/>
 					</FormControl>
 					<FormControl className="register-container__form-field">
@@ -48,6 +61,16 @@ const Register: FunctionComponent<RouteComponentProps> = props => {
 							label="Powtórz hasło"
 							required
 							autoComplete="current-password"
+							InputProps={{
+								endAdornment: (
+									<InputAdornment position="end">
+										<IconButton>
+											<MdVisibility />
+											<MdVisibilityOff />
+										</IconButton>
+									</InputAdornment>
+								)
+							}}
 						/>
 					</FormControl>
 					<Button className="btn" type="submit">
