@@ -40,7 +40,7 @@
 		color: transparent;
 		height: 70%;
 		font-size: 4rem;
-		font-family: 'Bebas Neue', cursive;
+		font-family: $bebas;
 		font-weight: 500;
 	}
 
@@ -67,7 +67,7 @@
 		grid-gap: 1rem;
 		justify-items: center;
 
-		font-family: 'Bebas Neue', cursive;
+		font-family: $bebas;
 		padding: 1rem;
 	}
 
@@ -96,6 +96,6 @@
 	&__description {
 		grid-column: 1 / -1;
 		font-size: 1rem;
-		font-family: 'Poppins', sans-serif;
+		font-family: $poppins;
 	}
 }
