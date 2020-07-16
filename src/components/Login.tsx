@@ -161,7 +161,7 @@ const Login: FunctionComponent<RouteComponentProps> = ({
 									? validatedData.email.message
 									: ''
 							}
-							autoComplete="username"
+							autoComplete="email"
 							onChange={handleOnChange('email')}
 						/>
 					</FormControl>

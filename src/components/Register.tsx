@@ -23,16 +23,32 @@ const Register: FunctionComponent<RouteComponentProps> = props => {
 				<Divider />
 				<form className="register-container__form">
 					<FormControl className="register-container__form-field">
-						<TextField label="Adres e-mail" />
+						<TextField
+							label="Adres e-mail"
+							required
+							autoComplete="email"
+						/>
 					</FormControl>
 					<FormControl className="register-container__form-field">
-						<TextField label="Nazwa użytkownika" />
+						<TextField
+							label="Nazwa użytkownika"
+							required
+							autoComplete="username"
+						/>
 					</FormControl>
 					<FormControl className="register-container__form-field">
-						<TextField label="Hasło" />
+						<TextField
+							label="Hasło"
+							required
+							autoComplete="current-password"
+						/>
 					</FormControl>
 					<FormControl className="register-container__form-field">
-						<TextField label="Powtórz hasło" />
+						<TextField
+							label="Powtórz hasło"
+							required
+							autoComplete="current-password"
+						/>
 					</FormControl>
 					<Button className="btn" type="submit">
 						Zarejestruj
