@@ -146,82 +146,76 @@ const Login: FunctionComponent<RouteComponentProps> = ({
 					Zaloguj się
 				</Typography>
 				<Divider />
-				<div className="login-contaier__form-box">
-					<form
-						className="login-container__form"
-						onSubmit={handleOnSubmit}
+				<form
+					className="login-container__form"
+					onSubmit={handleOnSubmit}
+				>
+					<FormControl className="login-container__form-field">
+						<TextField
+							label="Adres e-mail"
+							required
+							error={validatedData.email.error}
+							value={userData.email}
+							helperText={
+								validatedData.email.error
+									? validatedData.email.message
+									: ''
+							}
+							autoComplete="username"
+							onChange={handleOnChange('email')}
+						/>
+					</FormControl>
+					<FormControl className="login-container__form-field">
+						<TextField
+							label="Hasło"
+							required
+							value={userData.password}
+							error={validatedData.password.error}
+							helperText={
+								validatedData.password.error
+									? validatedData.password.message
+									: ''
+							}
+							autoComplete="current-password"
+							type={userData.showPassword ? 'text' : 'password'}
+							onChange={handleOnChange('password')}
+							InputProps={{
+								endAdornment: (
+									<InputAdornment position="end">
+										<IconButton
+											onClick={handleClickShowPassword}
+										>
+											{userData.showPassword ? (
+												<MdVisibility />
+											) : (
+												<MdVisibilityOff />
+											)}
+										</IconButton>
+									</InputAdornment>
+								)
+							}}
+						/>
+					</FormControl>
+					<Button className="btn" type="submit">
+						Zaloguj
+					</Button>
+					<Link
+						to="/rejestracja"
+						className="login-container__register-link"
 					>
-						<FormControl className="login-container__form-field">
-							<TextField
-								label="Adres e-mail"
-								required
-								error={validatedData.email.error}
-								value={userData.email}
-								helperText={
-									validatedData.email.error
-										? validatedData.email.message
-										: ''
-								}
-								autoComplete="username"
-								onChange={handleOnChange('email')}
-							/>
-						</FormControl>
-						<FormControl className="login-container__form-field">
-							<TextField
-								label="Hasło"
-								required
-								value={userData.password}
-								error={validatedData.password.error}
-								helperText={
-									validatedData.password.error
-										? validatedData.password.message
-										: ''
-								}
-								autoComplete="current-password"
-								type={
-									userData.showPassword ? 'text' : 'password'
-								}
-								onChange={handleOnChange('password')}
-								InputProps={{
-									endAdornment: (
-										<InputAdornment position="end">
-											<IconButton
-												onClick={
-													handleClickShowPassword
-												}
-											>
-												{userData.showPassword ? (
-													<MdVisibility />
-												) : (
-													<MdVisibilityOff />
-												)}
-											</IconButton>
-										</InputAdornment>
-									)
-								}}
-							/>
-						</FormControl>
-						<Button className="btn" type="submit">
-							Zaloguj
-						</Button>
-						<Link
-							to="/rejestracja"
-							className="login-container__register-link"
-						>
-							Nie masz jeszcze konta? Zarejestruj się tutaj!
-						</Link>
-						{loginSuccess && (
-							<Alert variant="outlined" severity="success">
-								Zalogowano pomyślnie!
-							</Alert>
-						)}
-						{loginError && (
-							<Alert variant="outlined" severity="error">
-								Wprowadzono błędne dane!
-							</Alert>
-						)}
-					</form>
-				</div>
+						Nie masz jeszcze konta? Zarejestruj się tutaj!
+					</Link>
+					{loginSuccess && (
+						<Alert variant="outlined" severity="success">
+							Zalogowano pomyślnie!
+						</Alert>
+					)}
+					{loginError && (
+						<Alert variant="outlined" severity="error">
+							Wprowadzono błędne dane!
+						</Alert>
+					)}
+				</form>
 			</Paper>
 		</div>
 	);
