@@ -9,10 +9,12 @@ import {
 	IconButton,
 	Button
 } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import validateLoginData from '../validation/validateLoginData';
 import { ValidationErrorItem } from '@hapi/joi';
+import axios from 'axios';
+import { Link, RouteComponentProps } from 'react-router-dom';
+import validateLoginData from '../validation/validateLoginData';
 
 interface IStateUser {
 	email: string;
@@ -35,7 +37,9 @@ interface IValidateData {
 	};
 }
 
-const Login: FunctionComponent = () => {
+const Login: FunctionComponent<RouteComponentProps> = ({
+	history: { push }
+}) => {
 	const [userData, setUserData] = useState<IStateUser>({
 		email: '',
 		password: '',
@@ -52,6 +56,9 @@ const Login: FunctionComponent = () => {
 			error: false
 		}
 	});
+
+	const [loginError, setLoginError] = useState<boolean>(false);
+	const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
 
 	const handleOnChange = (name: string) => (
 		event: React.ChangeEvent<HTMLInputElement>
@@ -70,6 +77,28 @@ const Login: FunctionComponent = () => {
 			...prevUserData,
 			showPassword: !prevUserData.showPassword
 		}));
+	};
+
+	const loginUser = async (user: IUser) => {
+		try {
+			const {
+				data: { error }
+			} = await axios.post('/login', user);
+			if (error) {
+				setLoginSuccess(false);
+				setLoginError(true);
+			} else {
+				setLoginError(false);
+				setLoginSuccess(true);
+				setTimeout(() => {
+					setLoginSuccess(false);
+					push('/druzyna');
+				}, 1000);
+			}
+		} catch (e) {
+			setLoginError(true);
+			throw new Error('Error in signing in');
+		}
 	};
 
 	const handleOnSubmit = (event: React.FormEvent) => {
@@ -100,8 +129,10 @@ const Login: FunctionComponent = () => {
 					}));
 				}
 			);
+		} else {
+			const { email, password } = userData;
+			loginUser({ email, password });
 		}
-		console.log('tutaj', validatedData);
 	};
 
 	return (
@@ -179,6 +210,16 @@ const Login: FunctionComponent = () => {
 						>
 							Nie masz jeszcze konta? Zarejestruj się tutaj!
 						</Link>
+						{loginSuccess && (
+							<Alert variant="outlined" severity="success">
+								Zalogowano pomyślnie!
+							</Alert>
+						)}
+						{loginError && (
+							<Alert variant="outlined" severity="error">
+								Wprowadzono błędne dane!
+							</Alert>
+						)}
 					</form>
 				</div>
 			</Paper>
