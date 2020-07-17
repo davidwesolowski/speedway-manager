@@ -44,6 +44,7 @@ const Register: FunctionComponent<RouteComponentProps> = props => {
 							label="Adres e-mail"
 							required
 							autoComplete="email"
+							value={userData.email}
 						/>
 					</FormControl>
 					<FormControl className="register-container__form-field">
@@ -51,6 +52,7 @@ const Register: FunctionComponent<RouteComponentProps> = props => {
 							label="Nazwa użytkownika"
 							required
 							autoComplete="username"
+							value={userData.username}
 						/>
 					</FormControl>
 					<FormControl className="register-container__form-field">
@@ -58,6 +60,7 @@ const Register: FunctionComponent<RouteComponentProps> = props => {
 							label="Hasło"
 							required
 							autoComplete="new-password"
+							value={userData.password}
 							InputProps={{
 								endAdornment: (
 									<InputAdornment position="end">
@@ -75,6 +78,7 @@ const Register: FunctionComponent<RouteComponentProps> = props => {
 							label="Powtórz hasło"
 							required
 							autoComplete="new-password"
+							value={userData.repPassword}
 							InputProps={{
 								endAdornment: (
 									<InputAdornment position="end">
