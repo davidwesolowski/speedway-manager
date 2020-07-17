@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState, ChangeEvent } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import {
 	Paper,
@@ -27,6 +27,18 @@ const Register: FunctionComponent<RouteComponentProps> = props => {
 		repPassword: ''
 	});
 
+	const handleOnChange = (name: string) => (
+		event: React.ChangeEvent<HTMLInputElement>
+	) => {
+		event.persist();
+		if (event.target) {
+			setUserData((prevState: IUserState) => ({
+				...prevState,
+				[name]: event.target.value
+			}));
+		}
+	};
+
 	return (
 		<div className="register-container">
 			<div className="register-container__img"></div>
@@ -45,6 +57,7 @@ const Register: FunctionComponent<RouteComponentProps> = props => {
 							required
 							autoComplete="email"
 							value={userData.email}
+							onChange={handleOnChange('email')}
 						/>
 					</FormControl>
 					<FormControl className="register-container__form-field">
@@ -53,6 +66,7 @@ const Register: FunctionComponent<RouteComponentProps> = props => {
 							required
 							autoComplete="username"
 							value={userData.username}
+							onChange={handleOnChange('username')}
 						/>
 					</FormControl>
 					<FormControl className="register-container__form-field">
@@ -61,6 +75,7 @@ const Register: FunctionComponent<RouteComponentProps> = props => {
 							required
 							autoComplete="new-password"
 							value={userData.password}
+							onChange={handleOnChange('password')}
 							InputProps={{
 								endAdornment: (
 									<InputAdornment position="end">
@@ -79,6 +94,7 @@ const Register: FunctionComponent<RouteComponentProps> = props => {
 							required
 							autoComplete="new-password"
 							value={userData.repPassword}
+							onChange={handleOnChange('repPassword')}
 							InputProps={{
 								endAdornment: (
 									<InputAdornment position="end">
