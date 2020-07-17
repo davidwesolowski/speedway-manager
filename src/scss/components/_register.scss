@@ -4,6 +4,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	font-family: $bebas;
 
 	&__img {
 		position: absolute;
@@ -49,5 +50,13 @@
 		&-field {
 			margin-bottom: $xs-margin !important;
 		}
+	}
+
+	&__login-link {
+		margin-top: $xs-margin;
+		text-decoration: none !important;
+		align-self: flex-end;
+		font-size: 1.2rem;
+		color: $color-primary;
 	}
 }

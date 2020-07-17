@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, Link } from 'react-router-dom';
 import {
 	Paper,
 	Typography,
@@ -131,6 +131,12 @@ const Register: FunctionComponent<RouteComponentProps> = props => {
 					<Button className="btn" type="submit">
 						Zarejestruj
 					</Button>
+					<Link
+						to="/login"
+						className="register-container__login-link"
+					>
+						Masz już konto? Zaloguj się!
+					</Link>
 				</form>
 			</Paper>
 		</div>
