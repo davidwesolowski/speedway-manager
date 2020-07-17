@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, ChangeEvent } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import {
 	Paper,
@@ -26,6 +26,8 @@ const Register: FunctionComponent<RouteComponentProps> = props => {
 		password: '',
 		repPassword: ''
 	});
+	const [showPassword, setShowPassword] = useState<boolean>(false);
+	const [showRepPassword, setShowRepPassword] = useState<boolean>(false);
 
 	const handleOnChange = (name: string) => (
 		event: React.ChangeEvent<HTMLInputElement>
@@ -38,6 +40,13 @@ const Register: FunctionComponent<RouteComponentProps> = props => {
 			}));
 		}
 	};
+
+	const handleClickShowPassword = () =>
+		setShowPassword((prevShowPassword: boolean) => !prevShowPassword);
+	const handleClickShowRepPassword = () =>
+		setShowRepPassword(
+			(prevShowRepPassword: boolean) => !prevShowRepPassword
+		);
 
 	return (
 		<div className="register-container">
@@ -74,14 +83,20 @@ const Register: FunctionComponent<RouteComponentProps> = props => {
 							label="Hasło"
 							required
 							autoComplete="new-password"
+							type={showPassword ? 'text' : 'password'}
 							value={userData.password}
 							onChange={handleOnChange('password')}
 							InputProps={{
 								endAdornment: (
 									<InputAdornment position="end">
-										<IconButton>
-											<MdVisibility />
-											<MdVisibilityOff />
+										<IconButton
+											onClick={handleClickShowPassword}
+										>
+											{showPassword ? (
+												<MdVisibility />
+											) : (
+												<MdVisibilityOff />
+											)}
 										</IconButton>
 									</InputAdornment>
 								)
@@ -93,14 +108,20 @@ const Register: FunctionComponent<RouteComponentProps> = props => {
 							label="Powtórz hasło"
 							required
 							autoComplete="new-password"
+							type={showRepPassword ? 'text' : 'password'}
 							value={userData.repPassword}
 							onChange={handleOnChange('repPassword')}
 							InputProps={{
 								endAdornment: (
 									<InputAdornment position="end">
-										<IconButton>
-											<MdVisibility />
-											<MdVisibilityOff />
+										<IconButton
+											onClick={handleClickShowRepPassword}
+										>
+											{showRepPassword ? (
+												<MdVisibility />
+											) : (
+												<MdVisibilityOff />
+											)}
 										</IconButton>
 									</InputAdornment>
 								)
