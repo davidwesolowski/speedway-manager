@@ -43,6 +43,7 @@ const Register: FunctionComponent<RouteComponentProps> = props => {
 
 	const handleClickShowPassword = () =>
 		setShowPassword((prevShowPassword: boolean) => !prevShowPassword);
+
 	const handleClickShowRepPassword = () =>
 		setShowRepPassword(
 			(prevShowRepPassword: boolean) => !prevShowRepPassword
