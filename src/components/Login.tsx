@@ -136,21 +136,21 @@ const Login: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	return (
-		<div className="login-container">
-			<div className="login-container__img"></div>
-			<Paper className="login-container__box">
+		<div className="login-register-container">
+			<div className="login-register-container__img"></div>
+			<Paper className="login-register-container__box">
 				<Typography
 					variant="h2"
-					className="heading-1 login-container__login_heading"
+					className="heading-1 login-register-container__heading"
 				>
 					Zaloguj się
 				</Typography>
 				<Divider />
 				<form
-					className="login-container__form"
+					className="login-register-container__form"
 					onSubmit={handleOnSubmit}
 				>
-					<FormControl className="login-container__form-field">
+					<FormControl className="login-register-container__form-field">
 						<TextField
 							label="Adres e-mail"
 							required
@@ -165,7 +165,7 @@ const Login: FunctionComponent<RouteComponentProps> = ({
 							onChange={handleOnChange('email')}
 						/>
 					</FormControl>
-					<FormControl className="login-container__form-field">
+					<FormControl className="login-register-container__form-field">
 						<TextField
 							label="Hasło"
 							required
@@ -201,7 +201,7 @@ const Login: FunctionComponent<RouteComponentProps> = ({
 					</Button>
 					<Link
 						to="/rejestracja"
-						className="login-container__register-link"
+						className="login-register-container__link"
 					>
 						Nie masz jeszcze konta? Zarejestruj się tutaj!
 					</Link>

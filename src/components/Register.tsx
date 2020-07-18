@@ -151,21 +151,21 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	return (
-		<div className="register-container">
-			<div className="register-container__img"></div>
-			<Paper className="register-container__box">
+		<div className="login-register-container">
+			<div className="login-register-container__img"></div>
+			<Paper className="login-register-container__box">
 				<Typography
 					variant="h2"
-					className="heading-1 register-container__heading"
+					className="heading-1 login-register-container__heading"
 				>
 					Rejestracja
 				</Typography>
 				<Divider />
 				<form
-					className="register-container__form"
+					className="login-register-container__form"
 					onSubmit={handleOnSubmit}
 				>
-					<FormControl className="register-container__form-field">
+					<FormControl className="login-register-container__form-field">
 						<TextField
 							label="Adres e-mail"
 							required
@@ -180,7 +180,7 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 							}
 						/>
 					</FormControl>
-					<FormControl className="register-container__form-field">
+					<FormControl className="login-register-container__form-field">
 						<TextField
 							label="Nazwa użytkownika"
 							required
@@ -195,7 +195,7 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 							}
 						/>
 					</FormControl>
-					<FormControl className="register-container__form-field">
+					<FormControl className="login-register-container__form-field">
 						<TextField
 							label="Hasło"
 							required
@@ -226,7 +226,7 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 							}}
 						/>
 					</FormControl>
-					<FormControl className="register-container__form-field">
+					<FormControl className="login-register-container__form-field">
 						<TextField
 							label="Powtórz hasło"
 							required
@@ -262,7 +262,7 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 					</Button>
 					<Link
 						to="/login"
-						className="register-container__login-link"
+						className="login-register-container__link"
 					>
 						Masz już konto? Zaloguj się!
 					</Link>
