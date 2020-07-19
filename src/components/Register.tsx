@@ -14,7 +14,9 @@ import Alert from '@material-ui/lab/Alert';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { ValidationErrorItem } from '@hapi/joi';
 import axios from 'axios';
+import Cookie from 'universal-cookie';
 import validateRegisterData from '../validation/validateRegisterData';
+import Cookies from 'universal-cookie';
 
 interface IUserState {
 	email: string;
@@ -23,6 +25,11 @@ interface IUserState {
 	repPassword: string;
 }
 
+interface IRegisterData {
+	email: string;
+	username: string;
+	password: string;
+}
 interface IValidatedData {
 	email: {
 		message: string;
@@ -98,24 +105,26 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 			(prevShowRepPassword: boolean) => !prevShowRepPassword
 		);
 
-	const registerUser = async (userData: IUserState) => {
+	const registerUser = async (userData: IRegisterData) => {
 		try {
 			const {
-				data: { error }
-			} = await axios.post('/register', userData);
-			if (error) {
+				data: { access_token }
+			} = await axios.post(
+				'https://fantasy-league-eti.herokuapp.com/auth/register',
+				userData
+			);
+			const cookies = new Cookies();
+			cookies.set('access_token', access_token, { path: '/' });
+
+			setRegisterError(false);
+			setRegisterSucess(true);
+			setTimeout(() => {
 				setRegisterSucess(false);
-				setRegisterSucess(true);
-			} else {
-				setRegisterError(false);
-				setRegisterSucess(true);
-				setTimeout(() => {
-					setRegisterSucess(false);
-					push('/druzyna');
-				}, 1000);
-			}
+				push('/druzyna');
+			}, 1000);
 		} catch (e) {
-			setRegisterError(true);
+			setRegisterSucess(false);
+			setRegisterSucess(true);
 			throw new Error('Error in registering user!');
 		}
 	};
@@ -146,7 +155,8 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 					}
 				}));
 		} else {
-			registerUser(userData);
+			const { email, username, password } = userData;
+			registerUser({ email, username, password });
 		}
 	};
 
