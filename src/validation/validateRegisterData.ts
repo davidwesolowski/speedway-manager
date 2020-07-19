@@ -45,30 +45,9 @@ const schema = Joi.object({
 			}
 			return error;
 		}),
-	password: Joi.string()
-		.min(6)
-		.max(1024)
-		.required()
-		.error((error: ErrorReport[]): any => {
-			if (error[0].code) {
-				switch (error[0].code) {
-					case 'string.empty':
-						error[0].message = 'Hasło nie może być puste!';
-						break;
-					case 'string.min':
-						error[0].message =
-							'Hasło musi mieć przynajmniej 6 znaków!';
-						break;
-					case 'string.max':
-						error[0].message =
-							'Hasło może mieć maksymalnie 1024 znaki!';
-						break;
-					default:
-						break;
-				}
-			}
-			return error;
-		}),
+	password: Joi.string().regex(
+		/(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
+	),
 	repPassword: Joi.ref('password')
 }).with('password', 'repPassword');
 

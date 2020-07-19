@@ -137,13 +137,24 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 			const { password, repPassword } = userData;
 			validationResponse.error.details.forEach(
 				(errorItem: ValidationErrorItem): any => {
-					setValidatedData((prevState: IValidatedData) => ({
-						...prevState,
-						[errorItem.path[0]]: {
-							message: errorItem.message,
-							error: true
-						}
-					}));
+					setValidatedData((prevState: IValidatedData) => {
+						if (errorItem.path[0] == 'password')
+							return {
+								...prevState,
+								[errorItem.path[0]]: {
+									message:
+										'Hasło musi mieć przynajmniej 8 znaków, zawierać co najmniej jedną wielką literę i jeden znak specjalny!',
+									error: true
+								}
+							};
+						return {
+							...prevState,
+							[errorItem.path[0]]: {
+								message: errorItem.message,
+								error: true
+							}
+						};
+					});
 				}
 			);
 			if (password != repPassword)
