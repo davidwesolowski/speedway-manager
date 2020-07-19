@@ -13,6 +13,7 @@ import Alert from '@material-ui/lab/Alert';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { ValidationErrorItem } from '@hapi/joi';
 import axios from 'axios';
+import Cookies from 'universal-cookie';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import validateLoginData from '../validation/validateLoginData';
 
@@ -82,20 +83,21 @@ const Login: FunctionComponent<RouteComponentProps> = ({
 	const loginUser = async (user: IUser) => {
 		try {
 			const {
-				data: { error }
-			} = await axios.post('/login', user);
-			if (error) {
+				data: { access_token }
+			} = await axios.post(
+				'https://fantasy-league-eti.herokuapp.com/auth/login',
+				user
+			);
+			const cookies = new Cookies();
+			cookies.set('access_token', access_token, { path: '/' });
+			setLoginError(false);
+			setLoginSuccess(true);
+			setTimeout(() => {
 				setLoginSuccess(false);
-				setLoginError(true);
-			} else {
-				setLoginError(false);
-				setLoginSuccess(true);
-				setTimeout(() => {
-					setLoginSuccess(false);
-					push('/druzyna');
-				}, 1000);
-			}
+				push('/druzyna');
+			}, 1000);
 		} catch (e) {
+			setLoginSuccess(false);
 			setLoginError(true);
 			throw new Error('Error in signing in');
 		}
