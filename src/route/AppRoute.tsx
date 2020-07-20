@@ -4,6 +4,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import WelcomePage from '../components/WelcomePage';
 import Login from '../components/Login';
+import Account from '../components/Account';
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -12,6 +13,7 @@ const AppRoute: FunctionComponent = () => {
 			<Switch>
 				<Route path="/" exact component={WelcomePage} />
 				<Route path="/login" component={Login} />
+				<Route path="/konto" component={Account} />
 			</Switch>
 			<Footer />
 		</Router>
