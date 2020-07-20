@@ -13,6 +13,16 @@ body {
 	font-weight: 300;
 	background-color: $color-primary;
 	color: #fff;
+
+	@media only screen and (max-width: $bp-md)
+	{
+		font-size: 57% !important;
+	}
+
+	@media only screen and (max-width: $bp-sm)
+	{
+		font-size: 50% !important;
+	}
 }
 
 #root {
