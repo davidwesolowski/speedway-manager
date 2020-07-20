@@ -4,7 +4,9 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import WelcomePage from '../components/WelcomePage';
 import Login from '../components/Login';
+import Account from '../components/Account';
 import Register from '../components/Register';
+
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -13,7 +15,9 @@ const AppRoute: FunctionComponent = () => {
 			<Switch>
 				<Route path="/" exact component={WelcomePage} />
 				<Route path="/login" component={Login} />
+				<Route path="/konto" component={Account} />
 				<Route path="/rejestracja" component={Register} />
+
 			</Switch>
 			<Footer />
 		</Router>
