@@ -1,4 +1,4 @@
-.login-container {
+.login-register-container {
 	grid-column: center-start / center-end;
 	position: relative;
 	display: flex;
@@ -33,7 +33,7 @@
 		}
 	}
 
-	&__login_heading {
+	&__heading {
 		text-align: center;
 		text-transform: uppercase;
 		font-family: $bebas !important;
@@ -53,7 +53,7 @@
 		}
 	}
 
-	&__register-link {
+	&__link {
 		margin-top: $xs-margin;
 		text-decoration: none !important;
 		align-self: flex-end;
