@@ -20,9 +20,9 @@ interface IState {
 
 const Account: FunctionComponent = () => {
 	const accountDefaultData = {
-		username: '',
-		name: '',
-		club: '',
+		username: 'Testowy',
+		name: 'Test',
+		club: 'GKM',
 		points: 0,
 		position: -1
 	};
@@ -55,20 +55,14 @@ const Account: FunctionComponent = () => {
 					<div className="account-info__nickname-row">
 						<div className="account-info__username"></div>
 						<div className="account-info__change-nickname-part">
-							<Link
-								to="/edycja-konta"
-								className="account-info__change-nickname"
-							>
-								<TiPen></TiPen> Edytuj konto
-							</Link>
+							<div className="account-info__change-nickname">
+								<TiPen /> Edytuj konto
+							</div>
 							<br />
 							<br />
-							<Link
-								to="/usuwanie-konta"
-								className="account-info__delete-account"
-							>
-								<TiTimes></TiTimes> Usuń konto
-							</Link>
+							<div className="account-info__delete-account">
+								<TiTimes /> Usuń konto
+							</div>
 						</div>
 					</div>
 					<br />
