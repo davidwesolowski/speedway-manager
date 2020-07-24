@@ -235,4 +235,13 @@
 	&__title {
 		font-family: $bebas !important;
 	}
+
+	&__form {
+		display: flex;
+		flex-direction: column;
+
+		&-field {
+			margin-bottom: $xs-margin !important;
+		}
+	}
 }

@@ -9,7 +9,9 @@ import {
 	IconButton,
 	Button,
 	Dialog,
-	DialogTitle
+	DialogTitle,
+	DialogContent,
+	FormControl
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { TiPen, TiTimes } from 'react-icons/ti';
@@ -17,19 +19,21 @@ import { FiX } from 'react-icons/fi';
 
 interface IState {
 	username: string;
-	name: string;
 	club: string;
 	points: number;
 	position: number;
+	password: string;
+	newPassword: string;
 }
 
 const Account: FunctionComponent = () => {
 	const accountDefaultData = {
 		username: 'Testowy',
-		name: 'Test',
 		club: 'GKM',
 		points: 0,
-		position: -1
+		position: -1,
+		password: '',
+		newPassword: ''
 	};
 	const [accountData, setAccountData] = useState<IState>(accountDefaultData);
 	const [dialogOpen, setDialogOpen] = useState<boolean>(true);
@@ -43,7 +47,7 @@ const Account: FunctionComponent = () => {
 				<div className="account-info__background"></div>
 				<Paper className="account-info__box">
 					<Typography variant="h2" className="account-info__header">
-						{accountData.username} ({accountData.name})
+						{accountData.username}
 					</Typography>
 					<Divider />
 					<div className="account-info__avatar-part">
@@ -129,10 +133,38 @@ const Account: FunctionComponent = () => {
 							Edycja konta
 						</Typography>
 						<IconButton>
-							<FiX />
+							<FiX onClick={handleClose} />
 						</IconButton>
 					</div>
 				</DialogTitle>
+				<DialogContent dividers>
+					<form className="dialog__form">
+						<FormControl className="dialog__form-field">
+							<TextField
+								label="Nazwa"
+								required
+								autoComplete="username"
+								value={accountData.username}
+							/>
+						</FormControl>
+						<FormControl className="dialog__form-field">
+							<TextField
+								label="Stare hasło"
+								required
+								autoComplete="current-password"
+								value={accountData.password}
+							/>
+						</FormControl>
+						<FormControl className="dialog__form-field">
+							<TextField
+								label="Nowe hasło"
+								required
+								autoComplete="new-password"
+								value={accountData.newPassword}
+							/>
+						</FormControl>
+					</form>
+				</DialogContent>
 			</Dialog>
 		</>
 	);
