@@ -224,3 +224,15 @@
 		font-family: $poppins !important;
 	}
 }
+
+.dialog {
+	&__header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	&__title {
+		font-family: $bebas !important;
+	}
+}
