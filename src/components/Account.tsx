@@ -1,6 +1,11 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { FunctionComponent, useState, ChangeEvent } from 'react';
+import React, {
+	FunctionComponent,
+	useState,
+	ChangeEvent,
+	FormEvent
+} from 'react';
 import {
 	Paper,
 	Typography,
@@ -19,6 +24,7 @@ import { Link } from 'react-router-dom';
 import { TiPen, TiTimes } from 'react-icons/ti';
 import { FiX } from 'react-icons/fi';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
+import Alert from '@material-ui/lab/Alert';
 
 interface IState {
 	username: string;
@@ -42,13 +48,15 @@ const Account: FunctionComponent = () => {
 	const [dialogOpen, setDialogOpen] = useState<boolean>(true);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
+	const [success, setSuccess] = useState<boolean>(false);
+	const [error, setError] = useState<boolean>(false);
 
 	const handleOpen = () => setDialogOpen(true);
 	const handleClose = () => setDialogOpen(false);
 	const handleClickShowPassword = () => setShowPassword(!showPassword);
 	const handleClickShowNewPassword = () =>
 		setShowNewPassword(!showNewPassword);
-	const handleChange = (name: string) => (
+	const handleOnChange = (name: string) => (
 		event: ChangeEvent<HTMLInputElement>
 	) => {
 		event.persist();
@@ -166,7 +174,7 @@ const Account: FunctionComponent = () => {
 										required
 										autoComplete="username"
 										value={accountData.username}
-										onChange={handleChange('username')}
+										onChange={handleOnChange('username')}
 									/>
 								</FormControl>
 								<FormControl className="dialog__form_field">
@@ -178,7 +186,7 @@ const Account: FunctionComponent = () => {
 											showPassword ? 'text' : 'password'
 										}
 										value={accountData.password}
-										onChange={handleChange('password')}
+										onChange={handleOnChange('password')}
 										InputProps={{
 											endAdornment: (
 												<InputAdornment position="end">
@@ -209,7 +217,7 @@ const Account: FunctionComponent = () => {
 												: 'password'
 										}
 										value={accountData.newPassword}
-										onChange={handleChange('newPassword')}
+										onChange={handleOnChange('newPassword')}
 										InputProps={{
 											endAdornment: (
 												<InputAdornment position="end">
@@ -251,6 +259,21 @@ const Account: FunctionComponent = () => {
 								<Button className="btn dialog__form_button">
 									Edytuj
 								</Button>
+							</Grid>
+							<Grid item xs={12}>
+								{success && (
+									<Alert
+										severity="success"
+										variant="outlined"
+									>
+										Edycja zakończona powodzeniem!
+									</Alert>
+								)}
+								{error && (
+									<Alert severity="error" variant="outlined">
+										Edycja zakończona niepowodzeniem!
+									</Alert>
+								)}
 							</Grid>
 						</Grid>
 					</form>
