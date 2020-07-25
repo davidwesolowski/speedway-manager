@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState, ChangeEvent } from 'react';
 import {
 	Paper,
 	Typography,
@@ -46,7 +46,19 @@ const Account: FunctionComponent = () => {
 	const handleOpen = () => setDialogOpen(true);
 	const handleClose = () => setDialogOpen(false);
 	const handleClickShowPassword = () => setShowPassword(!showPassword);
-	const handleClickShowNewPassword = () => setShowNewPassword(!showPassword);
+	const handleClickShowNewPassword = () =>
+		setShowNewPassword(!showNewPassword);
+	const handleChange = (name: string) => (
+		event: ChangeEvent<HTMLInputElement>
+	) => {
+		event.persist();
+		if (event.target) {
+			setAccountData((prevState: IState) => ({
+				...prevState,
+				[name]: event.target.value
+			}));
+		}
+	};
 
 	return (
 		<>
@@ -154,6 +166,7 @@ const Account: FunctionComponent = () => {
 										required
 										autoComplete="username"
 										value={accountData.username}
+										onChange={handleChange('username')}
 									/>
 								</FormControl>
 								<FormControl className="dialog__form_field">
@@ -165,6 +178,7 @@ const Account: FunctionComponent = () => {
 											showPassword ? 'text' : 'password'
 										}
 										value={accountData.password}
+										onChange={handleChange('password')}
 										InputProps={{
 											endAdornment: (
 												<InputAdornment position="end">
@@ -195,6 +209,7 @@ const Account: FunctionComponent = () => {
 												: 'password'
 										}
 										value={accountData.newPassword}
+										onChange={handleChange('newPassword')}
 										InputProps={{
 											endAdornment: (
 												<InputAdornment position="end">
