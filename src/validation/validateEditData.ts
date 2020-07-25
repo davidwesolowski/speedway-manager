@@ -34,7 +34,7 @@ const schema = Joi.object({
 	)
 });
 
-export function validateEditData(data: {
+export default function validateEditData(data: {
 	username: string;
 	password: string;
 	newPassword: string;

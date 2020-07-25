@@ -25,6 +25,8 @@ import { TiPen, TiTimes } from 'react-icons/ti';
 import { FiX } from 'react-icons/fi';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import Alert from '@material-ui/lab/Alert';
+import validateEditData from '../validation/validateEditData';
+import { ValidationErrorItem } from '@hapi/joi';
 
 interface IState {
 	username: string;
@@ -35,27 +37,68 @@ interface IState {
 	newPassword: string;
 }
 
-const Account: FunctionComponent = () => {
-	const accountDefaultData = {
-		username: 'Testowy',
-		club: 'GKM',
-		points: 0,
-		position: -1,
-		password: '',
-		newPassword: ''
+interface IValidateData {
+	username: {
+		message: string;
+		error: boolean;
 	};
-	const [accountData, setAccountData] = useState<IState>(accountDefaultData);
-	const [dialogOpen, setDialogOpen] = useState<boolean>(true);
+	password: {
+		message: string;
+		error: boolean;
+	};
+	newPassword: {
+		message: string;
+		error: boolean;
+	};
+}
+
+const defaultValidateData = {
+	username: {
+		message: '',
+		error: false
+	},
+	password: {
+		message: '',
+		error: false
+	},
+	newPassword: {
+		message: '',
+		error: false
+	}
+};
+
+const defaultAccountData = {
+	username: 'Testowy',
+	club: 'GKM',
+	points: 0,
+	position: -1,
+	password: '',
+	newPassword: ''
+};
+
+const Account: FunctionComponent = () => {
+	const [accountData, setAccountData] = useState<IState>(defaultAccountData);
+	const [validateData, setValidateData] = useState<IValidateData>(
+		defaultValidateData
+	);
+	const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
 	const [success, setSuccess] = useState<boolean>(false);
 	const [error, setError] = useState<boolean>(false);
 
 	const handleOpen = () => setDialogOpen(true);
-	const handleClose = () => setDialogOpen(false);
+	const handleClose = () => {
+		setValidateData(defaultValidateData);
+		setAccountData(defaultAccountData);
+		setDialogOpen(false);
+		setShowPassword(false);
+		setShowNewPassword(false);
+	};
 	const handleClickShowPassword = () => setShowPassword(!showPassword);
 	const handleClickShowNewPassword = () =>
 		setShowNewPassword(!showNewPassword);
+
 	const handleOnChange = (name: string) => (
 		event: ChangeEvent<HTMLInputElement>
 	) => {
@@ -65,6 +108,42 @@ const Account: FunctionComponent = () => {
 				...prevState,
 				[name]: event.target.value
 			}));
+		}
+	};
+
+	const editData = (data: IState) => {};
+
+	const handleOnSubmit = (event: FormEvent) => {
+		event.preventDefault();
+		const validationResult = validateEditData(accountData);
+		if (validationResult.error) {
+			setValidateData(() => defaultValidateData);
+			validationResult.error.details.forEach(
+				(errorItem: ValidationErrorItem) => {
+					setValidateData((prevState: IValidateData) => {
+						if (errorItem.path[0] != 'username') {
+							return {
+								...prevState,
+								[errorItem.path[0]]: {
+									message:
+										'Hasło musi mieć przynajmniej 8 znaków, zawierać co najmniej jedną wielką literę i jeden znak specjalny!',
+									error: true
+								}
+							};
+						}
+
+						return {
+							...prevState,
+							[errorItem.path[0]]: {
+								message: errorItem.message,
+								error: true
+							}
+						};
+					});
+				}
+			);
+		} else {
+			editData(accountData);
 		}
 	};
 
@@ -159,13 +238,13 @@ const Account: FunctionComponent = () => {
 						<Typography variant="h4" className="dialog__title">
 							Edycja konta
 						</Typography>
-						<IconButton>
-							<FiX onClick={handleClose} />
+						<IconButton onClick={handleClose}>
+							<FiX />
 						</IconButton>
 					</div>
 				</DialogTitle>
 				<DialogContent dividers>
-					<form className="dialog__form">
+					<form className="dialog__form" onSubmit={handleOnSubmit}>
 						<Grid container>
 							<Grid item xs={7} className="dialog__form_fields">
 								<FormControl className="dialog__form_field">
@@ -174,6 +253,10 @@ const Account: FunctionComponent = () => {
 										required
 										autoComplete="username"
 										value={accountData.username}
+										error={validateData.username.error}
+										helperText={
+											validateData.username.message
+										}
 										onChange={handleOnChange('username')}
 									/>
 								</FormControl>
@@ -186,6 +269,10 @@ const Account: FunctionComponent = () => {
 											showPassword ? 'text' : 'password'
 										}
 										value={accountData.password}
+										error={validateData.password.error}
+										helperText={
+											validateData.password.message
+										}
 										onChange={handleOnChange('password')}
 										InputProps={{
 											endAdornment: (
@@ -218,6 +305,10 @@ const Account: FunctionComponent = () => {
 										}
 										value={accountData.newPassword}
 										onChange={handleOnChange('newPassword')}
+										error={validateData.newPassword.error}
+										helperText={
+											validateData.newPassword.message
+										}
 										InputProps={{
 											endAdornment: (
 												<InputAdornment position="end">
@@ -252,11 +343,17 @@ const Account: FunctionComponent = () => {
 											alt="user-avatar"
 											className="dialog__avatar-img"
 										/>
+										<div className="dialog__avatar-edit">
+											Edytuj
+										</div>
 									</div>
 								</label>
 							</Grid>
 							<Grid item xs={12}>
-								<Button className="btn dialog__form_button">
+								<Button
+									className="btn dialog__form_button"
+									type="submit"
+								>
 									Edytuj
 								</Button>
 							</Grid>

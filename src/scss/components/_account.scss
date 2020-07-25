@@ -253,6 +253,7 @@
 	}
 	&__avatar-img {
 		&-box {
+			position: relative;
 			display: flex;
 			justify-content: center;
 			align-items: center;
@@ -265,5 +266,24 @@
 		height: 65%;
 		margin-left: $xs-margin;
 		cursor: pointer;
+	}
+
+	&__avatar-edit {
+		position: absolute;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		display: none;
+		font-size: 1rem;
+		font-weight: 700;
+		text-transform: uppercase;
+	}
+
+	&__avatar-img:hover {
+		filter: opacity(0.4);
+	}
+
+	&__avatar-img:hover + &__avatar-edit {
+		display: block;
 	}
 }
