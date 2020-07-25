@@ -237,11 +237,16 @@
 	}
 
 	&__form {
-		display: flex;
-		flex-direction: column;
+		&_fields {
+			display: flex;
+			flex-direction: column;
+		}
 
-		&-field {
+		&_field {
 			margin-bottom: $xs-margin !important;
+		}
+		&_button {
+			width: 100%;
 		}
 	}
 }

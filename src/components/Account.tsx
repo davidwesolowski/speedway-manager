@@ -11,11 +11,14 @@ import {
 	Dialog,
 	DialogTitle,
 	DialogContent,
-	FormControl
+	FormControl,
+	Grid,
+	InputAdornment
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { TiPen, TiTimes } from 'react-icons/ti';
 import { FiX } from 'react-icons/fi';
+import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 
 interface IState {
 	username: string;
@@ -37,9 +40,13 @@ const Account: FunctionComponent = () => {
 	};
 	const [accountData, setAccountData] = useState<IState>(accountDefaultData);
 	const [dialogOpen, setDialogOpen] = useState<boolean>(true);
+	const [showPassword, setShowPassword] = useState<boolean>(false);
+	const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
 
 	const handleOpen = () => setDialogOpen(true);
 	const handleClose = () => setDialogOpen(false);
+	const handleClickShowPassword = () => setShowPassword(!showPassword);
+	const handleClickShowNewPassword = () => setShowNewPassword(!showPassword);
 
 	return (
 		<>
@@ -139,30 +146,82 @@ const Account: FunctionComponent = () => {
 				</DialogTitle>
 				<DialogContent dividers>
 					<form className="dialog__form">
-						<FormControl className="dialog__form-field">
-							<TextField
-								label="Nazwa"
-								required
-								autoComplete="username"
-								value={accountData.username}
-							/>
-						</FormControl>
-						<FormControl className="dialog__form-field">
-							<TextField
-								label="Stare hasło"
-								required
-								autoComplete="current-password"
-								value={accountData.password}
-							/>
-						</FormControl>
-						<FormControl className="dialog__form-field">
-							<TextField
-								label="Nowe hasło"
-								required
-								autoComplete="new-password"
-								value={accountData.newPassword}
-							/>
-						</FormControl>
+						<Grid container>
+							<Grid item xs={8} className="dialog__form_fields">
+								<FormControl className="dialog__form_field">
+									<TextField
+										label="Nazwa"
+										required
+										autoComplete="username"
+										value={accountData.username}
+									/>
+								</FormControl>
+								<FormControl className="dialog__form_field">
+									<TextField
+										label="Stare hasło"
+										required
+										autoComplete="current-password"
+										type={
+											showPassword ? 'text' : 'password'
+										}
+										value={accountData.password}
+										InputProps={{
+											endAdornment: (
+												<InputAdornment position="end">
+													<IconButton
+														onClick={
+															handleClickShowPassword
+														}
+													>
+														{showPassword ? (
+															<MdVisibility />
+														) : (
+															<MdVisibilityOff />
+														)}
+													</IconButton>
+												</InputAdornment>
+											)
+										}}
+									/>
+								</FormControl>
+								<FormControl className="dialog__form_field">
+									<TextField
+										label="Nowe hasło"
+										required
+										autoComplete="new-password"
+										type={
+											showNewPassword
+												? 'text'
+												: 'password'
+										}
+										value={accountData.newPassword}
+										InputProps={{
+											endAdornment: (
+												<InputAdornment position="end">
+													<IconButton
+														onClick={
+															handleClickShowNewPassword
+														}
+													>
+														{showNewPassword ? (
+															<MdVisibility />
+														) : (
+															<MdVisibilityOff />
+														)}
+													</IconButton>
+												</InputAdornment>
+											)
+										}}
+									/>
+								</FormControl>
+							</Grid>
+							<Grid item xs={4}></Grid>
+							<Grid item xs={12}>
+								<Button className="btn dialog__form_button">
+									Edytuj
+								</Button>
+							</Grid>
+						</Grid>
 					</form>
 				</DialogContent>
 			</Dialog>
