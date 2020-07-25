@@ -75,14 +75,14 @@ const Account: FunctionComponent = () => {
 								src="/img/kenny.jpg"
 								alt="user-avatar"
 								className="account-info__avatar-img"
-							></img>
+							/>
 						</div>
-						<Link
-							to="/zmien-awatar"
+						<div
 							className="account-info__change-avatar"
+							onClick={handleOpen}
 						>
 							Zmień swój awatar
-						</Link>
+						</div>
 					</div>
 					<div className="account-info__account-data-part">
 						<div className="account-info__nickname-row">
@@ -159,7 +159,7 @@ const Account: FunctionComponent = () => {
 				<DialogContent dividers>
 					<form className="dialog__form">
 						<Grid container>
-							<Grid item xs={8} className="dialog__form_fields">
+							<Grid item xs={7} className="dialog__form_fields">
 								<FormControl className="dialog__form_field">
 									<TextField
 										label="Nazwa"
@@ -230,7 +230,23 @@ const Account: FunctionComponent = () => {
 									/>
 								</FormControl>
 							</Grid>
-							<Grid item xs={4}></Grid>
+							<Grid item xs={5}>
+								<input
+									type="file"
+									accept="image/*"
+									style={{ display: 'none' }}
+									id="id-file"
+								/>
+								<label htmlFor="id-file">
+									<div className="dialog__avatar-img-box">
+										<img
+											src="/img/kenny.jpg"
+											alt="user-avatar"
+											className="dialog__avatar-img"
+										/>
+									</div>
+								</label>
+							</Grid>
 							<Grid item xs={12}>
 								<Button className="btn dialog__form_button">
 									Edytuj

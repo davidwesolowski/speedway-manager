@@ -84,6 +84,7 @@
 		text-align: center;
 		color: dimgray;
 		text-decoration: none;
+		cursor: pointer;
 
 		@media only screen and (max-width: $bp-md) {
 			width: 100%;
@@ -248,5 +249,20 @@
 		&_button {
 			width: 100%;
 		}
+	}
+	&__avatar-img {
+		&-box {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100%;
+		}
+
+		border-radius: 50%;
+		object-fit: contain;
+		width: 65%;
+		height: 65%;
+		margin-left: $xs-margin;
+		cursor: pointer;
 	}
 }
