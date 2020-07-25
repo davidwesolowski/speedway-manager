@@ -6,6 +6,7 @@ import WelcomePage from '../components/WelcomePage';
 import Login from '../components/Login';
 import Account from '../components/Account';
 import Register from '../components/Register';
+import Riders from '../components/Riders';
 
 
 const AppRoute: FunctionComponent = () => {
@@ -17,7 +18,7 @@ const AppRoute: FunctionComponent = () => {
 				<Route path="/login" component={Login} />
 				<Route path="/konto" component={Account} />
 				<Route path="/rejestracja" component={Register} />
-
+				<Route path="/zawodnicy" component={Riders}/>
 			</Switch>
 			<Footer />
 		</Router>
