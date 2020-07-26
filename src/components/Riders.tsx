@@ -9,6 +9,7 @@ import {
 	Button
 } from '@material-ui/core';
 import {FiPlus} from 'react-icons/fi';
+import axios from 'axios';
 
 interface IRider{
     firstName: string;
@@ -41,7 +42,7 @@ interface IValidatedData{
     };
 }
 
-const AddRider: FunctionComponent<RouteComponentProps> = ({
+const Riders: FunctionComponent<RouteComponentProps> = ({
     history: { push }
 }) => {
     const defaultValidatedData = {
@@ -93,13 +94,24 @@ const AddRider: FunctionComponent<RouteComponentProps> = ({
         }
     };
 
-    return(
-        <div></div>
-    );
-}
+    const addRider = async (riderData: IRider) => {
+        try {
+            const {
+                data: { access_token }
+            } = await axios.post(
+                'https://fantasy-league-eti.herokuapp.com/auth/rider',
+                riderData
+            );
 
-const Riders: FunctionComponent = () => {
-    
+            setAddRiderError(false);
+            setAddRiderSuccess(true);
+        } catch (e) {
+            setAddRiderSuccess(false);
+            setAddRiderError(true);
+            throw new Error('Error in adding new rider!');
+        }
+    };
+
     return(
         <div className="riders">
             <div className="riders__background"></div>
@@ -113,8 +125,7 @@ const Riders: FunctionComponent = () => {
                 </Typography>
             </Paper>
         </div>
-    );
-
+    )
 };
 
 export default Riders;
