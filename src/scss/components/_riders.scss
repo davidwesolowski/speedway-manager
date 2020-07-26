@@ -31,4 +31,11 @@
 		margin-bottom: $xs-margin !important;
         letter-spacing: 1px !important;
     }
+
+    &__fiplus{
+        float: right;
+        color: green;
+        margin-top: 5px;
+        margin-right: 2%;
+    }
 }
