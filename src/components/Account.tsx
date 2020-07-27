@@ -146,11 +146,37 @@ const Account: FunctionComponent = () => {
 		}
 	};
 
-	const editData = (data: IState) => {};
+	const editData = async (data: IState) => {
+		try {
+			const { username, password, newPassword, image } = data;
+			const resultUser = await axios.patch(
+				'https://fantasy-league-eti.herokuapp.com/users/self',
+				{ username, password, newPassword }
+			);
+			const resultAvatar = await axios.patch(
+				'https://fantasy-league-eti.herokuapp.com/users/self/avatar',
+				image
+			);
+			setError(false);
+			setSuccess(true);
+			setTimeout(() => {
+				setSuccess(false);
+			}, 1000);
+		} catch (e) {
+			setSuccess(false);
+			setError(true);
+			console.log(e);
+		}
+	};
 
 	const handleOnSubmit = (event: FormEvent) => {
 		event.preventDefault();
-		const validationResult = validateEditData(accountData);
+		const { username, password, newPassword } = accountData;
+		const validationResult = validateEditData({
+			username,
+			password,
+			newPassword
+		});
 		if (validationResult.error) {
 			setValidateData(() => defaultValidateData);
 			validationResult.error.details.forEach(
@@ -178,6 +204,7 @@ const Account: FunctionComponent = () => {
 				}
 			);
 		} else {
+			console.log('wchodzi');
 			editData(accountData);
 		}
 	};
