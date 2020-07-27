@@ -35,6 +35,7 @@ interface IState {
 	position: number;
 	password: string;
 	newPassword: string;
+	image: string | ArrayBuffer | null;
 }
 
 interface IValidateData {
@@ -73,7 +74,8 @@ const defaultAccountData = {
 	points: 0,
 	position: -1,
 	password: '',
-	newPassword: ''
+	newPassword: '',
+	image: ''
 };
 
 const Account: FunctionComponent = () => {
@@ -108,6 +110,20 @@ const Account: FunctionComponent = () => {
 				...prevState,
 				[name]: event.target.value
 			}));
+		}
+	};
+
+	const handleFile = (event: ChangeEvent<HTMLInputElement>) => {
+		if (event.target.files) {
+			const image = event.target.files[0];
+			const imageReader = new FileReader();
+			imageReader.onload = () => {
+				setAccountData((prevState: IState) => ({
+					...prevState,
+					image: imageReader.result
+				}));
+			};
+			if (image) imageReader.readAsDataURL(image);
 		}
 	};
 
@@ -334,6 +350,7 @@ const Account: FunctionComponent = () => {
 									type="file"
 									accept="image/*"
 									style={{ display: 'none' }}
+									onChange={handleFile}
 									id="id-file"
 								/>
 								<label htmlFor="id-file">
