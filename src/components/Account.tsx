@@ -21,12 +21,14 @@ import {
 	InputAdornment
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import Alert from '@material-ui/lab/Alert';
 import { TiPen, TiTimes } from 'react-icons/ti';
 import { FiX } from 'react-icons/fi';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
-import Alert from '@material-ui/lab/Alert';
-import validateEditData from '../validation/validateEditData';
 import { ValidationErrorItem } from '@hapi/joi';
+import axios from 'axios';
+import Resizer from 'react-image-file-resizer';
+import validateEditData from '../validation/validateEditData';
 
 interface IState {
 	username: string;
@@ -35,7 +37,7 @@ interface IState {
 	position: number;
 	password: string;
 	newPassword: string;
-	image: string | ArrayBuffer | null;
+	image: string | Blob | ProgressEvent<FileReader>;
 }
 
 interface IValidateData {
@@ -118,12 +120,29 @@ const Account: FunctionComponent = () => {
 			const image = event.target.files[0];
 			const imageReader = new FileReader();
 			imageReader.onload = () => {
-				setAccountData((prevState: IState) => ({
-					...prevState,
-					image: imageReader.result
-				}));
+				const imageExtension = image.name.split('.')[1].toUpperCase();
+				let compressFormat: string;
+				if (imageExtension == 'JPG' || imageExtension == 'JPEG')
+					compressFormat = 'JPEG';
+				else if (imageExtension == 'PNG') compressFormat = 'PNG';
+				else compressFormat = 'WEBP';
+
+				Resizer.imageFileResizer(
+					image,
+					400,
+					400,
+					compressFormat,
+					100,
+					0,
+					uri => {
+						setAccountData((prevState: IState) => ({
+							...prevState,
+							image: uri
+						}));
+					},
+					'base64'
+				);
 			};
-			if (image) imageReader.readAsDataURL(image);
 		}
 	};
 
