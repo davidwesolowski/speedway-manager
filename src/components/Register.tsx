@@ -115,7 +115,6 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 			);
 			const cookies = new Cookies();
 			cookies.set('access_token', access_token, { path: '/' });
-
 			setRegisterError(false);
 			setRegisterSucess(true);
 			setTimeout(() => {

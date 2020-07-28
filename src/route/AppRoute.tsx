@@ -1,12 +1,18 @@
 import React, { FunctionComponent } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {
+	BrowserRouter as Router,
+	Route,
+	Switch,
+	Redirect,
+	RouteComponentProps
+} from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import WelcomePage from '../components/WelcomePage';
 import Login from '../components/Login';
 import Account from '../components/Account';
 import Register from '../components/Register';
-
+import checkCookies from '../validation/checkCookies';
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -14,10 +20,30 @@ const AppRoute: FunctionComponent = () => {
 			<Header />
 			<Switch>
 				<Route path="/" exact component={WelcomePage} />
-				<Route path="/login" component={Login} />
-				<Route path="/konto" component={Account} />
-				<Route path="/rejestracja" component={Register} />
-
+				<Route
+					path="/login"
+					render={(props: RouteComponentProps) => {
+						const cookiesExist = checkCookies();
+						if (cookiesExist) return <Redirect to="/druzyna" />;
+						else return <Login {...props} />;
+					}}
+				/>
+				<Route
+					path="/konto"
+					render={(props: RouteComponentProps) => {
+						const cookiesExist = checkCookies();
+						if (cookiesExist) return <Account {...props} />;
+						else return <Login {...props} />;
+					}}
+				/>
+				<Route
+					path="/rejestracja"
+					render={(props: RouteComponentProps) => {
+						const cookiesExist = checkCookies();
+						if (cookiesExist) return <Redirect to="/druzyna" />;
+						else return <Register {...props} />;
+					}}
+				/>
 			</Switch>
 			<Footer />
 		</Router>

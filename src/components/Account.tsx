@@ -20,7 +20,7 @@ import {
 	Grid,
 	InputAdornment
 } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
 import { TiPen, TiTimes } from 'react-icons/ti';
 import { FiX } from 'react-icons/fi';
@@ -98,7 +98,9 @@ const defaultImageData = {
 	type: ''
 };
 
-const Account: FunctionComponent = () => {
+const Account: FunctionComponent<RouteComponentProps> = ({
+	history: { push }
+}) => {
 	const [accountData, setAccountData] = useState<IState>(defaultAccountData);
 	const [validateData, setValidateData] = useState<IValidateData>(
 		defaultValidateData
@@ -142,7 +144,6 @@ const Account: FunctionComponent = () => {
 				imageReader.onload = () => {
 					const { name, type } = image;
 					setImageData({ name, type });
-					console.log(imageReader.result);
 					setAccountData({
 						...accountData,
 						image: imageReader.result
