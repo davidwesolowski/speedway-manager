@@ -18,7 +18,8 @@ import {
 	DialogContent,
 	FormControl,
 	Grid,
-	InputAdornment
+	InputAdornment,
+	DialogActions
 } from '@material-ui/core';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
@@ -27,8 +28,8 @@ import { FiX } from 'react-icons/fi';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { ValidationErrorItem } from '@hapi/joi';
 import axios from 'axios';
-import Resizer from 'react-image-file-resizer';
 import validateEditData from '../validation/validateEditData';
+import Cookies from 'universal-cookie';
 
 interface IState {
 	username: string;
@@ -106,23 +107,27 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 		defaultValidateData
 	);
 	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
-	const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+	const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
+	const [removeDialogOpen, setRemoveDialogOpen] = useState<boolean>(false);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
 	const [success, setSuccess] = useState<boolean>(false);
 	const [error, setError] = useState<boolean>(false);
 
-	const handleOpen = () => setDialogOpen(true);
-	const handleClose = () => {
+	const handleEditOpen = () => setEditDialogOpen(true);
+	const handleEditClose = () => {
 		setValidateData(defaultValidateData);
 		setAccountData(defaultAccountData);
-		setDialogOpen(false);
+		setEditDialogOpen(false);
 		setShowPassword(false);
 		setShowNewPassword(false);
 	};
 	const handleClickShowPassword = () => setShowPassword(!showPassword);
 	const handleClickShowNewPassword = () =>
 		setShowNewPassword(!showNewPassword);
+
+	const handleRemoveOpen = () => setRemoveDialogOpen(true);
+	const handleRemoveClose = () => setRemoveDialogOpen(false);
 
 	const handleOnChange = (name: string) => (
 		event: ChangeEvent<HTMLInputElement>
@@ -162,8 +167,29 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
+	const removeUser = async () => {
+		try {
+			const cookies = new Cookies();
+			const access_token = cookies.get('access_token');
+			axios.defaults.headers.common.Authorization = `Bearer ${access_token}`;
+			await axios.delete(
+				'https://fantasy-league-eti.herokuapp.com/users/self'
+			);
+			cookies.remove('access_token');
+			push('/rejestracja');
+		} catch (e) {
+			const cookies = new Cookies();
+			cookies.remove('access_token');
+			push('/login');
+		}
+	};
+
 	const editData = async (data: IState, imageData: IImageData) => {
 		try {
+			const cookies = new Cookies();
+			const access_token = cookies.get('access_token');
+			axios.defaults.headers.common.Authorization = `Bearer ${access_token}`;
+
 			const { username, password, newPassword, image } = data;
 			const { name, type } = imageData;
 			await axios.patch(
@@ -247,7 +273,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 						</div>
 						<div
 							className="account-info__change-avatar"
-							onClick={handleOpen}
+							onClick={handleEditOpen}
 						>
 							Zmień swój awatar
 						</div>
@@ -258,13 +284,16 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 							<div className="account-info__change-nickname-part">
 								<div
 									className="account-info__change-nickname"
-									onClick={handleOpen}
+									onClick={handleEditOpen}
 								>
 									<TiPen /> Edytuj konto
 								</div>
 								<br />
 								<br />
-								<div className="account-info__delete-account">
+								<div
+									className="account-info__delete-account"
+									onClick={handleRemoveOpen}
+								>
 									<TiTimes /> Usuń konto
 								</div>
 							</div>
@@ -313,13 +342,17 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 					</div>
 				</Paper>
 			</div>
-			<Dialog open={dialogOpen} onClose={handleClose} className="dialog">
+			<Dialog
+				open={editDialogOpen}
+				onClose={handleEditClose}
+				className="dialog"
+			>
 				<DialogTitle>
 					<div className="dialog__header">
 						<Typography variant="h4" className="dialog__title">
 							Edycja konta
 						</Typography>
-						<IconButton onClick={handleClose}>
+						<IconButton onClick={handleEditClose}>
 							<FiX />
 						</IconButton>
 					</div>
@@ -461,6 +494,26 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 						</Grid>
 					</form>
 				</DialogContent>
+			</Dialog>
+			<Dialog open={removeDialogOpen} onClose={handleRemoveClose}>
+				<DialogTitle>
+					<div>
+						<Typography variant="h4" className="dialog__title">
+							Czy na pewno chcesz usunąć swoje konto?
+						</Typography>
+					</div>
+				</DialogTitle>
+				<DialogActions>
+					<Button className="btn" onClick={handleRemoveClose}>
+						Anuluj
+					</Button>
+					<Button
+						className="btn dialog__button-approve"
+						onClick={removeUser}
+					>
+						Usuń
+					</Button>
+				</DialogActions>
 			</Dialog>
 		</>
 	);
