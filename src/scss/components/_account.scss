@@ -255,6 +255,7 @@
 		&-box {
 			position: relative;
 			display: flex;
+			flex-direction: column;
 			justify-content: center;
 			align-items: center;
 			height: 100%;
@@ -285,5 +286,11 @@
 
 	&__avatar-img:hover + &__avatar-edit {
 		display: block;
+	}
+
+	&__avatar-error {
+		font-size: 0.9rem;
+		color: red;
+		font-weight: 700;
 	}
 }

@@ -37,7 +37,7 @@ interface IState {
 	position: number;
 	password: string;
 	newPassword: string;
-	image: string | Blob | ProgressEvent<FileReader>;
+	image: string | ArrayBuffer | null;
 }
 
 interface IValidateData {
@@ -53,6 +53,15 @@ interface IValidateData {
 		message: string;
 		error: boolean;
 	};
+	image: {
+		message: string;
+		error: boolean;
+	};
+}
+
+interface IImageData {
+	name: string;
+	type: string;
 }
 
 const defaultValidateData = {
@@ -65,6 +74,10 @@ const defaultValidateData = {
 		error: false
 	},
 	newPassword: {
+		message: '',
+		error: false
+	},
+	image: {
 		message: '',
 		error: false
 	}
@@ -80,11 +93,17 @@ const defaultAccountData = {
 	image: ''
 };
 
+const defaultImageData = {
+	name: '',
+	type: ''
+};
+
 const Account: FunctionComponent = () => {
 	const [accountData, setAccountData] = useState<IState>(defaultAccountData);
 	const [validateData, setValidateData] = useState<IValidateData>(
 		defaultValidateData
 	);
+	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
 	const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
@@ -118,45 +137,45 @@ const Account: FunctionComponent = () => {
 	const handleFile = (event: ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files) {
 			const image = event.target.files[0];
-			const imageReader = new FileReader();
-			imageReader.onload = () => {
-				const imageExtension = image.name.split('.')[1].toUpperCase();
-				let compressFormat: string;
-				if (imageExtension == 'JPG' || imageExtension == 'JPEG')
-					compressFormat = 'JPEG';
-				else if (imageExtension == 'PNG') compressFormat = 'PNG';
-				else compressFormat = 'WEBP';
-
-				Resizer.imageFileResizer(
-					image,
-					400,
-					400,
-					compressFormat,
-					100,
-					0,
-					uri => {
-						setAccountData((prevState: IState) => ({
-							...prevState,
-							image: uri
-						}));
-					},
-					'base64'
-				);
-			};
+			if (image.size <= 1048576) {
+				const imageReader = new FileReader();
+				imageReader.onload = () => {
+					const { name, type } = image;
+					setImageData({ name, type });
+					console.log(imageReader.result);
+					setAccountData({
+						...accountData,
+						image: imageReader.result
+					});
+				};
+				if (image) imageReader.readAsDataURL(image);
+			} else {
+				setValidateData({
+					...validateData,
+					image: {
+						message: 'Awatar może mieć maksymalny rozmiar 1 MB',
+						error: true
+					}
+				});
+			}
 		}
 	};
 
-	const editData = async (data: IState) => {
+	const editData = async (data: IState, imageData: IImageData) => {
 		try {
 			const { username, password, newPassword, image } = data;
-			const resultUser = await axios.patch(
+			const { name, type } = imageData;
+			await axios.patch(
 				'https://fantasy-league-eti.herokuapp.com/users/self',
 				{ username, password, newPassword }
 			);
-			const resultAvatar = await axios.patch(
+			const {
+				data: signed_url
+			} = await axios.post(
 				'https://fantasy-league-eti.herokuapp.com/users/self/avatar',
-				image
+				{ name, type }
 			);
+			await axios.put(signed_url, { image });
 			setError(false);
 			setSuccess(true);
 			setTimeout(() => {
@@ -204,8 +223,7 @@ const Account: FunctionComponent = () => {
 				}
 			);
 		} else {
-			console.log('wchodzi');
-			editData(accountData);
+			editData(accountData, imageData);
 		}
 	};
 
@@ -408,6 +426,10 @@ const Account: FunctionComponent = () => {
 										/>
 										<div className="dialog__avatar-edit">
 											Edytuj
+										</div>
+										<div className="dialog__avatar-error">
+											{validateData.image.error &&
+												validateData.image.message}
 										</div>
 									</div>
 								</label>
