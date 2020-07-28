@@ -68,3 +68,16 @@
         font-size: large !important;
     }
 }
+
+table{
+    width: 100%;
+    font-size: x-large;
+    border: 2px solid black;
+    text-align: center;
+}
+
+td{
+    border: 4px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}

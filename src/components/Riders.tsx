@@ -20,6 +20,7 @@ import { ValidationErrorItem } from '@hapi/joi';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Alert from '@material-ui/lab/Alert';
+import RidersList from "../components/RidersList";
 
 interface IRider{
     firstName: string;
@@ -181,6 +182,7 @@ const Riders: FunctionComponent = () => {
                     <IconButton className="riders__fiplus" onClick={handleOpen}>
                         <FiPlus />
                     </IconButton>
+                    <RidersList/>
                 </Paper>
             </div>
             <Dialog open={showDialog} onClose={handleClose} className="dialog">
