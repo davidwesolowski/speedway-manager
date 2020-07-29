@@ -202,9 +202,14 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 		try {
 			const cookies = new Cookies();
 			const access_token = cookies.get('access_token');
-			axios.defaults.headers.common.Authorization = `Bearer ${access_token}`;
+			const options = {
+				headers: {
+					Authorization: `Bearer ${access_token}`
+				}
+			};
 			await axios.delete(
-				'https://fantasy-league-eti.herokuapp.com/users/self'
+				'https://fantasy-league-eti.herokuapp.com/users/self',
+				options
 			);
 			cookies.remove('access_token');
 			const title = 'Suckes!';
