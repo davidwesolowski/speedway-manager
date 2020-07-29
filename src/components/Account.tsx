@@ -4,7 +4,8 @@ import React, {
 	FunctionComponent,
 	useState,
 	ChangeEvent,
-	FormEvent
+	FormEvent,
+	useContext
 } from 'react';
 import {
 	Paper,
@@ -30,6 +31,8 @@ import axios from 'axios';
 import Cookies from 'universal-cookie';
 import { store } from 'react-notifications-component';
 import validateEditData from '../validation/validateEditData';
+import { AppContext } from './AppProvider';
+import { updateUser } from '../actions/userActions';
 
 interface IState {
 	username: string;
@@ -133,6 +136,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 	const [removeDialogOpen, setRemoveDialogOpen] = useState<boolean>(false);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
+	const { userData, dispatchUserData } = useContext(AppContext);
 
 	const handleEditOpen = () => setEditDialogOpen(true);
 	const handleEditClose = () => {
@@ -272,6 +276,8 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 				addNotification(title, message, type);
 			}
 
+			if (username) dispatchUserData(updateUser({ username }));
+
 			const { name: filename, imageBuffer } = imageData;
 			if (filename && imageBuffer) {
 				const {
@@ -290,6 +296,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 				setAccountData({ ...accountData, image: image_url });
 				message = 'Pomyślna zmiana awataru!';
 				addNotification(title, message, type);
+				dispatchUserData(updateUser({ avatar_url: image_url }));
 			}
 		} catch (e) {
 			const {
