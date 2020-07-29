@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState, useContext } from 'react';
 import {
 	Paper,
 	Typography,
@@ -16,6 +16,8 @@ import axios from 'axios';
 import Cookies from 'universal-cookie';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import validateLoginData from '../validation/validateLoginData';
+import { AppContext } from './AppProvider';
+import { setUser } from '../actions/userActions';
 
 interface IStateUser {
 	email: string;
@@ -60,6 +62,7 @@ const Login: FunctionComponent<RouteComponentProps> = ({
 
 	const [loginError, setLoginError] = useState<boolean>(false);
 	const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
+	const { dispatchUserData } = useContext(AppContext);
 
 	const handleOnChange = (name: string) => (
 		event: React.ChangeEvent<HTMLInputElement>
@@ -90,6 +93,18 @@ const Login: FunctionComponent<RouteComponentProps> = ({
 			);
 			const cookies = new Cookies();
 			cookies.set('access_token', access_token, { path: '/' });
+			const options = {
+				headers: {
+					Authorization: `Bearer ${access_token}`
+				}
+			};
+			const {
+				data: { username, email, avatar_url }
+			} = await axios.get(
+				'https://fantasy-league-eti.herokuapp.com/users/self',
+				options
+			);
+			dispatchUserData(setUser({ username, email, avatar_url }));
 			setLoginError(false);
 			setLoginSuccess(true);
 			setTimeout(() => {
