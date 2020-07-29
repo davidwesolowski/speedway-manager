@@ -55,15 +55,13 @@ interface IValidateData {
 		message: string;
 		error: boolean;
 	};
-	image: {
-		message: string;
-		error: boolean;
-	};
 }
 
 interface IImageData {
 	name: string;
 	type: string;
+	imageBin: string | ArrayBuffer | null;
+	imageUrl: string | ArrayBuffer | null;
 }
 
 const defaultValidateData = {
@@ -78,15 +76,11 @@ const defaultValidateData = {
 	newPassword: {
 		message: '',
 		error: false
-	},
-	image: {
-		message: '',
-		error: false
 	}
 };
 
 const defaultAccountData = {
-	username: 'Testowy',
+	username: '',
 	club: 'GKM',
 	points: 0,
 	position: -1,
@@ -142,13 +136,12 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 	const [removeDialogOpen, setRemoveDialogOpen] = useState<boolean>(false);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
-	const [success, setSuccess] = useState<boolean>(false);
-	const [error, setError] = useState<boolean>(false);
 
 	const handleEditOpen = () => setEditDialogOpen(true);
 	const handleEditClose = () => {
 		setValidateData(defaultValidateData);
 		setAccountData(defaultAccountData);
+		setImageData(defaultImageData);
 		setEditDialogOpen(false);
 		setShowPassword(false);
 		setShowNewPassword(false);
@@ -173,19 +166,28 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	const handleFile = (event: ChangeEvent<HTMLInputElement>) => {
-		if (event.target.files) {
+		if (event.target.files && event.target.files[0]) {
 			const image = event.target.files[0];
 			if (image.size <= 1048576) {
-				const imageReader = new FileReader();
-				imageReader.onload = () => {
+				const imageBinReader = new FileReader();
+				imageBinReader.onload = () => {
 					const { name, type } = image;
-					setImageData({ name, type });
-					setAccountData({
-						...accountData,
-						image: imageReader.result
+					setImageData({
+						name,
+						type,
+						imageBin: imageBinReader.result,
+						imageUrl: ''
 					});
 				};
-				if (image) imageReader.readAsDataURL(image);
+				if (image) imageBinReader.readAsBinaryString(image);
+				const imageUrlReader = new FileReader();
+				imageUrlReader.onload = () => {
+					setImageData((prevState: IImageData) => ({
+						...prevState,
+						imageUrl: imageUrlReader.result
+					}));
+				};
+				if (image) imageUrlReader.readAsDataURL(image);
 			} else {
 				event.target.value = '';
 				const title = 'Informacja!';
@@ -372,7 +374,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 					<div className="account-info__avatar-part">
 						<div className="account-info__avatar-img-box">
 							<img
-								src="/img/kenny.jpg"
+								src={accountData.image || '/img/kenny.jpg'}
 								alt="user-avatar"
 								className="account-info__avatar-img"
 							/>

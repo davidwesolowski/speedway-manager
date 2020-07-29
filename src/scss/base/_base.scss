@@ -9,18 +9,16 @@
 }
 
 body {
-	font-size: 62.5%;
+	font-size: 62.5% !important;
 	font-weight: 300;
 	background-color: $color-primary;
 	color: #fff;
 
-	@media only screen and (max-width: $bp-md)
-	{
+	@media only screen and (max-width: $bp-md) {
 		font-size: 57% !important;
 	}
 
-	@media only screen and (max-width: $bp-sm)
-	{
+	@media only screen and (max-width: $bp-sm) {
 		font-size: 50% !important;
 	}
 }
@@ -32,4 +30,13 @@ body {
 		[full-start] minmax(3rem, 10rem)
 		[center-start] 1fr [center-end] minmax(3rem, 10rem)
 		[full-end];
+}
+
+.notification {
+	&-title {
+		font-size: 1.1rem !important;
+	}
+	&-message {
+		font-size: 1rem !important;
+	}
 }
