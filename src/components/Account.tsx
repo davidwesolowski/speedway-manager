@@ -22,7 +22,6 @@ import {
 	DialogActions
 } from '@material-ui/core';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import Alert from '@material-ui/lab/Alert';
 import { TiPen, TiTimes } from 'react-icons/ti';
 import { FiX } from 'react-icons/fi';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
@@ -59,8 +58,7 @@ interface IValidateData {
 
 interface IImageData {
 	name: string;
-	type: string;
-	imageBin: string | ArrayBuffer | null;
+	imageBuffer: string | ArrayBuffer | null;
 	imageUrl: string | ArrayBuffer | null;
 }
 
@@ -91,8 +89,7 @@ const defaultAccountData = {
 
 const defaultImageData = {
 	name: '',
-	type: '',
-	imageBin: '',
+	imageBuffer: '',
 	imageUrl: ''
 };
 
@@ -169,17 +166,16 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 		if (event.target.files && event.target.files[0]) {
 			const image = event.target.files[0];
 			if (image.size <= 1048576) {
-				const imageBinReader = new FileReader();
-				imageBinReader.onload = () => {
-					const { name, type } = image;
+				const imageBufferReader = new FileReader();
+				imageBufferReader.onload = () => {
+					const { name } = image;
 					setImageData({
 						name,
-						type,
-						imageBin: imageBinReader.result,
+						imageBuffer: imageBufferReader.result,
 						imageUrl: ''
 					});
 				};
-				if (image) imageBinReader.readAsBinaryString(image);
+				if (image) imageBufferReader.readAsArrayBuffer(image);
 				const imageUrlReader = new FileReader();
 				imageUrlReader.onload = () => {
 					setImageData((prevState: IImageData) => ({
@@ -276,22 +272,21 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 				addNotification(title, message, type);
 			}
 
-			const { name: filename, type: content_type, imageBin } = imageData;
-			if (filename && content_type && imageBin) {
+			const { name: filename, imageBuffer } = imageData;
+			if (filename && imageBuffer) {
 				const {
-					data: { signed_url, image_url }
+					data: { signed_url, image_url, type: content_type }
 				} = await axios.post(
 					'https://fantasy-league-eti.herokuapp.com/users/self/avatar',
-					{ filename, content_type },
+					{ filename },
 					options
 				);
-				console.log(signed_url, image_url);
 				const awsOptions = {
 					headers: {
 						'Content-Type': content_type
 					}
 				};
-				console.log(await axios.put(signed_url, imageBin, awsOptions));
+				await axios.put(signed_url, imageBuffer, awsOptions);
 				setAccountData({ ...accountData, image: image_url });
 				message = 'Pomyślna zmiana awataru!';
 				addNotification(title, message, type);
@@ -471,7 +466,11 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 					</div>
 				</DialogTitle>
 				<DialogContent dividers>
-					<form className="dialog__form" onSubmit={handleOnSubmit}>
+					<form
+						className="dialog__form"
+						onSubmit={handleOnSubmit}
+						encType="multipart/form-data"
+					>
 						<Grid container>
 							<Grid item xs={7} className="dialog__form_fields">
 								<FormControl className="dialog__form_field">
