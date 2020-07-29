@@ -28,7 +28,6 @@ import { FiX } from 'react-icons/fi';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { ValidationErrorItem } from '@hapi/joi';
 import axios from 'axios';
-import validateEditData from '../validation/validateEditData';
 import Cookies from 'universal-cookie';
 import { store } from 'react-notifications-component';
 import validateEditData from '../validation/validateEditData';
@@ -40,7 +39,7 @@ interface IState {
 	position: number;
 	password: string;
 	newPassword: string;
-	image: string | ArrayBuffer | null;
+	image: string | undefined;
 }
 
 interface IValidateData {
@@ -471,7 +470,6 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 								<FormControl className="dialog__form_field">
 									<TextField
 										label="Nazwa"
-										required
 										autoComplete="username"
 										value={accountData.username}
 										error={validateData.username.error}
@@ -484,7 +482,6 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 								<FormControl className="dialog__form_field">
 									<TextField
 										label="Stare hasło"
-										required
 										autoComplete="current-password"
 										type={
 											showPassword ? 'text' : 'password'
@@ -517,7 +514,6 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 								<FormControl className="dialog__form_field">
 									<TextField
 										label="Nowe hasło"
-										required
 										autoComplete="new-password"
 										type={
 											showNewPassword
@@ -561,16 +557,15 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 								<label htmlFor="id-file">
 									<div className="dialog__avatar-img-box">
 										<img
-											src="/img/kenny.jpg"
+											src={
+												(imageData.imageUrl as string) ||
+												'/img/kenny.jpg'
+											}
 											alt="user-avatar"
 											className="dialog__avatar-img"
 										/>
 										<div className="dialog__avatar-edit">
 											Edytuj
-										</div>
-										<div className="dialog__avatar-error">
-											{validateData.image.error &&
-												validateData.image.message}
 										</div>
 									</div>
 								</label>
@@ -582,21 +577,6 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 								>
 									Edytuj
 								</Button>
-							</Grid>
-							<Grid item xs={12}>
-								{success && (
-									<Alert
-										severity="success"
-										variant="outlined"
-									>
-										Edycja zakończona powodzeniem!
-									</Alert>
-								)}
-								{error && (
-									<Alert severity="error" variant="outlined">
-										Edycja zakończona niepowodzeniem!
-									</Alert>
-								)}
 							</Grid>
 						</Grid>
 					</form>
@@ -625,8 +605,5 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 		</>
 	);
 };
-
-//do linii 41: <Typography variant="h3"> {AccountData.Username} ({AccountData.Name}) </Typography>
-//do linii 75: <Link to="/zmien-haslo" className="account-info__change-pwd">Zmień hasło</Link>
 
 export default Account;
