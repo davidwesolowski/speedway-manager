@@ -2,20 +2,32 @@ import React, {
 	createContext,
 	useReducer,
 	FunctionComponent,
-	ReactNode
+	ReactNode,
+	Dispatch
 } from 'react';
 import userReducer from '../reducers/userReducer';
-
-export const AppContext = createContext({});
+import { IUser, UserAction } from '../actions/userActions';
 interface IChildren {
 	children: ReactNode;
 }
 
-const defaultUserData = {
+interface IAppContext {
+	userData: IUser;
+	dispatchUserData: Dispatch<UserAction>;
+}
+
+const defaultUserData: IUser = {
 	email: '',
 	username: '',
 	avatar_url: ''
 };
+
+const defaultUserContext: IAppContext = {
+	userData: defaultUserData,
+	dispatchUserData: () => null
+};
+
+export const AppContext = createContext<IAppContext>(defaultUserContext);
 
 const AppProvider: FunctionComponent<IChildren> = ({ children }) => {
 	const [userData, dispatchUserData] = useReducer(
