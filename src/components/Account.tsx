@@ -30,6 +30,8 @@ import { ValidationErrorItem } from '@hapi/joi';
 import axios from 'axios';
 import validateEditData from '../validation/validateEditData';
 import Cookies from 'universal-cookie';
+import { store } from 'react-notifications-component';
+import validateEditData from '../validation/validateEditData';
 
 interface IState {
 	username: string;
@@ -96,7 +98,37 @@ const defaultAccountData = {
 
 const defaultImageData = {
 	name: '',
-	type: ''
+	type: '',
+	imageBin: '',
+	imageUrl: ''
+};
+
+type NotificationType =
+	| 'success'
+	| 'danger'
+	| 'info'
+	| 'default'
+	| 'warning'
+	| undefined;
+
+const addNotification = (
+	title: string,
+	message: string,
+	type: NotificationType
+) => {
+	store.addNotification({
+		title,
+		message,
+		type,
+		insert: 'top',
+		container: 'center',
+		animationIn: ['animated', 'jackInTheBox'],
+		animationOut: ['animated', 'fadeOut'],
+		dismiss: {
+			duration: 3000,
+			showIcon: true
+		}
+	});
 };
 
 const Account: FunctionComponent<RouteComponentProps> = ({
@@ -156,13 +188,11 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 				};
 				if (image) imageReader.readAsDataURL(image);
 			} else {
-				setValidateData({
-					...validateData,
-					image: {
-						message: 'Awatar może mieć maksymalny rozmiar 1 MB',
-						error: true
-					}
-				});
+				event.target.value = '';
+				const title = 'Informacja!';
+				const message = 'Maksymalny rozmiar awataru to 1MB!';
+				const type = 'info';
+				addNotification(title, message, type);
 			}
 		}
 	};
@@ -176,11 +206,28 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 				'https://fantasy-league-eti.herokuapp.com/users/self'
 			);
 			cookies.remove('access_token');
-			push('/rejestracja');
+			const title = 'Suckes!';
+			const message = 'Pomyślne usunięcie konta!';
+			const type = 'success';
+			addNotification(title, message, type);
+			setTimeout(() => {
+				push('/rejestracja');
+			}, 3000);
 		} catch (e) {
-			const cookies = new Cookies();
-			cookies.remove('access_token');
-			push('/login');
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				const cookies = new Cookies();
+				cookies.remove('access_token');
+				const title = 'Błąd!';
+				const message = 'Sesja wygasła!';
+				const type = 'danger';
+				addNotification(title, message, type);
+				setTimeout(() => {
+					push('/login');
+				}, 3000);
+			}
 		}
 	};
 
@@ -188,30 +235,90 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 		try {
 			const cookies = new Cookies();
 			const access_token = cookies.get('access_token');
-			axios.defaults.headers.common.Authorization = `Bearer ${access_token}`;
+			const { username, password, newPassword } = data;
+			const title = 'Sukces!';
+			let message = '';
+			const type = 'success';
+			const options = {
+				headers: {
+					Authorization: `Bearer ${access_token}`
+				}
+			};
+			if (username && password && newPassword) {
+				await axios.patch(
+					'https://fantasy-league-eti.herokuapp.com/users/self',
+					{ username, password, newPassword },
+					options
+				);
+				message = 'Pomyślna zmiana danych!';
+				addNotification(title, message, type);
+			} else if (password && newPassword && !username) {
+				await axios.patch(
+					'https://fantasy-league-eti.herokuapp.com/users/self',
+					{ password, newPassword },
+					options
+				);
+				message = 'Pomyślna zmiana hasła!';
+				addNotification(title, message, type);
+			} else if (username) {
+				await axios.patch(
+					'https://fantasy-league-eti.herokuapp.com/users/self',
+					{ username },
+					options
+				);
+				message = 'Pomyślna zmiana nazwy!';
+				addNotification(title, message, type);
+			}
 
-			const { username, password, newPassword, image } = data;
-			const { name, type } = imageData;
-			await axios.patch(
-				'https://fantasy-league-eti.herokuapp.com/users/self',
-				{ username, password, newPassword }
-			);
-			const {
-				data: signed_url
-			} = await axios.post(
-				'https://fantasy-league-eti.herokuapp.com/users/self/avatar',
-				{ name, type }
-			);
-			await axios.put(signed_url, { image });
-			setError(false);
-			setSuccess(true);
-			setTimeout(() => {
-				setSuccess(false);
-			}, 1000);
+			const { name: filename, type: content_type, imageBin } = imageData;
+			if (filename && content_type && imageBin) {
+				const {
+					data: { signed_url, image_url }
+				} = await axios.post(
+					'https://fantasy-league-eti.herokuapp.com/users/self/avatar',
+					{ filename, content_type },
+					options
+				);
+				console.log(signed_url, image_url);
+				const awsOptions = {
+					headers: {
+						'Content-Type': content_type
+					}
+				};
+				console.log(await axios.put(signed_url, imageBin, awsOptions));
+				setAccountData({ ...accountData, image: image_url });
+				message = 'Pomyślna zmiana awataru!';
+				addNotification(title, message, type);
+			}
 		} catch (e) {
-			setSuccess(false);
-			setError(true);
-			console.log(e);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				const cookies = new Cookies();
+				cookies.remove('access_token');
+				const title = 'Błąd!';
+				const message = 'Sesja wygasła!';
+				const type = 'danger';
+				addNotification(title, message, type);
+				setTimeout(() => {
+					push('/login');
+				}, 3000);
+			} else if (
+				data.statusCode == 400 &&
+				data.message == 'Bad password.'
+			) {
+				const title = 'Błąd!';
+				const message = 'Wprowadziłeś niepoprawne hasło!';
+				const type = 'danger';
+				addNotification(title, message, type);
+			} else {
+				console.log(e.response);
+				const title = 'Błąd!';
+				const message = 'Zmiana awataru nie powiodła się!';
+				const type = 'danger';
+				addNotification(title, message, type);
+			}
 		}
 	};
 
