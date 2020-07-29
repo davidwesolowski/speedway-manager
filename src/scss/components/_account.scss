@@ -56,6 +56,14 @@
 		height: 20vw;
 		border: dimgrey 10px ridge;
 
+		& > svg {
+			font-size: 20vw;
+
+			@media only screen and (max-width: $bp-md) {
+				font-size: 30vw;
+			}
+		}
+
 		@media only screen and (max-width: $bp-md) {
 			width: 30vw;
 			height: 30vw;
@@ -266,6 +274,11 @@
 		width: 65%;
 		height: 65%;
 		margin-left: $xs-margin;
+		cursor: pointer;
+	}
+
+	&__avatar-upload {
+		font-size: 8rem;
 		cursor: pointer;
 	}
 

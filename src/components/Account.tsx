@@ -25,7 +25,8 @@ import {
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { TiPen, TiTimes } from 'react-icons/ti';
 import { FiX } from 'react-icons/fi';
-import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
+import { MdVisibility, MdVisibilityOff, MdImage } from 'react-icons/md';
+import { FaFileUpload } from 'react-icons/fa';
 import { ValidationErrorItem } from '@hapi/joi';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
@@ -375,16 +376,20 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 				<div className="account-info__background"></div>
 				<Paper className="account-info__box">
 					<Typography variant="h2" className="account-info__header">
-						{accountData.username}
+						{userData.username}
 					</Typography>
 					<Divider />
 					<div className="account-info__avatar-part">
 						<div className="account-info__avatar-img-box">
-							<img
-								src={accountData.image || '/img/kenny.jpg'}
-								alt="user-avatar"
-								className="account-info__avatar-img"
-							/>
+							{userData.avatar_url ? (
+								<img
+									src={userData.avatar_url}
+									alt="user-avatar"
+									className="account-info__avatar-img"
+								/>
+							) : (
+								<MdImage />
+							)}
 						</div>
 						<div
 							className="account-info__change-avatar"
@@ -569,14 +574,23 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 								/>
 								<label htmlFor="id-file">
 									<div className="dialog__avatar-img-box">
-										<img
-											src={
-												(imageData.imageUrl as string) ||
-												'/img/kenny.jpg'
-											}
-											alt="user-avatar"
-											className="dialog__avatar-img"
-										/>
+										{imageData.imageUrl ? (
+											<img
+												src={
+													imageData.imageUrl as string
+												}
+												alt="user-avatar"
+												className="dialog__avatar-img"
+											/>
+										) : userData.avatar_url ? (
+											<img
+												src={userData.avatar_url}
+												alt="user-avatar"
+												className="dialog__avatar-img"
+											/>
+										) : (
+											<FaFileUpload className="dialog__avatar-upload" />
+										)}
 										<div className="dialog__avatar-edit">
 											Edytuj
 										</div>
