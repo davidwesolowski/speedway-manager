@@ -18,6 +18,7 @@ import Cookies from 'universal-cookie';
 import validateRegisterData from '../validation/validateRegisterData';
 import { AppContext } from './AppProvider';
 import { setUser } from '../actions/userActions';
+import addNotification from '../notifications/addNotification';
 
 interface IUserState {
 	email: string;
@@ -83,8 +84,6 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 	const [validatedData, setValidatedData] = useState<IValidatedData>(
 		defaultValidatedData
 	);
-	const [registerSuccess, setRegisterSucess] = useState<boolean>(false);
-	const [registerError, setRegisterError] = useState<boolean>(false);
 	const { dispatchUserData, setLoggedIn } = useContext(AppContext);
 
 	const handleOnChange = (name: string) => (
@@ -117,19 +116,23 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 			);
 			const cookies = new Cookies();
 			cookies.set('access_token', access_token, { path: '/' });
-			setRegisterError(false);
-			setRegisterSucess(true);
 			const { username, email } = userData;
 			dispatchUserData(setUser({ username, email }));
+			const title = 'Sukces!';
+			const message = 'Rejstracja zakończona powodzeniem!';
+			const type = 'success';
+			const duration = 1000;
+			addNotification(title, message, type, duration);
 			setTimeout(() => {
-				setRegisterSucess(false);
 				setLoggedIn(true);
 				push('/druzyna');
-			}, 1000);
+			}, duration);
 		} catch (e) {
-			setRegisterSucess(false);
-			setRegisterError(true);
-			throw new Error('Error in registering user!');
+			const title = 'Błąd!';
+			const message = 'Rejstracja zakończona niepowodzeniem!';
+			const type = 'danger';
+			const duration = 1000;
+			addNotification(title, message, type, duration);
 		}
 	};
 
@@ -291,16 +294,6 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 					>
 						Masz już konto? Zaloguj się!
 					</Link>
-					{registerSuccess && (
-						<Alert variant="outlined" severity="success">
-							Rejstracja zakończona powodzeniem!
-						</Alert>
-					)}
-					{registerError && (
-						<Alert variant="outlined" severity="error">
-							Rejestracja zakończona niepowodzeniem!
-						</Alert>
-					)}
 				</form>
 			</Paper>
 		</div>
