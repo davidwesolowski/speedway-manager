@@ -31,10 +31,10 @@ import { FaFileUpload } from 'react-icons/fa';
 import { ValidationErrorItem } from '@hapi/joi';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
-import { store } from 'react-notifications-component';
 import validateEditData from '../validation/validateEditData';
 import { AppContext } from './AppProvider';
 import { updateUser, setUser } from '../actions/userActions';
+import addNotification from '../notifications/addNotification';
 
 interface IState {
 	username: string;
@@ -94,34 +94,6 @@ const defaultImageData: IImageData = {
 	name: '',
 	imageBuffer: '',
 	imageUrl: ''
-};
-
-type NotificationType =
-	| 'success'
-	| 'danger'
-	| 'info'
-	| 'default'
-	| 'warning'
-	| undefined;
-
-const addNotification = (
-	title: string,
-	message: string,
-	type: NotificationType
-) => {
-	store.addNotification({
-		title,
-		message,
-		type,
-		insert: 'top',
-		container: 'center',
-		animationIn: ['animated', 'jackInTheBox'],
-		animationOut: ['animated', 'fadeOut'],
-		dismiss: {
-			duration: 3000,
-			showIcon: true
-		}
-	});
 };
 
 const Account: FunctionComponent<RouteComponentProps> = ({
@@ -193,7 +165,8 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 				const title = 'Informacja!';
 				const message = 'Maksymalny rozmiar awataru to 1MB!';
 				const type = 'info';
-				addNotification(title, message, type);
+				const duration = 3000;
+				addNotification(title, message, type, duration);
 			}
 		}
 	};
@@ -215,10 +188,11 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 			const title = 'Suckes!';
 			const message = 'Pomyślne usunięcie konta!';
 			const type = 'success';
-			addNotification(title, message, type);
+			const duration = 1500;
+			addNotification(title, message, type, duration);
 			setTimeout(() => {
 				push('/rejestracja');
-			}, 3000);
+			}, duration);
 		} catch (e) {
 			const {
 				response: { data }
@@ -229,10 +203,11 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 				const title = 'Błąd!';
 				const message = 'Sesja wygasła!';
 				const type = 'danger';
-				addNotification(title, message, type);
+				const duration = 3000;
+				addNotification(title, message, type, duration);
 				setTimeout(() => {
 					push('/login');
-				}, 3000);
+				}, duration);
 			}
 		}
 	};
@@ -245,6 +220,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 			const title = 'Sukces!';
 			let message = '';
 			const type = 'success';
+			const duration = 3000;
 			const options = {
 				headers: {
 					Authorization: `Bearer ${access_token}`
@@ -257,7 +233,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 					options
 				);
 				message = 'Pomyślna zmiana danych!';
-				addNotification(title, message, type);
+				addNotification(title, message, type, duration);
 			} else if (password && newPassword && !username) {
 				await axios.patch(
 					'https://fantasy-league-eti.herokuapp.com/users/self',
@@ -265,7 +241,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 					options
 				);
 				message = 'Pomyślna zmiana hasła!';
-				addNotification(title, message, type);
+				addNotification(title, message, type, duration);
 			} else if (username) {
 				await axios.patch(
 					'https://fantasy-league-eti.herokuapp.com/users/self',
@@ -273,7 +249,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 					options
 				);
 				message = 'Pomyślna zmiana nazwy!';
-				addNotification(title, message, type);
+				addNotification(title, message, type, duration);
 			}
 
 			if (username) dispatchUserData(updateUser({ username }));
@@ -294,7 +270,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 				};
 				await axios.put(signed_url, imageBuffer, awsOptions);
 				message = 'Pomyślna zmiana awataru!';
-				addNotification(title, message, type);
+				addNotification(title, message, type, duration);
 				dispatchUserData(updateUser({ avatar_url: image_url }));
 			}
 		} catch (e) {
@@ -307,10 +283,11 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 				const title = 'Błąd!';
 				const message = 'Sesja wygasła!';
 				const type = 'danger';
-				addNotification(title, message, type);
+				const duration = 3000;
+				addNotification(title, message, type, duration);
 				setTimeout(() => {
 					push('/login');
-				}, 3000);
+				}, duration);
 			} else if (
 				data.statusCode == 400 &&
 				data.message == 'Bad password.'
@@ -318,13 +295,14 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 				const title = 'Błąd!';
 				const message = 'Wprowadziłeś niepoprawne hasło!';
 				const type = 'danger';
-				addNotification(title, message, type);
+				const duration = 3000;
+				addNotification(title, message, type, duration);
 			} else {
-				console.log(e.response);
 				const title = 'Błąd!';
 				const message = 'Zmiana awataru nie powiodła się!';
 				const type = 'danger';
-				addNotification(title, message, type);
+				const duration = 3000;
+				addNotification(title, message, type, duration);
 			}
 		}
 	};
@@ -396,11 +374,12 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 					const title = 'Błąd!';
 					const message = 'Sesja wygasła!';
 					const type = 'danger';
-					addNotification(title, message, type);
+					const duration = 3000;
+					addNotification(title, message, type, duration);
 					setTimeout(() => {
 						setLoggedIn(false);
 						push('/login');
-					}, 3000);
+					}, duration);
 				}
 			}
 		};
