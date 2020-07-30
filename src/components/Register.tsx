@@ -85,7 +85,7 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 	);
 	const [registerSuccess, setRegisterSucess] = useState<boolean>(false);
 	const [registerError, setRegisterError] = useState<boolean>(false);
-	const { dispatchUserData } = useContext(AppContext);
+	const { dispatchUserData, setLoggedIn } = useContext(AppContext);
 
 	const handleOnChange = (name: string) => (
 		event: React.ChangeEvent<HTMLInputElement>
@@ -123,6 +123,7 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 			dispatchUserData(setUser({ username, email }));
 			setTimeout(() => {
 				setRegisterSucess(false);
+				setLoggedIn(true);
 				push('/druzyna');
 			}, 1000);
 		} catch (e) {
