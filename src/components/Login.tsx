@@ -9,7 +9,6 @@ import {
 	IconButton,
 	Button
 } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { ValidationErrorItem } from '@hapi/joi';
 import axios from 'axios';
@@ -18,6 +17,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import validateLoginData from '../validation/validateLoginData';
 import { AppContext } from './AppProvider';
 import { setUser } from '../actions/userActions';
+import addNotification from '../notifications/addNotification';
 
 interface IStateUser {
 	email: string;
@@ -60,8 +60,6 @@ const Login: FunctionComponent<RouteComponentProps> = ({
 		}
 	});
 
-	const [loginError, setLoginError] = useState<boolean>(false);
-	const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
 	const { dispatchUserData, setLoggedIn } = useContext(AppContext);
 
 	const handleOnChange = (name: string) => (
@@ -105,17 +103,21 @@ const Login: FunctionComponent<RouteComponentProps> = ({
 				options
 			);
 			dispatchUserData(setUser({ username, email, avatar_url }));
-			setLoginError(false);
-			setLoginSuccess(true);
+			const title = 'Sukces!';
+			const message = 'Zalogowano pomyślnie!';
+			const type = 'success';
+			const duration = 1000;
+			addNotification(title, message, type, duration);
 			setTimeout(() => {
-				setLoginSuccess(false);
 				setLoggedIn(true);
 				push('/druzyna');
-			}, 1000);
+			}, duration);
 		} catch (e) {
-			setLoginSuccess(false);
-			setLoginError(true);
-			throw new Error('Error in signing in');
+			const title = 'Błąd!';
+			const message = 'Wprowadzono błędne dane!';
+			const type = 'danger';
+			const duration = 1000;
+			addNotification(title, message, type, duration);
 		}
 	};
 
@@ -223,16 +225,6 @@ const Login: FunctionComponent<RouteComponentProps> = ({
 					>
 						Nie masz jeszcze konta? Zarejestruj się tutaj!
 					</Link>
-					{loginSuccess && (
-						<Alert variant="outlined" severity="success">
-							Zalogowano pomyślnie!
-						</Alert>
-					)}
-					{loginError && (
-						<Alert variant="outlined" severity="error">
-							Wprowadzono błędne dane!
-						</Alert>
-					)}
 				</form>
 			</Paper>
 		</div>
