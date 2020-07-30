@@ -20,8 +20,9 @@ import Cookies from 'universal-cookie';
 const Header: FunctionComponent = () => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const { push } = useHistory();
-	const { userData } = useContext(AppContext);
+	const { userData, loggedIn, setLoggedIn } = useContext(AppContext);
 	const isMenuOpen = Boolean(anchorEl);
+
 	const handleProfileMenuOpen = (event: MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
@@ -29,6 +30,7 @@ const Header: FunctionComponent = () => {
 	const handleLogout = () => {
 		const cookies = new Cookies();
 		cookies.remove('access_token');
+		setLoggedIn(false);
 		push('/login');
 	};
 
@@ -53,26 +55,27 @@ const Header: FunctionComponent = () => {
 								Wyniki meczów
 							</Link>
 						</li>
-						<li className="header__item">
-							<Link to="/konto" className="header__link">
-								Konto
-							</Link>
-						</li>
 					</ul>
-					<Link to="/login" className="header__link header__login">
-						<div>Zaloguj</div>
-						<FaUserCircle />
-					</Link>
-					<IconButton onClick={handleProfileMenuOpen}>
-						<Avatar
-							alt="user-avatar"
-							className="header__avatar"
-							src={userData.avatar_url}
-						/>
-						<span className="header__username">
-							{userData.username}
-						</span>
-					</IconButton>
+					{loggedIn ? (
+						<IconButton onClick={handleProfileMenuOpen}>
+							<Avatar
+								alt="user-avatar"
+								className="header__avatar"
+								src={userData.avatar_url}
+							/>
+							<span className="header__username">
+								{userData.username}
+							</span>
+						</IconButton>
+					) : (
+						<Link
+							to="/login"
+							className="header__link header__login"
+						>
+							<div>Zaloguj</div>
+							<FaUserCircle />
+						</Link>
+					)}
 				</Toolbar>
 			</AppBar>
 			<Menu
