@@ -136,7 +136,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 	const [removeDialogOpen, setRemoveDialogOpen] = useState<boolean>(false);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
-	const { userData, dispatchUserData } = useContext(AppContext);
+	const { userData, dispatchUserData, setLoggedIn } = useContext(AppContext);
 
 	const handleEditOpen = () => setEditDialogOpen(true);
 	const handleEditClose = () => {
@@ -385,6 +385,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 					options
 				);
 				dispatchUserData(setUser({ username, email, avatar_url }));
+				setLoggedIn(true);
 			} catch (e) {
 				const {
 					response: { data }
@@ -397,6 +398,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 					const type = 'danger';
 					addNotification(title, message, type);
 					setTimeout(() => {
+						setLoggedIn(false);
 						push('/login');
 					}, 3000);
 				}
