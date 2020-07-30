@@ -3,7 +3,7 @@ import { UPDATE_USER, SET_USER } from './actionDefinitions';
 export interface IUser {
 	email?: string;
 	username?: string;
-	avatar_url?: string | null | undefined;
+	avatar_url?: string | undefined;
 }
 
 export interface UserAction {

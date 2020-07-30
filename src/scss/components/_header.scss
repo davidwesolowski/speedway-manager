@@ -40,4 +40,22 @@
 			margin-right: 0.25rem;
 		}
 	}
+	&__avatar {
+		width: 3rem !important;
+		height: 3rem !important;
+	}
+
+	&__username {
+		color: #fff;
+		text-transform: uppercase;
+		margin-left: 0.5rem;
+	}
+
+	&__menu-item {
+		text-decoration: none;
+		text-transform: uppercase;
+		font-family: $bebas;
+		font-size: 2rem;
+		text-align: center;
+	}
 }
