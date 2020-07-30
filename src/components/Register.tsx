@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState, useContext } from 'react';
 import { RouteComponentProps, Link } from 'react-router-dom';
 import {
 	Paper,
@@ -14,9 +14,10 @@ import Alert from '@material-ui/lab/Alert';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { ValidationErrorItem } from '@hapi/joi';
 import axios from 'axios';
-import Cookie from 'universal-cookie';
-import validateRegisterData from '../validation/validateRegisterData';
 import Cookies from 'universal-cookie';
+import validateRegisterData from '../validation/validateRegisterData';
+import { AppContext } from './AppProvider';
+import { setUser } from '../actions/userActions';
 
 interface IUserState {
 	email: string;
@@ -49,28 +50,28 @@ interface IValidatedData {
 	};
 }
 
+const defaultValidatedData = {
+	email: {
+		message: '',
+		error: false
+	},
+	username: {
+		message: '',
+		error: false
+	},
+	password: {
+		message: '',
+		error: false
+	},
+	repPassword: {
+		message: '',
+		error: false
+	}
+};
+
 const Register: FunctionComponent<RouteComponentProps> = ({
 	history: { push }
 }) => {
-	const defaultValidatedData = {
-		email: {
-			message: '',
-			error: false
-		},
-		username: {
-			message: '',
-			error: false
-		},
-		password: {
-			message: '',
-			error: false
-		},
-		repPassword: {
-			message: '',
-			error: false
-		}
-	};
-
 	const [userData, setUserData] = useState<IUserState>({
 		email: '',
 		username: '',
@@ -84,6 +85,7 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 	);
 	const [registerSuccess, setRegisterSucess] = useState<boolean>(false);
 	const [registerError, setRegisterError] = useState<boolean>(false);
+	const { dispatchUserData } = useContext(AppContext);
 
 	const handleOnChange = (name: string) => (
 		event: React.ChangeEvent<HTMLInputElement>
@@ -117,13 +119,15 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 			cookies.set('access_token', access_token, { path: '/' });
 			setRegisterError(false);
 			setRegisterSucess(true);
+			const { username, email } = userData;
+			dispatchUserData(setUser({ username, email }));
 			setTimeout(() => {
 				setRegisterSucess(false);
 				push('/druzyna');
 			}, 1000);
 		} catch (e) {
 			setRegisterSucess(false);
-			setRegisterSucess(true);
+			setRegisterError(true);
 			throw new Error('Error in registering user!');
 		}
 	};
