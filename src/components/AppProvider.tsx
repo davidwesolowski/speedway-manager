@@ -3,7 +3,9 @@ import React, {
 	useReducer,
 	FunctionComponent,
 	ReactNode,
-	Dispatch
+	Dispatch,
+	useState,
+	SetStateAction
 } from 'react';
 import userReducer from '../reducers/userReducer';
 import { IUser, UserAction } from '../actions/userActions';
@@ -14,6 +16,8 @@ interface IChildren {
 interface IAppContext {
 	userData: IUser;
 	dispatchUserData: Dispatch<UserAction>;
+	loggedIn: boolean;
+	setLoggedIn: Dispatch<SetStateAction<boolean>>;
 }
 
 const defaultUserData: IUser = {
@@ -24,7 +28,9 @@ const defaultUserData: IUser = {
 
 const defaultUserContext: IAppContext = {
 	userData: defaultUserData,
-	dispatchUserData: () => null
+	dispatchUserData: () => null,
+	loggedIn: false,
+	setLoggedIn: () => false
 };
 
 export const AppContext = createContext<IAppContext>(defaultUserContext);
@@ -34,9 +40,12 @@ const AppProvider: FunctionComponent<IChildren> = ({ children }) => {
 		userReducer,
 		defaultUserData
 	);
+	const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
 	return (
-		<AppContext.Provider value={{ userData, dispatchUserData }}>
+		<AppContext.Provider
+			value={{ userData, dispatchUserData, loggedIn, setLoggedIn }}
+		>
 			{children}
 		</AppContext.Provider>
 	);
