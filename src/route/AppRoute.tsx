@@ -13,6 +13,7 @@ import Login from '../components/Login';
 import Account from '../components/Account';
 import Register from '../components/Register';
 import checkCookies from '../validation/checkCookies';
+import Team from '../components/Team';
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -44,6 +45,7 @@ const AppRoute: FunctionComponent = () => {
 						else return <Register {...props} />;
 					}}
 				/>
+				<Route path="/druzyna" component={Team} />
 			</Switch>
 			<Footer />
 		</Router>
