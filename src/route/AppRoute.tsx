@@ -33,7 +33,7 @@ const AppRoute: FunctionComponent = () => {
 					render={(props: RouteComponentProps) => {
 						const cookiesExist = checkCookies();
 						if (cookiesExist) return <Account {...props} />;
-						else return <Login {...props} />;
+						else return <Redirect to="/login" />;
 					}}
 				/>
 				<Route

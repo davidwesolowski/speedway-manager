@@ -1,19 +1,28 @@
 .heading-1 {
-	font-size: 2.5rem !important;
+	font-size: 4rem !important;
 	font-weight: 300 !important;
 }
 
 .heading-2 {
-	font-size: 2rem !important;
+	font-size: 2.5rem !important;
 	font-weight: 300;
 }
 
 .heading-3 {
-	font-size: 1.5rem !important;
+	font-size: 2rem !important;
 	font-weight: 300;
 }
 
 .heading-4 {
-	font-size: 1rem !important;
+	font-size: 1.5rem !important;
 	font-weight: 300;
+}
+
+.MuiInputBase-input,
+.MuiInput-input {
+	font-size: 1.7rem !important;
+}
+
+.MuiInputLabel-formControl {
+	font-size: 1.6rem !important;
 }

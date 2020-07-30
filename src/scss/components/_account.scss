@@ -87,7 +87,7 @@
 		margin-left: auto;
 		margin-right: auto;
 		margin-top: 10px;
-		font-size: 1.25rem;
+		font-size: 1.8rem;
 		width: 30%;
 		text-align: center;
 		color: dimgray;
@@ -168,7 +168,7 @@
 	&__change-nickname {
 		color: dimgrey;
 		text-decoration: none;
-		font-size: 1.25rem;
+		font-size: 1.8rem;
 		@media only screen and (max-width: $bp-md) {
 			width: 100%;
 			float: none;
@@ -188,7 +188,7 @@
 	&__delete-account {
 		color: dimgrey;
 		text-decoration: none;
-		font-size: 1.25rem;
+		font-size: 1.8rem;
 		cursor: pointer;
 
 		&:hover {
@@ -220,7 +220,7 @@
 	&__change-pwd {
 		color: dimgrey;
 		text-decoration: none;
-		font-size: 1.25rem;
+		font-size: 1.8rem;
 		margin-left: 10px;
 	}
 
@@ -253,6 +253,9 @@
 
 		&_field {
 			margin-bottom: $xs-margin !important;
+			& svg {
+				font-size: 2rem !important;
+			}
 		}
 		&_button {
 			width: 100%;
@@ -288,7 +291,7 @@
 		justify-content: center;
 		align-items: center;
 		display: none;
-		font-size: 1rem;
+		font-size: 1.6rem;
 		font-weight: 700;
 		text-transform: uppercase;
 	}
@@ -299,12 +302,6 @@
 
 	&__avatar-img:hover + &__avatar-edit {
 		display: block;
-	}
-
-	&__avatar-error {
-		font-size: 0.9rem;
-		color: red;
-		font-weight: 700;
 	}
 
 	&__button-approve {
