@@ -19,7 +19,7 @@
 		grid-column: 1 / -1;
 		grid-row: 1 / 2;
 		text-align: center;
-		width: 50rem;
+		width: 70rem;
 		height: 7rem;
 		margin: 0 auto;
 		color: #fff;
@@ -38,8 +38,8 @@
 		-webkit-background-clip: text;
 		background-clip: text;
 		color: transparent;
-		height: 70%;
-		font-size: 4rem;
+		height: 80%;
+		font-size: 5rem;
 		font-family: $bebas;
 		font-weight: 500;
 	}
@@ -47,7 +47,7 @@
 	&__preview {
 		grid-row: 2 / 3;
 		grid-column: 1 / -1;
-
+		margin-top: $xs-margin;
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
 		grid-column-gap: 2rem;
@@ -57,13 +57,11 @@
 
 	&__card {
 		border-radius: 1rem;
-		border-bottom: #fff 1px solid;
-		border-left: #fff 1px solid;
-		border-right: #fff 1px solid;
 		border: #fff 1px solid;
 
 		display: grid;
 		grid-template-columns: min-content 1fr;
+		grid-template-rows: min-content 1fr;
 		grid-gap: 1rem;
 		justify-items: center;
 
@@ -95,7 +93,8 @@
 
 	&__description {
 		grid-column: 1 / -1;
-		font-size: 1rem;
+		grid-row: 2 / 3;
+		font-size: 1.7rem;
 		font-family: $poppins;
 	}
 }

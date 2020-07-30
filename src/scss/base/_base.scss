@@ -8,8 +8,11 @@
 	box-sizing: inherit;
 }
 
-body {
+html {
 	font-size: 62.5% !important;
+}
+
+body {
 	font-weight: 300;
 	background-color: $color-primary;
 	color: #fff;
@@ -25,7 +28,7 @@ body {
 
 #root {
 	display: grid;
-	grid-template-rows: 3rem minmax(calc(100vh - 6rem), 1fr) 3rem;
+	grid-template-rows: 4.5rem minmax(calc(100vh - 8.5rem), 1fr) 3rem; // 100vh - header(4.5) - footer(3rem) - padding w footerze(2rem/2)
 	grid-template-columns:
 		[full-start] minmax(3rem, 10rem)
 		[center-start] 1fr [center-end] minmax(3rem, 10rem)
@@ -34,9 +37,9 @@ body {
 
 .notification {
 	&-title {
-		font-size: 1.1rem !important;
+		font-size: 2rem !important;
 	}
 	&-message {
-		font-size: 1rem !important;
+		font-size: 1.5rem !important;
 	}
 }
