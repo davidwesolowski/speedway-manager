@@ -5,7 +5,8 @@ import React, {
 	useState,
 	ChangeEvent,
 	FormEvent,
-	useContext
+	useContext,
+	useEffect
 } from 'react';
 import {
 	Paper,
@@ -33,7 +34,7 @@ import Cookies from 'universal-cookie';
 import { store } from 'react-notifications-component';
 import validateEditData from '../validation/validateEditData';
 import { AppContext } from './AppProvider';
-import { updateUser } from '../actions/userActions';
+import { updateUser, setUser } from '../actions/userActions';
 
 interface IState {
 	username: string;
@@ -42,7 +43,6 @@ interface IState {
 	position: number;
 	password: string;
 	newPassword: string;
-	image: string | undefined;
 }
 
 interface IValidateData {
@@ -81,17 +81,16 @@ const defaultValidateData = {
 	}
 };
 
-const defaultAccountData = {
+const defaultAccountData: IState = {
 	username: '',
 	club: 'GKM',
 	points: 0,
 	position: -1,
 	password: '',
-	newPassword: '',
-	image: ''
+	newPassword: ''
 };
 
-const defaultImageData = {
+const defaultImageData: IImageData = {
 	name: '',
 	imageBuffer: '',
 	imageUrl: ''
@@ -294,7 +293,6 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 					}
 				};
 				await axios.put(signed_url, imageBuffer, awsOptions);
-				setAccountData({ ...accountData, image: image_url });
 				message = 'Pomyślna zmiana awataru!';
 				addNotification(title, message, type);
 				dispatchUserData(updateUser({ avatar_url: image_url }));
@@ -369,6 +367,44 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 			editData(accountData, imageData);
 		}
 	};
+
+	useEffect(() => {
+		const fetchUserData = async () => {
+			const cookies = new Cookies();
+			const access_token = cookies.get('access_token');
+			const options = {
+				headers: {
+					Authorization: `Bearer ${access_token}`
+				}
+			};
+			try {
+				const {
+					data: { username, email, avatar_url }
+				} = await axios.get(
+					'https://fantasy-league-eti.herokuapp.com/users/self',
+					options
+				);
+				dispatchUserData(setUser({ username, email, avatar_url }));
+			} catch (e) {
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					const cookies = new Cookies();
+					cookies.remove('access_token');
+					const title = 'Błąd!';
+					const message = 'Sesja wygasła!';
+					const type = 'danger';
+					addNotification(title, message, type);
+					setTimeout(() => {
+						push('/login');
+					}, 3000);
+				}
+			}
+		};
+
+		if (!userData.email) fetchUserData();
+	}, []);
 
 	return (
 		<>
