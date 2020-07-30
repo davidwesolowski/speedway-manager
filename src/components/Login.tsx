@@ -62,7 +62,7 @@ const Login: FunctionComponent<RouteComponentProps> = ({
 
 	const [loginError, setLoginError] = useState<boolean>(false);
 	const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
-	const { dispatchUserData } = useContext(AppContext);
+	const { dispatchUserData, setLoggedIn } = useContext(AppContext);
 
 	const handleOnChange = (name: string) => (
 		event: React.ChangeEvent<HTMLInputElement>
@@ -109,6 +109,7 @@ const Login: FunctionComponent<RouteComponentProps> = ({
 			setLoginSuccess(true);
 			setTimeout(() => {
 				setLoginSuccess(false);
+				setLoggedIn(true);
 				push('/druzyna');
 			}, 1000);
 		} catch (e) {
