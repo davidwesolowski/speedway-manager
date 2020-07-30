@@ -1,225 +1,313 @@
-.account-info{
-    grid-column: center-start / center-end;
+.account-info {
+	grid-column: center-start / center-end;
 	position: relative;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-    font-family: $bebas !important;
-    
-    &__background{
-        background-image: url("/img/warsaw_venue.jpg");
-        height: 100%;
-        width: 100%;
-        position: absolute;
-        z-index: 1;
-        background-size: cover;
-        filter: opacity(0.2);
-    }
+	font-family: $bebas !important;
 
-    &__box{
-        position: relative;
+	&__background {
+		background-image: url('/img/warsaw_venue.jpg');
+		height: 100%;
+		width: 100%;
+		position: absolute;
+		z-index: 1;
+		background-size: cover;
+		filter: opacity(0.2);
+	}
+
+	&__box {
+		position: relative;
 		z-index: 1000;
 		min-width: 45vw;
-        padding: 3rem 2rem;
-        width: 90%;
-    }
+		padding: 3rem 2rem;
+		width: 90%;
+	}
 
-    &__header{
-        text-align: center;
+	&__header {
+		text-align: center;
 		text-transform: uppercase;
 		font-family: $bebas !important;
 		margin-bottom: $xs-margin !important;
-        letter-spacing: 1px !important;
-    }
+		letter-spacing: 1px !important;
+	}
 
-    &__avatar-part{
-        float: left;
-        width: 45%;
-        margin-top: 30px !important;
+	&__avatar-part {
+		float: left;
+		width: 45%;
+		margin-top: 30px !important;
 
-        @media only screen and (max-width: $bp-md) {
-            width: 100%;
-            float: none;
+		@media only screen and (max-width: $bp-md) {
+			width: 100%;
+			float: none;
 		}
 
 		@media only screen and (max-width: $bp-sm) {
 			width: 100%;
-            float: none;
+			float: none;
 		}
-    }
+	}
 
-    &__avatar-img-box{
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        width: 20vw;
-        height: 20vw;
-        border: dimgrey 10px ridge;
+	&__avatar-img-box {
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		width: 20vw;
+		height: 20vw;
+		border: dimgrey 10px ridge;
 
-        @media only screen and (max-width: $bp-md) {
-            width: 30vw;
-            height: 30vw;
-            float: none;
-		}
+		& > svg {
+			font-size: 20vw;
 
-		@media only screen and (max-width: $bp-sm) {
-            width: 30vw;
-            height: 30vw;
-            float: none;
+			@media only screen and (max-width: $bp-md) {
+				font-size: 30vw;
+			}
 		}
 
-    }
-
-    &__avatar-img{
-        width: 100%;
-        height: 100%;
-    }
-
-    &__change-avatar{
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 10px;
-        font-size: 1.25rem;
-        width: 30%;
-        text-align: center;
-        color: dimgray;
-        text-decoration: none;
-
-        @media only screen and (max-width: $bp-md) {
-            width: 100%;
-            float: none;
+		@media only screen and (max-width: $bp-md) {
+			width: 30vw;
+			height: 30vw;
+			float: none;
 		}
 
 		@media only screen and (max-width: $bp-sm) {
-            width: 100%;
-            float: none;
+			width: 30vw;
+			height: 30vw;
+			float: none;
 		}
-    }
+	}
 
-    &__change-avatar:hover{
-        text-decoration: underline;
-        color: black;
-    }
+	&__avatar-img {
+		width: 100%;
+		height: 100%;
+	}
 
-    &__account-data-part{
-        float: right;
-        width: 55%;
-        margin-top: 30px !important;
-        @media only screen and (max-width: $bp-md) {
-            width: 100%;
-            float: none;
-		}
+	&__change-avatar {
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 10px;
+		font-size: 1.25rem;
+		width: 30%;
+		text-align: center;
+		color: dimgray;
+		text-decoration: none;
+		cursor: pointer;
 
-		@media only screen and (max-width: $bp-sm) {
-            width: 100%;
-            float: none;
-		}
-    }
-
-    &__nickname-row{
-        display: flex;
-        word-wrap: break-word;
-        width: 100%;
-    }
-
-    &__username{
-        margin-right: 5%;
-        width: 75%;
-
-        @media only screen and (max-width: $bp-md) {
-            width: 0;
-            margin-right: 0;
+		@media only screen and (max-width: $bp-md) {
+			width: 100%;
+			float: none;
 		}
 
 		@media only screen and (max-width: $bp-sm) {
-            width: 0;
-            margin-right: 0;
+			width: 100%;
+			float: none;
 		}
-    }
+	}
 
-    &__change-nickname-part{
-        width: 20%;
+	&__change-avatar:hover {
+		text-decoration: underline;
+		color: black;
+	}
 
-        @media only screen and (max-width: $bp-md) {
-            width: 100%;
-            margin-right: auto;
-            margin-left: auto;
-            display: flex;
-		}
-
-		@media only screen and (max-width: $bp-sm) {
-            width: 100%;
-            margin-right: auto;
-            margin-left: auto;
-            display: flex;
-		}
-    }
-
-    &__change-nickname{
-        color: dimgrey;
-        text-decoration: none;
-        font-size: 1.25rem;
-        @media only screen and (max-width: $bp-md) {
-            width: 100%;
-            float: none;
+	&__account-data-part {
+		float: right;
+		width: 55%;
+		margin-top: 30px !important;
+		@media only screen and (max-width: $bp-md) {
+			width: 100%;
+			float: none;
 		}
 
 		@media only screen and (max-width: $bp-sm) {
-            width: 100%;
-            float: none;
+			width: 100%;
+			float: none;
 		}
-    }
+	}
 
-    &__change-nickname:hover{
-        color: black;
-        text-decoration: underline;
-    }
+	&__nickname-row {
+		display: flex;
+		word-wrap: break-word;
+		width: 100%;
+	}
 
-    &__delete-account{
-        color: dimgrey;
-        text-decoration: none;
-        font-size: 1.25rem;
+	&__username {
+		margin-right: 5%;
+		width: 75%;
 
-        @media only screen and (max-width: $bp-md) {
-            width: 100%;
-            float: none;
+		@media only screen and (max-width: $bp-md) {
+			width: 0;
+			margin-right: 0;
 		}
 
 		@media only screen and (max-width: $bp-sm) {
-            width: 100%;
-            float: none;
+			width: 0;
+			margin-right: 0;
 		}
-    }
+	}
 
-    &__delete-account:hover{
-        color: red;
-        text-decoration: underline;
-    }
+	&__change-nickname-part {
+		width: 20%;
+		cursor: pointer;
 
-    &__club{
-        color: dimgrey;
-        text-decoration: none;
-    }
+		@media only screen and (max-width: $bp-md) {
+			width: 100%;
+			margin-right: auto;
+			margin-left: auto;
+			display: flex;
+		}
 
-    &__club:hover{
-        color: black;
-        text-decoration: underline;
-    }
+		@media only screen and (max-width: $bp-sm) {
+			width: 100%;
+			margin-right: auto;
+			margin-left: auto;
+			display: flex;
+		}
+	}
 
-    &__change-pwd{
-        color: dimgrey;
-        text-decoration: none;
-        font-size: 1.25rem;
-        margin-left: 10px;
-    }
+	&__change-nickname {
+		color: dimgrey;
+		text-decoration: none;
+		font-size: 1.25rem;
+		@media only screen and (max-width: $bp-md) {
+			width: 100%;
+			float: none;
+		}
 
-    &__change-pwd:hover{
-        color: black;
-        text-decoration: underline;
-    }
+		@media only screen and (max-width: $bp-sm) {
+			width: 100%;
+			float: none;
+		}
+	}
 
-    &__stats{
-        font-family: $poppins !important;
-    }
+	&__change-nickname:hover {
+		color: black;
+		text-decoration: underline;
+	}
+
+	&__delete-account {
+		color: dimgrey;
+		text-decoration: none;
+		font-size: 1.25rem;
+		cursor: pointer;
+
+		&:hover {
+			color: red;
+			text-decoration: underline;
+		}
+
+		@media only screen and (max-width: $bp-md) {
+			width: 100%;
+			float: none;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			width: 100%;
+			float: none;
+		}
+	}
+
+	&__club {
+		color: dimgrey;
+		text-decoration: none;
+	}
+
+	&__club:hover {
+		color: black;
+		text-decoration: underline;
+	}
+
+	&__change-pwd {
+		color: dimgrey;
+		text-decoration: none;
+		font-size: 1.25rem;
+		margin-left: 10px;
+	}
+
+	&__change-pwd:hover {
+		color: black;
+		text-decoration: underline;
+	}
+
+	&__stats {
+		font-family: $poppins !important;
+	}
+}
+
+.dialog {
+	&__header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	&__title {
+		font-family: $bebas !important;
+	}
+
+	&__form {
+		&_fields {
+			display: flex;
+			flex-direction: column;
+		}
+
+		&_field {
+			margin-bottom: $xs-margin !important;
+		}
+		&_button {
+			width: 100%;
+			margin-bottom: $xs-margin !important;
+		}
+	}
+	&__avatar-img {
+		&-box {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			height: 100%;
+		}
+
+		border-radius: 50%;
+		object-fit: contain;
+		width: 65%;
+		height: 65%;
+		margin-left: $xs-margin;
+		cursor: pointer;
+	}
+
+	&__avatar-upload {
+		font-size: 8rem;
+		cursor: pointer;
+	}
+
+	&__avatar-edit {
+		position: absolute;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		display: none;
+		font-size: 1rem;
+		font-weight: 700;
+		text-transform: uppercase;
+	}
+
+	&__avatar-img:hover {
+		filter: opacity(0.4);
+	}
+
+	&__avatar-img:hover + &__avatar-edit {
+		display: block;
+	}
+
+	&__avatar-error {
+		font-size: 0.9rem;
+		color: red;
+		font-weight: 700;
+	}
+
+	&__button-approve {
+		background-color: red !important;
+	}
 }
