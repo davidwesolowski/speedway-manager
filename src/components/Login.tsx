@@ -17,8 +17,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import validateLoginData from '../validation/validateLoginData';
 import { AppContext } from './AppProvider';
 import { setUser } from '../actions/userActions';
-import addNotification from '../notifications/addNotification';
-
+import addNotification from '../utils/addNotification';
 interface IStateUser {
 	email: string;
 	password: string;

@@ -18,7 +18,7 @@ import Cookies from 'universal-cookie';
 import validateRegisterData from '../validation/validateRegisterData';
 import { AppContext } from './AppProvider';
 import { setUser } from '../actions/userActions';
-import addNotification from '../notifications/addNotification';
+import addNotification from '../utils/addNotification';
 
 interface IUserState {
 	email: string;
