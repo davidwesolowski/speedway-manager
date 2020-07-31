@@ -45,7 +45,14 @@ const AppRoute: FunctionComponent = () => {
 						else return <Register {...props} />;
 					}}
 				/>
-				<Route path="/druzyna" component={Team} />
+				<Route
+					path="/druzyna"
+					render={(props: RouteComponentProps) => {
+						const cookiesExist = checkCookies();
+						if (cookiesExist) return <Team {...props} />;
+						else return <Redirect to="/login" />;
+					}}
+				/>
 			</Switch>
 			<Footer />
 		</Router>
