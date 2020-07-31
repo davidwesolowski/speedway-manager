@@ -9,6 +9,20 @@ import {
 	InputLabel
 } from '@material-ui/core';
 
+interface ITeamState {
+	name: string;
+	league: string;
+	imageBuffer: string | ArrayBuffer | null;
+	imageUrl: string | ArrayBuffer | null;
+}
+
+const defaultTeam: ITeamState = {
+	name: '',
+	league: '',
+	imageBuffer: '',
+	imageUrl: ''
+};
+
 const TeamCreate: FunctionComponent = () => {
 	return (
 		<div className="team-create-contaier">
