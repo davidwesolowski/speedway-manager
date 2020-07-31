@@ -6,8 +6,10 @@ import {
 	TextField,
 	Select,
 	MenuItem,
-	InputLabel
+	InputLabel,
+	Button
 } from '@material-ui/core';
+import { FaFileUpload } from 'react-icons/fa';
 
 interface ITeamState {
 	name: string;
@@ -23,9 +25,15 @@ const defaultTeam: ITeamState = {
 	imageUrl: ''
 };
 
+const leagues: string[] = [
+	'PGE Ekstraliga',
+	'eWINNER 1. Liga',
+	'2. Liga żużlowa'
+];
+
 const TeamCreate: FunctionComponent = () => {
 	return (
-		<div className="team-create-contaier">
+		<div className="team-create-container">
 			<Typography className="heading-3 team-create-container__heading">
 				Stwórz drużynę
 			</Typography>
@@ -36,7 +44,8 @@ const TeamCreate: FunctionComponent = () => {
 				<Grid container justify="center">
 					<Grid
 						item
-						xs={5}
+						xs={12}
+						md={6}
 						className="team-create-container__form-fields"
 					>
 						<FormControl className="team-create-container__form-field">
@@ -48,17 +57,34 @@ const TeamCreate: FunctionComponent = () => {
 						>
 							<InputLabel id="id-league">Liga</InputLabel>
 							<Select labelId="id-league">
-								<MenuItem className="team-create-container__form-menu">
-									PGE Ekstraliga
-								</MenuItem>
-								<MenuItem className="team-create-container__form-menu">
-									eWINNER 1. Liga
-								</MenuItem>
-								<MenuItem className="team-create-container__form-menu">
-									2. Liga żużlowa
-								</MenuItem>
+								{leagues.map((league: string) => (
+									<MenuItem
+										key={league}
+										className="team-create-container__menu"
+									>
+										{league}
+									</MenuItem>
+								))}
 							</Select>
 						</FormControl>
+					</Grid>
+					<Grid item xs={12} md={4}>
+						<div className="team-create-container__img-box">
+							<input
+								type="file"
+								accept="image/*"
+								id="id-file"
+								style={{ display: 'none' }}
+							/>
+							<label htmlFor="id-file">
+								<FaFileUpload className="team-create-container__img-upload" />
+							</label>
+						</div>
+					</Grid>
+					<Grid item xs={12} md={10}>
+						<Button className="btn team-create-container__btn">
+							Utwórz
+						</Button>
 					</Grid>
 				</Grid>
 			</form>
