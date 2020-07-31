@@ -1,0 +1,19 @@
+.team-create-container {
+	&__heading {
+		text-align: center;
+		font-family: $poppins !important;
+	}
+
+	&__form {
+		&-fields {
+			display: flex;
+			flex-direction: column;
+		}
+		&-field {
+			margin-bottom: $xs-margin !important;
+		}
+		&-menu {
+			font-size: 1.6rem !important;
+		}
+	}
+}
