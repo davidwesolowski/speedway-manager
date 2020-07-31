@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState, ChangeEvent } from 'react';
 import {
 	Typography,
 	FormControl,
@@ -18,6 +18,11 @@ interface ITeamState {
 	imageUrl: string | ArrayBuffer | null;
 }
 
+type SelectType = {
+	name?: string | undefined;
+	value: unknown;
+};
+
 const defaultTeam: ITeamState = {
 	name: '',
 	league: '',
@@ -32,6 +37,20 @@ const leagues: string[] = [
 ];
 
 const TeamCreate: FunctionComponent = () => {
+	const [team, setTeam] = useState<ITeamState>(defaultTeam);
+
+	const handleOnChange = (name: string) => (
+		event: ChangeEvent<HTMLInputElement | SelectType>
+	) => {
+		event.persist();
+		if (event.target) {
+			setTeam((prevState: ITeamState) => ({
+				...prevState,
+				[name]: event.target.value
+			}));
+		}
+	};
+
 	return (
 		<div className="team-create-container">
 			<Typography className="heading-3 team-create-container__heading">
@@ -49,17 +68,27 @@ const TeamCreate: FunctionComponent = () => {
 						className="team-create-container__form-fields"
 					>
 						<FormControl className="team-create-container__form-field">
-							<TextField label="Nazwa" required />
+							<TextField
+								label="Nazwa"
+								required
+								value={team.name}
+								onChange={handleOnChange('name')}
+							/>
 						</FormControl>
 						<FormControl
 							required
 							className="team-create-container__form-field"
 						>
 							<InputLabel id="id-league">Liga</InputLabel>
-							<Select labelId="id-league">
+							<Select
+								labelId="id-league"
+								value={team.league}
+								onChange={handleOnChange('league')}
+							>
 								{leagues.map((league: string) => (
 									<MenuItem
 										key={league}
+										value={league}
 										className="team-create-container__menu"
 									>
 										{league}
