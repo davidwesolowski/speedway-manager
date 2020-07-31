@@ -20,10 +20,12 @@
 		position: relative;
 		z-index: 1000;
 		min-width: 80%;
+		min-height: 85%;
 		padding: 3rem 2rem;
 
 		@media only screen and (max-width: $bp-md) {
 			min-width: 85%;
+			min-height: 100%;
 			padding: 2rem 1rem;
 		}
 

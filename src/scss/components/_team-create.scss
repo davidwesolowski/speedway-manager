@@ -2,18 +2,49 @@
 	&__heading {
 		text-align: center;
 		font-family: $poppins !important;
+		margin-top: $m-margin !important;
+
+		@media only screen and (max-width: $bp-sm) {
+			margin-top: $xs-margin !important;
+		}
 	}
 
 	&__form {
-		&-fields {
-			display: flex;
-			flex-direction: column;
+		margin-top: $xs-margin;
+		width: 70%;
+		margin: 0 auto;
+
+		& .MuiFormControl-root {
+			min-width: 90%;
 		}
+
 		&-field {
 			margin-bottom: $xs-margin !important;
 		}
-		&-menu {
-			font-size: 1.6rem !important;
+
+		@media only screen and (max-width: $bp-sm) {
+			width: 100%;
 		}
+	}
+
+	&__menu {
+		font-size: 1.6rem !important;
+	}
+
+	&__btn {
+		width: 100%;
+	}
+
+	&__img-box {
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+	}
+
+	&__img-upload {
+		cursor: pointer;
+		font-size: $icons-size;
 	}
 }
