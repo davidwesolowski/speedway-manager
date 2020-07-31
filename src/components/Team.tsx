@@ -6,7 +6,7 @@ import React, {
 } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Paper, Typography, Divider, Box, Tabs, Tab } from '@material-ui/core';
-
+import TeamCreate from './TeamCreate';
 interface ITabPanelProps {
 	children?: ReactNode;
 	index: any;
@@ -59,7 +59,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 						</Tabs>
 					</Paper>
 					<TabPanel value={value} index={0}>
-						Stwórz drużynę
+						<TeamCreate />
 					</TabPanel>
 					<TabPanel value={value} index={1}>
 						Dodaj zawodników
