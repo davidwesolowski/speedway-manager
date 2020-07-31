@@ -10,12 +10,14 @@ import {
 	Button
 } from '@material-ui/core';
 import { FaFileUpload } from 'react-icons/fa';
+import handleImgFile, {
+	IImageData,
+	defaultImageData
+} from '../utils/handleImgFile';
 
 interface ITeamState {
 	name: string;
 	league: string;
-	imageBuffer: string | ArrayBuffer | null;
-	imageUrl: string | ArrayBuffer | null;
 }
 
 type SelectType = {
@@ -25,9 +27,7 @@ type SelectType = {
 
 const defaultTeam: ITeamState = {
 	name: '',
-	league: '',
-	imageBuffer: '',
-	imageUrl: ''
+	league: ''
 };
 
 const leagues: string[] = [
@@ -38,6 +38,7 @@ const leagues: string[] = [
 
 const TeamCreate: FunctionComponent = () => {
 	const [team, setTeam] = useState<ITeamState>(defaultTeam);
+	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
 
 	const handleOnChange = (name: string) => (
 		event: ChangeEvent<HTMLInputElement | SelectType>
@@ -104,9 +105,18 @@ const TeamCreate: FunctionComponent = () => {
 								accept="image/*"
 								id="id-file"
 								style={{ display: 'none' }}
+								onChange={handleImgFile(setImageData)}
 							/>
 							<label htmlFor="id-file">
-								<FaFileUpload className="team-create-container__img-upload" />
+								{imageData.imageUrl ? (
+									<img
+										src={imageData.imageUrl as string}
+										alt="team-logo"
+										className="team-create-container__img"
+									/>
+								) : (
+									<FaFileUpload className="team-create-container__img-upload" />
+								)}
 							</label>
 						</div>
 					</Grid>
