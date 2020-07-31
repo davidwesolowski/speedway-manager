@@ -19,16 +19,16 @@
 	&__box {
 		position: relative;
 		z-index: 1000;
-		min-width: 45vw;
+		min-width: 80%;
 		padding: 3rem 2rem;
 
 		@media only screen and (max-width: $bp-md) {
-			min-width: 55vw;
+			min-width: 85%;
 			padding: 2rem 1rem;
 		}
 
 		@media only screen and (max-width: $bp-sm) {
-			min-width: 65vw;
+			min-width: 95%;
 			padding: 1rem 0.5rem;
 		}
 	}
@@ -40,4 +40,14 @@
 		margin-bottom: $xs-margin !important;
 		letter-spacing: 1px !important;
 	}
+
+	&__tabs-container {
+		font-size: 2rem !important;
+		font-family: $poppins;
+	}
+}
+
+.MuiTab-root {
+	font-size: 2rem !important;
+	font-family: $bebas !important;
 }
