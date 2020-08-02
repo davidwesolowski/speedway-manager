@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useState, ChangeEvent } from 'react';
+import React, {
+	FunctionComponent,
+	useState,
+	ChangeEvent,
+	FormEvent
+} from 'react';
 import {
 	Typography,
 	FormControl,
@@ -10,10 +15,14 @@ import {
 	Button
 } from '@material-ui/core';
 import { FaFileUpload } from 'react-icons/fa';
+import axios from 'axios';
+import Cookies from 'universal-cookie';
 import handleImgFile, {
 	IImageData,
 	defaultImageData
 } from '../utils/handleImgFile';
+import addNotification from '../utils/addNotification';
+import { useHistory } from 'react-router-dom';
 
 interface ITeamState {
 	name: string;
@@ -39,6 +48,7 @@ const leagues: string[] = [
 const TeamCreate: FunctionComponent = () => {
 	const [team, setTeam] = useState<ITeamState>(defaultTeam);
 	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
+	const { push } = useHistory();
 
 	const handleOnChange = (name: string) => (
 		event: ChangeEvent<HTMLInputElement | SelectType>
@@ -52,6 +62,83 @@ const TeamCreate: FunctionComponent = () => {
 		}
 	};
 
+	const createTeam = async (team: ITeamState, imageData: IImageData) => {
+		try {
+			const cookies = new Cookies();
+			const access_token = cookies.get('access_token');
+			const { name, league } = team;
+			const options = {
+				headers: {
+					Authorization: `Bearer ${access_token}`
+				}
+			};
+			const {
+				data: { _id }
+			} = await axios.post(
+				'https://fantasy-league-eti.herokuapp.com/teams',
+				{ name, league },
+				options
+			);
+
+			const title = 'Sukces!';
+			let message = 'Pomyślnie stworzono drużynę!';
+			const type = 'success';
+			const duration = 3000;
+			addNotification(title, message, type, duration);
+
+			const { name: filename, imageBuffer } = imageData;
+			const {
+				data: { signed_url, image_url, type: content_type }
+			} = await axios.post(
+				`https://fantasy-league-eti.herokuapp.com/teams/${_id}/logo`,
+				{ filename },
+				options
+			);
+
+			const awsOptions = {
+				headers: {
+					'Content-Type': content_type
+				}
+			};
+			await axios.put(signed_url, imageBuffer, awsOptions);
+			message = 'Pomyślnie dodano logo drużyny!';
+			addNotification(title, message, type, duration);
+		} catch (e) {
+			const {
+				response: { data }
+			} = e;
+			const title = 'Błąd!';
+			const type = 'danger';
+			const duration = 3000;
+			let message: string;
+			if (data.statusCode == 401) {
+				const cookies = new Cookies();
+				cookies.remove('access_token');
+				message = 'Sesja wygasła!';
+				addNotification(title, message, type, duration);
+				setTimeout(() => {
+					push('/login');
+				}, duration);
+			} else {
+				message = 'Stworzenie drużyny nie powiodło się!';
+				addNotification(title, message, type, duration);
+			}
+		}
+	};
+
+	const handleOnSubmit = (event: FormEvent) => {
+		event.preventDefault();
+		if (imageData.imageBuffer) {
+			createTeam(team, imageData);
+		} else {
+			const title = 'Informacja!';
+			const message = 'Musisz wybrać logo drużyny!';
+			const type = 'info';
+			const duration = 2000;
+			addNotification(title, message, type, duration);
+		}
+	};
+
 	return (
 		<div className="team-create-container">
 			<Typography className="heading-3 team-create-container__heading">
@@ -60,6 +147,7 @@ const TeamCreate: FunctionComponent = () => {
 			<form
 				className="team-create-container__form"
 				encType="multipart/form-data"
+				onSubmit={handleOnSubmit}
 			>
 				<Grid container justify="center">
 					<Grid
@@ -121,7 +209,10 @@ const TeamCreate: FunctionComponent = () => {
 						</div>
 					</Grid>
 					<Grid item xs={12} md={10}>
-						<Button className="btn team-create-container__btn">
+						<Button
+							type="submit"
+							className="btn team-create-container__btn"
+						>
 							Utwórz
 						</Button>
 					</Grid>
