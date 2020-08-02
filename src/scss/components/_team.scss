@@ -1,0 +1,56 @@
+.team-container {
+	grid-column: center-start / center-end;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-family: $bebas;
+
+	&__img {
+		height: 100%;
+		width: 100%;
+		position: absolute;
+		z-index: 1;
+		background-image: url(/img/warsaw_venue.jpg);
+		background-size: cover;
+		filter: opacity(0.2);
+	}
+
+	&__box {
+		position: relative;
+		z-index: 1000;
+		min-width: 80%;
+		min-height: 85%;
+		padding: 3rem 2rem;
+
+		@media only screen and (max-width: $bp-md) {
+			min-width: 85%;
+			min-height: 100%;
+			padding: 2rem 1rem;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			min-width: 95%;
+			padding: 1rem 0.5rem;
+		}
+	}
+
+	&__heading {
+		text-align: center;
+		text-transform: uppercase;
+		font-family: $bebas !important;
+		margin-bottom: $xs-margin !important;
+		letter-spacing: 1px !important;
+	}
+
+	&__tabs-container {
+		margin-top: $s-margin !important;
+		font-size: 2rem !important;
+		font-family: $poppins;
+	}
+}
+
+.MuiTab-root {
+	font-size: 2rem !important;
+	font-family: $bebas !important;
+}

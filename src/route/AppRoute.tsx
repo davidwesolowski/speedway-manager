@@ -13,6 +13,7 @@ import Login from '../components/Login';
 import Account from '../components/Account';
 import Register from '../components/Register';
 import checkCookies from '../validation/checkCookies';
+import Team from '../components/Team';
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -42,6 +43,14 @@ const AppRoute: FunctionComponent = () => {
 						const cookiesExist = checkCookies();
 						if (cookiesExist) return <Redirect to="/druzyna" />;
 						else return <Register {...props} />;
+					}}
+				/>
+				<Route
+					path="/druzyna"
+					render={(props: RouteComponentProps) => {
+						const cookiesExist = checkCookies();
+						if (cookiesExist) return <Team {...props} />;
+						else return <Redirect to="/login" />;
 					}}
 				/>
 			</Switch>

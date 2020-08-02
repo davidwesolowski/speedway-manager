@@ -34,7 +34,11 @@ import Cookies from 'universal-cookie';
 import validateEditData from '../validation/validateEditData';
 import { AppContext } from './AppProvider';
 import { updateUser, setUser } from '../actions/userActions';
-import addNotification from '../notifications/addNotification';
+import addNotification from '../utils/addNotification';
+import handleImgFile, {
+	IImageData,
+	defaultImageData
+} from '../utils/handleImgFile';
 
 interface IState {
 	username: string;
@@ -60,13 +64,7 @@ interface IValidateData {
 	};
 }
 
-interface IImageData {
-	name: string;
-	imageBuffer: string | ArrayBuffer | null;
-	imageUrl: string | ArrayBuffer | null;
-}
-
-const defaultValidateData = {
+const defaultValidateData: IValidateData = {
 	username: {
 		message: '',
 		error: false
@@ -88,12 +86,6 @@ const defaultAccountData: IState = {
 	position: -1,
 	password: '',
 	newPassword: ''
-};
-
-const defaultImageData: IImageData = {
-	name: '',
-	imageBuffer: '',
-	imageUrl: ''
 };
 
 const Account: FunctionComponent<RouteComponentProps> = ({
@@ -135,39 +127,6 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 				...prevState,
 				[name]: event.target.value
 			}));
-		}
-	};
-
-	const handleFile = (event: ChangeEvent<HTMLInputElement>) => {
-		if (event.target.files && event.target.files[0]) {
-			const image = event.target.files[0];
-			if (image.size <= 1048576) {
-				const imageBufferReader = new FileReader();
-				imageBufferReader.onload = () => {
-					const { name } = image;
-					setImageData({
-						name,
-						imageBuffer: imageBufferReader.result,
-						imageUrl: ''
-					});
-				};
-				if (image) imageBufferReader.readAsArrayBuffer(image);
-				const imageUrlReader = new FileReader();
-				imageUrlReader.onload = () => {
-					setImageData((prevState: IImageData) => ({
-						...prevState,
-						imageUrl: imageUrlReader.result
-					}));
-				};
-				if (image) imageUrlReader.readAsDataURL(image);
-			} else {
-				event.target.value = '';
-				const title = 'Informacja!';
-				const message = 'Maksymalny rozmiar awataru to 1MB!';
-				const type = 'info';
-				const duration = 3000;
-				addNotification(title, message, type, duration);
-			}
 		}
 	};
 
@@ -277,13 +236,14 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 			const {
 				response: { data }
 			} = e;
+			const title = 'Błąd!';
+			const type = 'danger';
+			const duration = 3000;
+			let message: string;
 			if (data.statusCode == 401) {
 				const cookies = new Cookies();
 				cookies.remove('access_token');
-				const title = 'Błąd!';
-				const message = 'Sesja wygasła!';
-				const type = 'danger';
-				const duration = 3000;
+				message = 'Sesja wygasła!';
 				addNotification(title, message, type, duration);
 				setTimeout(() => {
 					push('/login');
@@ -292,16 +252,10 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 				data.statusCode == 400 &&
 				data.message == 'Bad password.'
 			) {
-				const title = 'Błąd!';
-				const message = 'Wprowadziłeś niepoprawne hasło!';
-				const type = 'danger';
-				const duration = 3000;
+				message = 'Wprowadziłeś niepoprawne hasło!';
 				addNotification(title, message, type, duration);
 			} else {
-				const title = 'Błąd!';
-				const message = 'Zmiana awataru nie powiodła się!';
-				const type = 'danger';
-				const duration = 3000;
+				message = 'Zmiana awataru nie powiodła się!';
 				addNotification(title, message, type, duration);
 			}
 		}
@@ -586,7 +540,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 									type="file"
 									accept="image/*"
 									style={{ display: 'none' }}
-									onChange={handleFile}
+									onChange={handleImgFile(setImageData)}
 									id="id-file"
 								/>
 								<label htmlFor="id-file">
