@@ -21,8 +21,17 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Alert from '@material-ui/lab/Alert';
 import RidersList from "../components/RidersList";
+import Cookies from 'universal-cookie';
 
 interface IRider{
+    firstName: string;
+    lastName: string;
+    nickname: string;
+    dateOfBirth: string;
+    club: string;
+}
+
+interface IRiderState{
     firstName: string;
     lastName: string;
     nickname: string;
@@ -80,13 +89,24 @@ const defaultRiderData = {
     firstName: '',
     lastName: '',
     nickname: '',
-    dateOfBirth: new Date(1990,1,1),
+    dateOfBirth: '1-1-1900',
+    club: 'Fogo Unia Leszno'
+};
+
+const defaultRiderState = {
+    firstName: '',
+    lastName: '',
+    nickname: '',
+    dateOfBirth: new Date(1,1,1990),
     club: ''
 };
 
 const Riders: FunctionComponent = () => {
     const [riderData, setRiderData] = useState<IRider>(
         defaultRiderData
+    );
+    const [riderState, setRiderState] = useState<IRiderState>(
+        defaultRiderState  
     );
     const [validatedData, setValidatedData] = useState<IValidatedData>(
         defaultValidatedData
@@ -117,26 +137,38 @@ const Riders: FunctionComponent = () => {
     const handleDateOnChange = date => {
         setRiderData((prevState: IRider) => ({
             ...prevState,
-            dateOfBirth: date
+            dateOfBirth: date.toString()
         }));
     };
 
-    const handleOnChangeClub = sclub => {
-        setRiderData((prevState: IRider) => ({
-            ...prevState,
-            club: sclub
-        }));
+    const handleOnChangeClub = (name: string) => (
+        event: React.ChangeEvent<HTMLSelectElement>
+    ) => {
+        event.persist();
+        if (event.target) {
+            setRiderData((prevState: IRider) => ({
+                ...prevState,
+                [name]: event.target.value
+            }));
+        }
     };
 
     const addRider = async (riderData: IRider) => {
         try {
+            const cookies = new Cookies();
+            const access_token = cookies.get("access_token");
+            const options = {
+                headers: {
+                    Authorization: `Bearer ${access_token}`
+                }
+            };
             const {
-                data: { access_token }
+                data
             } = await axios.post(
                 'https://fantasy-league-eti.herokuapp.com/auth/rider',
-                riderData
+                riderData,
+                options
             );
-
             setAddRiderError(false);
             setAddRiderSuccess(true);
         } catch (e) {
@@ -236,11 +268,11 @@ const Riders: FunctionComponent = () => {
                                 </FormControl>
                                 <FormControl className="dialog__form_field_date">
                                     Data urodzenia:
-                                    <DatePicker selected={riderData.dateOfBirth} onChange={handleDateOnChange} className="dialog__choose_list"/>
+                                    <DatePicker selected={new Date(riderData.dateOfBirth)} onChange={handleDateOnChange} className="dialog__choose_list"/>
                                 </FormControl>
                                 <FormControl className="dialog__form_field_club">
                                     Klub:
-                                    <select value={riderData.club} onChange={handleOnChangeClub} className="dialog__choose_list">
+                                    <select value={riderData.club} onChange={handleOnChangeClub('club')} className="dialog__choose_list">
                                         <option value="Fogo Unia Leszno">Fogo Unia Leszno</option>
                                         <option value="forBet Włókniarz Częstochowa">forBet Włókniarz Częstochowa</option>
                                         <option value="RM Solar Falubaz Zielona Góra">RM Solar Falubaz Zielona Góra</option>

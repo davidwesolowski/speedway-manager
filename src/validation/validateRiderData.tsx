@@ -54,9 +54,8 @@ const schema = Joi.object({
             return error;
         }),
     nickname: Joi.string()
-        .min(2)
         .max(255)
-        .trim()
+        .allow("")
         .error((error: ErrorReport[]): any => {
             if(error[0].code) {
                 switch(error[0].code){
@@ -74,7 +73,7 @@ const schema = Joi.object({
             }
             return error;
         }),
-    dateOfBirth: Joi.date()
+    dateOfBirth: Joi.string()
         .required()
         .error((error: ErrorReport[]): any => {
             if (error[0].code) {
@@ -121,7 +120,7 @@ export default function validateRiderData(data: {
     firstName: string;
     lastName: string;
     nickname: string;
-    dateOfBirth: Date;
+    dateOfBirth: string;
     club: string;
 }): ValidationResult {
     return schema.validate(data, {abortEarly: false});

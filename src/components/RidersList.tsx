@@ -24,7 +24,11 @@ class RidersList extends Component<{}, {riders}> {
                     <td>{przydomek}</td>
                     <td>{data_urodzenia}</td>
                     <td>{klub}</td>
-                    <td className="table-X">X</td>
+                    <td className="table-X">
+                        <a href="/usun">
+                            X
+                        </a>
+                    </td>
                 </tr>
             )
         })
