@@ -121,10 +121,12 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 			setTimeout(() => {
 				setRegisterSucess(false);
 				push('/druzyna');
+				console.log("pupa");
 			}, 1000);
 		} catch (e) {
 			setRegisterSucess(false);
-			setRegisterSucess(true);
+			setRegisterError(true);
+			console.log(e.response);
 			throw new Error('Error in registering user!');
 		}
 	};

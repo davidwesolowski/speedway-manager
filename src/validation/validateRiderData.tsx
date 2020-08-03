@@ -1,7 +1,7 @@
 import Joi, { ErrorReport, ValidationResult } from '@hapi/joi';
 
 const schema = Joi.object({
-    firstName: Joi.string()
+    first_name: Joi.string()
         .min(2)
         .max(255)
         .trim()
@@ -27,7 +27,7 @@ const schema = Joi.object({
             }
             return error;
         }),
-    lastName: Joi.string()
+    last_name: Joi.string()
         .min(2)
         .max(255)
         .trim()
@@ -73,7 +73,7 @@ const schema = Joi.object({
             }
             return error;
         }),
-    dateOfBirth: Joi.string()
+    date_of_birth: Joi.string()
         .required()
         .error((error: ErrorReport[]): any => {
             if (error[0].code) {
@@ -88,7 +88,7 @@ const schema = Joi.object({
             }
             return error;
         }),
-    club: Joi.string()
+    /*club: Joi.string()
         .min(2)
         .max(255)
         .trim()
@@ -113,15 +113,15 @@ const schema = Joi.object({
                 }
             }
             return error;
-        }),
+        }),*/
 });
 
 export default function validateRiderData(data: {
-    firstName: string;
-    lastName: string;
+    first_name: string;
+    last_name: string;
     nickname: string;
-    dateOfBirth: string;
-    club: string;
+    date_of_birth: string;
+    //club: string;
 }): ValidationResult {
     return schema.validate(data, {abortEarly: false});
 }

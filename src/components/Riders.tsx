@@ -22,29 +22,23 @@ import "react-datepicker/dist/react-datepicker.css";
 import Alert from '@material-ui/lab/Alert';
 import RidersList from "../components/RidersList";
 import Cookies from 'universal-cookie';
+import addNotification from '../utils/addNotification';
+import { Link, RouteComponentProps } from 'react-router-dom';
 
 interface IRider{
-    firstName: string;
-    lastName: string;
+    first_name: string;
+    last_name: string;
     nickname: string;
-    dateOfBirth: string;
-    club: string;
-}
-
-interface IRiderState{
-    firstName: string;
-    lastName: string;
-    nickname: string;
-    dateOfBirth: Date;
-    club: string;
+    date_of_birth: string;
+//   club: string;
 }
 
 interface IValidatedData{
-    firstName: {
+    first_name: {
         message: string;
         error: boolean;
     };
-    lastName: {
+    last_name: {
         message: string;
         error: boolean;
     };
@@ -52,22 +46,22 @@ interface IValidatedData{
         message: string;
         error: boolean;
     };
-    dateOfBirth: {
+    date_of_birth: {
         message: string;
         error: boolean;
     };
-    club: {
+/*    club: {
         message: string;
         error: boolean;
-    };
+    };*/
 }
 
 const defaultValidatedData = {
-    firstName: {
+    first_name: {
         message: '',
         error: false
     },
-    lastName: {
+    last_name: {
         message: '',
         error: false
     },
@@ -75,38 +69,29 @@ const defaultValidatedData = {
         message: '',
         error: false
     },
-    dateOfBirth: {
+    date_of_birth: {
         message: '',
         error: false
     },
-    club: {
+/*    club: {
         message: '',
         error: false
-    }
+    }*/
 };
 
 const defaultRiderData = {
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     nickname: '',
-    dateOfBirth: '1-1-1900',
-    club: 'Fogo Unia Leszno'
+    date_of_birth: '1-1-1900',
+ //   club: 'Fogo Unia Leszno'
 };
 
-const defaultRiderState = {
-    firstName: '',
-    lastName: '',
-    nickname: '',
-    dateOfBirth: new Date(1,1,1990),
-    club: ''
-};
-
-const Riders: FunctionComponent = () => {
+const Riders: FunctionComponent<RouteComponentProps> = ({
+	history: { push }
+}) => {
     const [riderData, setRiderData] = useState<IRider>(
         defaultRiderData
-    );
-    const [riderState, setRiderState] = useState<IRiderState>(
-        defaultRiderState  
     );
     const [validatedData, setValidatedData] = useState<IValidatedData>(
         defaultValidatedData
@@ -137,7 +122,7 @@ const Riders: FunctionComponent = () => {
     const handleDateOnChange = date => {
         setRiderData((prevState: IRider) => ({
             ...prevState,
-            dateOfBirth: date.toString()
+            date_of_birth: date.toString()
         }));
     };
 
@@ -165,15 +150,40 @@ const Riders: FunctionComponent = () => {
             const {
                 data
             } = await axios.post(
-                'https://fantasy-league-eti.herokuapp.com/auth/rider',
+                'https://fantasy-league-eti.herokuapp.com/riders',
                 riderData,
                 options
             );
             setAddRiderError(false);
             setAddRiderSuccess(true);
+            addNotification("Sukces", "Poprawnie dodano zawodnika", "success", 1000);
+            setValidatedData(defaultValidatedData);
+            setRiderData(defaultRiderData); 
+            setTimeout(() => {
+                setAddRiderSuccess(false);
+            }, 3000);
         } catch (e) {
-            setAddRiderSuccess(false);
-            setAddRiderError(true);
+            //setAddRiderSuccess(false);
+            //setAddRiderError(true);
+            if(e.response == "Bad Request Exception")
+            {
+                setAddRiderError(true);
+                setAddRiderSuccess(false);
+                addNotification("Błąd!", "Podany zawodnik już istnieje w bazie!", "danger",1000);
+                setTimeout(() => {
+                    setAddRiderError(false);
+                }, 3000);
+            }
+            else
+            {
+                addNotification("Błąd!", "Twoja sesja wygasła", "danger", 1000);
+                setAddRiderError(true);
+                setAddRiderSuccess(false);
+                setTimeout(() => {
+                    push('/login');
+                    setAddRiderError(false);
+                }, 3000);
+            }
             throw new Error('Error in adding new rider!');
         }
     };
@@ -197,8 +207,10 @@ const Riders: FunctionComponent = () => {
                 }
             );
         } else {
-            const {firstName, lastName, nickname, dateOfBirth, club} = riderData;
-            addRider({firstName, lastName, nickname, dateOfBirth, club});
+            const {first_name, last_name, nickname, date_of_birth} = riderData;
+            addRider({first_name, last_name, nickname, date_of_birth});
+ /*           const {firstName, lastName, nickname, dateOfBirth, club} = riderData;
+            addRider({firstName, lastName, nickname, dateOfBirth, club});*/
         }
     };
 
@@ -236,24 +248,24 @@ const Riders: FunctionComponent = () => {
                                     <TextField
                                         label="Imię"
                                         required
-                                        autoComplete="firstName"
-                                        value={riderData.firstName}
-                                        error={validatedData.firstName.error}
+                                        autoComplete="first_name"
+                                        value={riderData.first_name}
+                                        error={validatedData.first_name.error}
                                         helperText={
-                                            validatedData.firstName.message
+                                            validatedData.first_name.message
                                         }
-                                        onChange={handleOnChange('firstName')}
+                                        onChange={handleOnChange('first_name')}
                                     />
                                 </FormControl>
                                 <FormControl className="dialog__form_field">
                                     <TextField
                                         label="Nazwisko"
                                         required
-                                        autoComplete="lastName"
-                                        value={riderData.lastName}
-                                        error={validatedData.lastName.error}
-                                        helperText={validatedData.lastName.message}
-                                        onChange={handleOnChange('lastName')}
+                                        autoComplete="last_name"
+                                        value={riderData.last_name}
+                                        error={validatedData.last_name.error}
+                                        helperText={validatedData.last_name.message}
+                                        onChange={handleOnChange('last_name')}
                                     />
                                 </FormControl>
                                 <FormControl className="dialog__form_field">
@@ -268,20 +280,7 @@ const Riders: FunctionComponent = () => {
                                 </FormControl>
                                 <FormControl className="dialog__form_field_date">
                                     Data urodzenia:
-                                    <DatePicker selected={new Date(riderData.dateOfBirth)} onChange={handleDateOnChange} className="dialog__choose_list"/>
-                                </FormControl>
-                                <FormControl className="dialog__form_field_club">
-                                    Klub:
-                                    <select value={riderData.club} onChange={handleOnChangeClub('club')} className="dialog__choose_list">
-                                        <option value="Fogo Unia Leszno">Fogo Unia Leszno</option>
-                                        <option value="forBet Włókniarz Częstochowa">forBet Włókniarz Częstochowa</option>
-                                        <option value="RM Solar Falubaz Zielona Góra">RM Solar Falubaz Zielona Góra</option>
-                                        <option value="Motor Lublin">Motor Lublin</option>
-                                        <option value="Betard Sparta Wrocław">Betard Sparta Wrocław</option>
-                                        <option value="MRGARDEN GKM Grudziądz">MRGARDEN GKM Grudziądz</option>
-                                        <option value="Moje Bermudy Stal Gorzów">Moje Bermudy Stal Gorzów</option>
-                                        <option value="PGG ROW Rybnik">PGG ROW Rybnik</option>
-                                    </select>
+                                    <DatePicker selected={new Date(riderData.date_of_birth)} onChange={handleDateOnChange} className="dialog__choose_list"/>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
@@ -316,3 +315,19 @@ const Riders: FunctionComponent = () => {
 };
 
 export default Riders;
+
+/*
+<FormControl className="dialog__form_field_club">
+    Klub:
+    <select value={riderData.club} onChange={handleOnChangeClub('club')} className="dialog__choose_list">
+        <option value="Fogo Unia Leszno">Fogo Unia Leszno</option>
+        <option value="forBet Włókniarz Częstochowa">forBet Włókniarz Częstochowa</option>
+        <option value="RM Solar Falubaz Zielona Góra">RM Solar Falubaz Zielona Góra</option>
+        <option value="Motor Lublin">Motor Lublin</option>
+        <option value="Betard Sparta Wrocław">Betard Sparta Wrocław</option>
+        <option value="MRGARDEN GKM Grudziądz">MRGARDEN GKM Grudziądz</option>
+        <option value="Moje Bermudy Stal Gorzów">Moje Bermudy Stal Gorzów</option>
+        <option value="PGG ROW Rybnik">PGG ROW Rybnik</option>
+    </select>
+</FormControl>
+*/
