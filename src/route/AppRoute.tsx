@@ -14,6 +14,8 @@ import Account from '../components/Account';
 import Register from '../components/Register';
 import checkCookies from '../validation/checkCookies';
 import Team from '../components/Team';
+import Riders from '../components/Riders';
+
 
 const AppRoute: FunctionComponent = () => {
 	return (

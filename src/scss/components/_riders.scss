@@ -1,0 +1,83 @@
+.riders{
+    grid-column: center-start / center-end;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+    font-family: $bebas !important;
+
+    &__background{
+        background-image: url("/img/warsaw_venue.jpg");
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        z-index: 1;
+        background-size: cover;
+        filter: opacity(0.2);
+    }
+
+    &__box{
+        position: relative;
+		z-index: 1000;
+		min-width: 45vw;
+        padding: 3rem 2rem;
+        width: 90%;
+    }
+
+    &__header{
+        text-align: center;
+		text-transform: uppercase;
+		font-family: $bebas !important;
+		margin-bottom: $xs-margin !important;
+        letter-spacing: 1px !important;
+    }
+
+    &__fiplus{
+        float: right;
+        color: green !important;
+        margin-top: 5px;
+        margin-right: 2%;
+        font-size: 2.5rem !important;
+    }
+
+    &__fix{
+        float: right;
+    }
+}
+
+.dialog{
+    float: center;
+    
+    &__form_field_date{
+        margin-top: 10px !important;
+        font-size: large !important;
+        width: 100%;
+    }
+
+    &__form_field_club{
+        margin-top: 10px !important;
+        font-size: large !important;
+        width: 100%;
+    }
+
+    &__form_field{
+        width: 100% !important;
+    }
+
+    &__choose_list{
+        font-size: large !important;
+    }
+}
+
+table{
+    width: 100%;
+    font-size: x-large;
+    border: 2px solid black;
+    text-align: center;
+}
+
+td{
+    border: 4px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}

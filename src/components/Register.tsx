@@ -126,6 +126,7 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 			setTimeout(() => {
 				setLoggedIn(true);
 				push('/druzyna');
+<<<<<<< HEAD
 			}, duration);
 		} catch (e) {
 			const title = 'Błąd!';
@@ -133,6 +134,15 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 			const type = 'danger';
 			const duration = 1000;
 			addNotification(title, message, type, duration);
+=======
+				console.log("pupa");
+			}, 1000);
+		} catch (e) {
+			setRegisterSucess(false);
+			setRegisterError(true);
+			console.log(e.response);
+			throw new Error('Error in registering user!');
+>>>>>>> Dominik
 		}
 	};
 

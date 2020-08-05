@@ -1,0 +1,19 @@
+.table-X{
+    color: red;
+    font-size: xx-large;
+    border-right: 4px solid black !important;
+
+    &__header{
+        color: black;
+        font-size: x-large;
+    }
+}
+
+.first-column{
+    border-left: 4px solid black !important;
+}
+
+th{
+    border: 4px solid black;
+    background-color: grey;
+}
