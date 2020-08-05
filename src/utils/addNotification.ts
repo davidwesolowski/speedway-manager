@@ -19,7 +19,7 @@ const addNotification = (
 		message,
 		type,
 		insert: 'top',
-		container: 'center',
+		container: 'bottom-center',
 		animationIn: ['animated', 'jackInTheBox'],
 		animationOut: ['animated', 'fadeOut'],
 		dismiss: {
