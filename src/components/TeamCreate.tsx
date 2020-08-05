@@ -76,7 +76,7 @@ const TeamCreate: FunctionComponent = () => {
 				data: { _id }
 			} = await axios.post(
 				'https://fantasy-league-eti.herokuapp.com/teams',
-				{ name, league },
+				{ name },
 				options
 			);
 

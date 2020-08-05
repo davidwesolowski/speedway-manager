@@ -1,7 +1,9 @@
 import React, { Component, useEffect, FunctionComponent, useState } from 'react';
-import FiX from 'react-icons/fi';
+import FiX, { FiXCircle } from 'react-icons/fi';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
+import { IconButton } from '@material-ui/core';
+import addNotification from '../utils/addNotification';
 
 class RidersList extends Component<{}, {riders}> {
     constructor(props){
@@ -10,6 +12,39 @@ class RidersList extends Component<{}, {riders}> {
             riders: []
         }
     }
+
+    refreshPage(){
+        window.location.reload(false);
+      }
+
+    async deleteRiders(id) {
+        try {
+            const cookies = new Cookies();
+            const access_token = cookies.get("access_token");
+            const options = {
+                headers: {
+                    Authorization: `Bearer ${access_token}`
+                }
+            };
+            const {
+                data
+            } = await axios.delete(
+                `https://fantasy-league-eti.herokuapp.com/riders/${id.id}`,
+                options
+            );
+            ////Sukces
+            addNotification("Sukces!", "Udało się usunąć zawodnika!", "success", 1000);
+            setTimeout(() => {
+                //setAddRiderSuccess(false);
+                this.refreshPage();
+            }, 1000);
+        } catch (e) {
+            addNotification("Błąd!", "Nie udało się usunąć zawodnika!", "danger", 1000);
+            console.log(e.response);
+            throw new Error('Error in deleting riders!');
+        }
+    };
+
 
     async getRiders() {
         try {
@@ -26,7 +61,6 @@ class RidersList extends Component<{}, {riders}> {
                 'https://fantasy-league-eti.herokuapp.com/riders',
                 options
             );
-            console.log(data);
             this.setState(() => ({
                 riders: []
             }));
@@ -51,7 +85,6 @@ class RidersList extends Component<{}, {riders}> {
         this.getRiders()
     }
 
-
     renderTableData() {
         return this.state.riders.map((rider, index) => {
             const {id, imię, nazwisko, przydomek, data_urodzenia} = rider
@@ -63,9 +96,9 @@ class RidersList extends Component<{}, {riders}> {
                     <td>{data_urodzenia}</td>
                     <td></td>
                     <td className="table-X">
-                        <a href="/usun">
-                            X
-                        </a>
+                        <IconButton  onClick={(event: React.MouseEvent<HTMLElement>) => {this.deleteRiders({id})}} className="delete-button">
+                            <FiXCircle />
+                        </IconButton>
                     </td>
                 </tr>
             )

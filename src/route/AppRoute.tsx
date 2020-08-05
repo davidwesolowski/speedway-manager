@@ -55,6 +55,14 @@ const AppRoute: FunctionComponent = () => {
 						else return <Redirect to="/login" />;
 					}}
 				/>
+				<Route
+					path="/zawodnicy"
+					render={(props: RouteComponentProps) => {
+						const cookiesExist = checkCookies();
+						if (cookiesExist) return <Riders {...props} />;
+						else return <Redirect to="/login" />;
+					}}
+				/>
 			</Switch>
 			<Footer />
 		</Router>

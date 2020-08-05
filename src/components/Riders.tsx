@@ -24,6 +24,9 @@ import RidersList from "../components/RidersList";
 import Cookies from 'universal-cookie';
 import addNotification from '../utils/addNotification';
 import { Link, RouteComponentProps } from 'react-router-dom';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
 
 interface IRider{
     first_name: string;
@@ -79,11 +82,15 @@ const defaultValidatedData = {
     }*/
 };
 
+const refreshPage = () => {
+    window.location.reload(false);
+  }
+
 const defaultRiderData = {
     first_name: '',
     last_name: '',
     nickname: '',
-    date_of_birth: '1-1-1900',
+    date_of_birth: '1/1/2000',
  //   club: 'Fogo Unia Leszno'
 };
 
@@ -147,6 +154,18 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
                     Authorization: `Bearer ${access_token}`
                 }
             };
+            const date = new Date(riderData.date_of_birth);
+            const month = date.getUTCMonth() + 1;
+            const day = date.getUTCDate();
+            const year = date.getUTCFullYear();
+
+            const newdate = day + "/" + month + "/" + year;
+            console.log(newdate);  
+            setRiderData((prevState: IRider) => ({
+                ...prevState,
+                date_of_birth: newdate
+            }));
+            console.log(riderData.date_of_birth);
             const {
                 data
             } = await axios.post(
@@ -154,25 +173,28 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
                 riderData,
                 options
             );
-            setAddRiderError(false);
-            setAddRiderSuccess(true);
+            console.log(data);
+            //setAddRiderError(false);
+            //setAddRiderSuccess(true);
             addNotification("Sukces", "Poprawnie dodano zawodnika", "success", 1000);
             setValidatedData(defaultValidatedData);
             setRiderData(defaultRiderData); 
             setTimeout(() => {
-                setAddRiderSuccess(false);
-            }, 3000);
+                {handleClose()};
+            }, 10);
+            setTimeout(() => {
+                //setAddRiderSuccess(false);
+                {refreshPage()};
+            }, 1000);
         } catch (e) {
-            //setAddRiderSuccess(false);
-            //setAddRiderError(true);
-            if(e.response == "Bad Request Exception")
+            if(e.statusText == "Bad Request")
             {
                 setAddRiderError(true);
                 setAddRiderSuccess(false);
                 addNotification("Błąd!", "Podany zawodnik już istnieje w bazie!", "danger",1000);
                 setTimeout(() => {
                     setAddRiderError(false);
-                }, 3000);
+                }, 1000);
             }
             else
             {
@@ -182,7 +204,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
                 setTimeout(() => {
                     push('/login');
                     setAddRiderError(false);
-                }, 3000);
+                }, 1000);
             }
             throw new Error('Error in adding new rider!');
         }
@@ -280,7 +302,18 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
                                 </FormControl>
                                 <FormControl className="dialog__form_field_date">
                                     Data urodzenia:
-                                    <DatePicker selected={new Date(riderData.date_of_birth)} onChange={handleDateOnChange} className="dialog__choose_list"/>
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                        <KeyboardDatePicker
+                                            margin="normal"
+                                            id="date-picker-dialog"
+                                            format="dd/MM/yyyy"
+                                            value={new Date(riderData.date_of_birth)}
+                                            onChange={handleDateOnChange}
+                                            KeyboardButtonProps={{
+                                                'aria-label': 'change date'
+                                            }}
+                                        />
+                                    </MuiPickersUtilsProvider>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
