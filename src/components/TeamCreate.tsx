@@ -2,7 +2,8 @@ import React, {
 	FunctionComponent,
 	useState,
 	ChangeEvent,
-	FormEvent
+	FormEvent,
+	useContext
 } from 'react';
 import {
 	Typography,
@@ -23,6 +24,8 @@ import handleImgFile, {
 } from '../utils/handleImgFile';
 import addNotification from '../utils/addNotification';
 import { useHistory } from 'react-router-dom';
+import { checkBadAuthorization } from '../validation/checkCookies';
+import { AppContext } from './AppProvider';
 
 interface ITeamState {
 	name: string;
@@ -48,6 +51,7 @@ const leagues: string[] = [
 const TeamCreate: FunctionComponent = () => {
 	const [team, setTeam] = useState<ITeamState>(defaultTeam);
 	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
+	const { setLoggedIn } = useContext(AppContext);
 	const { push } = useHistory();
 
 	const handleOnChange = (name: string) => (
@@ -112,13 +116,7 @@ const TeamCreate: FunctionComponent = () => {
 			const duration = 3000;
 			let message: string;
 			if (data.statusCode == 401) {
-				const cookies = new Cookies();
-				cookies.remove('access_token');
-				message = 'Sesja wygasła!';
-				addNotification(title, message, type, duration);
-				setTimeout(() => {
-					push('/login');
-				}, duration);
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				message = 'Stworzenie drużyny nie powiodło się!';
 				addNotification(title, message, type, duration);
