@@ -17,7 +17,7 @@ import {
 import { FaUserCircle } from 'react-icons/fa';
 import { AppContext } from './AppProvider';
 import Cookies from 'universal-cookie';
-import checkCookies from '../validation/checkCookies';
+import { checkCookies } from '../validation/checkCookies';
 
 const Header: FunctionComponent = () => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
