@@ -39,6 +39,7 @@ import handleImgFile, {
 	IImageData,
 	defaultImageData
 } from '../utils/handleImgFile';
+import { checkBadAuthorization } from '../validation/checkCookies';
 
 interface IState {
 	username: string;
@@ -150,6 +151,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 			const duration = 1500;
 			addNotification(title, message, type, duration);
 			setTimeout(() => {
+				setLoggedIn(false);
 				push('/rejestracja');
 			}, duration);
 		} catch (e) {
@@ -157,16 +159,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 				response: { data }
 			} = e;
 			if (data.statusCode == 401) {
-				const cookies = new Cookies();
-				cookies.remove('access_token');
-				const title = 'Błąd!';
-				const message = 'Sesja wygasła!';
-				const type = 'danger';
-				const duration = 3000;
-				addNotification(title, message, type, duration);
-				setTimeout(() => {
-					push('/login');
-				}, duration);
+				checkBadAuthorization(setLoggedIn, push);
 			}
 		}
 	};
@@ -241,13 +234,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 			const duration = 3000;
 			let message: string;
 			if (data.statusCode == 401) {
-				const cookies = new Cookies();
-				cookies.remove('access_token');
-				message = 'Sesja wygasła!';
-				addNotification(title, message, type, duration);
-				setTimeout(() => {
-					push('/login');
-				}, duration);
+				checkBadAuthorization(setLoggedIn, push);
 			} else if (
 				data.statusCode == 400 &&
 				data.message == 'Bad password.'
