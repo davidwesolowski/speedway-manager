@@ -66,7 +66,7 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
             return riders.map((rider, index) => {
                 const {id, first_name, last_name, nickname, date_of_birth} = rider
                 return (
-                    <tr key = {id}>
+                    <tr key = {id} style={index % 2? { background: "white"} : {background: "#dddddd"}}>
                         <td>{first_name}</td>
                         <td>{last_name}</td>
                         <td>{nickname}</td>
@@ -80,7 +80,7 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
             return riders.filter(rider => ((rider.first_name.toUpperCase())+" "+(rider.last_name.toUpperCase())).includes(phrase.toUpperCase())).map((rider, index) => {
                 const {id, first_name, last_name, nickname, date_of_birth} = rider
                 return (
-                    <tr key = {id}>
+                    <tr key = {id} style={index % 2? { background: "white"} : {background: "#dddddd"}}>
                         <td>{first_name}</td>
                         <td>{last_name}</td>
                         <td>{nickname}</td>
@@ -126,6 +126,7 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
                     label="Szukaj"
                     value={phrase}
                     onChange={handleOnChange()}
+                    className="find-rider__phrase"
                 />
                 <table id="riders-list">
                     <tbody>
