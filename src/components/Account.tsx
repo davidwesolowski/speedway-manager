@@ -310,17 +310,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 					response: { data }
 				} = e;
 				if (data.statusCode == 401) {
-					const cookies = new Cookies();
-					cookies.remove('access_token');
-					const title = 'Błąd!';
-					const message = 'Sesja wygasła!';
-					const type = 'danger';
-					const duration = 3000;
-					addNotification(title, message, type, duration);
-					setTimeout(() => {
-						setLoggedIn(false);
-						push('/login');
-					}, duration);
+					checkBadAuthorization(setLoggedIn, push);
 				}
 			}
 		};
