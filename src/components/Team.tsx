@@ -68,7 +68,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 					'https://fantasy-league-eti.herokuapp.com/teams',
 					options
 				);
-				if (data[0]) {
+				if (data.length && data[0]) {
 					const { name, logo_url } = data[0];
 					setTeam({ name, logo_url });
 				}
@@ -114,20 +114,24 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 					<Paper>
 						<Tabs value={value} onChange={handleChange} centered>
 							<Tab label="Drużyna" {...a11yProps(0)} />
-							<Tab label="Kadra" {...a11yProps(1)} />
-							<Tab label="Skład meczowy" {...a11yProps(2)} />
+							<Tab
+								disabled={team.name ? false : true}
+								label="Skład meczowy"
+								{...a11yProps(1)}
+							/>
 						</Tabs>
 					</Paper>
 					<TabPanel value={value} index={0}>
-						<TeamCreate />
+						{team.name ? (
+							<TeamGeneral
+								name={team.name}
+								logo_url={team.logo_url}
+							/>
+						) : (
+							<TeamCreate />
+						)}
 					</TabPanel>
 					<TabPanel value={value} index={1}>
-						<TeamGeneral
-							name={team.name}
-							logo_url={team.logo_url}
-						/>
-					</TabPanel>
-					<TabPanel value={value} index={2}>
 						Skład meczowy
 					</TabPanel>
 				</div>
