@@ -62,6 +62,11 @@ const Header: FunctionComponent = () => {
 								Wyniki meczów
 							</Link>
 						</li>
+						<li className="header__item">
+							<Link to="/druzyna" className="header__link">
+								Drużyna
+							</Link>
+						</li>
 					</ul>
 					{loggedIn ? (
 						<IconButton onClick={handleProfileMenuOpen}>
