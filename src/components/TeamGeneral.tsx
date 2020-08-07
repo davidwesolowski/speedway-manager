@@ -7,8 +7,10 @@ import {
 	TableHead,
 	TableRow,
 	TableCell,
-	TableBody
+	TableBody,
+	IconButton
 } from '@material-ui/core';
+import { FaTrashAlt, FaPencilAlt } from 'react-icons/fa';
 
 const riders = [
 	{
@@ -48,17 +50,30 @@ const riders = [
 	}
 ];
 
-const TeamGeneral: FunctionComponent = () => {
+interface IProps {
+	name: string;
+	logo_url: string;
+}
+
+const TeamGeneral: FunctionComponent<IProps> = ({ name, logo_url }) => {
 	return (
 		<Grid container alignItems="flex-start" className="team-container">
 			<Grid item xs={12} md={4}>
 				<div className="team-container__left-pane">
+					<div className="team-container__edit-delete-pane">
+						<IconButton>
+							<FaPencilAlt />
+						</IconButton>
+						<IconButton>
+							<FaTrashAlt />
+						</IconButton>
+					</div>
 					<Typography className="heading-1 team-container__name">
-						GKM Grudziądz
+						{name}
 					</Typography>
 					<div className="team-container__logo-box">
 						<img
-							src="img/kenny.jpg"
+							src={logo_url}
 							alt="team-logo"
 							className="team-container__logo"
 						/>
