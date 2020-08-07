@@ -36,11 +36,6 @@ const Header: FunctionComponent = () => {
 		push('/login');
 	};
 
-	useEffect(() => {
-		const cookiesExist = checkCookies();
-		if (cookiesExist) setLoggedIn(true);
-	}, []);
-
 	return (
 		<>
 			<AppBar position="sticky" className="header">
