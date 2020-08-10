@@ -1,5 +1,5 @@
 import React, { Component, useEffect, FunctionComponent, useState } from 'react';
-import FiX, { FiXCircle } from 'react-icons/fi';
+import {FiX, FiXCircle, FiPlus} from 'react-icons/fi';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 import { IconButton } from '@material-ui/core';
@@ -71,7 +71,9 @@ class RidersList extends Component<{}, {riders}> {
                         imię: rider.first_name,
                         nazwisko: rider.last_name,
                         przydomek: rider.nickname,
-                        data_urodzenia: rider.date_of_birth
+                        data_urodzenia: rider.date_of_birth,
+                        zagraniczny: rider.isForeigner,
+                        ksm: rider.ksm
                     })
                 });
             });
@@ -85,15 +87,51 @@ class RidersList extends Component<{}, {riders}> {
         this.getRiders()
     }
 
+    ifForeigner(foreigner)
+    {
+        if(foreigner.zagraniczny == true)
+        {
+           return(
+                <FiX className="NoX"></FiX>
+           ) 
+        }
+        else{
+            return(
+                <FiPlus className="YesPlus"></FiPlus>
+            )
+        }
+    }
+
+    ifJunior(date)
+    {
+        if(((new Date().getFullYear())-(new Date(date.data_urodzenia).getFullYear()))<22)
+        {
+            return(
+                <FiPlus className="YesPlus"></FiPlus>
+            )
+        }
+        else{
+            return(
+                <FiX className="NoX"></FiX>
+           ) 
+        }
+    }
+
     renderTableData() {
         return this.state.riders.map((rider, index) => {
-            const {id, imię, nazwisko, przydomek, data_urodzenia} = rider
+            const {id, imię, nazwisko, przydomek, data_urodzenia, zagraniczny, ksm} = rider
             return (
                 <tr key={id}>
                     <td className="first-column">{imię}</td>
                     <td>{nazwisko}</td>
                     <td>{przydomek}</td>
-                    <td>{data_urodzenia}</td>
+                    <td>{new Intl.DateTimeFormat("en-GB", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit"
+                        }).format(new Date(data_urodzenia))}</td>
+                    <td>{this.ifForeigner({zagraniczny})}</td>
+                    <td>{this.ifJunior({data_urodzenia})}</td>
                     <td></td>
                     <td className="table-X">
                         <IconButton  onClick={(event: React.MouseEvent<HTMLElement>) => {this.deleteRiders({id})}} className="delete-button">
@@ -106,7 +144,7 @@ class RidersList extends Component<{}, {riders}> {
     }
 
     renderTableHeader(){
-        let header = ["Imię", "Nazwisko", "Przydomek", "Data urodzenia", "Klub"];
+        let header = ["Imię", "Nazwisko", "Przydomek", "Data urodzenia", "Polak", "Junior", "Klub"];
         return header.map((key, index) => {
         return <th key={index}>{key.toUpperCase()}</th>
         })

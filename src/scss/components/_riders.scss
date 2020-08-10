@@ -41,7 +41,8 @@
     }
 
     &__fix{
-        float: right;
+        float: right !important;
+        size: x-large !important;
     }
 }
 

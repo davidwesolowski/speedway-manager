@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState, useEffect } from 'react';
 import {
 	Paper,
 	Typography,
@@ -10,7 +10,8 @@ import {
 	DialogTitle,
 	DialogContent,
 	FormControl,
-	Grid,
+    Grid,
+    Checkbox
 } from '@material-ui/core';
 import {FiPlus, FiX, FiTarget} from 'react-icons/fi';
 import axios from 'axios';
@@ -29,6 +30,8 @@ interface IRider{
     last_name: string;
     nickname: string;
     date_of_birth: Date;
+    isForeigner: boolean;
+    ksm: number;
 //   club: string;
 }
 
@@ -49,6 +52,10 @@ interface IValidatedData{
         message: string;
         error: boolean;
     };
+    ksm: {
+        message: string;
+        error: boolean;
+    }
 /*    club: {
         message: string;
         error: boolean;
@@ -72,6 +79,10 @@ const defaultValidatedData = {
         message: '',
         error: false
     },
+    ksm: {
+        message: '',
+        error: false
+    }
 /*    club: {
         message: '',
         error: false
@@ -87,6 +98,8 @@ const defaultRiderData = {
     last_name: '',
     nickname: '',
     date_of_birth: new Date(2000,1,1),
+    isForeigner: false,
+    ksm: 2.50
  //   club: 'Fogo Unia Leszno'
 };
 
@@ -212,8 +225,8 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
                 }
             );
         } else {
-            const {first_name, last_name, nickname, date_of_birth} = riderData;
-            addRider({first_name, last_name, nickname, date_of_birth});
+            const {first_name, last_name, nickname, date_of_birth, isForeigner, ksm} = riderData;
+            addRider({first_name, last_name, nickname, date_of_birth, isForeigner, ksm});
  /*           const {firstName, lastName, nickname, dateOfBirth, club} = riderData;
             addRider({firstName, lastName, nickname, dateOfBirth, club});*/
         }
@@ -239,10 +252,10 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
                     <div className="dialog__header">
                         <Typography variant="h4" className="dialog__title">
                             Dodawanie zawodnika
-                            <IconButton onClick={handleClose} className="riders__fix">
-                                <FiX />
-                            </IconButton>
                         </Typography>
+                        <IconButton onClick={handleClose} className="riders__fix">
+                                <FiX />
+                        </IconButton>
                     </div>
                 </DialogTitle>
                 <DialogContent dividers>
@@ -297,6 +310,18 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
                                             }}
                                         />
                                     </MuiPickersUtilsProvider>
+                                </FormControl>
+                                <br/>
+                                <FormControl className="dialog__form_field">
+                                    <TextField
+                                        label="KSM"
+                                        required
+                                        autoComplete="ksm"
+                                        value={riderData.ksm}
+                                        error={validatedData.ksm.error}
+                                        helperText={validatedData.ksm.message}
+                                        onChange={handleOnChange('ksm')}
+                                    />
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
