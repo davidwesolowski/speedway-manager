@@ -142,7 +142,10 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 								setUpdatedTeam={setUpdatedTeam}
 							/>
 						) : (
-							<TeamCreate />
+							<TeamCreate
+								updatedTeam={updatedTeam}
+								setUpdatedTeam={setUpdatedTeam}
+							/>
 						)}
 					</TabPanel>
 					<TabPanel value={value} index={1}>
