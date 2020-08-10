@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactNode, useState } from 'react';
+import React, { FunctionComponent, Fragment, ReactNode, useState } from 'react';
 import {
 	Card,
 	CardHeader,
@@ -71,8 +71,6 @@ const not = (a: ITempRider[], b: ITempRider[]) => {
 const intersection = (a: ITempRider[], b: ITempRider[]) => {
 	return a.filter((rider: ITempRider) => b.indexOf(rider) !== -1);
 };
-
-const union = (a: ITempRider[], b: ITempRider[]) => [...a, ...not(b, a)];
 
 const TeamMatch: FunctionComponent = () => {
 	const [checked, setChecked] = useState<ITempRider[]>([]);
@@ -150,30 +148,22 @@ const TeamMatch: FunctionComponent = () => {
 		riders: ITempRider[],
 		header: string
 	) => (
-		<Card>
+		<Card className="team-match-container__card">
 			<CardHeader title={header} />
-			<Divider /> n
+			<Divider />
 			<List dense component="div" role="list">
 				{riders.map((rider: ITempRider) => {
-					const value = `${rider.firstName} ${rider.lastName}`;
-					const labelId = `transfer-list-all-item-${value}-label`;
 					return (
-						<ListItem
-							key={value}
-							role="listitem"
-							button
-							onClick={handleToggle(rider)}
-						>
-							<ListItemIcon>
-								<Checkbox
-									checked={checked.indexOf(rider) !== -1}
-									tabIndex={-1}
-									disableRipple
-									inputProps={{ 'aria-labelledby': labelId }}
-								/>
-							</ListItemIcon>
-							<ListItemText id={labelId} primary={value} />
-						</ListItem>
+						<Fragment key={rider._id}>
+							<ListItem
+								role="listitem"
+								button
+								onClick={handleToggle(rider)}
+							>
+								{customRider(rider)}
+							</ListItem>
+							<Divider />
+						</Fragment>
 					);
 				})}
 			</List>
@@ -181,8 +171,16 @@ const TeamMatch: FunctionComponent = () => {
 	);
 
 	return (
-		<Grid container alignItems="center" justify="center" spacing={2}>
-			<Grid item>{customList('Choices', left, 'Cała drużyna')}</Grid>
+		<Grid
+			container
+			alignItems="center"
+			justify="center"
+			spacing={2}
+			className="team-match-container"
+		>
+			<Grid item xs={5} style={{ alignSelf: 'flex-start' }}>
+				{customList('Choices', left, 'Cała drużyna')}
+			</Grid>
 			<Grid item>
 				<Grid container direction="column" alignItems="center">
 					<Button
@@ -211,7 +209,7 @@ const TeamMatch: FunctionComponent = () => {
 					</Button>
 				</Grid>
 			</Grid>
-			<Grid item style={{ alignSelf: 'flex-start' }}>
+			<Grid item xs={5} style={{ alignSelf: 'flex-start' }}>
 				{customList('Chosen', right, 'Kadra meczowa')}
 			</Grid>
 		</Grid>
