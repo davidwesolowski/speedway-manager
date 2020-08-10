@@ -17,7 +17,7 @@ export const checkBadAuthorization = (
 	const title = 'Błąd!';
 	const type = 'danger';
 	const message = 'Sesja wygasła!';
-	const duration = 3000;
+	const duration = 1000;
 	const cookies = new Cookies();
 	cookies.remove('access_token');
 	addNotification(title, message, type, duration);
