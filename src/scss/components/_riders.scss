@@ -51,13 +51,13 @@
     
     &__form_field_date{
         margin-top: 10px !important;
-        font-size: x-large !important;
+        font-size: large !important;
         width: 100%;
     }
 
     &__form_field_club{
         margin-top: 10px !important;
-        font-size: x-large !important;
+        font-size: large !important;
         width: 100%;
     }
 
@@ -66,8 +66,16 @@
     }
 
     &__choose_list{
-        font-size: x-large !important;
+        font-size: large !important;
     }
+
+    &__checkbox{
+        font-size: large !important;
+    }
+}
+
+.checkbox{
+    float: right !important;
 }
 
 table{

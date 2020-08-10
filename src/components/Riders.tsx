@@ -97,7 +97,7 @@ const defaultRiderData = {
     first_name: '',
     last_name: '',
     nickname: '',
-    date_of_birth: new Date(2000,1,1),
+    date_of_birth: new Date(2000,0,1),
     isForeigner: false,
     ksm: 2.50
  //   club: 'Fogo Unia Leszno'
@@ -135,6 +135,17 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
         }
     };
 
+    const handleOnChangeCheckbox = (event) => {
+        event.persist();
+        console.log(!event.target.checked);
+        if(event.target){
+            setRiderData((prevState: IRider) => ({
+                ...prevState,
+                isForeigner: !event.target.checked
+            }));
+        }
+    };
+
     const handleDateOnChange = date => {
         setRiderData((prevState: IRider) => ({
             ...prevState,
@@ -142,7 +153,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
         }));
     };
 
-    const handleOnChangeClub = (name: string) => (
+    /*const handleOnChangeClub = (name: string) => (
         event: React.ChangeEvent<HTMLSelectElement>
     ) => {
         event.persist();
@@ -152,7 +163,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
                 [name]: event.target.value
             }));
         }
-    };
+    };*/
 
     const addRider = async (riderData: IRider) => {
         try {
@@ -312,6 +323,16 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
                                     </MuiPickersUtilsProvider>
                                 </FormControl>
                                 <br/>
+                                <FormControl className="dialog__checkbox">
+                                    Polak:
+                                    <Checkbox
+                                        required
+                                        onChange={handleOnChangeCheckbox}
+                                        size="small"
+                                        className="checkbox"
+                                        title="Zaznacz jeśli zawodnik jest Polakiem"
+                                    />
+                                </FormControl>
                                 <FormControl className="dialog__form_field">
                                     <TextField
                                         label="KSM"

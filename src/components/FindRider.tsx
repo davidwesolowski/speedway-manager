@@ -70,7 +70,11 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
                         <td>{first_name}</td>
                         <td>{last_name}</td>
                         <td>{nickname}</td>
-                        <td>{date_of_birth}</td>
+                        <td>{new Intl.DateTimeFormat("en-GB", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit"
+                        }).format(new Date(date_of_birth))}</td>
                     </tr>
                 )
             })
@@ -84,7 +88,11 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
                         <td>{first_name}</td>
                         <td>{last_name}</td>
                         <td>{nickname}</td>
-                        <td>{date_of_birth}</td>
+                        <td>{new Intl.DateTimeFormat("en-GB", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit"
+                        }).format(new Date(date_of_birth))}</td>
                     </tr>
                 )
             })
