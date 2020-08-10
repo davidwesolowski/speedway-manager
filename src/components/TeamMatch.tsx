@@ -113,6 +113,38 @@ const TeamMatch: FunctionComponent = () => {
 		setChecked(not(checked, rightChecked));
 	};
 
+	const customRider = (rider: ITempRider) => (
+		<Grid
+			container
+			justify="space-evenly"
+			alignItems="center"
+			className="team-match-container__rider"
+		>
+			<Grid item xs={1}>
+				<Checkbox
+					checked={checked.indexOf(rider) !== -1}
+					tabIndex={-1}
+					disableRipple
+				/>
+			</Grid>
+			<Grid item xs={1}>
+				{rider._id}
+			</Grid>
+			<Grid item xs={3}>
+				{`${rider.firstName} ${rider.lastName}`}
+			</Grid>
+			<Grid item xs={1}>
+				PL
+			</Grid>
+			<Grid item xs={1}>
+				Junior
+			</Grid>
+			<Grid item xs={1}>
+				KSM
+			</Grid>
+		</Grid>
+	);
+
 	const customList = (
 		title: ReactNode,
 		riders: ITempRider[],
