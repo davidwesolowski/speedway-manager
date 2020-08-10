@@ -82,6 +82,8 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 				if (data.length && data[0]) {
 					const { name, logo_url, _id } = data[0];
 					setTeam({ name, logo_url, _id });
+				} else {
+					setTeam(defaultTeamState);
 				}
 			} catch (e) {
 				const {

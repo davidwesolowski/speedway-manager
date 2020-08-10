@@ -171,6 +171,44 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 		}
 	};
 
+	const removeTeam = async () => {
+		try {
+			const cookies = new Cookies();
+			const access_token = cookies.get('access_token');
+			const options = {
+				headers: {
+					Authorization: `Bearer ${access_token}`
+				}
+			};
+			await axios.delete(
+				`https://fantasy-league-eti.herokuapp.com/teams/${team._id}`,
+				options
+			);
+			const title = 'Sukces!';
+			const message = 'Pomyślnie usunięto drużynę!';
+			const type = 'success';
+			const duration = 1500;
+			addNotification(title, message, type, duration);
+			setTimeout(() => {
+				handleRemoveClose();
+				setUpdatedTeam(!updatedTeam);
+			}, duration);
+		} catch (e) {
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
+			} else {
+				const title = 'Błąd!';
+				const message = 'Wystąpił błąd podczas usuwania drużyny!';
+				const type = 'danger';
+				const duration = 1500;
+				addNotification(title, message, type, duration);
+			}
+		}
+	};
+
 	const handleOnSubmit = (event: FormEvent) => {
 		event.preventDefault();
 		editTeam();
@@ -328,7 +366,12 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 					<Button className="btn" onClick={handleRemoveClose}>
 						Anuluj
 					</Button>
-					<Button className="btn dialog__button-approve">Usuń</Button>
+					<Button
+						className="btn dialog__button-approve"
+						onClick={removeTeam}
+					>
+						Usuń
+					</Button>
 				</DialogActions>
 			</Dialog>
 		</>
