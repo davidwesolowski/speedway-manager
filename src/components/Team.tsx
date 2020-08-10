@@ -16,6 +16,7 @@ import { AppContext } from './AppProvider';
 import { checkBadAuthorization } from '../validation/checkCookies';
 import { setUser } from '../actions/userActions';
 import { defaultImageData } from '../utils/handleImgFile';
+import TeamMatch from './TeamMatch';
 
 interface ITabPanelProps {
 	children?: ReactNode;
@@ -149,7 +150,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 						)}
 					</TabPanel>
 					<TabPanel value={value} index={1}>
-						Skład meczowy
+						<TeamMatch />
 					</TabPanel>
 				</div>
 			</Paper>
