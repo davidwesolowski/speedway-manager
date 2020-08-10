@@ -15,12 +15,25 @@ import TeamGeneral from './TeamGeneral';
 import { AppContext } from './AppProvider';
 import { checkBadAuthorization } from '../validation/checkCookies';
 import { setUser } from '../actions/userActions';
+import { defaultImageData } from '../utils/handleImgFile';
 
 interface ITabPanelProps {
 	children?: ReactNode;
 	index: any;
 	value: any;
 }
+
+interface ITeamState {
+	name: string;
+	logo_url: string;
+	_id: string;
+}
+
+const defaultTeamState = {
+	name: '',
+	logo_url: '',
+	_id: ''
+};
 
 const TabPanel = (props: ITabPanelProps) => {
 	const { children, value, index, ...other } = props;
@@ -44,10 +57,8 @@ const a11yProps = (index: any) => ({
 
 const Team: FunctionComponent<RouteComponentProps> = () => {
 	const [value, setValue] = useState<number>(0);
-	const [team, setTeam] = useState<{ name: string; logo_url: string }>({
-		name: '',
-		logo_url: ''
-	});
+	const [team, setTeam] = useState<ITeamState>(defaultTeamState);
+	const [updatedTeam, setUpdatedTeam] = useState<boolean>(false);
 	const { push } = useHistory();
 	const { setLoggedIn, dispatchUserData, userData } = useContext(AppContext);
 	// eslint-disable-next-line @typescript-eslint/ban-types
@@ -69,8 +80,8 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 					options
 				);
 				if (data.length && data[0]) {
-					const { name, logo_url } = data[0];
-					setTeam({ name, logo_url });
+					const { name, logo_url, _id } = data[0];
+					setTeam({ name, logo_url, _id });
 				}
 			} catch (e) {
 				const {
@@ -97,7 +108,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 		};
 		fetchTeam();
 		if (!userData.username) fetchUserData();
-	}, []);
+	}, [updatedTeam]);
 
 	return (
 		<div className="team-container">
@@ -124,8 +135,9 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 					<TabPanel value={value} index={0}>
 						{team.name ? (
 							<TeamGeneral
-								name={team.name}
-								logo_url={team.logo_url}
+								team={team}
+								updatedTeam={updatedTeam}
+								setUpdatedTeam={setUpdatedTeam}
 							/>
 						) : (
 							<TeamCreate />
