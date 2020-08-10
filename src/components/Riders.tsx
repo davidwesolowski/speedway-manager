@@ -11,15 +11,11 @@ import {
 	DialogContent,
 	FormControl,
 	Grid,
-	InputAdornment
 } from '@material-ui/core';
 import {FiPlus, FiX, FiTarget} from 'react-icons/fi';
 import axios from 'axios';
 import validateRiderData from '../validation/validateRiderData';
 import { ValidationErrorItem } from '@hapi/joi';
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import Alert from '@material-ui/lab/Alert';
 import RidersList from "../components/RidersList";
 import Cookies from 'universal-cookie';
 import addNotification from '../utils/addNotification';
@@ -32,7 +28,7 @@ interface IRider{
     first_name: string;
     last_name: string;
     nickname: string;
-    date_of_birth: string;
+    date_of_birth: Date;
 //   club: string;
 }
 
@@ -90,7 +86,7 @@ const defaultRiderData = {
     first_name: '',
     last_name: '',
     nickname: '',
-    date_of_birth: '1/1/2000',
+    date_of_birth: new Date(2000,1,1),
  //   club: 'Fogo Unia Leszno'
 };
 
@@ -129,7 +125,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
     const handleDateOnChange = date => {
         setRiderData((prevState: IRider) => ({
             ...prevState,
-            date_of_birth: date.toString()
+            date_of_birth: date
         }));
     };
 
@@ -154,18 +150,6 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
                     Authorization: `Bearer ${access_token}`
                 }
             };
-            const date = new Date(riderData.date_of_birth);
-            const month = date.getUTCMonth() + 1;
-            const day = date.getUTCDate();
-            const year = date.getUTCFullYear();
-
-            const newdate = day + "/" + month + "/" + year;
-            console.log(newdate);  
-            setRiderData((prevState: IRider) => ({
-                ...prevState,
-                date_of_birth: newdate
-            }));
-            console.log(riderData.date_of_birth);
             const {
                 data
             } = await axios.post(
@@ -173,9 +157,6 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
                 riderData,
                 options
             );
-            console.log(data);
-            //setAddRiderError(false);
-            //setAddRiderSuccess(true);
             addNotification("Sukces", "Poprawnie dodano zawodnika", "success", 1000);
             setValidatedData(defaultValidatedData);
             setRiderData(defaultRiderData); 
@@ -183,26 +164,28 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
                 {handleClose()};
             }, 10);
             setTimeout(() => {
-                //setAddRiderSuccess(false);
                 {refreshPage()};
             }, 1000);
         } catch (e) {
             if(e.statusText == "Bad Request")
             {
-                setAddRiderError(true);
-                setAddRiderSuccess(false);
                 addNotification("Błąd!", "Podany zawodnik już istnieje w bazie!", "danger",1000);
                 setTimeout(() => {
-                    setAddRiderError(false);
+                }, 1000);
+            }
+            else if(e.statusText == "Unauthorized")
+            {
+                addNotification("Błąd!", "Twoja sesja wygasła", "danger", 1000);
+                setTimeout(() => {
+                    push('/login');
                 }, 1000);
             }
             else
             {
-                addNotification("Błąd!", "Twoja sesja wygasła", "danger", 1000);
                 setAddRiderError(true);
                 setAddRiderSuccess(false);
+                addNotification("Błąd!", "Nie udało się dodać zawodnika!", "danger",1000);
                 setTimeout(() => {
-                    push('/login');
                     setAddRiderError(false);
                 }, 1000);
             }
@@ -323,21 +306,6 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 								>
 									Dodaj
 								</Button>
-							</Grid>
-							<Grid item xs={12}>
-								{addRiderSuccess && (
-									<Alert
-										severity="success"
-										variant="outlined"
-									>
-										Dodawanie zawodnika zakończone powodzeniem!
-									</Alert>
-								)}
-								{addRiderError && (
-									<Alert severity="error" variant="outlined">
-										Dodawanie zawodnika zakończone niepowodzeniem!
-									</Alert>
-								)}
 							</Grid>
                         </Grid>
                     </form> 

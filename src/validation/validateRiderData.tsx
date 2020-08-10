@@ -73,7 +73,7 @@ const schema = Joi.object({
             }
             return error;
         }),
-    date_of_birth: Joi.string()
+    date_of_birth: Joi.date()
         .required()
         .error((error: ErrorReport[]): any => {
             if (error[0].code) {
@@ -120,7 +120,7 @@ export default function validateRiderData(data: {
     first_name: string;
     last_name: string;
     nickname: string;
-    date_of_birth: string;
+    date_of_birth: Date;
     //club: string;
 }): ValidationResult {
     return schema.validate(data, {abortEarly: false});
