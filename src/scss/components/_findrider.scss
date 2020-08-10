@@ -23,14 +23,38 @@
 		min-width: 45vw;
         padding: 3rem 2rem;
         width: 90%;
-        align-items: center;
-        justify-content: center;
     }
 
     &__phrase{
         padding-bottom: 10px !important;
         width: 50% !important;
+        float: left;
     }
+
+    &__select1{
+        width:20%;
+        float: right;
+        margin-left: 2% !important;
+    }
+
+    &__select2{
+        width:20%;
+        float: right;
+    }
+
+    &__search{
+        display: inline-block;
+        width: 100%;
+    }
+}
+
+#label1{
+    width:20%;
+    float: right;
+}
+
+#label2{
+    width: 20%;
 }
 
 table{

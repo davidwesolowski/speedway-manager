@@ -121,7 +121,7 @@ class RidersList extends Component<{}, {riders}> {
         return this.state.riders.map((rider, index) => {
             const {id, imię, nazwisko, przydomek, data_urodzenia, zagraniczny, ksm} = rider
             return (
-                <tr key={id}>
+                <tr key={id} style={index % 2? { background: "white"} : {background: "#dddddd"}}>
                     <td className="first-column">{imię}</td>
                     <td>{nazwisko}</td>
                     <td>{przydomek}</td>
