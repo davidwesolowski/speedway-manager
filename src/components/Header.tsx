@@ -2,6 +2,7 @@ import React, {
 	FunctionComponent,
 	useContext,
 	useState,
+	useEffect,
 	MouseEvent
 } from 'react';
 import { Link, useHistory } from 'react-router-dom';
@@ -16,6 +17,7 @@ import {
 import { FaUserCircle } from 'react-icons/fa';
 import { AppContext } from './AppProvider';
 import Cookies from 'universal-cookie';
+import { checkCookies } from '../validation/checkCookies';
 
 const Header: FunctionComponent = () => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -53,6 +55,11 @@ const Header: FunctionComponent = () => {
 						<li className="header__item">
 							<Link to="/" className="header__link">
 								Wyniki meczów
+							</Link>
+						</li>
+						<li className="header__item">
+							<Link to="/druzyna" className="header__link">
+								Drużyna
 							</Link>
 						</li>
 					</ul>

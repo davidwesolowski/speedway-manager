@@ -2,16 +2,38 @@ import React, {
 	FunctionComponent,
 	ReactNode,
 	useState,
-	ChangeEvent
+	ChangeEvent,
+	useEffect,
+	useContext
 } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 import { Paper, Typography, Divider, Box, Tabs, Tab } from '@material-ui/core';
+import axios from 'axios';
+import Cookies from 'universal-cookie';
 import TeamCreate from './TeamCreate';
+import TeamGeneral from './TeamGeneral';
+import { AppContext } from './AppProvider';
+import { checkBadAuthorization } from '../validation/checkCookies';
+import { setUser } from '../actions/userActions';
+import { defaultImageData } from '../utils/handleImgFile';
+
 interface ITabPanelProps {
 	children?: ReactNode;
 	index: any;
 	value: any;
 }
+
+interface ITeamState {
+	name: string;
+	logo_url: string;
+	_id: string;
+}
+
+const defaultTeamState = {
+	name: '',
+	logo_url: '',
+	_id: ''
+};
 
 const TabPanel = (props: ITabPanelProps) => {
 	const { children, value, index, ...other } = props;
@@ -35,9 +57,60 @@ const a11yProps = (index: any) => ({
 
 const Team: FunctionComponent<RouteComponentProps> = () => {
 	const [value, setValue] = useState<number>(0);
+	const [team, setTeam] = useState<ITeamState>(defaultTeamState);
+	const [updatedTeam, setUpdatedTeam] = useState<boolean>(false);
+	const { push } = useHistory();
+	const { setLoggedIn, dispatchUserData, userData } = useContext(AppContext);
 	// eslint-disable-next-line @typescript-eslint/ban-types
 	const handleChange = (event: ChangeEvent<{}>, newValue: number) =>
 		setValue(newValue);
+
+	useEffect(() => {
+		const cookies = new Cookies();
+		const access_token = cookies.get('access_token');
+		const options = {
+			headers: {
+				Authorization: `Bearer ${access_token}`
+			}
+		};
+		const fetchTeam = async () => {
+			try {
+				const { data } = await axios.get(
+					'https://fantasy-league-eti.herokuapp.com/teams',
+					options
+				);
+				if (data.length && data[0]) {
+					const { name, logo_url, _id } = data[0];
+					setTeam({ name, logo_url, _id });
+				} else {
+					setTeam(defaultTeamState);
+				}
+			} catch (e) {
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
+				}
+			}
+		};
+		const fetchUserData = async () => {
+			try {
+				const {
+					data: { username, email, avatar_url }
+				} = await axios.get(
+					'https://fantasy-league-eti.herokuapp.com/users/self',
+					options
+				);
+				dispatchUserData(setUser({ username, email, avatar_url }));
+				setLoggedIn(true);
+			} catch (e) {
+				/**/
+			}
+		};
+		fetchTeam();
+		if (!userData.username) fetchUserData();
+	}, [updatedTeam]);
 
 	return (
 		<div className="team-container">
@@ -54,17 +127,28 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 					<Paper>
 						<Tabs value={value} onChange={handleChange} centered>
 							<Tab label="Drużyna" {...a11yProps(0)} />
-							<Tab label="Kadra" {...a11yProps(1)} />
-							<Tab label="Skład meczowy" {...a11yProps(2)} />
+							<Tab
+								disabled={team.name ? false : true}
+								label="Skład meczowy"
+								{...a11yProps(1)}
+							/>
 						</Tabs>
 					</Paper>
 					<TabPanel value={value} index={0}>
-						<TeamCreate />
+						{team.name ? (
+							<TeamGeneral
+								team={team}
+								updatedTeam={updatedTeam}
+								setUpdatedTeam={setUpdatedTeam}
+							/>
+						) : (
+							<TeamCreate
+								updatedTeam={updatedTeam}
+								setUpdatedTeam={setUpdatedTeam}
+							/>
+						)}
 					</TabPanel>
 					<TabPanel value={value} index={1}>
-						Dodaj zawodników
-					</TabPanel>
-					<TabPanel value={value} index={2}>
 						Skład meczowy
 					</TabPanel>
 				</div>
