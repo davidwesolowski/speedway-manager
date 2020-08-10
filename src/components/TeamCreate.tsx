@@ -3,7 +3,9 @@ import React, {
 	useState,
 	ChangeEvent,
 	FormEvent,
-	useContext
+	useContext,
+	SetStateAction,
+	Dispatch
 } from 'react';
 import {
 	Typography,
@@ -32,6 +34,11 @@ interface ITeamState {
 	league: string;
 }
 
+interface IProps {
+	updatedTeam: boolean;
+	setUpdatedTeam: Dispatch<SetStateAction<boolean>>;
+}
+
 type SelectType = {
 	name?: string | undefined;
 	value: unknown;
@@ -48,7 +55,10 @@ const leagues: string[] = [
 	'2. Liga żużlowa'
 ];
 
-const TeamCreate: FunctionComponent = () => {
+const TeamCreate: FunctionComponent<IProps> = ({
+	updatedTeam,
+	setUpdatedTeam
+}) => {
 	const [team, setTeam] = useState<ITeamState>(defaultTeam);
 	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
 	const { setLoggedIn } = useContext(AppContext);
@@ -87,7 +97,7 @@ const TeamCreate: FunctionComponent = () => {
 			const title = 'Sukces!';
 			let message = 'Pomyślnie stworzono drużynę!';
 			const type = 'success';
-			const duration = 3000;
+			const duration = 2000;
 			addNotification(title, message, type, duration);
 
 			const { name: filename, imageBuffer } = imageData;
@@ -107,18 +117,20 @@ const TeamCreate: FunctionComponent = () => {
 			await axios.put(signed_url, imageBuffer, awsOptions);
 			message = 'Pomyślnie dodano logo drużyny!';
 			addNotification(title, message, type, duration);
+			setTimeout(() => {
+				setUpdatedTeam(!updatedTeam);
+			}, duration);
 		} catch (e) {
 			const {
 				response: { data }
 			} = e;
-			const title = 'Błąd!';
-			const type = 'danger';
-			const duration = 3000;
-			let message: string;
 			if (data.statusCode == 401) {
 				checkBadAuthorization(setLoggedIn, push);
 			} else {
-				message = 'Stworzenie drużyny nie powiodło się!';
+				const title = 'Błąd!';
+				const message = 'Stworzenie drużyny nie powiodło się!';
+				const type = 'danger';
+				const duration = 3000;
 				addNotification(title, message, type, duration);
 			}
 		}
