@@ -22,7 +22,8 @@ import {
 	DialogContent,
 	FormGroup,
 	TextField,
-	Button
+	Button,
+	DialogActions
 } from '@material-ui/core';
 import { FaTrashAlt, FaPencilAlt } from 'react-icons/fa';
 import { FiX } from 'react-icons/fi';
@@ -87,6 +88,7 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 	updatedTeam
 }) => {
 	const [editOpen, setEditOpen] = useState<boolean>(false);
+	const [removeOpen, setRemoveOpen] = useState<boolean>(false);
 	const [teamName, setTeamName] = useState<string>('');
 	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
 	const { push } = useHistory();
@@ -99,6 +101,10 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 	};
 
 	const handleEditOpen = () => setEditOpen(true);
+
+	const handleRemoveOpen = () => setRemoveOpen(true);
+
+	const handleRemoveClose = () => setRemoveOpen(false);
 
 	const handleOnchange = (event: ChangeEvent<HTMLInputElement>) => {
 		if (event.target) {
@@ -177,7 +183,7 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 					<IconButton onClick={handleEditOpen}>
 						<FaPencilAlt />
 					</IconButton>
-					<IconButton>
+					<IconButton onClick={handleRemoveOpen}>
 						<FaTrashAlt />
 					</IconButton>
 				</Grid>
@@ -309,6 +315,21 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 						</Grid>
 					</form>
 				</DialogContent>
+			</Dialog>
+			<Dialog open={removeOpen} onClose={handleRemoveClose}>
+				<DialogTitle>
+					<div>
+						<Typography variant="h4" className="dialog__title">
+							Czy na pewno chcesz usunąć swoją drużynę?
+						</Typography>
+					</div>
+				</DialogTitle>
+				<DialogActions>
+					<Button className="btn" onClick={handleRemoveClose}>
+						Anuluj
+					</Button>
+					<Button className="btn dialog__button-approve">Usuń</Button>
+				</DialogActions>
 			</Dialog>
 		</>
 	);
