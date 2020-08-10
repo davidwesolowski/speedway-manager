@@ -4,6 +4,8 @@
 	&__name {
 		font-family: $bebas !important;
 		text-align: center !important;
+		word-wrap: break-word !important;
+		word-break: break-all !important;
 	}
 
 	&__logo {
@@ -26,13 +28,6 @@
 
 	&__right-pane {
 		margin-left: $xs-margin;
-	}
-
-	&__edit-delete-pane {
-		position: absolute;
-		z-index: 2;
-		left: 0;
-		top: 0;
 	}
 
 	.MuiTableCell-head {
