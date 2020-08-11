@@ -7,7 +7,16 @@ import React, {
 	useContext
 } from 'react';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
-import { Paper, Typography, Divider, Box, Tabs, Tab } from '@material-ui/core';
+import {
+	Paper,
+	Typography,
+	Divider,
+	Box,
+	Tabs,
+	Tab,
+	CircularProgress,
+	Grid
+} from '@material-ui/core';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
 import TeamCreate from './TeamCreate';
@@ -60,6 +69,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 	const [value, setValue] = useState<number>(0);
 	const [team, setTeam] = useState<ITeamState>(defaultTeamState);
 	const [updatedTeam, setUpdatedTeam] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(true);
 	const { push } = useHistory();
 	const { setLoggedIn, dispatchUserData, userData } = useContext(AppContext);
 	// eslint-disable-next-line @typescript-eslint/ban-types
@@ -67,6 +77,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 		setValue(newValue);
 
 	useEffect(() => {
+		setLoading(true);
 		const cookies = new Cookies();
 		const access_token = cookies.get('access_token');
 		const options = {
@@ -111,6 +122,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 		};
 		fetchTeam();
 		if (!userData.username) fetchUserData();
+		setLoading(false);
 	}, [updatedTeam]);
 
 	return (
@@ -124,7 +136,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 					Zarządzaj swoją drużyną marzeń!
 				</Typography>
 				<Divider />
-				<div className="team-container__tabs-container">
+				<div className="team-container__tabsContainer">
 					<Paper>
 						<Tabs value={value} onChange={handleChange} centered>
 							<Tab label="Drużyna" {...a11yProps(0)} />
@@ -136,7 +148,16 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 						</Tabs>
 					</Paper>
 					<TabPanel value={value} index={0}>
-						{team.name ? (
+						{loading ? (
+							<Grid
+								container
+								justify="center"
+								alignItems="center"
+								className="team-container__tabsLoading"
+							>
+								<CircularProgress />
+							</Grid>
+						) : team.name ? (
 							<TeamGeneral
 								team={team}
 								updatedTeam={updatedTeam}

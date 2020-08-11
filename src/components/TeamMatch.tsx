@@ -242,7 +242,7 @@ const TeamMatch: FunctionComponent = () => {
 		riders: ITempRider[],
 		header: string
 	) => (
-		<Card className="team-match-container__card">
+		<Card>
 			<CardHeader
 				title={header}
 				subheader={
@@ -280,7 +280,7 @@ const TeamMatch: FunctionComponent = () => {
 			spacing={2}
 			className="team-match-container"
 		>
-			<Grid item xs={5} style={{ alignSelf: 'flex-start' }}>
+			<Grid item xs={12} lg={5} style={{ alignSelf: 'flex-start' }}>
 				{customList('Choices', left, 'Cała drużyna')}
 			</Grid>
 			<Grid item xs={2}>
@@ -311,7 +311,7 @@ const TeamMatch: FunctionComponent = () => {
 					</Button>
 				</Grid>
 			</Grid>
-			<Grid item xs={5} style={{ alignSelf: 'flex-start' }}>
+			<Grid item xs={12} lg={5} style={{ alignSelf: 'flex-start' }}>
 				{customList('Chosen', right, 'Kadra meczowa')}
 			</Grid>
 			<Button onClick={handleCheckLeft} className="btn">
