@@ -34,6 +34,8 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
         age: "All"
     });
     const [filteredRiders, setFilteredRiders] = useState([]);
+    const [filteredNationality, setFilteredNationality] = useState([]);
+    const [filteredAge, setFilteredAge] = useState([]);
     const getRiders = async () => {
         try {
             const cookies = new Cookies();
@@ -104,55 +106,94 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
         }
     }
 
-    const filterAge = () => {
-        console.log(selects.age);
-        console.log(filteredRiders);
+    const filtr = () => {
         if(selects.age == "U23")
         {
-            filteredRiders.map(rider => console.log(new Date().getFullYear() - new Date(rider.date_of_birth).getFullYear()));
-            setFilteredRiders(
-                filteredRiders.filter(rider => ((new Date().getFullYear() - new Date(rider.date_of_birth).getFullYear())<24))
-            )
+            if(selects.nationality == "All")
+            {
+                setFilteredRiders(
+                    riders.filter(rider => ((new Date().getFullYear() - new Date(rider.date_of_birth).getFullYear())<24))
+                )
+            }
+            else if(selects.nationality == "Polish")
+            {
+                setFilteredRiders(
+                    riders.filter(rider => (rider.isForeigner == false) && ((new Date().getFullYear() - new Date(rider.date_of_birth).getFullYear())<24))
+                );
+            }
+            else
+            {
+                setFilteredRiders(
+                    riders.filter(rider => (rider.isForeigner == true) && ((new Date().getFullYear() - new Date(rider.date_of_birth).getFullYear())<24))
+                );
+            }
         }
         else if(selects.age == "U21")
         {
-            filteredRiders.map(rider => console.log(new Date().getFullYear() - new Date(rider.date_of_birth).getFullYear()));
-            setFilteredRiders(
-                filteredRiders.filter(rider => ((new Date().getFullYear() - new Date(rider.date_of_birth).getFullYear())<22))
-            )
+            if(selects.nationality == "All")
+            {
+                setFilteredRiders(
+                    riders.filter(rider => ((new Date().getFullYear() - new Date(rider.date_of_birth).getFullYear())<22))
+                )
+            }
+            else if(selects.nationality == "Polish")
+            {
+                setFilteredRiders(
+                    riders.filter(rider => (rider.isForeigner == false) && ((new Date().getFullYear() - new Date(rider.date_of_birth).getFullYear())<22))
+                );
+            }
+            else
+            {
+                setFilteredRiders(
+                    riders.filter(rider => (rider.isForeigner == true) && ((new Date().getFullYear() - new Date(rider.date_of_birth).getFullYear())<22))
+                );
+            }
         }
         else if(selects.age == "22+")
         {
-            filteredRiders.map(rider => console.log(new Date().getFullYear() - new Date(rider.date_of_birth).getFullYear()));
-            setFilteredRiders(
-                filteredRiders.filter(rider => ((new Date().getFullYear() - new Date(rider.date_of_birth).getFullYear())>21))
-            )
-        }
-    }
-
-    const filterNationality = () => {
-        if(selects.nationality == "All")
-        {
-            setFilteredRiders(riders);
-        }
-        else if(selects.nationality == "Polish")
-        {
-            setFilteredRiders(
-                riders.filter(rider => (rider.isForeigner == false))
-            );
+            if(selects.nationality == "All")
+            {
+                setFilteredRiders(
+                    riders.filter(rider => ((new Date().getFullYear() - new Date(rider.date_of_birth).getFullYear())>21))
+                )
+            }
+            else if(selects.nationality == "Polish")
+            {
+                setFilteredRiders(
+                    riders.filter(rider => (rider.isForeigner == false) && ((new Date().getFullYear() - new Date(rider.date_of_birth).getFullYear())>21))
+                );
+            }
+            else
+            {
+                setFilteredRiders(
+                    riders.filter(rider => (rider.isForeigner == true) && ((new Date().getFullYear() - new Date(rider.date_of_birth).getFullYear())>21))
+                );
+            }
         }
         else
         {
-            setFilteredRiders(
-                riders.filter(rider => (rider.isForeigner == true))
-            );
+            if(selects.nationality == "All")
+            {
+                setFilteredRiders(riders);
+            }
+            else if(selects.nationality == "Polish")
+            {
+                setFilteredRiders(
+                    riders.filter(rider => (rider.isForeigner == false))
+                );
+            }
+            else
+            {
+                setFilteredRiders(
+                    riders.filter(rider => (rider.isForeigner == true))
+                );
+            }
         }
-        filterAge();
     }
 
     const renderTableData = () => {
         useEffect(() => {
-            filterNationality();
+            filtr();
         }, [phrase, selects.age, selects.nationality])
         if(phrase.length == 0)
         {
@@ -177,7 +218,6 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
         }
         else
         {
-            console.log("Wypisywanie");
             return filteredRiders.filter(rider => ((rider.first_name.toUpperCase())+" "+(rider.last_name.toUpperCase())).includes(phrase.toUpperCase())).map((rider, index) => {
                 const {id, first_name, last_name, nickname, date_of_birth, foreigner, ksm} = rider
                 return (
