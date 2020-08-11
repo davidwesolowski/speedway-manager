@@ -133,6 +133,38 @@ const intersection = (a: ITempRider[], b: ITempRider[]) => {
 	return a.filter((rider: ITempRider) => b.indexOf(rider) !== -1);
 };
 
+const validateRiders = (riders: ITempRider[]): IValidateRider =>
+	riders.reduce(
+		(prev: IValidateRider, curr: ITempRider): IValidateRider => {
+			if (curr.nationality.toUpperCase() !== 'PL') {
+				prev.foreigners += 1;
+			}
+			prev.ksm += curr.ksm;
+			return prev;
+		},
+		{ foreigners: 0, u21: 0, u23: 0, ksm: 0 }
+	);
+
+const checkTeamMatch = (riders: ITempRider[]): boolean => {
+	let alert = false;
+	const result = validateRiders(riders);
+	const title = 'Informacja!';
+	const type = 'info';
+	const duration = 3000;
+	let message;
+	if (result.ksm > maxKSM) {
+		message = `KSM drużyny może maksymalnie wynosić ${maxKSM}!`;
+		addNotification(title, message, type, duration);
+		alert = true;
+	}
+	if (result.foreigners > maxForeigners) {
+		message = `Drużyna może składać się maksymalnie z ${maxForeigners} obcokrajowców!`;
+		addNotification(title, message, type, duration);
+		alert = true;
+	}
+	return alert;
+};
+
 const TeamMatch: FunctionComponent = () => {
 	const [checked, setChecked] = useState<ITempRider[]>([]);
 	const [left, setLeft] = useState<ITempRider[]>(riders);
@@ -152,13 +184,14 @@ const TeamMatch: FunctionComponent = () => {
 		setChecked(newChecked);
 	};
 
-	const numberOfChecked = (riders: ITempRider[]) =>
-		intersection(checked, riders).length;
-
 	const handleCheckRight = () => {
-		setRight([...right, ...leftChecked]);
-		setLeft(not(left, leftChecked));
-		setChecked(not(checked, leftChecked));
+		const newRight = [...right, ...leftChecked];
+		const result = checkTeamMatch(newRight);
+		if (!result) {
+			setRight([...right, ...leftChecked]);
+			setLeft(not(left, leftChecked));
+			setChecked(not(checked, leftChecked));
+		}
 	};
 
 	const handleCheckAllLeft = () => {
@@ -193,13 +226,13 @@ const TeamMatch: FunctionComponent = () => {
 				{`${rider.firstName} ${rider.lastName}`}
 			</Grid>
 			<Grid item xs={1}>
-				PL
+				{rider.nationality}
 			</Grid>
 			<Grid item xs={1}>
 				Junior
 			</Grid>
 			<Grid item xs={1}>
-				KSM
+				{rider.ksm}
 			</Grid>
 		</Grid>
 	);
@@ -210,7 +243,15 @@ const TeamMatch: FunctionComponent = () => {
 		header: string
 	) => (
 		<Card className="team-match-container__card">
-			<CardHeader title={header} />
+			<CardHeader
+				title={header}
+				subheader={
+					header === 'Kadra meczowa' &&
+					`Wybrano: ${right.length}/8 KSM: ${
+						validateRiders(right).ksm
+					}/41`
+				}
+			/>
 			<Divider />
 			<List dense component="div" role="list">
 				{riders.map((rider: ITempRider) => {
@@ -242,7 +283,7 @@ const TeamMatch: FunctionComponent = () => {
 			<Grid item xs={5} style={{ alignSelf: 'flex-start' }}>
 				{customList('Choices', left, 'Cała drużyna')}
 			</Grid>
-			<Grid item>
+			<Grid item xs={2}>
 				<Grid container direction="column" alignItems="center">
 					<Button
 						variant="outlined"
@@ -273,6 +314,9 @@ const TeamMatch: FunctionComponent = () => {
 			<Grid item xs={5} style={{ alignSelf: 'flex-start' }}>
 				{customList('Chosen', right, 'Kadra meczowa')}
 			</Grid>
+			<Button onClick={handleCheckLeft} className="btn">
+				Zgłoś drużynę
+			</Button>
 		</Grid>
 	);
 };
