@@ -68,10 +68,16 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
             });
         } catch (e) {
             console.log(e.response);
-            addNotification("Błąd", "Sesja wygasła", "danger", 3000);
-            setTimeout(() => {
-                push("/login")
-            }, 3000);
+            if(e.response.statusText == "Unauthorized")
+            {
+                addNotification("Błąd", "Sesja wygasła", "danger", 3000);
+                setTimeout(() => {
+                    push("/login")
+                }, 3000);
+            }
+            else {
+                addNotification("Błąd", "Nie udało się pobrać zawodników z bazy", "danger", 3000);
+            }
             throw new Error('Error in getting riders');
         }
     };
@@ -172,11 +178,7 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
         }
         else
         {
-            if(selects.nationality == "All")
-            {
-                setFilteredRiders(riders);
-            }
-            else if(selects.nationality == "Polish")
+            if(selects.nationality == "Polish")
             {
                 setFilteredRiders(
                     riders.filter(rider => (rider.isForeigner == false))
@@ -195,7 +197,28 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
         useEffect(() => {
             filtr();
         }, [phrase, selects.age, selects.nationality])
-        if(phrase.length == 0)
+        if(phrase.length == 0 && selects.age == "All" && selects.nationality == "All")
+        {
+            return riders.map((rider, index) => {
+                const {id, first_name, last_name, nickname, date_of_birth, isForeigner, ksm} = rider
+                return (
+                    <tr key = {id} style={index % 2? { background: "white"} : {background: "#dddddd"}}>
+                        <td>{first_name}</td>
+                        <td>{last_name}</td>
+                        <td>{nickname}</td>
+                        <td>{new Intl.DateTimeFormat("en-GB", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit"
+                        }).format(new Date(date_of_birth))}</td>
+                        <td>{ifForeigner({isForeigner})}</td>
+                        <td>{ifJunior({date_of_birth})}</td>
+                        <td></td>
+                    </tr>
+                )
+            })
+        }
+        else if(phrase.length == 0)
         {
             return filteredRiders.map((rider, index) => {
                 const {id, first_name, last_name, nickname, date_of_birth, isForeigner, ksm} = rider
@@ -283,25 +306,31 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
                 </Typography>
                 <Divider/>
                 <div className="find-rider__search">
-                    <TextField
-                        label="Szukaj"
-                        value={phrase}
-                        onChange={handleOnChange()}
-                        className="find-rider__phrase"
-                    />
-                    <InputLabel id="label1">Narodowość</InputLabel>
-                    <Select labelId="label1" className="find-rider__select1" value={selects.nationality} onChange={handleOnChangeSelect('nationality')}>
-                        <MenuItem value="All">Wszyscy</MenuItem>
-                        <MenuItem value="Polish">Polacy</MenuItem>
-                        <MenuItem value="Foreigner">Obcokrajowcy</MenuItem>
-                    </Select>
-                    <InputLabel id="label2">Wiek</InputLabel>
-                    <Select labelId="label2" className="find-rider__select2" value={selects.age} onChange={handleOnChangeSelect('age')}>
-                        <MenuItem value="All">Wszyscy</MenuItem>
-                        <MenuItem value="U23">U23</MenuItem>
-                        <MenuItem value="U21">U21</MenuItem>
-                        <MenuItem value="22+">Seniorzy</MenuItem>
-                    </Select>
+                    <div className="find-rider__search-phrase">
+                        <TextField
+                            label="Szukaj"
+                            value={phrase}
+                            onChange={handleOnChange()}
+                            className="find-rider__phrase"
+                        />
+                    </div>
+                    <div className="find-rider__search-select1">
+                        <InputLabel id="label1">Narodowość:</InputLabel>
+                        <Select labelId="label1" className="find-rider__select1" value={selects.nationality} onChange={handleOnChangeSelect('nationality')}>
+                            <MenuItem value="All">Wszyscy</MenuItem>
+                            <MenuItem value="Polish">Polacy</MenuItem>
+                            <MenuItem value="Foreigner">Obcokrajowcy</MenuItem>
+                        </Select>
+                    </div>
+                    <div className="find-rider__search-select2">
+                        <InputLabel id="label2">Wiek:</InputLabel>
+                        <Select labelId="label2" className="find-rider__select2" value={selects.age} onChange={handleOnChangeSelect('age')}>
+                            <MenuItem value="All">Wszyscy</MenuItem>
+                            <MenuItem value="U23">U23</MenuItem>
+                            <MenuItem value="U21">U21</MenuItem>
+                            <MenuItem value="22+">Seniorzy</MenuItem>
+                        </Select>
+                    </div>
                 </div>
                 <table id="riders-list">
                     <tbody>
