@@ -40,42 +40,96 @@ import { checkBadAuthorization } from '../validation/checkCookies';
 
 const riders = [
 	{
+		_id: '1',
 		firstName: 'Krzysztof',
 		lastName: 'Buczkowski',
 		club: 'MrGarden GKM Grudziądz',
-		ksm: '10.0',
+		nationality: 'PL',
+		ksm: 3.5,
 		dateOfBirth: '06.08.2020'
 	},
 	{
+		_id: '2',
 		firstName: 'Artem',
 		lastName: 'Łaguta',
 		club: 'MrGarden GKM Grudziądz',
-		ksm: '10.0',
+		nationality: 'NN',
+		ksm: 12.0,
 		dateOfBirth: '06.08.2020'
 	},
 	{
+		_id: '3',
 		firstName: 'Nicki',
 		lastName: 'Pedersen',
 		club: 'MrGarden GKM Grudziądz',
-		ksm: '10.0',
+		nationality: 'NN',
+		ksm: 8.0,
 		dateOfBirth: '06.08.2020'
 	},
 	{
+		_id: '4',
 		firstName: 'Kenneth',
 		lastName: 'Bjerre',
 		club: 'MrGarden GKM Grudziądz',
-		ksm: '10.0',
+		nationality: 'NN',
+		ksm: 8.5,
 		dateOfBirth: '06.08.2020'
 	},
 	{
+		_id: '5',
 		firstName: 'Bartosz',
 		lastName: 'Zmarzlik',
 		club: 'MrGarden GKM Grudziądz',
-		ksm: '10.0',
+		nationality: 'PL',
+		ksm: 11.5,
+		dateOfBirth: '06.08.2020'
+	},
+	{
+		_id: '6',
+		firstName: 'Szymon',
+		lastName: 'Woźniak',
+		club: 'MrGarden GKM Grudziądz',
+		nationality: 'PL',
+		ksm: 2.5,
+		dateOfBirth: '06.08.2020'
+	},
+	{
+		_id: '7',
+		firstName: 'Maciej',
+		lastName: 'Janowski',
+		club: 'MrGarden GKM Grudziądz',
+		nationality: 'PL',
+		ksm: 9.0,
+		dateOfBirth: '06.08.2020'
+	},
+	{
+		_id: '8',
+		firstName: 'Bartosz',
+		lastName: 'Smektała',
+		club: 'MrGarden GKM Grudziądz',
+		nationality: 'PL',
+		ksm: 8.0,
+		dateOfBirth: '06.08.2020'
+	},
+	{
+		_id: '9',
+		firstName: 'Dominik',
+		lastName: 'Kubera',
+		club: 'MrGarden GKM Grudziądz',
+		nationality: 'PL',
+		ksm: 7.0,
+		dateOfBirth: '06.08.2020'
+	},
+	{
+		_id: '10',
+		firstName: 'Emil',
+		lastName: 'Sajfutdinow',
+		club: 'MrGarden GKM Grudziądz',
+		nationality: 'NN',
+		ksm: 12.0,
 		dateOfBirth: '06.08.2020'
 	}
 ];
-
 interface IProps {
 	team: { name: string; logo_url: string; _id: string };
 	updatedTeam: boolean;
@@ -257,13 +311,7 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 								</TableHead>
 								<TableBody>
 									{riders.map(rider => (
-										<TableRow
-											key={
-												rider.firstName +
-												rider.firstName
-											}
-											hover={true}
-										>
+										<TableRow key={rider._id} hover={true}>
 											<TableCell>
 												{rider.firstName}
 											</TableCell>

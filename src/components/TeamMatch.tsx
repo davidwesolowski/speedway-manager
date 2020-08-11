@@ -6,20 +6,31 @@ import {
 	List,
 	ListItem,
 	Checkbox,
-	ListItemIcon,
-	ListItemText,
 	Grid,
 	Button
 } from '@material-ui/core';
+import addNotification from '../utils/addNotification';
 
 interface ITempRider {
 	_id: string;
 	firstName: string;
 	lastName: string;
 	club: string;
+	nationality: string;
 	ksm: number;
 	dateOfBirth: string;
 }
+
+interface IValidateRider {
+	foreigners: number;
+	u21: number;
+	u23: number;
+	ksm: number;
+}
+
+const maxForeigners = 3;
+const maxAbove23YO = 5;
+const maxKSM = 41.0;
 
 const riders: ITempRider[] = [
 	{
@@ -27,7 +38,8 @@ const riders: ITempRider[] = [
 		firstName: 'Krzysztof',
 		lastName: 'Buczkowski',
 		club: 'MrGarden GKM Grudziądz',
-		ksm: 10.0,
+		nationality: 'PL',
+		ksm: 3.5,
 		dateOfBirth: '06.08.2020'
 	},
 	{
@@ -35,7 +47,8 @@ const riders: ITempRider[] = [
 		firstName: 'Artem',
 		lastName: 'Łaguta',
 		club: 'MrGarden GKM Grudziądz',
-		ksm: 10.0,
+		nationality: 'NN',
+		ksm: 12.0,
 		dateOfBirth: '06.08.2020'
 	},
 	{
@@ -43,7 +56,8 @@ const riders: ITempRider[] = [
 		firstName: 'Nicki',
 		lastName: 'Pedersen',
 		club: 'MrGarden GKM Grudziądz',
-		ksm: 10.0,
+		nationality: 'NN',
+		ksm: 8.0,
 		dateOfBirth: '06.08.2020'
 	},
 	{
@@ -51,7 +65,8 @@ const riders: ITempRider[] = [
 		firstName: 'Kenneth',
 		lastName: 'Bjerre',
 		club: 'MrGarden GKM Grudziądz',
-		ksm: 10.0,
+		nationality: 'NN',
+		ksm: 8.5,
 		dateOfBirth: '06.08.2020'
 	},
 	{
@@ -59,7 +74,53 @@ const riders: ITempRider[] = [
 		firstName: 'Bartosz',
 		lastName: 'Zmarzlik',
 		club: 'MrGarden GKM Grudziądz',
-		ksm: 10.0,
+		nationality: 'PL',
+		ksm: 11.5,
+		dateOfBirth: '06.08.2020'
+	},
+	{
+		_id: '6',
+		firstName: 'Szymon',
+		lastName: 'Woźniak',
+		club: 'MrGarden GKM Grudziądz',
+		nationality: 'PL',
+		ksm: 2.5,
+		dateOfBirth: '06.08.2020'
+	},
+	{
+		_id: '7',
+		firstName: 'Maciej',
+		lastName: 'Janowski',
+		club: 'MrGarden GKM Grudziądz',
+		nationality: 'PL',
+		ksm: 9.0,
+		dateOfBirth: '06.08.2020'
+	},
+	{
+		_id: '8',
+		firstName: 'Bartosz',
+		lastName: 'Smektała',
+		club: 'MrGarden GKM Grudziądz',
+		nationality: 'PL',
+		ksm: 8.0,
+		dateOfBirth: '06.08.2020'
+	},
+	{
+		_id: '9',
+		firstName: 'Dominik',
+		lastName: 'Kubera',
+		club: 'MrGarden GKM Grudziądz',
+		nationality: 'PL',
+		ksm: 7.0,
+		dateOfBirth: '06.08.2020'
+	},
+	{
+		_id: '10',
+		firstName: 'Emil',
+		lastName: 'Sajfutdinow',
+		club: 'MrGarden GKM Grudziądz',
+		nationality: 'NN',
+		ksm: 12.0,
 		dateOfBirth: '06.08.2020'
 	}
 ];
