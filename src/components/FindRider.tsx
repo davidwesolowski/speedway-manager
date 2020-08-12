@@ -33,8 +33,8 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
         age: "All"
     });
     const [filteredRiders, setFilteredRiders] = useState([]);
-    const [filteredNationality, setFilteredNationality] = useState([]);
-    const [filteredAge, setFilteredAge] = useState([]);
+    //const [filteredNationality, setFilteredNationality] = useState([]);
+    //const [filteredAge, setFilteredAge] = useState([]);
     const getRiders = async () => {
         try {
             const cookies = new Cookies();
