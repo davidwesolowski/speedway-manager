@@ -16,6 +16,7 @@ import checkCookies from '../validation/checkCookies';
 import Team from '../components/Team';
 import Riders from '../components/Riders';
 import FindRider from '../components/FindRider';
+import AddRiderToTeam from '../components/AddRiderToTeam';
 
 
 const AppRoute: FunctionComponent = () => {
@@ -69,6 +70,14 @@ const AppRoute: FunctionComponent = () => {
 					render={(props: RouteComponentProps) => {
 						const cookiesExist = checkCookies();
 						if (cookiesExist) return <FindRider {...props} />;
+						else return <Redirect to="/login" />;
+					}}
+				/>
+				<Route
+					path="/dodaj-druzyna"
+					render={(props: RouteComponentProps) => {
+						const cookiesExist = checkCookies();
+						if(cookiesExist) return <AddRiderToTeam {...props} />;
 						else return <Redirect to="/login" />;
 					}}
 				/>
