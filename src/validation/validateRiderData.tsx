@@ -88,6 +88,14 @@ const schema = Joi.object({
             }
             return error;
         }),
+    isForeigner: Joi.boolean()
+        .required()
+        .error((error: ErrorReport[]): any => {
+            if(error[0].code) {
+                error[0].message = "Niepoprawna narodowość zawodnika!";
+            }
+            return error;
+        }),
     ksm: Joi.number()
         .required()
         .min(2.50)
@@ -140,6 +148,7 @@ export default function validateRiderData(data: {
     last_name: string;
     nickname: string;
     date_of_birth: Date;
+    isForeigner: boolean;
     ksm: number;
     //club: string;
 }): ValidationResult {

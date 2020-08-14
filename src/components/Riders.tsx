@@ -35,6 +35,17 @@ interface IRider{
 //   club: string;
 }
 
+interface IRider1{
+    first_name: string;
+    last_name: string;
+    nickname: string;
+    date_of_birth: Date;
+    isForeigner: boolean;
+    isJunior: boolean;
+   // ksm: number;
+//   club: string;
+}
+
 interface IValidatedData{
     first_name: {
         message: string;
@@ -52,6 +63,10 @@ interface IValidatedData{
         message: string;
         error: boolean;
     };
+    isForeigner: {
+        message: string;
+        error: boolean;
+    }
     ksm: {
         message: string;
         error: boolean;
@@ -76,6 +91,10 @@ const defaultValidatedData = {
         error: false
     },
     date_of_birth: {
+        message: '',
+        error: false
+    },
+    isForeigner: {
         message: '',
         error: false
     },
@@ -112,9 +131,118 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
     const [validatedData, setValidatedData] = useState<IValidatedData>(
         defaultValidatedData
     );
-    const [addRiderSuccess, setAddRiderSuccess] = useState<boolean>(false);
-    const [addRiderError, setAddRiderError] = useState<boolean>(false);
+    //const [addRiderSuccess, setAddRiderSuccess] = useState<boolean>(false);
+    //const [addRiderError, setAddRiderError] = useState<boolean>(false);
     const [showDialog, setShowDialog] = useState<boolean>(false);
+
+    const [exampleRiders, setExampleRiders] = useState<IRider1[]>(
+        [
+            {
+                first_name: "Chris",
+                last_name: "Holder",
+                nickname: "Crispy",
+                date_of_birth: new Date(1980,1,1),
+                isForeigner: true,
+                isJunior: false
+            },
+            {
+                first_name: "Jack",
+                last_name: "Holder",
+                nickname: "Jackie",
+                date_of_birth: new Date(1980,1,1),
+                isForeigner: true,
+                isJunior: false
+            },
+            {
+                first_name: "Victor",
+                last_name: "Kulakov",
+                nickname: "",
+                date_of_birth: new Date(1980,1,1),
+                isForeigner: true,
+                isJunior: false
+            },
+            {
+                first_name: "Tai",
+                last_name: "Woffinden",
+                nickname: "Woffy",
+                date_of_birth: new Date(1980,1,1),
+                isForeigner: true,
+                isJunior: false
+            },
+            {
+                first_name: "Tobiasz",
+                last_name: "Musielak",
+                nickname: "Tofik",
+                date_of_birth: new Date(1980,1,1),
+                isForeigner: false,
+                isJunior: false
+            },
+            {
+                first_name: "Adrian",
+                last_name: "Miedziński",
+                nickname: "Miedziak",
+                date_of_birth: new Date(1980,1,1),
+                isForeigner: false,
+                isJunior: false
+            },
+            {
+                first_name: "Maciej",
+                last_name: "Janowski",
+                nickname: "Magic",
+                date_of_birth: new Date(1980,1,1),
+                isForeigner: false,
+                isJunior: false
+            },
+            {
+                first_name: "Maksym",
+                last_name: "Drabik",
+                nickname: "",
+                date_of_birth: new Date(1980,1,1),
+                isForeigner: false,
+                isJunior: false
+            },
+            {
+                first_name: "Piotr",
+                last_name: "Protasiewicz",
+                nickname: "Protas",
+                date_of_birth: new Date(1980,1,1),
+                isForeigner: false,
+                isJunior: false
+            },
+            {
+                first_name: "Gleb",
+                last_name: "Chugunov",
+                nickname: "",
+                date_of_birth: new Date(2000,1,1),
+                isForeigner: false,
+                isJunior: true
+            },
+            {
+                first_name: "Igor",
+                last_name: "Sobczyński",
+                nickname: "",
+                date_of_birth: new Date(2000,1,1),
+                isForeigner: false,
+                isJunior: true
+            },
+            {
+                first_name: "Kamil",
+                last_name: "Marciniec",
+                nickname: "",
+                date_of_birth: new Date(2000,1,1),
+                isForeigner: false,
+                isJunior: true
+            },
+            {
+                first_name: "Aleks",
+                last_name: "Rydlewski",
+                nickname: "",
+                date_of_birth: new Date(2000,1,1),
+                isForeigner: false,
+                isJunior: true
+            }
+        ]
+    );
 
     const handleOpen = () => setShowDialog(true);
     const handleClose = () => {
@@ -165,8 +293,9 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
         }
     };*/
 
-    const addRider = async (riderData: IRider) => {
+    /*const addRiders = async (riderData: IRider1) => {
         try {
+            console.log("Dodawanie zawodnika");
             const cookies = new Cookies();
             const access_token = cookies.get("access_token");
             const options = {
@@ -206,24 +335,70 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
             }
             else
             {
-                setAddRiderError(true);
-                setAddRiderSuccess(false);
                 addNotification("Błąd!", "Nie udało się dodać zawodnika!", "danger",1000);
+            }
+            throw new Error('Error in adding new rider!');
+        }
+    };*/
+
+    const addRider = async (riderData: IRider) => {
+        try {
+            console.log("Dodawanie zawodnika");
+            const cookies = new Cookies();
+            const access_token = cookies.get("access_token");
+            const options = {
+                headers: {
+                    Authorization: `Bearer ${access_token}`
+                }
+            };
+            const {
+                data
+            } = await axios.post(
+                'https://fantasy-league-eti.herokuapp.com/riders',
+                riderData,
+                options
+            );
+            addNotification("Sukces", "Poprawnie dodano zawodnika", "success", 1000);
+            setValidatedData(defaultValidatedData);
+            setRiderData(defaultRiderData); 
+            setTimeout(() => {
+                {handleClose()};
+            }, 10);
+            setTimeout(() => {
+                {refreshPage()};
+            }, 1000);
+        } catch (e) {
+            if(e.statusText == "Bad Request")
+            {
+                addNotification("Błąd!", "Podany zawodnik już istnieje w bazie!", "danger",1000);
                 setTimeout(() => {
-                    setAddRiderError(false);
                 }, 1000);
+            }
+            else if(e.statusText == "Unauthorized")
+            {
+                addNotification("Błąd!", "Twoja sesja wygasła", "danger", 1000);
+                setTimeout(() => {
+                    push('/login');
+                }, 1000);
+            }
+            else
+            {
+                addNotification("Błąd!", "Nie udało się dodać zawodnika!", "danger",1000);
             }
             throw new Error('Error in adding new rider!');
         }
     };
 
     const handleOnSubmit = (event: React.FormEvent) => {
+        console.log("Submit");
         event.preventDefault();
         const validationResponse = validateRiderData(riderData);
         if (validationResponse.error) {
+            console.log("ERROR");
             setValidatedData(() => defaultValidatedData);
             validationResponse.error.details.forEach(
                 (errorItem: ValidationErrorItem): any => {
+                    console.log(errorItem.message);
                     setValidatedData((prevState: IValidatedData) => {
                         return {
                             ...prevState,
@@ -236,12 +411,17 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
                 }
             );
         } else {
+            console.log("Add rider start");
             const {first_name, last_name, nickname, date_of_birth, isForeigner, ksm} = riderData;
             addRider({first_name, last_name, nickname, date_of_birth, isForeigner, ksm});
  /*           const {firstName, lastName, nickname, dateOfBirth, club} = riderData;
             addRider({firstName, lastName, nickname, dateOfBirth, club});*/
         }
     };
+
+    /*useEffect(() => {
+        exampleRiders.map(rider => addRiders(rider));
+    }, [])*/
 
     return(
         <>
@@ -326,7 +506,6 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
                                 <FormControl className="dialog__checkbox">
                                     Polak:
                                     <Checkbox
-                                        required
                                         onChange={handleOnChangeCheckbox}
                                         size="small"
                                         className="checkbox"

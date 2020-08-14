@@ -183,6 +183,10 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
                     riders.filter(rider => (rider.isForeigner == false))
                 );
             }
+            else if(selects.nationality == "All")
+            {
+                setFilteredRiders(riders);
+            }
             else
             {
                 setFilteredRiders(
