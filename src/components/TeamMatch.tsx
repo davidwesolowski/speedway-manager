@@ -25,11 +25,11 @@ interface IValidateRider {
 	foreigners: number;
 	u21: number;
 	u23: number;
-	ksm: number;
 }
 
 const maxForeigners = 3;
 const maxAbove23YO = 5;
+const maxRiders = 8;
 const maxKSM = 41.0;
 
 const riders: ITempRider[] = [
@@ -48,7 +48,7 @@ const riders: ITempRider[] = [
 		lastName: 'Łaguta',
 		club: 'MrGarden GKM Grudziądz',
 		nationality: 'NN',
-		ksm: 12.0,
+		ksm: 5.0,
 		dateOfBirth: '06.08.2020'
 	},
 	{
@@ -57,7 +57,7 @@ const riders: ITempRider[] = [
 		lastName: 'Pedersen',
 		club: 'MrGarden GKM Grudziądz',
 		nationality: 'NN',
-		ksm: 8.0,
+		ksm: 5.5,
 		dateOfBirth: '06.08.2020'
 	},
 	{
@@ -66,7 +66,7 @@ const riders: ITempRider[] = [
 		lastName: 'Bjerre',
 		club: 'MrGarden GKM Grudziądz',
 		nationality: 'NN',
-		ksm: 8.5,
+		ksm: 4,
 		dateOfBirth: '06.08.2020'
 	},
 	{
@@ -75,7 +75,7 @@ const riders: ITempRider[] = [
 		lastName: 'Zmarzlik',
 		club: 'MrGarden GKM Grudziądz',
 		nationality: 'PL',
-		ksm: 11.5,
+		ksm: 4.5,
 		dateOfBirth: '06.08.2020'
 	},
 	{
@@ -93,7 +93,7 @@ const riders: ITempRider[] = [
 		lastName: 'Janowski',
 		club: 'MrGarden GKM Grudziądz',
 		nationality: 'PL',
-		ksm: 9.0,
+		ksm: 5.5,
 		dateOfBirth: '06.08.2020'
 	},
 	{
@@ -102,7 +102,7 @@ const riders: ITempRider[] = [
 		lastName: 'Smektała',
 		club: 'MrGarden GKM Grudziądz',
 		nationality: 'PL',
-		ksm: 8.0,
+		ksm: 3.5,
 		dateOfBirth: '06.08.2020'
 	},
 	{
@@ -139,21 +139,40 @@ const validateRiders = (riders: ITempRider[]): IValidateRider =>
 			if (curr.nationality.toUpperCase() !== 'PL') {
 				prev.foreigners += 1;
 			}
-			prev.ksm += curr.ksm;
 			return prev;
 		},
-		{ foreigners: 0, u21: 0, u23: 0, ksm: 0 }
+		{ foreigners: 0, u21: 0, u23: 0 }
 	);
+
+const countKSM = (riders: ITempRider[]): number => {
+	const compare = (riderA: ITempRider, riderB: ITempRider) => {
+		if (riderA.ksm < riderB.ksm) return 1;
+		else return -1;
+	};
+	const sortedRiders = [...riders].sort(compare);
+	const bestRiders = sortedRiders.slice(0, 6);
+	const ksm = bestRiders.reduce(
+		(prev: number, curr: ITempRider): number => prev + curr.ksm,
+		0
+	);
+	return ksm;
+};
 
 const checkTeamMatch = (riders: ITempRider[]): boolean => {
 	let alert = false;
 	const result = validateRiders(riders);
+	const ksm = countKSM(riders);
 	const title = 'Informacja!';
 	const type = 'info';
 	const duration = 3000;
 	let message;
-	if (result.ksm > maxKSM) {
+	if (ksm > maxKSM) {
 		message = `KSM drużyny może maksymalnie wynosić ${maxKSM}!`;
+		addNotification(title, message, type, duration);
+		alert = true;
+	}
+	if (riders.length > 8) {
+		message = `Drużyna może się składać tylko z ${maxRiders} zawodników!`;
 		addNotification(title, message, type, duration);
 		alert = true;
 	}
@@ -247,9 +266,7 @@ const TeamMatch: FunctionComponent = () => {
 				title={header}
 				subheader={
 					header === 'Kadra meczowa' &&
-					`Wybrano: ${right.length}/8 KSM: ${
-						validateRiders(right).ksm
-					}/41`
+					`Wybrano: ${right.length}/8 KSM: ${countKSM(right)}/41`
 				}
 			/>
 			<Divider />
