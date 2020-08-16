@@ -24,4 +24,35 @@
         padding: 3rem 2rem;
         width: 90%;
     }
+
+    &__type-header{
+        font-size: 3.5rem !important;
+        font-family: $bebas !important;
+    }
+}
+
+.MuiTypography-body2{
+    font-size: 1.6rem !important;
+    font-family: $bebas !important;
+}
+
+.list-header{
+    font-size: 2rem !important;
+    font-family: $bebas !important;
+    text-align: center;
+}
+
+.MuiButton-label{
+    font-size: 1.7rem;
+}
+
+.submit-riders-button{
+    color: white !important;
+    background-color: black !important;
+    font-size: 1.7rem !important;
+    font-family: $bebas !important;
+}
+
+.submit-riders-button:disabled{
+    background-color: #cccccc !important;
 }

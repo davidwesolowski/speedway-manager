@@ -21,27 +21,12 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 	history: { push }
 }) => {
 
-    const useStyles = makeStyles((theme) => ({
-       root: {
-           margin: 'auto',
-       },
-       paper: {
-           width: 200,
-           height: 230,
-           overflow: 'auto',
-       },
-       button: {
-           margin: theme.spacing(0.5, 0),
-       }
-    }));
-
     const [riders, setRiders] = useState([]);
     const [teamId, setTeamId] = useState<string>("");
     const [teamRiders, setTeamRiders] = useState([]);
 
     const getRiders = async () => {
         try {
-            //console.log("Wchodzi get");
             const cookies = new Cookies();
             const access_token = cookies.get("access_token");
             const options = {
@@ -55,7 +40,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
                 'https://fantasy-league-eti.herokuapp.com/riders',
                 options
             );
-            //console.log("Get1 poszedl");
             setRiders(
                 []
             );
@@ -71,43 +55,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
                     })
                 );
             });
-            /*const {
-                data_
-            } = await axios.get(
-                'https://fantasy-league-eti.herokuapp.com/teams',
-                options
-            );
-            console.log("Get2 poszedl");
-            console.log(data_);*/
-            //setTeamId(data3[0]._id);
-            /*const {
-                data2
-            } = await axios.get(
-                `https://fantasy-league-eti.herokuapp.com/teams/${data3[0]._id}/riders`,
-                options
-            );
-            console.log("Get3 poszedl");
-            setTeamRiders(
-                []
-            );
-            data2.map((rider) => {
-                setTeamRiders(teamRiders => 
-                    teamRiders.concat({
-                        id: rider._id,
-                        first_name: rider.first_name,
-                        last_name: rider.last_name,
-                        nickname: rider.nickname,
-                        date_of_birth: rider.date_of_birth,
-                        isForeigner: rider.isForeigner
-                    })
-                );
-            });*/
-            console.log("DATA");
-            //console.log(data);
             getTeams(data);
-            //console.log("DATA2");
-            /*console.log(data2);
-            setLists(data, data2);*/
         } catch (e) {
             console.log(e.response);
             if(e.response.statusText == "Unauthorized")
@@ -126,7 +74,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 
     const getTeams = async (riders) => {
         try {
-            console.log("Get Teams");
             const cookies = new Cookies();
             const access_token = cookies.get("access_token");
             const options = {
@@ -140,38 +87,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
                 'https://fantasy-league-eti.herokuapp.com/teams',
                 options
             );
-            console.log(data[0]);
             setTeamId(data[0]._id);
-            /*const {
-                data2
-            } = await axios.get(
-                `https://fantasy-league-eti.herokuapp.com/teams/${data[0]._id}/riders`,
-                options
-            );*/
-            /*console.log("Team riders");
-            console.log(data2);
-            setTeamRiders(
-                []
-            );
-            if(data2 !== undefined)
-            {
-                data2.map((rider) => {
-                    setTeamRiders(teamRiders => 
-                        teamRiders.concat({
-                            id: rider._id,
-                            first_name: rider.first_name,
-                            last_name: rider.last_name,
-                            nickname: rider.nickname,
-                            date_of_birth: rider.date_of_birth,
-                            isForeigner: rider.isForeigner
-                        })
-                    );
-                });
-                setLists(riders, data2);
-            }
-            else{
-                setLists(riders, []);
-            }*/
             getTeamRiders(riders, data);
         } catch (e) {
             console.log(e.response);
@@ -191,7 +107,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 
     const getTeamRiders = async (riders, team) => {
         try {
-            console.log("Get Teams");
             const cookies = new Cookies();
             const access_token = cookies.get("access_token");
             const options = {
@@ -205,8 +120,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
                 `https://fantasy-league-eti.herokuapp.com/teams/${team[0]._id}/riders`,
                 options
             );
-            console.log("Team riders");
-            console.log(data);
             setTeamRiders(
                 []
             );
@@ -253,9 +166,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
         return a.filter((value) => b.indexOf(value) !== -1);
     }
 
-
-    const classes = useStyles();
-
     const [checkedPolish, setCheckedPolish] = React.useState([]);
     const [checkedForeign, setCheckedForeign] = React.useState([]);
     const [checkedU21, setCheckedU21] = React.useState([]);
@@ -284,13 +194,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
     }
 
     const setLists = (riders, teamRiders) => {
-        console.log("Riders");
-        console.log(riders);
-        console.log('Team riders:');
-        console.log(teamRiders);
         const teamRiderIDs = teamRiders.map(val => {return val.riderId});
-        console.log("Team IDs");
-        console.log(teamRiderIDs);
         setLeftPolish(
             riders.filter(rider => !teamRiderIDs.includes(rider._id) && !rider.isForeigner && !isJunior(rider.date_of_birth))
         )
@@ -351,8 +255,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
             }
             setCheckedU21(newChecked);
         }
-        //console.log(leftPolishChecked);
-        //console.log(rightPolishChecked);
     }
 
     const handleAllRight = (type) => () => {
@@ -421,14 +323,39 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
         }
     }
 
+    const listHeader = (side) => {
+        if(side === "Right"){
+            return(
+                <>
+                    <Typography variant="h4" className="list-header">
+                        Moja kadra
+                    </Typography>
+                    <Divider/>
+                </>
+            )
+        }else{
+            return(
+                <>
+                    <Typography variant="h4" className="list-header">
+                        Wolni zawodnicy
+                    </Typography>
+                    <Divider/>
+                </>
+            )
+            
+        }
+    }
+
     const customList = (items, type, side) =>{
         return(
-        <Paper className={classes.paper}>
+        <Paper className="list-paper">
+            {listHeader(side)}
             <List dense component="div" role="list">
                 {items.map((rider) => {
                     const labelId = `transfer-list-item-${rider.id}-label`;
                     if(type === "Polish"){
                         return(
+                            <>
                             <ListItem key={rider._id} role="listitem" button onClick={handleToggle(rider, type)}>
                                 <ListItemIcon>
                                     <Checkbox
@@ -438,11 +365,13 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
                                         inputProps={{ 'aria-labelledby': labelId }}
                                     />
                                 </ListItemIcon>
-                                <ListItemText id={labelId} primary={`${rider.first_name} ${rider.last_name}`} />
+                                <ListItemText className="list-rider" id={labelId} primary={`${rider.first_name} ${rider.last_name}`} />
                             </ListItem>
+                            <Divider/>
+                            </>
                         )
                     }else if(type === "Foreign"){
-                        return(<ListItem key={rider._id} role="listitem" button onClick={handleToggle(rider, type)}>
+                        return(<><ListItem key={rider._id} role="listitem" button onClick={handleToggle(rider, type)}>
                             <ListItemIcon>
                                 <Checkbox
                                     checked={checkedForeign.indexOf(rider) !== -1}
@@ -451,10 +380,10 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
                                     inputProps={{ 'aria-labelledby': labelId }}
                                 />
                             </ListItemIcon>
-                            <ListItemText id={labelId} primary={`${rider.first_name} ${rider.last_name}`} />
-                        </ListItem>)
+                            <ListItemText className="list-rider" id={labelId} primary={`${rider.first_name} ${rider.last_name}`} />
+                        </ListItem><Divider/></>)
                     }else{
-                        return(<ListItem key={rider._id} role="listitem" button onClick={handleToggle(rider, type)}>
+                        return(<><ListItem key={rider._id} role="listitem" button onClick={handleToggle(rider, type)}>
                             <ListItemIcon>
                                 <Checkbox
                                     checked={checkedU21.indexOf(rider) !== -1}
@@ -463,8 +392,8 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
                                     inputProps={{ 'aria-labelledby': labelId }}
                                 />
                             </ListItemIcon>
-                            <ListItemText id={labelId} primary={`${rider.first_name} ${rider.last_name}`} />
-                        </ListItem>)
+                            <ListItemText className="list-rider" id={labelId} primary={`${rider.first_name} ${rider.last_name}`} />
+                        </ListItem><Divider/></>)
                     }
                 })}
                 <ListItem />
@@ -475,7 +404,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 
     const addNewRider = async (rider) => {
         try {
-            console.log(rider);
             const cookies = new Cookies();
             const access_token = cookies.get("access_token");
             const options = {
@@ -500,7 +428,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
                 }, 3000);
             }
             else {
-                addNotification("Błąd", "Nie udało się pobrać zawodników z bazy", "danger", 3000);
+                addNotification("Błąd", "Nie udało się wymienić zawodników z bazy", "danger", 3000);
             }
             throw new Error('Error in getting riders');
         }
@@ -531,7 +459,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
                 }, 3000);
             }
             else {
-                addNotification("Błąd", "Nie udało się pobrać zawodników z bazy", "danger", 3000);
+                addNotification("Błąd", "Nie udało się wymienić zawodników z bazy", "danger", 3000);
             }
             throw new Error('Error in getting riders');
         }
@@ -542,16 +470,8 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
             const chosenRiders = rightU21.concat(rightForeign.concat(rightPolish));
             const chosenRidersIDs = chosenRiders.map(val => {return val._id});
             const teamRidersIDs = teamRiders.map(val => {return val.id});
-            console.log("Chosen riders");
-            console.log(chosenRiders);
             const deleteRiders = teamRiders.filter(rider => !chosenRidersIDs.includes(rider.id));
-            console.log("Team riders");
-            console.log(teamRiders);
-            console.log("Delete riders");
-            console.log(deleteRiders);
             const newRiders = chosenRiders.filter(rider => !teamRidersIDs.includes(rider._id));
-            console.log("New riders");
-            console.log(newRiders);
 
             deleteRiders.map(rider =>
                 deleteRiderFromTeam(rider)    
@@ -559,12 +479,13 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
             newRiders.map(rider =>
                 addNewRider(rider)
             )
-            
-            //addNewRider(newRiders[0]);
-            addNotification("Sukces", "Udalo sie", "success", 5000);
+            addNotification("Sukces", "Kadra została zmieniona poprawnie", "success", 1000);
+            setTimeout(() => {
+                window.location.reload(false)
+            }, 1000);
         }
         catch(e) {
-            addNotification("Błąd", "Nie udało się", "danger", 5000);
+            addNotification("Błąd", "Nie udało się wymienić kadry", "danger", 5000);
         }
     }
 
@@ -581,18 +502,19 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
                     Wybierz zawodników do drużyny
                 </Typography>
                 <Divider/>
-
+                <br/>
                 <Typography variant="h3" className="add-rider-to-team__type-header">
                     Polacy
                 </Typography>
-                <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
+                <br/>
+                <Grid container spacing={2} justify="center" alignItems="center" className="list-container">
                     <Grid item>{customList(leftPolish, "Polish", "Left")}</Grid>
                     <Grid item>
                         <Grid container direction="column" alignItems="center">
                             <Button
                                 variant="outlined"
                                 size="small"
-                                className={classes.button}
+                                className="list-button"
                                 onClick={handleCheckedRight("Polish")}
                                 disabled={leftPolishChecked.length === 0 || leftPolishChecked.length > (10 - rightForeign.length - rightPolish.length - rightU21.length)}
                             >
@@ -601,37 +523,39 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
                             <Button
                                 variant="outlined"
                                 size="small"
-                                className={classes.button}
-                                onClick={handleCheckedLeft("Polish")}
-                                disabled={rightPolishChecked.length === 0}
-                            >
-                                &lt;
-                            </Button>
-                            <Button
-                                variant="outlined"
-                                size="small"
-                                className={classes.button}
+                                className="list-button"
                                 onClick={handleAllLeft("Polish")}
                                 disabled={rightPolish.length === 0}
                             >
                                 ≪
                             </Button>
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                className="list-button"
+                                onClick={handleCheckedLeft("Polish")}
+                                disabled={rightPolishChecked.length === 0}
+                            >
+                                &lt;
+                            </Button>
                         </Grid>
                     </Grid>
                     <Grid item>{customList(rightPolish,"Polish", "Right")}</Grid>
                 </Grid>
-
+                <br/>
+                <br/>
                 <Typography variant="h3" className="add-rider-to-team__type-header">
                     U21 (minimum 3 w kadrze)
                 </Typography>
-                <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
+                <br/>
+                <Grid container spacing={2} justify="center" alignItems="center" className="list-container">
                     <Grid item>{customList(leftU21, "U21", "Left")}</Grid>
                     <Grid item>
                         <Grid container direction="column" alignItems="center">
                             <Button
                                 variant="outlined"
                                 size="small"
-                                className={classes.button}
+                                className="list-button"
                                 onClick={handleCheckedRight("U21")}
                                 disabled={leftU21Checked.length === 0 || leftU21Checked.length > (10 - rightForeign.length - rightPolish.length - rightU21.length)}
                             >
@@ -640,37 +564,39 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
                             <Button
                                 variant="outlined"
                                 size="small"
-                                className={classes.button}
-                                onClick={handleCheckedLeft("U21")}
-                                disabled={rightU21Checked.length === 0}
-                            >
-                                &lt;
-                            </Button>
-                            <Button
-                                variant="outlined"
-                                size="small"
-                                className={classes.button}
+                                className="list-button"
                                 onClick={handleAllLeft("U21")}
                                 disabled={rightU21.length === 0}
                             >
                                 ≪
                             </Button>
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                className="list-button"
+                                onClick={handleCheckedLeft("U21")}
+                                disabled={rightU21Checked.length === 0}
+                            >
+                                &lt;
+                            </Button>
                         </Grid>
                     </Grid>
                     <Grid item>{customList(rightU21,"U21", "Right")}</Grid>
                 </Grid>
-
+                <br/>
+                <br/>
                 <Typography variant="h3" className="add-rider-to-team__type-header">
                     Obcokrajowcy (maksymalnie 3 w kadrze)
                 </Typography>
-                <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
+                <br/>
+                <Grid container spacing={2} justify="center" alignItems="center" className="list-container">
                     <Grid item>{customList(leftForeign, "Foreign", "Left")}</Grid>
                     <Grid item>
                         <Grid container direction="column" alignItems="center">
                             <Button
                                 variant="outlined"
                                 size="small"
-                                className={classes.button}
+                                className="list-button"
                                 onClick={handleCheckedRight("Foreign")}
                                 disabled={leftForeignChecked.length === 0 ||  leftForeignChecked.length > (3-rightForeign.length) || leftForeignChecked.length > (10 - rightForeign.length - rightPolish.length - rightU21.length)}
                             >
@@ -679,29 +605,31 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
                             <Button
                                 variant="outlined"
                                 size="small"
-                                className={classes.button}
-                                onClick={handleCheckedLeft("Foreign")}
-                                disabled={rightForeignChecked.length === 0}
-                            >
-                                &lt;
-                            </Button>
-                            <Button
-                                variant="outlined"
-                                size="small"
-                                className={classes.button}
+                                className="list-button"
                                 onClick={handleAllLeft("Foreign")}
                                 disabled={rightForeign.length === 0}
                             >
                                 ≪
                             </Button>
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                className="list-button"
+                                onClick={handleCheckedLeft("Foreign")}
+                                disabled={rightForeignChecked.length === 0}
+                            >
+                                &lt;
+                            </Button>
                         </Grid>
                     </Grid>
                     <Grid item>{customList(rightForeign,"Foreign", "Right")}</Grid>
                 </Grid>
+                <br/>
                 <Button
                     size="large"
-                    disabled={(rightForeign.length + rightPolish.length + rightU21.length) !== 10}
+                    disabled={((rightForeign.length + rightPolish.length + rightU21.length) !== 10 || rightU21.length < 3)}
                     onClick={submitRiders}
+                    className="submit-riders-button"
                 >
                     Zapisz zmiany
                 </Button>
