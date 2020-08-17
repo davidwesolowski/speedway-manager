@@ -37,6 +37,7 @@ import addNotification from '../utils/addNotification';
 import { useHistory } from 'react-router-dom';
 import { AppContext } from './AppProvider';
 import { checkBadAuthorization } from '../validation/checkCookies';
+import { IRider } from './Team';
 
 const riders = [
 	{
@@ -130,14 +131,28 @@ const riders = [
 		dateOfBirth: '06.08.2020'
 	}
 ];
+
 interface IProps {
 	team: { name: string; logo_url: string; _id: string };
+	riders: IRider[];
 	updatedTeam: boolean;
 	setUpdatedTeam: Dispatch<SetStateAction<boolean>>;
 }
 
+const displayDate = (date: string): string => {
+	const newDate = new Date(date);
+	const year = newDate.getFullYear();
+	const month =
+		newDate.getMonth() < 9
+			? `0${newDate.getMonth() + 1}`
+			: newDate.getMonth() + 1;
+	const day = newDate.getDate();
+	return `${day}.${month}.${year}`;
+};
+
 const TeamGeneral: FunctionComponent<IProps> = ({
 	team,
+	riders,
 	setUpdatedTeam,
 	updatedTeam
 }) => {
@@ -319,7 +334,7 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 												{rider.lastName}
 											</TableCell>
 											<TableCell>
-												{rider.dateOfBirth}
+												{displayDate(rider.dateOfBirth)}
 											</TableCell>
 											<TableCell>{rider.club}</TableCell>
 											<TableCell>{rider.ksm}</TableCell>
