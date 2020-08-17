@@ -1,4 +1,10 @@
-import React, { FunctionComponent, Fragment, ReactNode, useState } from 'react';
+import React, {
+	FunctionComponent,
+	Fragment,
+	ReactNode,
+	useState,
+	useEffect
+} from 'react';
 import {
 	Card,
 	CardHeader,
@@ -10,16 +16,7 @@ import {
 	Button
 } from '@material-ui/core';
 import addNotification from '../utils/addNotification';
-
-interface ITempRider {
-	_id: string;
-	firstName: string;
-	lastName: string;
-	club: string;
-	nationality: string;
-	ksm: number;
-	dateOfBirth: string;
-}
+import { IRider } from './Team';
 
 interface IValidateRider {
 	foreigners: number;
@@ -27,116 +24,27 @@ interface IValidateRider {
 	u23: number;
 }
 
+interface IProps {
+	riders: IRider[];
+}
+
 const maxForeigners = 3;
 const maxAbove23YO = 5;
 const maxRiders = 8;
 const maxKSM = 41.0;
 
-const riders: ITempRider[] = [
-	{
-		_id: '1',
-		firstName: 'Krzysztof',
-		lastName: 'Buczkowski',
-		club: 'MrGarden GKM Grudziądz',
-		nationality: 'PL',
-		ksm: 3.5,
-		dateOfBirth: '06.08.2020'
-	},
-	{
-		_id: '2',
-		firstName: 'Artem',
-		lastName: 'Łaguta',
-		club: 'MrGarden GKM Grudziądz',
-		nationality: 'NN',
-		ksm: 5.0,
-		dateOfBirth: '06.08.2020'
-	},
-	{
-		_id: '3',
-		firstName: 'Nicki',
-		lastName: 'Pedersen',
-		club: 'MrGarden GKM Grudziądz',
-		nationality: 'NN',
-		ksm: 5.5,
-		dateOfBirth: '06.08.2020'
-	},
-	{
-		_id: '4',
-		firstName: 'Kenneth',
-		lastName: 'Bjerre',
-		club: 'MrGarden GKM Grudziądz',
-		nationality: 'NN',
-		ksm: 4,
-		dateOfBirth: '06.08.2020'
-	},
-	{
-		_id: '5',
-		firstName: 'Bartosz',
-		lastName: 'Zmarzlik',
-		club: 'MrGarden GKM Grudziądz',
-		nationality: 'PL',
-		ksm: 4.5,
-		dateOfBirth: '06.08.2020'
-	},
-	{
-		_id: '6',
-		firstName: 'Szymon',
-		lastName: 'Woźniak',
-		club: 'MrGarden GKM Grudziądz',
-		nationality: 'PL',
-		ksm: 2.5,
-		dateOfBirth: '06.08.2020'
-	},
-	{
-		_id: '7',
-		firstName: 'Maciej',
-		lastName: 'Janowski',
-		club: 'MrGarden GKM Grudziądz',
-		nationality: 'PL',
-		ksm: 5.5,
-		dateOfBirth: '06.08.2020'
-	},
-	{
-		_id: '8',
-		firstName: 'Bartosz',
-		lastName: 'Smektała',
-		club: 'MrGarden GKM Grudziądz',
-		nationality: 'PL',
-		ksm: 3.5,
-		dateOfBirth: '06.08.2020'
-	},
-	{
-		_id: '9',
-		firstName: 'Dominik',
-		lastName: 'Kubera',
-		club: 'MrGarden GKM Grudziądz',
-		nationality: 'PL',
-		ksm: 7.0,
-		dateOfBirth: '06.08.2020'
-	},
-	{
-		_id: '10',
-		firstName: 'Emil',
-		lastName: 'Sajfutdinow',
-		club: 'MrGarden GKM Grudziądz',
-		nationality: 'NN',
-		ksm: 12.0,
-		dateOfBirth: '06.08.2020'
-	}
-];
-
-const not = (a: ITempRider[], b: ITempRider[]) => {
-	return a.filter((rider: ITempRider) => b.indexOf(rider) === -1);
+const not = (a: IRider[], b: IRider[]) => {
+	return a.filter((rider: IRider) => b.indexOf(rider) === -1);
 };
 
-const intersection = (a: ITempRider[], b: ITempRider[]) => {
-	return a.filter((rider: ITempRider) => b.indexOf(rider) !== -1);
+const intersection = (a: IRider[], b: IRider[]) => {
+	return a.filter((rider: IRider) => b.indexOf(rider) !== -1);
 };
 
-const validateRiders = (riders: ITempRider[]): IValidateRider =>
+const validateRiders = (riders: IRider[]): IValidateRider =>
 	riders.reduce(
-		(prev: IValidateRider, curr: ITempRider): IValidateRider => {
-			if (curr.nationality.toUpperCase() !== 'PL') {
+		(prev: IValidateRider, curr: IRider): IValidateRider => {
+			if (curr.nationality === 'Zagraniczny') {
 				prev.foreigners += 1;
 			}
 			return prev;
@@ -144,21 +52,21 @@ const validateRiders = (riders: ITempRider[]): IValidateRider =>
 		{ foreigners: 0, u21: 0, u23: 0 }
 	);
 
-const countKSM = (riders: ITempRider[]): number => {
-	const compare = (riderA: ITempRider, riderB: ITempRider) => {
+const countKSM = (riders: IRider[]): number => {
+	const compare = (riderA: IRider, riderB: IRider) => {
 		if (riderA.ksm < riderB.ksm) return 1;
 		else return -1;
 	};
 	const sortedRiders = [...riders].sort(compare);
 	const bestRiders = sortedRiders.slice(0, 6);
 	const ksm = bestRiders.reduce(
-		(prev: number, curr: ITempRider): number => prev + curr.ksm,
+		(prev: number, curr: IRider): number => prev + curr.ksm,
 		0
 	);
 	return ksm;
 };
 
-const checkTeamMatch = (riders: ITempRider[]): boolean => {
+const checkTeamMatch = (riders: IRider[]): boolean => {
 	let alert = false;
 	const result = validateRiders(riders);
 	const ksm = countKSM(riders);
@@ -184,15 +92,15 @@ const checkTeamMatch = (riders: ITempRider[]): boolean => {
 	return alert;
 };
 
-const TeamMatch: FunctionComponent = () => {
-	const [checked, setChecked] = useState<ITempRider[]>([]);
-	const [left, setLeft] = useState<ITempRider[]>(riders);
-	const [right, setRight] = useState<ITempRider[]>([]);
+const TeamMatch: FunctionComponent<IProps> = ({ riders }) => {
+	const [checked, setChecked] = useState<IRider[]>([]);
+	const [left, setLeft] = useState<IRider[]>(riders);
+	const [right, setRight] = useState<IRider[]>([]);
 
 	const leftChecked = intersection(checked, left);
 	const rightChecked = intersection(checked, right);
 
-	const handleToggle = (rider: ITempRider) => () => {
+	const handleToggle = (rider: IRider) => () => {
 		const currentIndex = checked.indexOf(rider);
 		const newChecked = [...checked];
 		if (currentIndex === -1) {
@@ -224,7 +132,7 @@ const TeamMatch: FunctionComponent = () => {
 		setChecked(not(checked, rightChecked));
 	};
 
-	const customRider = (rider: ITempRider) => (
+	const customRider = (rider: IRider) => (
 		<Grid
 			container
 			justify="space-evenly"
@@ -241,14 +149,14 @@ const TeamMatch: FunctionComponent = () => {
 			<Grid item xs={1}>
 				{rider._id}
 			</Grid>
-			<Grid item xs={3}>
+			<Grid item xs={2}>
 				{`${rider.firstName} ${rider.lastName}`}
 			</Grid>
-			<Grid item xs={1}>
+			<Grid item xs={2}>
 				{rider.nationality}
 			</Grid>
 			<Grid item xs={1}>
-				Junior
+				{rider.age}
 			</Grid>
 			<Grid item xs={1}>
 				{rider.ksm}
@@ -256,11 +164,7 @@ const TeamMatch: FunctionComponent = () => {
 		</Grid>
 	);
 
-	const customList = (
-		title: ReactNode,
-		riders: ITempRider[],
-		header: string
-	) => (
+	const customList = (title: ReactNode, riders: IRider[], header: string) => (
 		<Card>
 			<CardHeader
 				title={header}
@@ -271,7 +175,7 @@ const TeamMatch: FunctionComponent = () => {
 			/>
 			<Divider />
 			<List dense component="div" role="list">
-				{riders.map((rider: ITempRider) => {
+				{riders.map((rider: IRider) => {
 					return (
 						<Fragment key={rider._id}>
 							<ListItem
