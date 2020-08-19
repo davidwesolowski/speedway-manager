@@ -37,53 +37,29 @@ import addNotification from '../utils/addNotification';
 import { useHistory } from 'react-router-dom';
 import { AppContext } from './AppProvider';
 import { checkBadAuthorization } from '../validation/checkCookies';
-
-const riders = [
-	{
-		firstName: 'Krzysztof',
-		lastName: 'Buczkowski',
-		club: 'MrGarden GKM Grudziądz',
-		ksm: '10.0',
-		dateOfBirth: '06.08.2020'
-	},
-	{
-		firstName: 'Artem',
-		lastName: 'Łaguta',
-		club: 'MrGarden GKM Grudziądz',
-		ksm: '10.0',
-		dateOfBirth: '06.08.2020'
-	},
-	{
-		firstName: 'Nicki',
-		lastName: 'Pedersen',
-		club: 'MrGarden GKM Grudziądz',
-		ksm: '10.0',
-		dateOfBirth: '06.08.2020'
-	},
-	{
-		firstName: 'Kenneth',
-		lastName: 'Bjerre',
-		club: 'MrGarden GKM Grudziądz',
-		ksm: '10.0',
-		dateOfBirth: '06.08.2020'
-	},
-	{
-		firstName: 'Bartosz',
-		lastName: 'Zmarzlik',
-		club: 'MrGarden GKM Grudziądz',
-		ksm: '10.0',
-		dateOfBirth: '06.08.2020'
-	}
-];
+import { IRider } from './Team';
 
 interface IProps {
 	team: { name: string; logo_url: string; _id: string };
+	riders: IRider[];
 	updatedTeam: boolean;
 	setUpdatedTeam: Dispatch<SetStateAction<boolean>>;
 }
 
+const displayDate = (date: string): string => {
+	const newDate = new Date(date);
+	const year = newDate.getFullYear();
+	const month =
+		newDate.getMonth() < 9
+			? `0${newDate.getMonth() + 1}`
+			: newDate.getMonth() + 1;
+	const day = newDate.getDate();
+	return `${day}.${month}.${year}`;
+};
+
 const TeamGeneral: FunctionComponent<IProps> = ({
 	team,
+	riders,
 	setUpdatedTeam,
 	updatedTeam
 }) => {
@@ -257,13 +233,7 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 								</TableHead>
 								<TableBody>
 									{riders.map(rider => (
-										<TableRow
-											key={
-												rider.firstName +
-												rider.firstName
-											}
-											hover={true}
-										>
+										<TableRow key={rider._id} hover={true}>
 											<TableCell>
 												{rider.firstName}
 											</TableCell>
@@ -271,7 +241,7 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 												{rider.lastName}
 											</TableCell>
 											<TableCell>
-												{rider.dateOfBirth}
+												{displayDate(rider.dateOfBirth)}
 											</TableCell>
 											<TableCell>{rider.club}</TableCell>
 											<TableCell>{rider.ksm}</TableCell>

@@ -1,0 +1,21 @@
+.team-match-container {
+	&__rider {
+		font-size: 1.6rem !important;
+		font-family: $bebas !important;
+	}
+
+	.MuiCardHeader-title {
+		font-size: 2rem !important;
+		font-family: $bebas !important;
+		text-align: center;
+	}
+
+	.MuiButton-label {
+		font-size: 1.7rem;
+	}
+
+	.MuiCardHeader-subheader {
+		font-size: 1.4rem !important;
+		font-family: $bebas !important;
+	}
+}
