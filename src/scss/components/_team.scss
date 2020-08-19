@@ -43,10 +43,14 @@
 		letter-spacing: 1px !important;
 	}
 
-	&__tabs-container {
+	&__tabsContainer {
 		margin-top: $s-margin !important;
 		font-size: 2rem !important;
 		font-family: $poppins;
+	}
+
+	&__tabsLoading {
+		min-height: 50vh;
 	}
 }
 
