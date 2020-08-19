@@ -17,6 +17,7 @@ import Team from '../components/Team';
 import Riders from '../components/Riders';
 import FindRider from '../components/FindRider';
 import AddRiderToTeam from '../components/AddRiderToTeam';
+import AddMatch from '../components/AddMatch';
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -77,6 +78,14 @@ const AppRoute: FunctionComponent = () => {
 					render={(props: RouteComponentProps) => {
 						const cookiesExist = checkCookies();
 						if(cookiesExist) return <AddRiderToTeam {...props} />;
+						else return <Redirect to="/login" />;
+					}}
+				/>
+				<Route
+					path="/dodaj-mecz"
+					render={(props: RouteComponentProps) => {
+						const cookiesExist = checkCookies();
+						if(cookiesExist) return <AddMatch {...props} />;
 						else return <Redirect to="/login" />;
 					}}
 				/>
