@@ -1,0 +1,58 @@
+.add-rider-to-team{
+    grid-column: center-start / center-end;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+    font-family: $bebas !important;
+    text-align: center;
+
+    &__background{
+        background-image: url("/img/warsaw_venue.jpg");
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        z-index: 1;
+        background-size: cover;
+        filter: opacity(0.2);
+    }
+
+    &__box{
+        position: relative;
+		z-index: 1000;
+		min-width: 45vw;
+        padding: 3rem 2rem;
+        width: 90%;
+    }
+
+    &__type-header{
+        font-size: 3.5rem !important;
+        font-family: $bebas !important;
+    }
+}
+
+.MuiTypography-body2{
+    font-size: 1.6rem !important;
+    font-family: $bebas !important;
+}
+
+.list-header{
+    font-size: 2rem !important;
+    font-family: $bebas !important;
+    text-align: center;
+}
+
+.MuiButton-label{
+    font-size: 1.7rem;
+}
+
+.submit-riders-button{
+    color: white !important;
+    background-color: black !important;
+    font-size: 1.7rem !important;
+    font-family: $bebas !important;
+}
+
+.submit-riders-button:disabled{
+    background-color: #cccccc !important;
+}

@@ -73,7 +73,7 @@ const schema = Joi.object({
             }
             return error;
         }),
-    date_of_birth: Joi.string()
+    date_of_birth: Joi.date()
         .required()
         .error((error: ErrorReport[]): any => {
             if (error[0].code) {
@@ -88,6 +88,33 @@ const schema = Joi.object({
             }
             return error;
         }),
+    isForeigner: Joi.boolean()
+        .required()
+        .error((error: ErrorReport[]): any => {
+            if(error[0].code) {
+                error[0].message = "Niepoprawna narodowość zawodnika!";
+            }
+            return error;
+        }),
+    ksm: Joi.number()
+        .required()
+        .min(2.50)
+        .max(12.00)
+        .error((error: ErrorReport[]): any => {
+            if (error[0].code) {
+                switch(error[0].code){
+                    case 'number.min':
+                        error[0].message = "Za niski ksm!";
+                        break;
+                    case 'number.max':
+                        error[0].message = "Za wysoki ksm!";
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return error;
+        })
     /*club: Joi.string()
         .min(2)
         .max(255)
@@ -120,7 +147,9 @@ export default function validateRiderData(data: {
     first_name: string;
     last_name: string;
     nickname: string;
-    date_of_birth: string;
+    date_of_birth: Date;
+    isForeigner: boolean;
+    ksm: number;
     //club: string;
 }): ValidationResult {
     return schema.validate(data, {abortEarly: false});

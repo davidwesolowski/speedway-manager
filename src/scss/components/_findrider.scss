@@ -1,0 +1,96 @@
+.find-rider{
+    grid-column: center-start / center-end;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+    font-family: $bebas !important;
+    text-align: center;
+
+    &__background{
+        background-image: url("/img/warsaw_venue.jpg");
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        z-index: 1;
+        background-size: cover;
+        filter: opacity(0.2);
+    }
+
+    &__box{
+        position: relative;
+		z-index: 1000;
+		min-width: 45vw;
+        padding: 3rem 2rem;
+        width: 90%;
+    }
+
+    &__phrase{
+        padding-bottom: 10px !important;
+        width: 80% !important;
+        float: left;
+    }
+
+    &__select1{
+        width:50%;
+    }
+
+    &__select2{
+        width:50%;
+    }
+
+    &__search-phrase{
+        width:40%;
+        float: left;
+    }
+
+    &__search-select1{
+        width: 30%;
+        float: right;
+        margin-top: 1%;
+    }
+
+    &__search-select2{
+        width: 20%;
+        float: left !important;
+        margin-top: 1%;
+    }
+
+    &__search{
+        display: inline-block;
+        width: 100%;
+    }
+}
+
+#label1{
+    width:40%;
+    font-size: large;
+    float: left;
+    //margin-top:3%;
+    margin-left: 5%;
+}
+
+#label2{
+    width: 50%;
+    font-size: large;
+    float: left;
+    //margin-top: 3%;
+}
+
+table{
+    width: 100%;
+    font-size: x-large;
+    text-align: center;
+    border: none;
+}
+
+td{
+    border: none;
+    //border-left: 1px solid black;
+    //border-right: 1px solid black;
+    //border-top: 1px solid black;
+}
+
+th{
+    border: none;
+}
