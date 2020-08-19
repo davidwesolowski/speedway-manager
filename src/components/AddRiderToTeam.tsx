@@ -4,7 +4,6 @@ import Cookies from 'universal-cookie';
 import axios from 'axios';
 import { Paper, Typography, Divider, TextField, InputLabel, Select, MenuItem, List, ListItem, ListItemIcon, Checkbox, ListItemText, Grid, Button } from '@material-ui/core';
 import addNotification from '../utils/addNotification';
-import { makeStyles } from '@material-ui/core/styles';
 
 interface IRider{
     //id: string;
