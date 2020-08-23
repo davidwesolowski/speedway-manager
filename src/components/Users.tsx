@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import {
 	Paper,
 	Typography,
@@ -10,12 +10,71 @@ import {
 	TableHead,
 	TableRow,
 	TableCell,
-	TableBody
+	TableBody,
+	CircularProgress,
+	Avatar,
+	IconButton
 } from '@material-ui/core';
-import { FiSearch } from 'react-icons/fi';
-import { RouteProps } from 'react-router-dom';
+import { FiSearch, FiArrowRightCircle } from 'react-icons/fi';
+import { RouteProps, useHistory } from 'react-router-dom';
+import axios from 'axios';
+import Cookies from 'universal-cookie';
+import { setUser } from '../actions/userActions';
+import { useStateValue } from './AppProvider';
+import { checkBadAuthorization } from '../validation/checkCookies';
 
 const Users: FunctionComponent<RouteProps> = () => {
+	const [users, setUsers] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const { userData, dispatchUserData, setLoggedIn } = useStateValue();
+	const { push } = useHistory();
+
+	useEffect(() => {
+		const cookies = new Cookies();
+		const access_token = cookies.get('access_token');
+		const options = {
+			headers: {
+				Authorization: `Bearer ${access_token}`
+			}
+		};
+
+		const fetchUsers = async () => {
+			try {
+				const { data } = await axios.get(
+					'https://fantasy-league-eti.herokuapp.com/users',
+					options
+				);
+				setUsers(data);
+			} catch (e) {
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
+				}
+			}
+		};
+
+		const fetchUserData = async () => {
+			const {
+				data: { username, email, avatarUrl }
+			} = await axios.get(
+				'https://fantasy-league-eti.herokuapp.com/users/self',
+				options
+			);
+			dispatchUserData(
+				setUser({ username, email, avatar_url: avatarUrl })
+			);
+			setLoggedIn(true);
+		};
+
+		fetchUsers();
+
+		if (!userData.username) fetchUserData();
+
+		setLoading(false);
+	}, []);
+
 	return (
 		<div className="users">
 			<div className="users__background"></div>

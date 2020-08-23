@@ -5,7 +5,8 @@ import React, {
 	ReactNode,
 	Dispatch,
 	useState,
-	SetStateAction
+	SetStateAction,
+	useContext
 } from 'react';
 import userReducer from '../reducers/userReducer';
 import { IUser, UserAction } from '../actions/userActions';
@@ -34,6 +35,8 @@ const defaultUserContext: IAppContext = {
 };
 
 export const AppContext = createContext<IAppContext>(defaultUserContext);
+
+export const useStateValue = () => useContext(AppContext);
 
 const AppProvider: FunctionComponent<IChildren> = ({ children }) => {
 	const [userData, dispatchUserData] = useReducer(
