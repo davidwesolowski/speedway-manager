@@ -1,0 +1,26 @@
+.users {
+	grid-column: center-start / center-end;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-family: $bebas !important;
+
+	&__background {
+		background-image: url('/img/warsaw_venue.jpg');
+		height: 100%;
+		width: 100%;
+		position: absolute;
+		z-index: 1;
+		background-size: cover;
+		filter: opacity(0.2);
+	}
+
+	&__box {
+		position: relative;
+		z-index: 1000;
+		min-width: 45vw;
+		padding: 3rem 2rem;
+		width: 90%;
+	}
+}
