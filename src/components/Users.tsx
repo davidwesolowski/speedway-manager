@@ -38,13 +38,43 @@ const Users: FunctionComponent<RouteProps> = () => {
 			}
 		};
 
+		const fetchTeams = async () => {
+			try {
+				const { data } = await axios.get(
+					'https://fantasy-league-eti.herokuapp.com/teams/all',
+					options
+				);
+				return data;
+			} catch (e) {
+				/**/
+			}
+		};
+
 		const fetchUsers = async () => {
 			try {
 				const { data } = await axios.get(
 					'https://fantasy-league-eti.herokuapp.com/users',
 					options
 				);
-				setUsers(data);
+				const teams = await fetchTeams();
+				const userState = data.map(user => {
+					const team = teams.find(team => team.userId === user._id);
+					if (team) {
+						return {
+							...user,
+							teamName: team.name,
+							teamLogo: team.logo_url,
+							teamId: team._id
+						};
+					}
+					return {
+						...user,
+						teamName: null,
+						teamLogo: null,
+						teamId: null
+					};
+				});
+				setUsers(userState);
 			} catch (e) {
 				const {
 					response: { data }
@@ -56,16 +86,20 @@ const Users: FunctionComponent<RouteProps> = () => {
 		};
 
 		const fetchUserData = async () => {
-			const {
-				data: { username, email, avatarUrl }
-			} = await axios.get(
-				'https://fantasy-league-eti.herokuapp.com/users/self',
-				options
-			);
-			dispatchUserData(
-				setUser({ username, email, avatar_url: avatarUrl })
-			);
-			setLoggedIn(true);
+			try {
+				const {
+					data: { username, email, avatarUrl }
+				} = await axios.get(
+					'https://fantasy-league-eti.herokuapp.com/users/self',
+					options
+				);
+				dispatchUserData(
+					setUser({ username, email, avatar_url: avatarUrl })
+				);
+				setLoggedIn(true);
+			} catch (e) {
+				/**/
+			}
 		};
 
 		fetchUsers();
