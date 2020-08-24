@@ -27,8 +27,9 @@ import Cookies from 'universal-cookie';
 import { setUser } from '../actions/userActions';
 import { useStateValue } from './AppProvider';
 import { checkBadAuthorization } from '../validation/checkCookies';
+import UsersList from './UsersList';
 
-interface IUsers {
+export interface IUsers {
 	_id: string;
 	username: string;
 	avatarUrl: string;
@@ -177,7 +178,12 @@ const Users: FunctionComponent<RouteProps> = () => {
 						<CircularProgress />
 					</Grid>
 				) : (
-					<Grid container className="users__container">
+					<Grid
+						container
+						className="users__container"
+						justify="center"
+						alignItems="center"
+					>
 						<Grid item>
 							<TableContainer>
 								<Table>
@@ -192,46 +198,11 @@ const Users: FunctionComponent<RouteProps> = () => {
 										</TableRow>
 									</TableHead>
 									<TableBody>
-										{filterUsers(users).length > 0 ? (
-											filterUsers(users).map(user => (
-												<TableRow
-													key={user._id}
-													hover={true}
-												>
-													<TableCell align="center">
-														<Avatar
-															alt="user-avatar"
-															src={user.avatarUrl}
-														/>
-													</TableCell>
-													<TableCell align="center">
-														{user.username}
-													</TableCell>
-													<TableCell align="center">
-														{user.teamName ||
-															'BRAK'}
-													</TableCell>
-													<TableCell align="center">
-														<IconButton
-															disabled={
-																!user.teamId
-															}
-														>
-															<FiArrowRightCircle className="users__teamButton" />
-														</IconButton>
-													</TableCell>
-												</TableRow>
-											))
-										) : (
-											<TableRow>
-												<TableCell
-													colSpan={4}
-													align="center"
-												>
-													Nie znalezniono użytkownika.
-												</TableCell>
-											</TableRow>
-										)}
+										{
+											<UsersList
+												users={filterUsers(users)}
+											/>
+										}
 									</TableBody>
 								</Table>
 							</TableContainer>
