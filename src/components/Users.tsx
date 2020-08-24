@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, {
+	FunctionComponent,
+	useEffect,
+	useState,
+	ChangeEvent
+} from 'react';
 import {
 	Paper,
 	Typography,
@@ -23,11 +28,39 @@ import { setUser } from '../actions/userActions';
 import { useStateValue } from './AppProvider';
 import { checkBadAuthorization } from '../validation/checkCookies';
 
+interface IUsers {
+	_id: string;
+	username: string;
+	avatarUrl: string;
+	teamId?: string;
+	teamName?: string;
+	teamLogo?: string;
+}
+
 const Users: FunctionComponent<RouteProps> = () => {
-	const [users, setUsers] = useState([]);
+	const [users, setUsers] = useState<IUsers[]>([]);
+	const [inputUserName, setInputUserName] = useState('');
 	const [loading, setLoading] = useState(true);
 	const { userData, dispatchUserData, setLoggedIn } = useStateValue();
 	const { push } = useHistory();
+
+	const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+		if (event.target) {
+			setInputUserName(event.target.value);
+		}
+	};
+
+	const filterUsers = (users: IUsers[]) => {
+		if (users.length !== 0) {
+			const filtered = users.filter(user =>
+				user.username
+					.toLowerCase()
+					.includes(inputUserName.toLowerCase())
+			);
+			return filtered;
+		}
+		return [];
+	};
 
 	useEffect(() => {
 		const cookies = new Cookies();
@@ -122,6 +155,8 @@ const Users: FunctionComponent<RouteProps> = () => {
 					<Grid item>
 						<TextField
 							placeholder="Użytkownik..."
+							value={inputUserName}
+							onChange={handleOnChange}
 							InputProps={{
 								startAdornment: (
 									<InputAdornment position="start">
@@ -157,39 +192,46 @@ const Users: FunctionComponent<RouteProps> = () => {
 										</TableRow>
 									</TableHead>
 									<TableBody>
-										{users.length !== 0
-											? users.map(user => (
-													<TableRow
-														key={user._id}
-														hover={true}
-													>
-														<TableCell align="center">
-															<Avatar
-																alt="user-avatar"
-																src={
-																	user.avatarUrl
-																}
-															/>
-														</TableCell>
-														<TableCell align="center">
-															{user.username}
-														</TableCell>
-														<TableCell align="center">
-															{user.teamName ||
-																'BRAK'}
-														</TableCell>
-														<TableCell align="center">
-															<IconButton
-																disabled={
-																	!user.teamId
-																}
-															>
-																<FiArrowRightCircle className="users__teamButton" />
-															</IconButton>
-														</TableCell>
-													</TableRow>
-											  ))
-											: null}
+										{filterUsers(users).length > 0 ? (
+											filterUsers(users).map(user => (
+												<TableRow
+													key={user._id}
+													hover={true}
+												>
+													<TableCell align="center">
+														<Avatar
+															alt="user-avatar"
+															src={user.avatarUrl}
+														/>
+													</TableCell>
+													<TableCell align="center">
+														{user.username}
+													</TableCell>
+													<TableCell align="center">
+														{user.teamName ||
+															'BRAK'}
+													</TableCell>
+													<TableCell align="center">
+														<IconButton
+															disabled={
+																!user.teamId
+															}
+														>
+															<FiArrowRightCircle className="users__teamButton" />
+														</IconButton>
+													</TableCell>
+												</TableRow>
+											))
+										) : (
+											<TableRow>
+												<TableCell
+													colSpan={4}
+													align="center"
+												>
+													Nie znalezniono użytkownika.
+												</TableCell>
+											</TableRow>
+										)}
 									</TableBody>
 								</Table>
 							</TableContainer>
