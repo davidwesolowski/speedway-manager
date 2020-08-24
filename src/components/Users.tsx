@@ -132,23 +132,70 @@ const Users: FunctionComponent<RouteProps> = () => {
 						/>
 					</Grid>
 				</Grid>
-				<Grid container className="users__container">
-					<Grid item>
-						<TableContainer>
-							<Table>
-								<TableHead>
-									<TableRow>
-										<TableCell />
-										<TableCell>Nazwa użytkownika</TableCell>
-										<TableCell>Nazwa drużyny</TableCell>
-										<TableCell>Sprawdź skład</TableCell>
-									</TableRow>
-								</TableHead>
-								<TableBody></TableBody>
-							</Table>
-						</TableContainer>
+				{loading ? (
+					<Grid
+						container
+						justify="center"
+						alignItems="center"
+						className="users__loading"
+					>
+						<CircularProgress />
 					</Grid>
-				</Grid>
+				) : (
+					<Grid container className="users__container">
+						<Grid item>
+							<TableContainer>
+								<Table>
+									<TableHead>
+										<TableRow>
+											<TableCell />
+											<TableCell>
+												Nazwa użytkownika
+											</TableCell>
+											<TableCell>Nazwa drużyny</TableCell>
+											<TableCell>Sprawdź skład</TableCell>
+										</TableRow>
+									</TableHead>
+									<TableBody>
+										{users.length !== 0
+											? users.map(user => (
+													<TableRow
+														key={user._id}
+														hover={true}
+													>
+														<TableCell align="center">
+															<Avatar
+																alt="user-avatar"
+																src={
+																	user.avatarUrl
+																}
+															/>
+														</TableCell>
+														<TableCell align="center">
+															{user.username}
+														</TableCell>
+														<TableCell align="center">
+															{user.teamName ||
+																'BRAK'}
+														</TableCell>
+														<TableCell align="center">
+															<IconButton
+																disabled={
+																	!user.teamId
+																}
+															>
+																<FiArrowRightCircle className="users__teamButton" />
+															</IconButton>
+														</TableCell>
+													</TableRow>
+											  ))
+											: null}
+									</TableBody>
+								</Table>
+							</TableContainer>
+						</Grid>
+					</Grid>
+				)}
 			</Paper>
 		</div>
 	);
