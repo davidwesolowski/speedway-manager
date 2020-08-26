@@ -21,12 +21,13 @@ import {
 import { FiSearch } from 'react-icons/fi';
 import { RouteProps, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import Cookies from 'universal-cookie';
 import { setUser } from '../actions/userActions';
 import { useStateValue } from './AppProvider';
 import { checkBadAuthorization } from '../validation/checkCookies';
 import UsersList from './UsersList';
 import getToken from '../utils/getToken';
+import TeamRiders, { IRider } from './TeamRiders';
+import addNotification from '../utils/addNotification';
 
 export interface IUsers {
 	_id: string;
@@ -39,16 +40,11 @@ export interface IUsers {
 
 const Users: FunctionComponent<RouteProps> = () => {
 	const [users, setUsers] = useState<IUsers[]>([]);
+	const [userTeamRiders, setUserTeamRiders] = useState<IRider[]>([]);
 	const [inputUserName, setInputUserName] = useState('');
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const { userData, dispatchUserData, setLoggedIn } = useStateValue();
 	const { push } = useHistory();
-
-	const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
-		if (event.target) {
-			setInputUserName(event.target.value);
-		}
-	};
 
 	const filterUsers = (users: IUsers[]) => {
 		if (users.length !== 0) {
@@ -62,7 +58,62 @@ const Users: FunctionComponent<RouteProps> = () => {
 		return [];
 	};
 
+	const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+		if (event.target) {
+			setInputUserName(event.target.value);
+		}
+	};
+
+	const handleFetchTeamRiders = async (teamId: string) => {
+		const accessToken = getToken();
+		const options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
+			}
+		};
+		try {
+			const { data: riders } = await axios.get(
+				`https://fantasy-league-eti.herokuapp.com/teams/${teamId}/riders`,
+				options
+			);
+			const newRiders = riders.map(({ rider }) => {
+				const riderAgeYear = new Date(rider.dateOfBirth).getFullYear();
+				const currentYear = new Date().getFullYear();
+				const diffYear = currentYear - riderAgeYear;
+				const age =
+					diffYear <= 21 ? 'U21' : diffYear <= 23 ? 'U23' : 'Senior';
+				const nationality = rider.isForeigner
+					? 'Zagraniczny'
+					: 'Krajowy';
+				return {
+					firstName: rider.firstName,
+					lastName: rider.lastName,
+					dateOfBirth: rider.dateOfBirth,
+					_id: rider._id,
+					nationality,
+					age,
+					ksm: 0,
+					club: ''
+				};
+			});
+			setUserTeamRiders(newRiders);
+		} catch (e) {
+			const { response: data } = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
+			} else {
+				const title = 'Błąd';
+				const message = 'Nie można pobrać drużyny';
+				const type = 'danger';
+				const duration = 1000;
+				addNotification(title, message, type, duration);
+			}
+		}
+	};
+
 	useEffect(() => {
+		setLoading(true);
+
 		const accessToken = getToken();
 		const options = {
 			headers: {
