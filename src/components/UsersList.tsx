@@ -3,11 +3,15 @@ import { TableRow, TableCell, Avatar, IconButton } from '@material-ui/core';
 import { FiArrowRightCircle } from 'react-icons/fi';
 import { IUsers } from './Users';
 
-type Props = {
+interface IProps {
 	users: IUsers[];
-};
+	handleFetchTeamRiders: (teamId: string) => Promise<void>;
+}
 
-const UsersList: FunctionComponent<Props> = ({ users }) => {
+const UsersList: FunctionComponent<IProps> = ({
+	users,
+	handleFetchTeamRiders
+}) => {
 	const isFound = (
 		<>
 			{users.map(user => (
@@ -20,7 +24,10 @@ const UsersList: FunctionComponent<Props> = ({ users }) => {
 						{user.teamName || 'BRAK'}
 					</TableCell>
 					<TableCell align="center">
-						<IconButton disabled={!user.teamId}>
+						<IconButton
+							disabled={!user.teamId}
+							onClick={() => handleFetchTeamRiders(user.teamId)}
+						>
 							<FiArrowRightCircle className="users__teamButton" />
 						</IconButton>
 					</TableCell>

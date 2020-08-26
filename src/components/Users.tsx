@@ -229,9 +229,14 @@ const Users: FunctionComponent<RouteProps> = () => {
 						container
 						className="users__container"
 						justify="center"
-						alignItems="center"
+						alignItems="flex-start"
 					>
-						<Grid item>
+						<Grid
+							item
+							className={
+								userTeamRiders.length > 0 ? 'users__list' : ''
+							}
+						>
 							<TableContainer>
 								<Table>
 									<TableHead>
@@ -248,12 +253,20 @@ const Users: FunctionComponent<RouteProps> = () => {
 										{
 											<UsersList
 												users={filterUsers(users)}
+												handleFetchTeamRiders={
+													handleFetchTeamRiders
+												}
 											/>
 										}
 									</TableBody>
 								</Table>
 							</TableContainer>
 						</Grid>
+						{userTeamRiders.length > 0 ? (
+							<Grid item>
+								<TeamRiders riders={userTeamRiders} />
+							</Grid>
+						) : null}
 					</Grid>
 				)}
 			</Paper>
