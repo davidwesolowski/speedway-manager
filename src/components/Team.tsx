@@ -24,6 +24,7 @@ import { checkBadAuthorization } from '../validation/checkCookies';
 import { setUser } from '../actions/userActions';
 import TeamMatch from './TeamMatch';
 import getToken from '../utils/getToken';
+import { setTeamRiders } from '../actions/teamRidersActions';
 
 interface ITabPanelProps {
 	children?: ReactNode;
@@ -66,11 +67,15 @@ const a11yProps = (index: any) => ({
 const Team: FunctionComponent<RouteComponentProps> = () => {
 	const [value, setValue] = useState<number>(0);
 	const [team, setTeam] = useState<ITeamState>(defaultTeamState);
-	const [riders, setRiders] = useState<IRider[]>([]);
 	const [updatedTeam, setUpdatedTeam] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(true);
 	const { push } = useHistory();
-	const { setLoggedIn, dispatchUserData, userData } = useContext(AppContext);
+	const {
+		setLoggedIn,
+		dispatchUserData,
+		userData,
+		dispatchTeamRiders
+	} = useStateValue();
 	// eslint-disable-next-line @typescript-eslint/ban-types
 	const handleChange = (event: ChangeEvent<{}>, newValue: number) =>
 		setValue(newValue);
@@ -116,7 +121,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 							club: ''
 						};
 					});
-					setRiders(newRiders);
+					dispatchTeamRiders(setTeamRiders(newRiders));
 				}
 			} catch (e) {
 				const {
@@ -209,7 +214,6 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 						) : team.name ? (
 							<TeamGeneral
 								team={team}
-								riders={riders}
 								updatedTeam={updatedTeam}
 								setUpdatedTeam={setUpdatedTeam}
 							/>
@@ -221,7 +225,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 						)}
 					</TabPanel>
 					<TabPanel value={value} index={1}>
-						<TeamMatch riders={riders} />
+						<TeamMatch />
 					</TabPanel>
 				</div>
 			</Paper>
