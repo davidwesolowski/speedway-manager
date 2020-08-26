@@ -14,8 +14,13 @@
 		height: 100%;
 
 		&-box {
-			width: 20rem;
-			height: 20rem;
+			width: 100%;
+		}
+		@media screen and (max-width: $bp-mdUp) {
+			&-box {
+				width: 20rem;
+				height: 20rem;
+			}
 		}
 	}
 

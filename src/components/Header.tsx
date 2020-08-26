@@ -29,7 +29,7 @@ const Header: FunctionComponent = () => {
 	const handleMenuClose = () => setAnchorEl(null);
 	const handleLogout = () => {
 		const cookies = new Cookies();
-		cookies.remove('access_token');
+		cookies.remove('accessToken');
 		setLoggedIn(false);
 		push('/login');
 	};
@@ -66,7 +66,7 @@ const Header: FunctionComponent = () => {
 							<Avatar
 								alt="user-avatar"
 								className="header__avatar"
-								src={userData.avatar_url}
+								src={userData.avatarUrl}
 							/>
 							<span className="header__username">
 								{userData.username}

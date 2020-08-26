@@ -16,11 +16,9 @@ import {
 	TableRow,
 	TableCell,
 	TableBody,
-	CircularProgress,
-	Avatar,
-	IconButton
+	CircularProgress
 } from '@material-ui/core';
-import { FiSearch, FiArrowRightCircle } from 'react-icons/fi';
+import { FiSearch } from 'react-icons/fi';
 import { RouteProps, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
@@ -28,6 +26,7 @@ import { setUser } from '../actions/userActions';
 import { useStateValue } from './AppProvider';
 import { checkBadAuthorization } from '../validation/checkCookies';
 import UsersList from './UsersList';
+import getToken from '../utils/getToken';
 
 export interface IUsers {
 	_id: string;
@@ -64,11 +63,10 @@ const Users: FunctionComponent<RouteProps> = () => {
 	};
 
 	useEffect(() => {
-		const cookies = new Cookies();
-		const access_token = cookies.get('access_token');
+		const accessToken = getToken();
 		const options = {
 			headers: {
-				Authorization: `Bearer ${access_token}`
+				Authorization: `Bearer ${accessToken}`
 			}
 		};
 
@@ -97,7 +95,7 @@ const Users: FunctionComponent<RouteProps> = () => {
 						return {
 							...user,
 							teamName: team.name,
-							teamLogo: team.logo_url,
+							teamLogo: team.logoUrl,
 							teamId: team._id
 						};
 					}
@@ -127,9 +125,7 @@ const Users: FunctionComponent<RouteProps> = () => {
 					'https://fantasy-league-eti.herokuapp.com/users/self',
 					options
 				);
-				dispatchUserData(
-					setUser({ username, email, avatar_url: avatarUrl })
-				);
+				dispatchUserData(setUser({ username, email, avatarUrl }));
 				setLoggedIn(true);
 			} catch (e) {
 				/**/

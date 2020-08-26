@@ -18,13 +18,13 @@ import {
 	Grid
 } from '@material-ui/core';
 import axios from 'axios';
-import Cookies from 'universal-cookie';
 import TeamCreate from './TeamCreate';
 import TeamGeneral from './TeamGeneral';
 import { AppContext } from './AppProvider';
 import { checkBadAuthorization } from '../validation/checkCookies';
 import { setUser } from '../actions/userActions';
 import TeamMatch from './TeamMatch';
+import getToken from '../utils/getToken';
 
 interface ITabPanelProps {
 	children?: ReactNode;
@@ -34,7 +34,7 @@ interface ITabPanelProps {
 
 interface ITeamState {
 	name: string;
-	logo_url: string;
+	logoUrl: string;
 	_id: string;
 }
 
@@ -51,7 +51,7 @@ export interface IRider {
 
 const defaultTeamState = {
 	name: '',
-	logo_url: '',
+	logoUrl: '',
 	_id: ''
 };
 
@@ -89,11 +89,10 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 
 	useEffect(() => {
 		setLoading(true);
-		const cookies = new Cookies();
-		const access_token = cookies.get('access_token');
+		const accessToken = getToken();
 		const options = {
 			headers: {
-				Authorization: `Bearer ${access_token}`
+				Authorization: `Bearer ${accessToken}`
 			}
 		};
 		const fetchTeamRiders = async (_id: string) => {
@@ -104,9 +103,8 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 				);
 				if (riders.length) {
 					const newRiders = riders.map(({ rider }) => {
-						const dateOfBirth = rider.date_of_birth;
 						const riderAgeYear = new Date(
-							dateOfBirth
+							rider.dateOfBirth
 						).getFullYear();
 						const currentYear = new Date().getFullYear();
 						const diffYear = currentYear - riderAgeYear;
@@ -120,13 +118,13 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 							? 'Zagraniczny'
 							: 'Krajowy';
 						return {
-							firstName: rider.first_name,
-							lastName: rider.last_name,
+							firstName: rider.firstName,
+							lastName: rider.lastName,
+							dateOfBirth: rider.dateOfBirth,
+							_id: rider._id,
 							nationality,
-							dateOfBirth,
 							age,
 							ksm: 0,
-							_id: 0,
 							club: ''
 						};
 					});
@@ -148,9 +146,9 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 					options
 				);
 				if (data.length && data[0]) {
-					const { name, logo_url, _id } = data[0];
+					const { name, logoUrl, _id } = data[0];
 					fetchTeamRiders(_id);
-					setTeam({ name, logo_url, _id });
+					setTeam({ name, logoUrl, _id });
 				} else {
 					setTeam(defaultTeamState);
 				}
@@ -166,12 +164,12 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 		const fetchUserData = async () => {
 			try {
 				const {
-					data: { username, email, avatar_url }
+					data: { username, email, avatarUrl }
 				} = await axios.get(
 					'https://fantasy-league-eti.herokuapp.com/users/self',
 					options
 				);
-				dispatchUserData(setUser({ username, email, avatar_url }));
+				dispatchUserData(setUser({ username, email, avatarUrl }));
 				setLoggedIn(true);
 			} catch (e) {
 				/*const {

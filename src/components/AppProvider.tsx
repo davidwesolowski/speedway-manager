@@ -24,7 +24,7 @@ interface IAppContext {
 const defaultUserData: IUser = {
 	email: '',
 	username: '',
-	avatar_url: ''
+	avatarUrl: ''
 };
 
 const defaultUserContext: IAppContext = {
