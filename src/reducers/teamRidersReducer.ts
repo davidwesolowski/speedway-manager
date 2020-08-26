@@ -1,4 +1,4 @@
-import { IRider } from '../components/Team';
+import { IRider } from '../components/TeamRiders';
 import { TeamRidersAction } from '../actions/teamRidersActions';
 import { SET_TEAM_RIDERS } from '../actions/actionDefinitions';
 

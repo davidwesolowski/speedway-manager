@@ -10,16 +10,13 @@ import {
 	Button
 } from '@material-ui/core';
 import addNotification from '../utils/addNotification';
-import { IRider } from './Team';
+import { IRider } from './TeamRiders';
+import { useStateValue } from './AppProvider';
 
 interface IValidateRider {
 	foreigners: number;
 	u21: number;
 	u23: number;
-}
-
-interface IProps {
-	riders: IRider[];
 }
 
 const maxForeigners = 3;

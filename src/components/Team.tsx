@@ -3,8 +3,7 @@ import React, {
 	ReactNode,
 	useState,
 	ChangeEvent,
-	useEffect,
-	useContext
+	useEffect
 } from 'react';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import {
@@ -20,7 +19,7 @@ import {
 import axios from 'axios';
 import TeamCreate from './TeamCreate';
 import TeamGeneral from './TeamGeneral';
-import { AppContext } from './AppProvider';
+import { useStateValue } from './AppProvider';
 import { checkBadAuthorization } from '../validation/checkCookies';
 import { setUser } from '../actions/userActions';
 import TeamMatch from './TeamMatch';
@@ -36,17 +35,6 @@ interface ITeamState {
 	name: string;
 	logoUrl: string;
 	_id: string;
-}
-
-export interface IRider {
-	_id: string;
-	firstName: string;
-	lastName: string;
-	club: string;
-	nationality: string;
-	ksm: number;
-	dateOfBirth: string;
-	age: string;
 }
 
 const defaultTeamState = {

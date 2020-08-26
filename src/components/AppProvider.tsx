@@ -11,7 +11,7 @@ import React, {
 import userReducer from '../reducers/userReducer';
 import { IUser, UserAction } from '../actions/userActions';
 import teamRidersReducer from '../reducers/teamRidersReducer';
-import { IRider } from './Team';
+import { IRider } from './TeamRiders';
 import { TeamRidersAction } from '../actions/teamRidersActions';
 interface IChildren {
 	children: ReactNode;
