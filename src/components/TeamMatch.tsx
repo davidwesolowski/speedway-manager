@@ -83,9 +83,10 @@ const checkTeamMatch = (riders: IRider[]): boolean => {
 	return alert;
 };
 
-const TeamMatch: FunctionComponent<IProps> = ({ riders }) => {
+const TeamMatch: FunctionComponent = () => {
+	const { teamRiders } = useStateValue();
 	const [checked, setChecked] = useState<IRider[]>([]);
-	const [left, setLeft] = useState<IRider[]>(riders);
+	const [left, setLeft] = useState<IRider[]>(teamRiders);
 	const [right, setRight] = useState<IRider[]>([]);
 
 	const leftChecked = intersection(checked, left);

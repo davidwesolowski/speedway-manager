@@ -1,7 +1,6 @@
 import React, {
 	FunctionComponent,
 	useState,
-	useContext,
 	ChangeEvent,
 	FormEvent,
 	SetStateAction,
@@ -10,12 +9,6 @@ import React, {
 import {
 	Typography,
 	Grid,
-	TableContainer,
-	Table,
-	TableHead,
-	TableRow,
-	TableCell,
-	TableBody,
 	IconButton,
 	Dialog,
 	DialogTitle,
@@ -27,40 +20,26 @@ import {
 } from '@material-ui/core';
 import { FaTrashAlt, FaPencilAlt } from 'react-icons/fa';
 import { FiX } from 'react-icons/fi';
+import { useHistory } from 'react-router-dom';
 import handleImgFile, {
 	IImageData,
 	defaultImageData
 } from '../utils/handleImgFile';
 import axios from 'axios';
 import addNotification from '../utils/addNotification';
-import { useHistory } from 'react-router-dom';
-import { AppContext } from './AppProvider';
+import { useStateValue } from './AppProvider';
 import { checkBadAuthorization } from '../validation/checkCookies';
-import { IRider } from './Team';
 import getToken from '../utils/getToken';
 import TeamRiders from './TeamRiders';
 
 interface IProps {
 	team: { name: string; logoUrl: string; _id: string };
-	riders: IRider[];
 	updatedTeam: boolean;
 	setUpdatedTeam: Dispatch<SetStateAction<boolean>>;
 }
 
-const displayDate = (date: string): string => {
-	const newDate = new Date(date);
-	const year = newDate.getFullYear();
-	const month =
-		newDate.getMonth() < 9
-			? `0${newDate.getMonth() + 1}`
-			: newDate.getMonth() + 1;
-	const day = newDate.getDate();
-	return `${day}.${month}.${year}`;
-};
-
 const TeamGeneral: FunctionComponent<IProps> = ({
 	team,
-	riders,
 	setUpdatedTeam,
 	updatedTeam
 }) => {
@@ -69,7 +48,7 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 	const [teamName, setTeamName] = useState<string>('');
 	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
 	const { push } = useHistory();
-	const { setLoggedIn } = useContext(AppContext);
+	const { setLoggedIn, teamRiders } = useStateValue();
 
 	const handleEditClose = () => {
 		setTeamName('');
@@ -216,7 +195,7 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 				</Grid>
 				<Grid item xs={12} md={8}>
 					<div className="team-container__right-pane">
-						<TeamRiders riders={riders} />
+						<TeamRiders riders={teamRiders} />
 					</div>
 				</Grid>
 			</Grid>

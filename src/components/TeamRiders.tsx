@@ -8,7 +8,6 @@ import {
 	TableCell,
 	TableBody
 } from '@material-ui/core';
-import { useStateValue } from './AppProvider';
 
 export interface IRider {
 	_id: string;
@@ -19,6 +18,10 @@ export interface IRider {
 	ksm: number;
 	dateOfBirth: string;
 	age: string;
+}
+
+interface IProps {
+	riders: IRider[];
 }
 
 const displayDate = (date: string): string => {
@@ -32,9 +35,7 @@ const displayDate = (date: string): string => {
 	return `${day}.${month}.${year}`;
 };
 
-const TeamRiders: FunctionComponent = () => {
-	const { teamRiders } = useStateValue();
-
+const TeamRiders: FunctionComponent<IProps> = ({ riders }) => {
 	return (
 		<div className="teamRiders">
 			<Typography className="heading-2 teamRiders__name">
@@ -52,7 +53,7 @@ const TeamRiders: FunctionComponent = () => {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{teamRiders.map(rider => (
+						{riders.map(rider => (
 							<TableRow key={rider._id} hover={true}>
 								<TableCell>{rider.firstName}</TableCell>
 								<TableCell>{rider.lastName}</TableCell>
