@@ -195,6 +195,9 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 				</Grid>
 				<Grid item xs={12} md={8}>
 					<div className="team-container__right-pane">
+						<Typography className="heading-2 team-container__name">
+							Kadra:
+						</Typography>
 						<TeamRiders riders={teamRiders} />
 					</div>
 				</Grid>

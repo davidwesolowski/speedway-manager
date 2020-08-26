@@ -38,9 +38,6 @@ const displayDate = (date: string): string => {
 const TeamRiders: FunctionComponent<IProps> = ({ riders }) => {
 	return (
 		<div className="teamRiders">
-			<Typography className="heading-2 teamRiders__name">
-				Kadra:
-			</Typography>
 			<TableContainer>
 				<Table>
 					<TableHead>
