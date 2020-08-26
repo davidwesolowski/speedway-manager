@@ -16,9 +16,10 @@ import {
 	TableRow,
 	TableCell,
 	TableBody,
-	CircularProgress
+	CircularProgress,
+	IconButton
 } from '@material-ui/core';
-import { FiSearch } from 'react-icons/fi';
+import { FiSearch, FiX } from 'react-icons/fi';
 import { RouteProps, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { setUser } from '../actions/userActions';
@@ -63,6 +64,8 @@ const Users: FunctionComponent<RouteProps> = () => {
 			setInputUserName(event.target.value);
 		}
 	};
+
+	const handleCloseRiders = () => setUserTeamRiders([]);
 
 	const handleFetchTeamRiders = async (teamId: string) => {
 		const accessToken = getToken();
@@ -264,7 +267,16 @@ const Users: FunctionComponent<RouteProps> = () => {
 						</Grid>
 						{userTeamRiders.length > 0 ? (
 							<Grid item>
-								<TeamRiders riders={userTeamRiders} />
+								<Grid container alignItems="flex-start">
+									<Grid item xs={11}>
+										<TeamRiders riders={userTeamRiders} />
+									</Grid>
+									<Grid item xs={1}>
+										<IconButton onClick={handleCloseRiders}>
+											<FiX className="users__xIcon" />
+										</IconButton>
+									</Grid>
+								</Grid>
 							</Grid>
 						) : null}
 					</Grid>
