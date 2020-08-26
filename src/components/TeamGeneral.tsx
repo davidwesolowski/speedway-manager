@@ -38,6 +38,7 @@ import { AppContext } from './AppProvider';
 import { checkBadAuthorization } from '../validation/checkCookies';
 import { IRider } from './Team';
 import getToken from '../utils/getToken';
+import TeamRiders from './TeamRiders';
 
 interface IProps {
 	team: { name: string; logoUrl: string; _id: string };
@@ -215,39 +216,7 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 				</Grid>
 				<Grid item xs={12} md={8}>
 					<div className="team-container__right-pane">
-						<Typography className="heading-2 team-container__name">
-							Kadra:
-						</Typography>
-						<TableContainer>
-							<Table>
-								<TableHead>
-									<TableRow>
-										<TableCell>Imię</TableCell>
-										<TableCell>Nazwisko</TableCell>
-										<TableCell>Data urodzenia</TableCell>
-										<TableCell>Klub</TableCell>
-										<TableCell>KSM</TableCell>
-									</TableRow>
-								</TableHead>
-								<TableBody>
-									{riders.map(rider => (
-										<TableRow key={rider._id} hover={true}>
-											<TableCell>
-												{rider.firstName}
-											</TableCell>
-											<TableCell>
-												{rider.lastName}
-											</TableCell>
-											<TableCell>
-												{displayDate(rider.dateOfBirth)}
-											</TableCell>
-											<TableCell>{rider.club}</TableCell>
-											<TableCell>{rider.ksm}</TableCell>
-										</TableRow>
-									))}
-								</TableBody>
-							</Table>
-						</TableContainer>
+						<TeamRiders riders={riders} />
 					</div>
 				</Grid>
 			</Grid>
