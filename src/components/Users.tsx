@@ -10,12 +10,6 @@ import {
 	TextField,
 	InputAdornment,
 	Grid,
-	TableContainer,
-	Table,
-	TableHead,
-	TableRow,
-	TableCell,
-	TableBody,
 	CircularProgress,
 	IconButton
 } from '@material-ui/core';
@@ -241,30 +235,10 @@ const Users: FunctionComponent<RouteProps> = () => {
 								userTeamRiders.length > 0 ? 'users__list' : ''
 							}
 						>
-							<TableContainer>
-								<Table>
-									<TableHead>
-										<TableRow>
-											<TableCell />
-											<TableCell>
-												Nazwa użytkownika
-											</TableCell>
-											<TableCell>Nazwa drużyny</TableCell>
-											<TableCell>Sprawdź skład</TableCell>
-										</TableRow>
-									</TableHead>
-									<TableBody>
-										{
-											<UsersList
-												users={filterUsers(users)}
-												handleFetchTeamRiders={
-													handleFetchTeamRiders
-												}
-											/>
-										}
-									</TableBody>
-								</Table>
-							</TableContainer>
+							<UsersList
+								users={filterUsers(users)}
+								handleFetchTeamRiders={handleFetchTeamRiders}
+							/>
 						</Grid>
 						<CSSTransition
 							in={userTeamRiders.length > 0}
