@@ -1,10 +1,4 @@
-import React, {
-	FunctionComponent,
-	Fragment,
-	ReactNode,
-	useState,
-	useEffect
-} from 'react';
+import React, { FunctionComponent, Fragment, ReactNode, useState } from 'react';
 import {
 	Card,
 	CardHeader,
@@ -16,16 +10,13 @@ import {
 	Button
 } from '@material-ui/core';
 import addNotification from '../utils/addNotification';
-import { IRider } from './Team';
+import { IRider } from './TeamRiders';
+import { useStateValue } from './AppProvider';
 
 interface IValidateRider {
 	foreigners: number;
 	u21: number;
 	u23: number;
-}
-
-interface IProps {
-	riders: IRider[];
 }
 
 const maxForeigners = 3;
@@ -92,9 +83,10 @@ const checkTeamMatch = (riders: IRider[]): boolean => {
 	return alert;
 };
 
-const TeamMatch: FunctionComponent<IProps> = ({ riders }) => {
+const TeamMatch: FunctionComponent = () => {
+	const { teamRiders } = useStateValue();
 	const [checked, setChecked] = useState<IRider[]>([]);
-	const [left, setLeft] = useState<IRider[]>(riders);
+	const [left, setLeft] = useState<IRider[]>(teamRiders);
 	const [right, setRight] = useState<IRider[]>([]);
 
 	const leftChecked = intersection(checked, left);

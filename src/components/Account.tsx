@@ -40,6 +40,7 @@ import handleImgFile, {
 	defaultImageData
 } from '../utils/handleImgFile';
 import { checkBadAuthorization } from '../validation/checkCookies';
+import getToken from '../utils/getToken';
 
 interface IState {
 	username: string;
@@ -134,17 +135,17 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 	const removeUser = async () => {
 		try {
 			const cookies = new Cookies();
-			const access_token = cookies.get('access_token');
+			const accessToken = getToken();
 			const options = {
 				headers: {
-					Authorization: `Bearer ${access_token}`
+					Authorization: `Bearer ${accessToken}`
 				}
 			};
 			await axios.delete(
 				'https://fantasy-league-eti.herokuapp.com/users/self',
 				options
 			);
-			cookies.remove('access_token');
+			cookies.remove('accessToken');
 			const title = 'Suckes!';
 			const message = 'Pomyślne usunięcie konta!';
 			const type = 'success';
@@ -166,8 +167,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 
 	const editData = async (data: IState, imageData: IImageData) => {
 		try {
-			const cookies = new Cookies();
-			const access_token = cookies.get('access_token');
+			const accessToken = getToken();
 			const { username, password, newPassword } = data;
 			const title = 'Sukces!';
 			let message = '';
@@ -175,7 +175,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 			const duration = 3000;
 			const options = {
 				headers: {
-					Authorization: `Bearer ${access_token}`
+					Authorization: `Bearer ${accessToken}`
 				}
 			};
 			if (username && password && newPassword) {
@@ -209,7 +209,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 			const { name: filename, imageBuffer } = imageData;
 			if (filename && imageBuffer) {
 				const {
-					data: { signed_url, image_url, type: content_type }
+					data: { signedUrl, imageUrl, type }
 				} = await axios.post(
 					'https://fantasy-league-eti.herokuapp.com/users/self/avatar',
 					{ filename },
@@ -217,13 +217,13 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 				);
 				const awsOptions = {
 					headers: {
-						'Content-Type': content_type
+						'Content-Type': type
 					}
 				};
-				await axios.put(signed_url, imageBuffer, awsOptions);
+				await axios.put(signedUrl, imageBuffer, awsOptions);
 				message = 'Pomyślna zmiana awataru!';
 				addNotification(title, message, type, duration);
-				dispatchUserData(updateUser({ avatar_url: image_url }));
+				dispatchUserData(updateUser({ avatarUrl: imageUrl }));
 			}
 		} catch (e) {
 			const {
@@ -289,21 +289,20 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 
 	useEffect(() => {
 		const fetchUserData = async () => {
-			const cookies = new Cookies();
-			const access_token = cookies.get('access_token');
+			const accessToken = getToken();
 			const options = {
 				headers: {
-					Authorization: `Bearer ${access_token}`
+					Authorization: `Bearer ${accessToken}`
 				}
 			};
 			try {
 				const {
-					data: { username, email, avatar_url }
+					data: { username, email, avatarUrl }
 				} = await axios.get(
 					'https://fantasy-league-eti.herokuapp.com/users/self',
 					options
 				);
-				dispatchUserData(setUser({ username, email, avatar_url }));
+				dispatchUserData(setUser({ username, email, avatarUrl }));
 				setLoggedIn(true);
 			} catch (e) {
 				const {
@@ -329,9 +328,9 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 					<Divider />
 					<div className="account-info__avatar-part">
 						<div className="account-info__avatar-img-box">
-							{userData.avatar_url ? (
+							{userData.avatarUrl ? (
 								<img
-									src={userData.avatar_url}
+									src={userData.avatarUrl}
 									alt="user-avatar"
 									className="account-info__avatar-img"
 								/>
@@ -530,9 +529,9 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 												alt="user-avatar"
 												className="dialog__avatar-img"
 											/>
-										) : userData.avatar_url ? (
+										) : userData.avatarUrl ? (
 											<img
-												src={userData.avatar_url}
+												src={userData.avatarUrl}
 												alt="user-avatar"
 												className="dialog__avatar-img"
 											/>

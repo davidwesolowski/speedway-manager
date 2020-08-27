@@ -2,11 +2,11 @@
 import Cookies from 'universal-cookie';
 import addNotification from '../utils/addNotification';
 import { Dispatch, SetStateAction } from 'react';
+import getToken from '../utils/getToken';
 
 export const checkCookies = (): boolean => {
-	const cookies = new Cookies();
-	const access_token = cookies.get('access_token');
-	if (!access_token) return false;
+	const accessToken = getToken();
+	if (!accessToken) return false;
 	return true;
 };
 
@@ -19,7 +19,7 @@ export const checkBadAuthorization = (
 	const message = 'Sesja wygasła!';
 	const duration = 1000;
 	const cookies = new Cookies();
-	cookies.remove('access_token');
+	cookies.remove('accessToken');
 	addNotification(title, message, type, duration);
 	setTimeout(() => {
 		setLoggedIn(false);

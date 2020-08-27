@@ -17,6 +17,7 @@ import Team from '../components/Team';
 import Riders from '../components/Riders';
 import FindRider from '../components/FindRider';
 import AddRiderToTeam from '../components/AddRiderToTeam';
+import Users from '../components/Users';
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -76,7 +77,15 @@ const AppRoute: FunctionComponent = () => {
 					path="/dodaj-druzyna"
 					render={(props: RouteComponentProps) => {
 						const cookiesExist = checkCookies();
-						if(cookiesExist) return <AddRiderToTeam {...props} />;
+						if (cookiesExist) return <AddRiderToTeam {...props} />;
+						else return <Redirect to="/login" />;
+					}}
+				/>
+				<Route
+					path="/uzytkownicy"
+					render={(props: RouteComponentProps) => {
+						const cookiesExist = checkCookies();
+						if (cookiesExist) return <Users {...props} />;
 						else return <Redirect to="/login" />;
 					}}
 				/>

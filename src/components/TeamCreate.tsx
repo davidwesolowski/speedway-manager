@@ -28,6 +28,7 @@ import addNotification from '../utils/addNotification';
 import { useHistory } from 'react-router-dom';
 import { checkBadAuthorization } from '../validation/checkCookies';
 import { AppContext } from './AppProvider';
+import getToken from '../utils/getToken';
 
 interface ITeamState {
 	name: string;
@@ -78,12 +79,11 @@ const TeamCreate: FunctionComponent<IProps> = ({
 
 	const createTeam = async (team: ITeamState, imageData: IImageData) => {
 		try {
-			const cookies = new Cookies();
-			const access_token = cookies.get('access_token');
+			const accessToken = getToken();
 			const { name, league } = team;
 			const options = {
 				headers: {
-					Authorization: `Bearer ${access_token}`
+					Authorization: `Bearer ${accessToken}`
 				}
 			};
 			const {
@@ -93,16 +93,15 @@ const TeamCreate: FunctionComponent<IProps> = ({
 				{ name },
 				options
 			);
-
+			const typeNotification = 'success';
 			const title = 'Sukces!';
 			let message = 'Pomyślnie stworzono drużynę!';
-			const type = 'success';
 			const duration = 2000;
-			addNotification(title, message, type, duration);
+			addNotification(title, message, typeNotification, duration);
 
 			const { name: filename, imageBuffer } = imageData;
 			const {
-				data: { signed_url, image_url, type: content_type }
+				data: { signedUrl, imageUrl, type }
 			} = await axios.post(
 				`https://fantasy-league-eti.herokuapp.com/teams/${_id}/logo`,
 				{ filename },
@@ -111,12 +110,12 @@ const TeamCreate: FunctionComponent<IProps> = ({
 
 			const awsOptions = {
 				headers: {
-					'Content-Type': content_type
+					'Content-Type': type
 				}
 			};
-			await axios.put(signed_url, imageBuffer, awsOptions);
+			await axios.put(signedUrl, imageBuffer, awsOptions);
 			message = 'Pomyślnie dodano logo drużyny!';
-			addNotification(title, message, type, duration);
+			addNotification(title, message, typeNotification, duration);
 			setTimeout(() => {
 				setUpdatedTeam(!updatedTeam);
 			}, duration);

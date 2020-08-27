@@ -14,8 +14,13 @@
 		height: 100%;
 
 		&-box {
-			width: 20rem;
-			height: 20rem;
+			width: 100%;
+		}
+		@media screen and (max-width: $bp-mdUp) {
+			&-box {
+				width: 20rem;
+				height: 20rem;
+			}
 		}
 	}
 
@@ -28,28 +33,5 @@
 
 	&__right-pane {
 		margin-left: $xs-margin;
-	}
-
-	.MuiTableCell-head {
-		background-color: $color-primary !important;
-		color: #fff !important;
-		font-size: 1.7rem;
-		font-family: $bebas !important;
-		border: 1px solid $color-primary-light;
-	}
-
-	.MuiTableRow-root:nth-child(even) .MuiTableCell-body {
-		background-color: $color-primary-light;
-		color: #fff;
-	}
-
-	.MuiTableCell-body {
-		font-size: 1.6rem;
-		font-family: $bebas !important;
-		border: 1px solid $color-primary;
-	}
-
-	.MuiTable-root {
-		border: 1px solid $color-primary;
 	}
 }

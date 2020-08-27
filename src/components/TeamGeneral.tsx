@@ -1,7 +1,6 @@
 import React, {
 	FunctionComponent,
 	useState,
-	useContext,
 	ChangeEvent,
 	FormEvent,
 	SetStateAction,
@@ -10,12 +9,6 @@ import React, {
 import {
 	Typography,
 	Grid,
-	TableContainer,
-	Table,
-	TableHead,
-	TableRow,
-	TableCell,
-	TableBody,
 	IconButton,
 	Dialog,
 	DialogTitle,
@@ -27,39 +20,26 @@ import {
 } from '@material-ui/core';
 import { FaTrashAlt, FaPencilAlt } from 'react-icons/fa';
 import { FiX } from 'react-icons/fi';
+import { useHistory } from 'react-router-dom';
 import handleImgFile, {
 	IImageData,
 	defaultImageData
 } from '../utils/handleImgFile';
-import Cookies from 'universal-cookie';
 import axios from 'axios';
 import addNotification from '../utils/addNotification';
-import { useHistory } from 'react-router-dom';
-import { AppContext } from './AppProvider';
+import { useStateValue } from './AppProvider';
 import { checkBadAuthorization } from '../validation/checkCookies';
-import { IRider } from './Team';
+import getToken from '../utils/getToken';
+import TeamRiders from './TeamRiders';
 
 interface IProps {
-	team: { name: string; logo_url: string; _id: string };
-	riders: IRider[];
+	team: { name: string; logoUrl: string; _id: string };
 	updatedTeam: boolean;
 	setUpdatedTeam: Dispatch<SetStateAction<boolean>>;
 }
 
-const displayDate = (date: string): string => {
-	const newDate = new Date(date);
-	const year = newDate.getFullYear();
-	const month =
-		newDate.getMonth() < 9
-			? `0${newDate.getMonth() + 1}`
-			: newDate.getMonth() + 1;
-	const day = newDate.getDate();
-	return `${day}.${month}.${year}`;
-};
-
 const TeamGeneral: FunctionComponent<IProps> = ({
 	team,
-	riders,
 	setUpdatedTeam,
 	updatedTeam
 }) => {
@@ -68,7 +48,7 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 	const [teamName, setTeamName] = useState<string>('');
 	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
 	const { push } = useHistory();
-	const { setLoggedIn } = useContext(AppContext);
+	const { setLoggedIn, teamRiders } = useStateValue();
 
 	const handleEditClose = () => {
 		setTeamName('');
@@ -90,11 +70,10 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 
 	const editTeam = async () => {
 		try {
-			const cookies = new Cookies();
-			const access_token = cookies.get('access_token');
+			const accessToken = getToken();
 			const options = {
 				headers: {
-					Authorization: `Bearer ${access_token}`
+					Authorization: `Bearer ${accessToken}`
 				}
 			};
 			const title = 'Sukces!';
@@ -114,7 +93,7 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 			const { name: filename, imageBuffer } = imageData;
 			if (filename && imageBuffer) {
 				const {
-					data: { signed_url, type: content_type }
+					data: { signedUrl, type: content_type }
 				} = await axios.post(
 					`https://fantasy-league-eti.herokuapp.com/teams/${team._id}/logo`,
 					{ filename },
@@ -126,7 +105,7 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 						'Content-Type': content_type
 					}
 				};
-				await axios.put(signed_url, imageBuffer, awsOptions);
+				await axios.put(signedUrl, imageBuffer, awsOptions);
 				message = 'Pomyślna zmiana loga drużyny!';
 				addNotification(title, message, type, duration);
 			}
@@ -149,11 +128,10 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 
 	const removeTeam = async () => {
 		try {
-			const cookies = new Cookies();
-			const access_token = cookies.get('access_token');
+			const accessToken = getToken();
 			const options = {
 				headers: {
-					Authorization: `Bearer ${access_token}`
+					Authorization: `Bearer ${accessToken}`
 				}
 			};
 			await axios.delete(
@@ -208,7 +186,7 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 						</Typography>
 						<div className="team-container__logo-box">
 							<img
-								src={team.logo_url}
+								src={team.logoUrl}
 								alt="team-logo"
 								className="team-container__logo"
 							/>
@@ -220,36 +198,7 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 						<Typography className="heading-2 team-container__name">
 							Kadra:
 						</Typography>
-						<TableContainer>
-							<Table>
-								<TableHead>
-									<TableRow>
-										<TableCell>Imię</TableCell>
-										<TableCell>Nazwisko</TableCell>
-										<TableCell>Data urodzenia</TableCell>
-										<TableCell>Klub</TableCell>
-										<TableCell>KSM</TableCell>
-									</TableRow>
-								</TableHead>
-								<TableBody>
-									{riders.map(rider => (
-										<TableRow key={rider._id} hover={true}>
-											<TableCell>
-												{rider.firstName}
-											</TableCell>
-											<TableCell>
-												{rider.lastName}
-											</TableCell>
-											<TableCell>
-												{displayDate(rider.dateOfBirth)}
-											</TableCell>
-											<TableCell>{rider.club}</TableCell>
-											<TableCell>{rider.ksm}</TableCell>
-										</TableRow>
-									))}
-								</TableBody>
-							</Table>
-						</TableContainer>
+						<TeamRiders riders={teamRiders} />
 					</div>
 				</Grid>
 			</Grid>
@@ -299,7 +248,7 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 											src={
 												imageData.imageUrl
 													? (imageData.imageUrl as string)
-													: team.logo_url
+													: team.logoUrl
 											}
 											alt="team-logo"
 											className="dialog__avatar-img"

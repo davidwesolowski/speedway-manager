@@ -10,7 +10,6 @@ import {
 	InputAdornment,
 	IconButton
 } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { ValidationErrorItem } from '@hapi/joi';
 import axios from 'axios';
@@ -109,13 +108,13 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 	const registerUser = async (userData: IRegisterData) => {
 		try {
 			const {
-				data: { access_token }
+				data: { accessToken }
 			} = await axios.post(
 				'https://fantasy-league-eti.herokuapp.com/auth/register',
 				userData
 			);
 			const cookies = new Cookies();
-			cookies.set('access_token', access_token, { path: '/' });
+			cookies.set('accessToken', accessToken, { path: '/' });
 			const { username, email } = userData;
 			dispatchUserData(setUser({ username, email }));
 			const title = 'Sukces!';
