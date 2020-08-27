@@ -29,6 +29,7 @@ import UsersList from './UsersList';
 import getToken from '../utils/getToken';
 import TeamRiders, { IRider } from './TeamRiders';
 import addNotification from '../utils/addNotification';
+import { CSSTransition } from 'react-transition-group';
 
 export interface IUsers {
 	_id: string;
@@ -265,7 +266,12 @@ const Users: FunctionComponent<RouteProps> = () => {
 								</Table>
 							</TableContainer>
 						</Grid>
-						{userTeamRiders.length > 0 ? (
+						<CSSTransition
+							in={userTeamRiders.length > 0}
+							timeout={500}
+							classNames="animationScaleUp"
+							unmountOnExit
+						>
 							<Grid item>
 								<Grid container alignItems="flex-start">
 									<Grid item xs={11}>
@@ -278,7 +284,7 @@ const Users: FunctionComponent<RouteProps> = () => {
 									</Grid>
 								</Grid>
 							</Grid>
-						) : null}
+						</CSSTransition>
 					</Grid>
 				)}
 			</Paper>
