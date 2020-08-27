@@ -111,7 +111,6 @@ const Users: FunctionComponent<RouteProps> = () => {
 
 	useEffect(() => {
 		setLoading(true);
-
 		const accessToken = getToken();
 		const options = {
 			headers: {
@@ -184,7 +183,6 @@ const Users: FunctionComponent<RouteProps> = () => {
 		fetchUsers();
 
 		if (!userData.username) fetchUserData();
-
 		setLoading(false);
 	}, []);
 
@@ -213,7 +211,7 @@ const Users: FunctionComponent<RouteProps> = () => {
 						/>
 					</Grid>
 				</Grid>
-				{loading ? (
+				{loading && (
 					<Grid
 						container
 						justify="center"
@@ -222,12 +220,18 @@ const Users: FunctionComponent<RouteProps> = () => {
 					>
 						<CircularProgress />
 					</Grid>
-				) : (
-					<Grid
-						container
-						className="users__container"
-						justify="center"
-						alignItems="flex-start"
+				)}
+				<Grid
+					container
+					className="users__container"
+					justify="center"
+					alignItems="flex-start"
+				>
+					<CSSTransition
+						in={users.length > 0}
+						timeout={300}
+						classNames="animationScaleUp"
+						unmountOnExit
 					>
 						<Grid
 							item
@@ -240,27 +244,27 @@ const Users: FunctionComponent<RouteProps> = () => {
 								handleFetchTeamRiders={handleFetchTeamRiders}
 							/>
 						</Grid>
-						<CSSTransition
-							in={userTeamRiders.length > 0}
-							timeout={500}
-							classNames="animationScaleUp"
-							unmountOnExit
-						>
-							<Grid item>
-								<Grid container alignItems="flex-start">
-									<Grid item xs={11}>
-										<TeamRiders riders={userTeamRiders} />
-									</Grid>
-									<Grid item xs={1}>
-										<IconButton onClick={handleCloseRiders}>
-											<FiX className="users__xIcon" />
-										</IconButton>
-									</Grid>
+					</CSSTransition>
+					<CSSTransition
+						in={userTeamRiders.length > 0}
+						timeout={300}
+						classNames="animationScaleUp"
+						unmountOnExit
+					>
+						<Grid item>
+							<Grid container alignItems="flex-start">
+								<Grid item xs={11}>
+									<TeamRiders riders={userTeamRiders} />
+								</Grid>
+								<Grid item xs={1}>
+									<IconButton onClick={handleCloseRiders}>
+										<FiX className="users__xIcon" />
+									</IconButton>
 								</Grid>
 							</Grid>
-						</CSSTransition>
-					</Grid>
-				)}
+						</Grid>
+					</CSSTransition>
+				</Grid>
 			</Paper>
 		</div>
 	);

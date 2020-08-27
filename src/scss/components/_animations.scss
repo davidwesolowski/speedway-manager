@@ -21,3 +21,27 @@
 		}
 	}
 }
+
+.animationSideX {
+	&-enter {
+		opacity: 1;
+		transform: translateX(0);
+
+		&-active {
+			opacity: 1;
+			transform: translateX(-50%);
+			transition: transform 300ms;
+		}
+	}
+
+	&-exit {
+		opacity: 1;
+		transform: translateX(-50%);
+
+		&-active {
+			opacity: 1;
+			transform: translateX(0);
+			transition: transform 300ms;
+		}
+	}
+}
