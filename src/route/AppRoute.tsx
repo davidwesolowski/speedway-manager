@@ -17,11 +17,8 @@ import Team from '../components/Team';
 import Riders from '../components/Riders';
 import FindRider from '../components/FindRider';
 import AddRiderToTeam from '../components/AddRiderToTeam';
-<<<<<<< HEAD
 import Users from '../components/Users';
-=======
 import AddMatch from '../components/AddMatch';
->>>>>>> Dominik
 
 const AppRoute: FunctionComponent = () => {
 	return (
