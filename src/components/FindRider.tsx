@@ -63,7 +63,8 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 						lastName: rider.lastName,
 						nickname: rider.nickname,
 						dateOfBirth: rider.dateOfBirth,
-						isForeigner: rider.isForeigner
+						isForeigner: rider.isForeigner,
+						ksm: rider.KSM
 					})
 				);
 			});
@@ -227,8 +228,8 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 			return riders.map((rider, index) => {
 				const {
 					id,
-					first_name,
-					last_name,
+					firstName,
+					lastName,
 					nickname,
 					dateOfBirth,
 					isForeigner,
@@ -243,8 +244,8 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 								: { background: '#dddddd' }
 						}
 					>
-						<td>{first_name}</td>
-						<td>{last_name}</td>
+						<td>{firstName}</td>
+						<td>{lastName}</td>
 						<td>{nickname}</td>
 						<td>
 							{new Intl.DateTimeFormat('en-GB', {
@@ -253,6 +254,7 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 								day: '2-digit'
 							}).format(new Date(dateOfBirth))}
 						</td>
+						<td>{ksm}</td>
 						<td>{ifForeigner({ isForeigner })}</td>
 						<td>{ifJunior({ dateOfBirth })}</td>
 						<td></td>
@@ -289,6 +291,7 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 								day: '2-digit'
 							}).format(new Date(dateOfBirth))}
 						</td>
+						<td>{ksm}</td>
 						<td>{ifForeigner({ isForeigner })}</td>
 						<td>{ifJunior({ dateOfBirth })}</td>
 						<td></td>
@@ -333,6 +336,7 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 									day: '2-digit'
 								}).format(new Date(dateOfBirth))}
 							</td>
+							<td>{ksm}</td>
 							<td>{ifForeigner({ foreigner })}</td>
 							<td>{ifJunior({ dateOfBirth })}</td>
 							<td></td>
@@ -348,6 +352,7 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 			'Nazwisko',
 			'Przydomek',
 			'Data urodzenia',
+			'KSM',
 			'Polak',
 			'Junior',
 			'Klub'

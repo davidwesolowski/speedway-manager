@@ -60,7 +60,8 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 						lastName: rider.lastName,
 						nickname: rider.nickname,
 						dateOfBirth: rider.dateOfBirth,
-						isForeigner: rider.isForeigner
+						isForeigner: rider.isForeigner,
+						ksm: rider.KSM
 					})
 				);
 			});
@@ -139,7 +140,8 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 							lastName: tuple.rider.lastName,
 							nickname: tuple.rider.nickname,
 							dateOfBirth: tuple.rider.dateOfBirth,
-							isForeigner: tuple.rider.isForeigner
+							isForeigner: tuple.rider.isForeigner,
+							ksm: tuple.rider.KSM
 						})
 					);
 				});
@@ -397,6 +399,11 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 											id={labelId}
 											primary={`${rider.firstName} ${rider.lastName}`}
 										/>
+										<ListItemText
+											className="list-rider"
+											id={`${labelId}-ksm`}
+											primary={`${rider.KSM}`}
+										/>
 									</ListItem>
 									<Divider />
 								</>
@@ -429,6 +436,11 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 											id={labelId}
 											primary={`${rider.firstName} ${rider.lastName}`}
 										/>
+										<ListItemText
+											className="list-rider"
+											id={`${labelId}-ksm`}
+											primary={`${rider.KSM}`}
+										/>
 									</ListItem>
 									<Divider />
 								</>
@@ -460,6 +472,11 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 											className="list-rider"
 											id={labelId}
 											primary={`${rider.firstName} ${rider.lastName}`}
+										/>
+										<ListItemText
+											className="list-rider"
+											id={`${labelId}-ksm`}
+											primary={`${rider.KSM}`}
 										/>
 									</ListItem>
 									<Divider />

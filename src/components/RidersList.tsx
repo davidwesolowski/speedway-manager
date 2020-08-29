@@ -78,7 +78,7 @@ class RidersList extends Component<{}, { riders }> {
 						przydomek: rider.nickname,
 						data_urodzenia: rider.dateOfBirth,
 						zagraniczny: rider.isForeigner,
-						ksm: rider.ksm
+						ksm: rider.KSM
 					})
 				});
 			});
@@ -142,6 +142,7 @@ class RidersList extends Component<{}, { riders }> {
 							day: '2-digit'
 						}).format(new Date(data_urodzenia))}
 					</td>
+					<td>{ksm}</td>
 					<td>{this.ifForeigner({ zagraniczny })}</td>
 					<td>{this.ifJunior({ data_urodzenia })}</td>
 					<td></td>
@@ -166,6 +167,7 @@ class RidersList extends Component<{}, { riders }> {
 			'Nazwisko',
 			'Przydomek',
 			'Data urodzenia',
+			'KSM',
 			'Polak',
 			'Junior',
 			'Klub'
