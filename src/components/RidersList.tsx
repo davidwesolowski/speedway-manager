@@ -69,6 +69,7 @@ class RidersList extends Component<{}, { riders }> {
 				riders: []
 			}));
 			data.map(rider => {
+				console.log(rider);
 				this.setState({
 					riders: this.state.riders.concat({
 						id: rider._id,
