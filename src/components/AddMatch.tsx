@@ -372,11 +372,10 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
         }
     }
 
-    const generateRoundsList = () => {
-        return rounds.map((round, index) => {
-            return(
-                <MenuItem value={round.number.toString()}>Runda {round.number}</MenuItem>
-            )
+    const generateRounds = () => {
+        rounds.map((round, index) => {
+            console.log("Dupa");
+            console.log(round.number);
         })
     }
 
@@ -395,9 +394,12 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                 options
             );
             addNotification("Sukces", "Poprawnie dodano rundę", "success", 2000);
-            setRounds(rounds.concat({
+            /*setRounds(rounds.concat({
                 roundCreate
-            }))
+            }))*/
+            setTimeout(() => {
+                window.location.reload(false);
+            }, 2000);
             setRoundCreate(defaultRoundCreate)
         } catch (e) {
             console.log(e.response);
@@ -430,15 +432,18 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                 'https://fantasy-league-eti.herokuapp.com/rounds',
                 options
             );
-            data.map(round => {
+            console.log(data);
+            setRounds([]);
+            /*data.map((round, index) => {
                 setRounds(
                     rounds.concat({
-                        startDate: data.startDate,
-                        endDate: data.endDate,
-                        number: data.number
+                        startDate: round.startDate,
+                        endDate: round.endDate,
+                        number: round.number
                     })
                 );
-            });
+            });*/
+            setRounds(data);
         } catch (e) {
             console.log(e.response);
             if (e.response.statusText == 'Unauthorized') {
@@ -459,7 +464,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
     }
 
     useEffect(() => {
-        getRounds
+        getRounds()
     }, [])
 
     return(
@@ -476,7 +481,10 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                         <InputLabel id="roundLabel">Kolejka:</InputLabel>
                         <Select labelId="roundLabel" className="add-match__round-select" value={number} onChange={handleOnChangeSelectRound()}>
                             <MenuItem value="New">Dodaj nową kolejkę</MenuItem>
-                            {generateRoundsList}
+                            {generateRounds()}
+                            {rounds.map((round, index) => 
+                                <MenuItem key={index} value={round.number.toString()}>Runda {round.number}</MenuItem>
+                            )}
                         </Select>
                     </div>
                     <Dialog open={addRoundDialogOpen} onClose={handleClose} className="number-dialog">

@@ -38,6 +38,11 @@ interface IRider {
 	//   club: string;
 }
 
+interface IClub{
+	id: string;
+	name: string;
+}
+
 interface IRider1 {
 	firstName: string;
 	lastName: string;
@@ -114,6 +119,34 @@ const defaultValidatedData = {
 const refreshPage = () => {
 	window.location.reload(false);
 };
+
+const [clubs, setClubs] = useState([])
+
+const getClubs = async () => {
+	try {
+		const accessToken = getToken();
+		const options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
+			}
+		};
+		const { data } = await axios.get(
+			'https://fantasy-league-eti.herokuapp.com/clubs',
+			options
+		);
+		data.map(club => {
+			setClubs(
+				clubs.concat({
+					id: club._id,
+					name: club.name
+				})
+			);
+		});
+	} catch (e) {
+		console.log(e.response);
+		throw new Error('Error in getting clubs!');
+	}
+}
 
 const defaultRiderData = {
 	firstName: '',
