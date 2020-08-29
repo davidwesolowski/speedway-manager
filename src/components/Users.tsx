@@ -34,6 +34,8 @@ export interface IUsers {
 	teamLogo?: string;
 }
 
+document.body.style.overflow = 'auto';
+
 const Users: FunctionComponent<RouteProps> = () => {
 	const [users, setUsers] = useState<IUsers[]>([]);
 	const [userTeamRiders, setUserTeamRiders] = useState<IRider[]>([]);
