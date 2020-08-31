@@ -22,14 +22,14 @@ import addNotification from '../utils/addNotification';
 import getToken from '../utils/getToken';
 
 interface IRider {
-	//id: string;
+	id: string;
 	firstName: string;
 	lastName: string;
 	nickname: string;
 	dateOfBirth: string;
 	isForeigner: boolean;
 	ksm: number;
-	//club: string;
+	club: string;
 }
 
 const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
@@ -61,7 +61,8 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 						nickname: rider.nickname,
 						dateOfBirth: rider.dateOfBirth,
 						isForeigner: rider.isForeigner,
-						ksm: rider.KSM
+						ksm: rider.KSM,
+						clubId: rider.clubId
 					})
 				);
 			});
@@ -141,7 +142,8 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 							nickname: tuple.rider.nickname,
 							dateOfBirth: tuple.rider.dateOfBirth,
 							isForeigner: tuple.rider.isForeigner,
-							ksm: tuple.rider.KSM
+							ksm: tuple.rider.KSM,
+							clubId: tuple.rider.clubId
 						})
 					);
 				});
@@ -187,6 +189,8 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 	const [rightPolish, setRightPolish] = React.useState([]);
 	const [rightForeign, setRightForeign] = React.useState([]);
 	const [rightU21, setRightU21] = React.useState([]);
+
+	const [clubs, setClubs] = React.useState([]);
 
 	const isJunior = date => {
 		if (new Date().getFullYear() - new Date(date).getFullYear() < 22) {
@@ -364,6 +368,56 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
+	const getClubs = async () => {
+		try {
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			const { data } = await axios.get(
+				'https://fantasy-league-eti.herokuapp.com/clubs',
+				options
+			);
+			setClubs([]);
+			data.map(club => {
+				setClubs(clubs =>
+					clubs.concat({
+						id: club._id,
+						name: club.name
+					})
+				);
+			});
+		} catch (e) {
+			console.log(e.response);
+			if (e.response.statusText == 'Unauthorized') {
+				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
+				setTimeout(() => {
+					push('/login');
+				}, 3000);
+			} else {
+				addNotification(
+					'Błąd',
+					'Nie udało się pobrać klubów z bazy',
+					'danger',
+					3000
+				);
+			}
+			throw new Error('Error in getting clubs');
+		}
+	};
+
+
+	const findClubName = (clubId) => {
+		const found = clubs.find(club => club.id == clubId);
+		if(found){
+			return found.name
+		} else {
+			return ''
+		}
+	}
+
 	const customList = (items, type, side) => {
 		return (
 			<Paper className="list-paper">
@@ -404,6 +458,11 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 											id={`${labelId}-ksm`}
 											primary={`${rider.KSM}`}
 										/>
+										<ListItemText
+											className="list-rider"
+											id={`${labelId}-club`}
+											primary={findClubName(rider.clubId)}
+										/>
 									</ListItem>
 									<Divider />
 								</>
@@ -441,6 +500,11 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 											id={`${labelId}-ksm`}
 											primary={`${rider.KSM}`}
 										/>
+										<ListItemText
+											className="list-rider"
+											id={`${labelId}-club`}
+											primary={findClubName(rider.clubId)}
+										/>
 									</ListItem>
 									<Divider />
 								</>
@@ -477,6 +541,11 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 											className="list-rider"
 											id={`${labelId}-ksm`}
 											primary={`${rider.KSM}`}
+										/>
+										<ListItemText
+											className="list-rider"
+											id={`${labelId}-club`}
+											primary={findClubName(rider.clubId)}
 										/>
 									</ListItem>
 									<Divider />
@@ -594,6 +663,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 
 	useEffect(() => {
 		getRiders();
+		getClubs();
 	}, []);
 
 	return (

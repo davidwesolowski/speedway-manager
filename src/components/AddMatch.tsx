@@ -374,7 +374,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 
     const generateRounds = () => {
         rounds.map((round, index) => {
-            console.log("Dupa");
             console.log(round.number);
         })
     }

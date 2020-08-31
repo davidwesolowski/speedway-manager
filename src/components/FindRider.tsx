@@ -15,14 +15,14 @@ import { FiX, FiPlus } from 'react-icons/fi';
 import getToken from '../utils/getToken';
 
 interface IRider {
-	//id: string;
+	id: string;
 	firstName: string;
 	lastName: string;
 	nickname: string;
 	dateOfBirth: string;
 	isForeigner: boolean;
 	ksm: number;
-	//club: string;
+	clubId: string;
 }
 
 interface ISelect {
@@ -40,6 +40,7 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 		age: 'All'
 	});
 	const [filteredRiders, setFilteredRiders] = useState([]);
+	const [clubs, setClubs] = useState([]);
 	//const [filteredNationality, setFilteredNationality] = useState([]);
 	//const [filteredAge, setFilteredAge] = useState([]);
 	const getRiders = async () => {
@@ -64,7 +65,8 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 						nickname: rider.nickname,
 						dateOfBirth: rider.dateOfBirth,
 						isForeigner: rider.isForeigner,
-						ksm: rider.KSM
+						ksm: rider.KSM,
+						clubId: rider.clubId
 					})
 				);
 			});
@@ -87,8 +89,48 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
+	const getClubs = async () => {
+		try {
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			const { data } = await axios.get(
+				'https://fantasy-league-eti.herokuapp.com/clubs',
+				options
+			);
+			setClubs([]);
+			data.map(club => {
+				setClubs(clubs =>
+					clubs.concat({
+						id: club._id,
+						name: club.name
+					})
+				);
+			});
+		} catch (e) {
+			console.log(e.response);
+			if (e.response.statusText == 'Unauthorized') {
+				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
+				setTimeout(() => {
+					push('/login');
+				}, 3000);
+			} else {
+				addNotification(
+					'Błąd',
+					'Nie udało się pobrać klubów z bazy',
+					'danger',
+					3000
+				);
+			}
+			throw new Error('Error in getting clubs');
+		}
+	};
+
 	const ifForeigner = foreigner => {
-		if (foreigner.isForeigner == true) {
+		if (foreigner == true) {
 			return <FiX className="NoX"></FiX>;
 		} else {
 			return <FiPlus className="YesPlus"></FiPlus>;
@@ -98,7 +140,7 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 	const ifJunior = date => {
 		if (
 			new Date().getFullYear() -
-				new Date(date.dateOfBirth).getFullYear() <
+				new Date(date).getFullYear() <
 			22
 		) {
 			return <FiPlus className="YesPlus"></FiPlus>;
@@ -216,6 +258,15 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
+	const findClubName = (clubId) => {
+		const found = clubs.find(club => club.id == clubId);
+		if(found){
+			return found.name
+		} else {
+			return ''
+		}
+	}
+
 	const renderTableData = () => {
 		useEffect(() => {
 			filtr();
@@ -233,7 +284,8 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 					nickname,
 					dateOfBirth,
 					isForeigner,
-					ksm
+					ksm,
+					clubId
 				} = rider;
 				return (
 					<tr
@@ -255,9 +307,9 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 							}).format(new Date(dateOfBirth))}
 						</td>
 						<td>{ksm}</td>
-						<td>{ifForeigner({ isForeigner })}</td>
-						<td>{ifJunior({ dateOfBirth })}</td>
-						<td></td>
+						<td>{ifForeigner( isForeigner )}</td>
+						<td>{ifJunior( dateOfBirth )}</td>
+						<td>{findClubName(clubId)}</td>
 					</tr>
 				);
 			});
@@ -270,7 +322,8 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 					nickname,
 					dateOfBirth,
 					isForeigner,
-					ksm
+					ksm,
+					clubId
 				} = rider;
 				return (
 					<tr
@@ -292,9 +345,9 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 							}).format(new Date(dateOfBirth))}
 						</td>
 						<td>{ksm}</td>
-						<td>{ifForeigner({ isForeigner })}</td>
-						<td>{ifJunior({ dateOfBirth })}</td>
-						<td></td>
+						<td>{ifForeigner( isForeigner )}</td>
+						<td>{ifJunior( dateOfBirth )}</td>
+						<td>{findClubName(clubId)}</td>
 					</tr>
 				);
 			});
@@ -315,7 +368,8 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 						nickname,
 						dateOfBirth,
 						foreigner,
-						ksm
+						ksm,
+						clubId
 					} = rider;
 					return (
 						<tr
@@ -337,9 +391,9 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 								}).format(new Date(dateOfBirth))}
 							</td>
 							<td>{ksm}</td>
-							<td>{ifForeigner({ foreigner })}</td>
-							<td>{ifJunior({ dateOfBirth })}</td>
-							<td></td>
+							<td>{ifForeigner(foreigner )}</td>
+							<td>{ifJunior( dateOfBirth )}</td>
+							<td>{findClubName(clubId)}</td>
 						</tr>
 					);
 				});
@@ -383,6 +437,7 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 
 	useEffect(() => {
 		getRiders();
+		getClubs()
 	}, []);
 
 	return (
