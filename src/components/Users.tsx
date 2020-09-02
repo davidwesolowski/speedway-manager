@@ -186,6 +186,9 @@ const Users: FunctionComponent<RouteProps> = () => {
 
 		if (!userData.username) fetchUserData();
 		setLoading(false);
+		setTimeout(() => {
+			document.body.style.overflow = 'auto';
+		}, 500);
 	}, []);
 
 	return (

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState, useEffect } from 'react';
 import {
 	Paper,
 	Typography,
@@ -444,7 +444,12 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 
 	/*useEffect(() => {
         exampleRiders.map(rider => addRiders(rider));
-    }, [])*/
+	}, [])*/
+	useEffect(() => {
+		setTimeout(() => {
+			document.body.style.overflow = 'auto';
+		}, 500);
+	}, []);
 
 	return (
 		<>
