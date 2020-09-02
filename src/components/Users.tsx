@@ -34,8 +34,6 @@ export interface IUsers {
 	teamLogo?: string;
 }
 
-document.body.style.overflow = 'auto';
-
 const Users: FunctionComponent<RouteProps> = () => {
 	const [users, setUsers] = useState<IUsers[]>([]);
 	const [userTeamRiders, setUserTeamRiders] = useState<IRider[]>([]);
@@ -76,27 +74,41 @@ const Users: FunctionComponent<RouteProps> = () => {
 				`https://fantasy-league-eti.herokuapp.com/teams/${teamId}/riders`,
 				options
 			);
-			const newRiders = riders.map(({ rider }) => {
-				const riderAgeYear = new Date(rider.dateOfBirth).getFullYear();
-				const currentYear = new Date().getFullYear();
-				const diffYear = currentYear - riderAgeYear;
-				const age =
-					diffYear <= 21 ? 'U21' : diffYear <= 23 ? 'U23' : 'Senior';
-				const nationality = rider.isForeigner
-					? 'Zagraniczny'
-					: 'Krajowy';
-				return {
-					firstName: rider.firstName,
-					lastName: rider.lastName,
-					dateOfBirth: rider.dateOfBirth,
-					_id: rider._id,
-					nationality,
-					age,
-					ksm: 0,
-					club: ''
-				};
-			});
-			setUserTeamRiders(newRiders);
+			if (riders.length > 0) {
+				const newRiders = riders.map(({ rider }) => {
+					const riderAgeYear = new Date(
+						rider.dateOfBirth
+					).getFullYear();
+					const currentYear = new Date().getFullYear();
+					const diffYear = currentYear - riderAgeYear;
+					const age =
+						diffYear <= 21
+							? 'U21'
+							: diffYear <= 23
+							? 'U23'
+							: 'Senior';
+					const nationality = rider.isForeigner
+						? 'Zagraniczny'
+						: 'Krajowy';
+					return {
+						firstName: rider.firstName,
+						lastName: rider.lastName,
+						dateOfBirth: rider.dateOfBirth,
+						_id: rider._id,
+						nationality,
+						age,
+						ksm: 0,
+						club: ''
+					};
+				});
+				setUserTeamRiders(newRiders);
+			} else {
+				const title = 'Informacja';
+				const message = 'Nie masz zawodników w drużynie!';
+				const type = 'info';
+				const duration = 2000;
+				addNotification(title, message, type, duration);
+			}
 		} catch (e) {
 			const { response: data } = e;
 			if (data.statusCode == 401) {
