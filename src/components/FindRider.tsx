@@ -42,6 +42,9 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 	const [filteredRiders, setFilteredRiders] = useState([]);
 	//const [filteredNationality, setFilteredNationality] = useState([]);
 	//const [filteredAge, setFilteredAge] = useState([]);
+
+	document.body.style.overflow = 'auto';
+
 	const getRiders = async () => {
 		try {
 			const accessToken = getToken();
