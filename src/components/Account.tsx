@@ -315,6 +315,9 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 		};
 
 		if (!userData.email) fetchUserData();
+		setTimeout(() => {
+			document.body.style.overflow = 'auto';
+		}, 2000);
 	}, []);
 
 	return (
