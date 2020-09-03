@@ -9,7 +9,9 @@ import axios from "axios";
 import addNotification from "../utils/addNotification";
 import validateRoundData from "../validation/validateRoundData";
 import { ValidationErrorItem, string } from "@hapi/joi";
-import { deepOrange } from "@material-ui/core/colors";
+import { setUser } from '../actions/userActions';
+import { useStateValue } from "./AppProvider";
+
 
 interface IRiderPoints{
     _id: string;
@@ -148,6 +150,38 @@ interface IValidatedRound{
 const AddMatch: FunctionComponent<RouteComponentProps> = ({
     history: { push }
 }) => {
+
+    const {
+        setLoggedIn,
+		dispatchUserData,
+		userData,
+    } = useStateValue();
+    
+    const fetchUserData = async () => {
+        const accessToken = getToken();
+		const options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
+			}
+		};
+        try {
+            const {
+                data: { username, email, avatarUrl }
+            } = await axios.get(
+                'https://fantasy-league-eti.herokuapp.com/users/self',
+                options
+            );
+            dispatchUserData(setUser({ username, email, avatarUrl }));
+            setLoggedIn(true);
+        } catch (e) {
+            /*const {
+                response: { data }
+            } = e;
+            if (data.statusCode == 401) {
+                checkBadAuthorization(setLoggedIn, push);
+            }*/
+        }
+    };
 
     const defaultRiderPoints = {
         _id: '',
@@ -974,6 +1008,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
         getRounds();
         getClubs();
         getRiders();
+        if (!userData.username) fetchUserData();
     }, [])
 
     return(

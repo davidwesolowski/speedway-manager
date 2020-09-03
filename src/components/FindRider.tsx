@@ -13,6 +13,8 @@ import {
 import addNotification from '../utils/addNotification';
 import { FiX, FiPlus } from 'react-icons/fi';
 import getToken from '../utils/getToken';
+import { useStateValue } from './AppProvider';
+import { setUser } from '../actions/userActions';
 
 interface IRider {
 	id: string;
@@ -33,6 +35,38 @@ interface ISelect {
 const FindRider: FunctionComponent<RouteComponentProps> = ({
 	history: { push }
 }) => {
+
+	const {
+        setLoggedIn,
+		dispatchUserData,
+		userData,
+    } = useStateValue();
+    
+    const fetchUserData = async () => {
+        const accessToken = getToken();
+		const options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
+			}
+		};
+        try {
+            const {
+                data: { username, email, avatarUrl }
+            } = await axios.get(
+                'https://fantasy-league-eti.herokuapp.com/users/self',
+                options
+            );
+            dispatchUserData(setUser({ username, email, avatarUrl }));
+            setLoggedIn(true);
+        } catch (e) {
+            /*const {
+                response: { data }
+            } = e;
+            if (data.statusCode == 401) {
+                checkBadAuthorization(setLoggedIn, push);
+            }*/
+        }
+    };
 	const [riders, setRiders] = useState([]);
 	const [phrase, setPhrase] = useState<string>('');
 	const [selects, setSelects] = useState<ISelect>({
@@ -437,7 +471,8 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 
 	useEffect(() => {
 		getRiders();
-		getClubs()
+		getClubs();
+		if (!userData.username) fetchUserData();
 	}, []);
 
 	return (
