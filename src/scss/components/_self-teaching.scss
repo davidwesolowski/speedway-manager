@@ -1,0 +1,20 @@
+.selfTeaching {
+	&__container {
+		grid-column: center-start / center-end;
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-family: $bebas;
+	}
+
+	&__img {
+		height: 100%;
+		width: 100%;
+		position: absolute;
+		z-index: 1;
+		background-image: url(/img/wroclaw.jpg);
+		background-size: cover;
+		filter: opacity(0.2);
+	}
+}

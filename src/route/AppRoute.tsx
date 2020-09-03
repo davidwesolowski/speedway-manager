@@ -21,6 +21,7 @@ import AddRiderToTeam from '../components/AddRiderToTeam';
 import Users from '../components/Users';
 import AddMatch from '../components/AddMatch';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import SelfTeaching from '../components/SelfTeaching';
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -184,6 +185,7 @@ const RoutesAnimation = () => {
 							else return <Redirect to="/login" />;
 						}}
 					/>
+					<Route path="/samouczek" component={SelfTeaching} />
 				</Switch>
 			</CSSTransition>
 		</TransitionGroup>
