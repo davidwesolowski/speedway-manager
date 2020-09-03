@@ -39,6 +39,8 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 	const [teamId, setTeamId] = useState<string>('');
 	const [teamRiders, setTeamRiders] = useState([]);
 
+	document.body.style.overflow = 'auto';
+
 	const getRiders = async () => {
 		try {
 			const accessToken = getToken();

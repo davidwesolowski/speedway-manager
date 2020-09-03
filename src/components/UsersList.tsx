@@ -1,5 +1,14 @@
 import React, { FunctionComponent } from 'react';
-import { TableRow, TableCell, Avatar, IconButton } from '@material-ui/core';
+import {
+	TableRow,
+	TableCell,
+	Avatar,
+	IconButton,
+	TableContainer,
+	Table,
+	TableHead,
+	TableBody
+} from '@material-ui/core';
 import { FiArrowRightCircle } from 'react-icons/fi';
 import { IUsers } from './Users';
 
@@ -43,7 +52,21 @@ const UsersList: FunctionComponent<IProps> = ({
 		</TableRow>
 	);
 
-	return users.length > 0 ? isFound : notFound;
+	return (
+		<TableContainer>
+			<Table>
+				<TableHead>
+					<TableRow>
+						<TableCell />
+						<TableCell>Nazwa użytkownika</TableCell>
+						<TableCell>Nazwa drużyny</TableCell>
+						<TableCell>Sprawdź skład</TableCell>
+					</TableRow>
+				</TableHead>
+				<TableBody>{users.length > 0 ? isFound : notFound}</TableBody>
+			</Table>
+		</TableContainer>
+	);
 };
 
 export default UsersList;

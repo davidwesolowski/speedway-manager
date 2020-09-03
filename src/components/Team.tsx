@@ -76,6 +76,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 		userData,
 		dispatchTeamRiders
 	} = useStateValue();
+
 	// eslint-disable-next-line @typescript-eslint/ban-types
 	const handleChange = (event: ChangeEvent<{}>, newValue: number) =>
 		setValue(newValue);
@@ -177,6 +178,9 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 		fetchTeam();
 		if (!userData.username) fetchUserData();
 		setLoading(false);
+		setTimeout(() => {
+			document.body.style.overflow = 'auto';
+		}, 500);
 	}, [updatedTeam]);
 
 	return (

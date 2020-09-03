@@ -4,7 +4,8 @@ import {
 	Route,
 	Switch,
 	Redirect,
-	RouteComponentProps
+	RouteComponentProps,
+	useLocation
 } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -19,6 +20,7 @@ import FindRider from '../components/FindRider';
 import AddRiderToTeam from '../components/AddRiderToTeam';
 import Users from '../components/Users';
 import AddMatch from '../components/AddMatch';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -99,8 +101,92 @@ const AppRoute: FunctionComponent = () => {
 					}}
 				/>
 			</Switch>
+			<Route path="*" component={RoutesAnimation} />
 			<Footer />
 		</Router>
+	);
+};
+
+const RoutesAnimation = () => {
+	const location = useLocation();
+	document.body.style.overflow = 'hidden';
+	return (
+		<TransitionGroup component={null}>
+			<CSSTransition
+				timeout={300}
+				classNames="animationRoutes"
+				key={location.key}
+			>
+				<Switch location={location}>
+					<Route path="/" exact component={WelcomePage} />
+					<Route
+						path="/login"
+						render={(props: RouteComponentProps) => {
+							const cookiesExist = checkCookies();
+							if (cookiesExist) return <Redirect to="/druzyna" />;
+							else return <Login {...props} />;
+						}}
+					/>
+					<Route
+						path="/konto"
+						render={(props: RouteComponentProps) => {
+							const cookiesExist = checkCookies();
+							if (cookiesExist) return <Account {...props} />;
+							else return <Redirect to="/login" />;
+						}}
+					/>
+					<Route
+						path="/rejestracja"
+						render={(props: RouteComponentProps) => {
+							const cookiesExist = checkCookies();
+							if (cookiesExist) return <Redirect to="/druzyna" />;
+							else return <Register {...props} />;
+						}}
+					/>
+					<Route
+						path="/druzyna"
+						render={(props: RouteComponentProps) => {
+							const cookiesExist = checkCookies();
+							if (cookiesExist) return <Team {...props} />;
+							else return <Redirect to="/login" />;
+						}}
+					/>
+					<Route
+						path="/zawodnicy"
+						render={(props: RouteComponentProps) => {
+							const cookiesExist = checkCookies();
+							if (cookiesExist) return <Riders {...props} />;
+							else return <Redirect to="/login" />;
+						}}
+					/>
+					<Route
+						path="/szukaj"
+						render={(props: RouteComponentProps) => {
+							const cookiesExist = checkCookies();
+							if (cookiesExist) return <FindRider {...props} />;
+							else return <Redirect to="/login" />;
+						}}
+					/>
+					<Route
+						path="/dodaj-druzyna"
+						render={(props: RouteComponentProps) => {
+							const cookiesExist = checkCookies();
+							if (cookiesExist)
+								return <AddRiderToTeam {...props} />;
+							else return <Redirect to="/login" />;
+						}}
+					/>
+					<Route
+						path="/uzytkownicy"
+						render={(props: RouteComponentProps) => {
+							const cookiesExist = checkCookies();
+							if (cookiesExist) return <Users {...props} />;
+							else return <Redirect to="/login" />;
+						}}
+					/>
+				</Switch>
+			</CSSTransition>
+		</TransitionGroup>
 	);
 };
 

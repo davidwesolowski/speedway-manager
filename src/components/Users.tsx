@@ -10,12 +10,6 @@ import {
 	TextField,
 	InputAdornment,
 	Grid,
-	TableContainer,
-	Table,
-	TableHead,
-	TableRow,
-	TableCell,
-	TableBody,
 	CircularProgress,
 	IconButton
 } from '@material-ui/core';
@@ -29,6 +23,7 @@ import UsersList from './UsersList';
 import getToken from '../utils/getToken';
 import TeamRiders, { IRider } from './TeamRiders';
 import addNotification from '../utils/addNotification';
+import { CSSTransition } from 'react-transition-group';
 
 export interface IUsers {
 	_id: string;
@@ -79,27 +74,41 @@ const Users: FunctionComponent<RouteProps> = () => {
 				`https://fantasy-league-eti.herokuapp.com/teams/${teamId}/riders`,
 				options
 			);
-			const newRiders = riders.map(({ rider }) => {
-				const riderAgeYear = new Date(rider.dateOfBirth).getFullYear();
-				const currentYear = new Date().getFullYear();
-				const diffYear = currentYear - riderAgeYear;
-				const age =
-					diffYear <= 21 ? 'U21' : diffYear <= 23 ? 'U23' : 'Senior';
-				const nationality = rider.isForeigner
-					? 'Zagraniczny'
-					: 'Krajowy';
-				return {
-					firstName: rider.firstName,
-					lastName: rider.lastName,
-					dateOfBirth: rider.dateOfBirth,
-					_id: rider._id,
-					nationality,
-					age,
-					ksm: 0,
-					club: ''
-				};
-			});
-			setUserTeamRiders(newRiders);
+			if (riders.length > 0) {
+				const newRiders = riders.map(({ rider }) => {
+					const riderAgeYear = new Date(
+						rider.dateOfBirth
+					).getFullYear();
+					const currentYear = new Date().getFullYear();
+					const diffYear = currentYear - riderAgeYear;
+					const age =
+						diffYear <= 21
+							? 'U21'
+							: diffYear <= 23
+							? 'U23'
+							: 'Senior';
+					const nationality = rider.isForeigner
+						? 'Zagraniczny'
+						: 'Krajowy';
+					return {
+						firstName: rider.firstName,
+						lastName: rider.lastName,
+						dateOfBirth: rider.dateOfBirth,
+						_id: rider._id,
+						nationality,
+						age,
+						ksm: 0,
+						club: ''
+					};
+				});
+				setUserTeamRiders(newRiders);
+			} else {
+				const title = 'Informacja';
+				const message = 'Nie masz zawodników w drużynie!';
+				const type = 'info';
+				const duration = 2000;
+				addNotification(title, message, type, duration);
+			}
 		} catch (e) {
 			const { response: data } = e;
 			if (data.statusCode == 401) {
@@ -116,7 +125,6 @@ const Users: FunctionComponent<RouteProps> = () => {
 
 	useEffect(() => {
 		setLoading(true);
-
 		const accessToken = getToken();
 		const options = {
 			headers: {
@@ -189,8 +197,10 @@ const Users: FunctionComponent<RouteProps> = () => {
 		fetchUsers();
 
 		if (!userData.username) fetchUserData();
-
 		setLoading(false);
+		setTimeout(() => {
+			document.body.style.overflow = 'auto';
+		}, 500);
 	}, []);
 
 	return (
@@ -218,7 +228,7 @@ const Users: FunctionComponent<RouteProps> = () => {
 						/>
 					</Grid>
 				</Grid>
-				{loading ? (
+				{loading && (
 					<Grid
 						container
 						justify="center"
@@ -227,12 +237,18 @@ const Users: FunctionComponent<RouteProps> = () => {
 					>
 						<CircularProgress />
 					</Grid>
-				) : (
-					<Grid
-						container
-						className="users__container"
-						justify="center"
-						alignItems="flex-start"
+				)}
+				<Grid
+					container
+					className="users__container"
+					justify="center"
+					alignItems="flex-start"
+				>
+					<CSSTransition
+						in={users.length > 0}
+						timeout={300}
+						classNames="animationScaleUp"
+						unmountOnExit
 					>
 						<Grid
 							item
@@ -240,47 +256,32 @@ const Users: FunctionComponent<RouteProps> = () => {
 								userTeamRiders.length > 0 ? 'users__list' : ''
 							}
 						>
-							<TableContainer>
-								<Table>
-									<TableHead>
-										<TableRow>
-											<TableCell />
-											<TableCell>
-												Nazwa użytkownika
-											</TableCell>
-											<TableCell>Nazwa drużyny</TableCell>
-											<TableCell>Sprawdź skład</TableCell>
-										</TableRow>
-									</TableHead>
-									<TableBody>
-										{
-											<UsersList
-												users={filterUsers(users)}
-												handleFetchTeamRiders={
-													handleFetchTeamRiders
-												}
-											/>
-										}
-									</TableBody>
-								</Table>
-							</TableContainer>
+							<UsersList
+								users={filterUsers(users)}
+								handleFetchTeamRiders={handleFetchTeamRiders}
+							/>
 						</Grid>
-						{userTeamRiders.length > 0 ? (
-							<Grid item>
-								<Grid container alignItems="flex-start">
-									<Grid item xs={11}>
-										<TeamRiders riders={userTeamRiders} />
-									</Grid>
-									<Grid item xs={1}>
-										<IconButton onClick={handleCloseRiders}>
-											<FiX className="users__xIcon" />
-										</IconButton>
-									</Grid>
+					</CSSTransition>
+					<CSSTransition
+						in={userTeamRiders.length > 0}
+						timeout={300}
+						classNames="animationScaleUp"
+						unmountOnExit
+					>
+						<Grid item>
+							<Grid container alignItems="flex-start">
+								<Grid item xs={11}>
+									<TeamRiders riders={userTeamRiders} />
+								</Grid>
+								<Grid item xs={1}>
+									<IconButton onClick={handleCloseRiders}>
+										<FiX className="users__xIcon" />
+									</IconButton>
 								</Grid>
 							</Grid>
-						) : null}
-					</Grid>
-				)}
+						</Grid>
+					</CSSTransition>
+				</Grid>
 			</Paper>
 		</div>
 	);
