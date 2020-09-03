@@ -214,6 +214,8 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 	);
 	const [showDialog, setShowDialog] = useState<boolean>(false);
 
+	const [tempKSM, setTempKSM] = useState<string>('');
+
 	const [exampleRiders, setExampleRiders] = useState<IRider1[]>([
 		{
 			firstName: 'Chris',
@@ -336,9 +338,10 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		if (event.target) {
 			if(name === 'KSM')
 			{
+				setTempKSM(event.target.value);
 				setRiderData((prevState: IRider) => ({
 					...prevState,
-					[name]: parseFloat(event.target.value)
+					[name]: parseFloat(tempKSM)
 				}));
 			} else {
 				setRiderData((prevState: IRider) => ({
@@ -716,7 +719,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 										label="KSM"
 										required
 										autoComplete="ksm"
-										value={riderData.KSM.toString()}
+										value={tempKSM}
 										error={validatedData.KSM.error}
 										helperText={validatedData.KSM.message}
 										onChange={handleOnChange('KSM')}
