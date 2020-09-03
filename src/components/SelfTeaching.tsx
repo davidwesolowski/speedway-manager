@@ -2,7 +2,8 @@ import React, {
 	useEffect,
 	useState,
 	FunctionComponent,
-	ChangeEvent
+	ChangeEvent,
+	FormEvent
 } from 'react';
 import axios from 'axios';
 import { useStateValue } from './AppProvider';
@@ -27,6 +28,7 @@ import {
 } from '@material-ui/core';
 import { FaPlusCircle } from 'react-icons/fa';
 import { FiX, FiChevronDown } from 'react-icons/fi';
+import addNotification from '../utils/addNotification';
 
 interface IAnswerAndQuestion {
 	question: string;
@@ -90,7 +92,7 @@ const SelfTeaching: FunctionComponent = () => {
 		setOpen(false);
 		setInput(defaultInput);
 	};
-	const handleInput = (name: string) => (
+	const handleOnChange = (name: string) => (
 		event: ChangeEvent<HTMLInputElement>
 	) => {
 		event.persist();
@@ -100,6 +102,17 @@ const SelfTeaching: FunctionComponent = () => {
 				[name]: event.target.value
 			}));
 		}
+	};
+
+	const handleOnSubmit = (event: FormEvent) => {
+		event.preventDefault();
+
+		setAnswersAndQuestions([...answersAndQuestions, input]);
+		const title = 'Sukces!';
+		const message = 'Pomyślnie dodano FAQ!';
+		const type = 'success';
+		const duration = 1500;
+		addNotification(title, message, type, duration);
 	};
 
 	useEffect(() => {
@@ -194,14 +207,14 @@ const SelfTeaching: FunctionComponent = () => {
 					</Grid>
 				</DialogTitle>
 				<DialogContent dividers>
-					<form>
+					<form onSubmit={handleOnSubmit}>
 						<Grid container direction="column">
 							<FormControl className="selfTeaching__formFields">
 								<TextField
 									label="Pytanie"
 									required
 									value={input.question}
-									onChange={handleInput('question')}
+									onChange={handleOnChange('question')}
 								/>
 							</FormControl>
 							<FormControl className="selfTeaching__formFields">
@@ -209,7 +222,7 @@ const SelfTeaching: FunctionComponent = () => {
 									label="Odpowiedź"
 									required
 									value={input.answer}
-									onChange={handleInput('answer')}
+									onChange={handleOnChange('answer')}
 								/>
 							</FormControl>
 							<FormControl>
