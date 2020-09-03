@@ -30,6 +30,10 @@
 	&__icon {
 		font-size: 2.5rem;
 		color: #000;
+
+		&-white {
+			color: #fff;
+		}
 	}
 
 	&__dialog {
@@ -53,5 +57,22 @@
 
 	&__formFields {
 		margin-bottom: $xs-margin !important;
+	}
+
+	&__fields {
+		width: 90% !important;
+		margin: 0 auto;
+	}
+
+	&__field {
+		background-color: $color-primary !important;
+		color: #fff !important;
+		margin: 0.5rem;
+
+		&-text {
+			font-family: $bebas !important;
+			letter-spacing: 0.5px !important;
+			font-size: 1.7rem !important;
+		}
 	}
 }

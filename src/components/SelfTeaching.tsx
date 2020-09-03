@@ -20,18 +20,67 @@ import {
 	DialogContent,
 	FormControl,
 	TextField,
-	Button
+	Button,
+	Accordion,
+	AccordionSummary,
+	AccordionDetails
 } from '@material-ui/core';
 import { FaPlusCircle } from 'react-icons/fa';
-import { FiX } from 'react-icons/fi';
+import { FiX, FiChevronDown } from 'react-icons/fi';
+
+interface IAnswerAndQuestion {
+	question: string;
+	answer: string;
+}
 
 const defaultInput = {
 	question: '',
 	answer: ''
 };
 
+const tempData = [
+	{
+		question:
+			'Czym jest nazwa drużyny i czy można ją zmienić w trakcie gry?',
+		answer:
+			'Nazwa drużyny jest wybierana przez gracza podczas tworzenia drużyny, może być edytowana, musi być unikalna.'
+	},
+	{
+		question: 'Czy można usunąć drużynę z gry?',
+		answer:
+			'Tak. Można usunąć drużynę, nie usuwając swojego konta w grze, co pozwala na stworzenie nowej drużyny.'
+	},
+	{
+		question: 'Jak wybrać kadrę w grze?',
+		answer:
+			'Kadra to 10 zawodników, w jej ramach tworzy się drużynę. Należy wybrać 10 zawodników (nie można mieć ich mniej). Kadra to 7 zawodników krajowych (minimum 3 młodzieżowych) i 3 zawodników obcokrajowców.'
+	},
+	{
+		question: 'Co to jest KSM w grze?',
+		answer:
+			'Jest to Kalkulowana Średnia Meczowa obliczana na podstawie Średniej Indywidualnej zawodników pomnożonej razy 4.'
+	},
+	{
+		question:
+			'Ile wynosi limit KSM na drużynę w grze i jak się go oblicza?',
+		answer:
+			'KSM drużyny nie może przekroczyć wartości 41 pkt. Oblicza się ją jako sumę 6 najlepszych KSM zawodników zgłoszonych do drużyny (nie kadry!).'
+	},
+	{
+		question: 'Jaki jest najniższy KSM zawodnika w grze?',
+		answer: 'KSM zawodnika w grze nie może być mniejszy niż 2,50pkt.'
+	},
+	{
+		question: 'Czy kadrę obowiązuje limit KSM w grze?',
+		answer: 'Nie. KSM w kadrze ma jedynie wymiar informacyjny dla gracza.'
+	}
+];
+
 const SelfTeaching: FunctionComponent = () => {
 	const [input, setInput] = useState(defaultInput);
+	const [answersAndQuestions, setAnswersAndQuestions] = useState<
+		IAnswerAndQuestion[]
+	>(tempData);
 	const [open, setOpen] = useState(false);
 	const { userData, dispatchUserData, setLoggedIn } = useStateValue();
 	const { push } = useHistory();
@@ -97,6 +146,33 @@ const SelfTeaching: FunctionComponent = () => {
 							</IconButton>
 						</Grid>
 					</Grid>
+					<Grid container className="selfTeaching__fields">
+						{answersAndQuestions.map(answerAndQuestion => (
+							<Grid
+								item
+								xs={12}
+								sm={6}
+								key={answerAndQuestion.question}
+							>
+								<Accordion className="selfTeaching__field">
+									<AccordionSummary
+										expandIcon={
+											<FiChevronDown className="selfTeaching__icon-white" />
+										}
+									>
+										<Typography className="selfTeaching__field-text">
+											{answerAndQuestion.question}
+										</Typography>
+									</AccordionSummary>
+									<AccordionDetails>
+										<Typography className="selfTeaching__field-text">
+											{answerAndQuestion.answer}
+										</Typography>
+									</AccordionDetails>
+								</Accordion>
+							</Grid>
+						))}
+					</Grid>
 				</Paper>
 			</div>
 			<Dialog
@@ -123,6 +199,7 @@ const SelfTeaching: FunctionComponent = () => {
 							<FormControl className="selfTeaching__formFields">
 								<TextField
 									label="Pytanie"
+									required
 									value={input.question}
 									onChange={handleInput('question')}
 								/>
@@ -130,6 +207,7 @@ const SelfTeaching: FunctionComponent = () => {
 							<FormControl className="selfTeaching__formFields">
 								<TextField
 									label="Odpowiedź"
+									required
 									value={input.answer}
 									onChange={handleInput('answer')}
 								/>
