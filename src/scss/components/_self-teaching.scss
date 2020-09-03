@@ -32,7 +32,26 @@
 		color: #000;
 	}
 
+	&__dialog {
+		.MuiDialog-paperWidthSm {
+			max-width: auto !important;
+			min-width: 35vw !important;
+
+			@media screen and (max-width: $bp-md) {
+				min-width: 60vw !important;
+			}
+
+			@media screen and (max-width: $bp-sm) {
+				min-width: 80vw !important;
+			}
+		}
+	}
+
 	&__dialogHeader {
 		font-family: $bebas !important;
+	}
+
+	&__formFields {
+		margin-bottom: $xs-margin !important;
 	}
 }

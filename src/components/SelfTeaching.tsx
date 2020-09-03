@@ -1,4 +1,9 @@
-import React, { useEffect, useState, FunctionComponent } from 'react';
+import React, {
+	useEffect,
+	useState,
+	FunctionComponent,
+	ChangeEvent
+} from 'react';
 import axios from 'axios';
 import { useStateValue } from './AppProvider';
 import { checkCookies, checkBadAuthorization } from '../utils/checkCookies';
@@ -12,18 +17,41 @@ import {
 	Dialog,
 	DialogTitle,
 	Typography,
-	DialogContent
+	DialogContent,
+	FormControl,
+	TextField,
+	Button
 } from '@material-ui/core';
 import { FaPlusCircle } from 'react-icons/fa';
 import { FiX } from 'react-icons/fi';
 
+const defaultInput = {
+	question: '',
+	answer: ''
+};
+
 const SelfTeaching: FunctionComponent = () => {
+	const [input, setInput] = useState(defaultInput);
 	const [open, setOpen] = useState(false);
 	const { userData, dispatchUserData, setLoggedIn } = useStateValue();
 	const { push } = useHistory();
 
 	const handleOpen = () => setOpen(true);
-	const handleClose = () => setOpen(false);
+	const handleClose = () => {
+		setOpen(false);
+		setInput(defaultInput);
+	};
+	const handleInput = (name: string) => (
+		event: ChangeEvent<HTMLInputElement>
+	) => {
+		event.persist();
+		if (event.target) {
+			setInput(prevState => ({
+				...prevState,
+				[name]: event.target.value
+			}));
+		}
+	};
 
 	useEffect(() => {
 		const checkIfUserLoggedIn = async () => {
@@ -84,12 +112,36 @@ const SelfTeaching: FunctionComponent = () => {
 						>
 							Dodaj pytanie do samouczka
 						</Typography>
-						<IconButton>
+						<IconButton onClick={handleClose}>
 							<FiX className="selfTeaching__icon" />
 						</IconButton>
 					</Grid>
 				</DialogTitle>
-				<DialogContent dividers></DialogContent>
+				<DialogContent dividers>
+					<form>
+						<Grid container direction="column">
+							<FormControl className="selfTeaching__formFields">
+								<TextField
+									label="Pytanie"
+									value={input.question}
+									onChange={handleInput('question')}
+								/>
+							</FormControl>
+							<FormControl className="selfTeaching__formFields">
+								<TextField
+									label="Odpowiedź"
+									value={input.answer}
+									onChange={handleInput('answer')}
+								/>
+							</FormControl>
+							<FormControl>
+								<Button className="btn" type="submit">
+									Dodaj pytanie
+								</Button>
+							</FormControl>
+						</Grid>
+					</form>
+				</DialogContent>
 			</Dialog>
 		</>
 	);
