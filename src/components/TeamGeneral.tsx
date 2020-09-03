@@ -28,7 +28,7 @@ import handleImgFile, {
 import axios from 'axios';
 import addNotification from '../utils/addNotification';
 import { useStateValue } from './AppProvider';
-import { checkBadAuthorization } from '../validation/checkCookies';
+import { checkBadAuthorization } from '../utils/checkCookies';
 import getToken from '../utils/getToken';
 import TeamRiders from './TeamRiders';
 

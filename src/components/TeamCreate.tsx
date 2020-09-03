@@ -26,7 +26,7 @@ import handleImgFile, {
 } from '../utils/handleImgFile';
 import addNotification from '../utils/addNotification';
 import { useHistory } from 'react-router-dom';
-import { checkBadAuthorization } from '../validation/checkCookies';
+import { checkBadAuthorization } from '../utils/checkCookies';
 import { AppContext } from './AppProvider';
 import getToken from '../utils/getToken';
 

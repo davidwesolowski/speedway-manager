@@ -18,7 +18,7 @@ import { RouteProps, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { setUser } from '../actions/userActions';
 import { useStateValue } from './AppProvider';
-import { checkBadAuthorization } from '../validation/checkCookies';
+import { checkBadAuthorization } from '../utils/checkCookies';
 import UsersList from './UsersList';
 import getToken from '../utils/getToken';
 import TeamRiders, { IRider } from './TeamRiders';
