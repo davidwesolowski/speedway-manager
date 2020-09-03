@@ -8,7 +8,7 @@ import getToken from "../utils/getToken";
 import axios from "axios";
 import addNotification from "../utils/addNotification";
 import validateRoundData from "../validation/validateRoundData";
-import { ValidationErrorItem } from "@hapi/joi";
+import { ValidationErrorItem, string } from "@hapi/joi";
 import { deepOrange } from "@material-ui/core/colors";
 
 interface IRiderPoints{
@@ -34,7 +34,36 @@ interface ITeamPoints{
     rider_8: IRiderPoints;
 }
 
+interface ITeamPointsToValidate{
+    home_id: string;
+    away_id: string;
+    points_1: number;
+    points_2: number;
+    points_3: number;
+    points_4: number;
+    points_5: number;
+    points_6: number;
+    points_7: number;
+    points_8: number;
+    points_9: number;
+    points_10: number;
+    points_11: number;
+    points_12: number;
+    points_13: number;
+    points_14: number;
+    points_15: number;
+    points_16: number;
+}
+
 interface IValidatedPoints{
+    home_id: {
+        message: string,
+        error: boolean
+    },
+    away_id: {
+        message: string,
+        error: boolean
+    },
     points_1: {
         message: string;
         error: boolean;
@@ -131,10 +160,32 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
         number: 0
     }
 
+    const defaultTeamPointsToValidate = {
+        home_id: '',
+        away_id: '',
+        points_1: 0,
+        points_2: 0,
+        points_3: 0,
+        points_4: 0,
+        points_5: 0,
+        points_6: 0,
+        points_7: 0,
+        points_8: 0,
+        points_9: 0,
+        points_10: 0,
+        points_11: 0,
+        points_12: 0,
+        points_13: 0,
+        points_14: 0,
+        points_15: 0,
+        points_16: 0
+    }
+
     const [roundCreate, setRoundCreate] = useState<IRoundCreate>(defaultRoundCreate)
     const [rounds, setRounds] = useState([])
     const [clubs, setClubs] = useState([])
     const [riders, setRiders] = useState([])
+    const [dataToValidation, setDataToValidation] = useState<ITeamPointsToValidate>(defaultTeamPointsToValidate)
 
     const getRiders = async () => {
 		try {
@@ -220,9 +271,40 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 			}
 			throw new Error('Error in getting clubs');
 		}
-	};
+    };
+    
+    const setDataToValidationFunc = () => {
+        setDataToValidation({
+            home_id: home.team_id,
+            away_id: away.team_id,
+            points_1: away.rider_1.points,
+            points_2: away.rider_2.points,
+            points_3: away.rider_3.points,
+            points_4: away.rider_4.points,
+            points_5: away.rider_5.points,
+            points_6: away.rider_6.points,
+            points_7: away.rider_7.points,
+            points_8: away.rider_8.points,
+            points_9: home.rider_1.points,
+            points_10: home.rider_2.points,
+            points_11: home.rider_3.points,
+            points_12: home.rider_4.points,
+            points_13: home.rider_5.points,
+            points_14: home.rider_6.points,
+            points_15: home.rider_7.points,
+            points_16: home.rider_8.points,
+        })
+    }
 
     const defaultValidatedPoints = {
+        home_id: {
+            message: '',
+            error: false
+        },
+        away_id: {
+            message: '',
+            error: false
+        },
         points_1: {
             message: '',
             error: false
