@@ -83,7 +83,7 @@ const defaultValidateData: IValidateData = {
 
 const defaultAccountData: IState = {
 	username: '',
-	club: 'GKM',
+	club: 'Apator',
 	points: 0,
 	position: -1,
 	password: '',

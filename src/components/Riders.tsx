@@ -31,6 +31,11 @@ import DateFnsUtils from '@date-io/date-fns';
 import getToken from '../utils/getToken';
 import { useStateValue } from './AppProvider';
 import { setUser } from '../actions/userActions';
+import handleImgFile, {
+	IImageData,
+	defaultImageData
+} from '../utils/handleImgFile';
+import { FaFileUpload } from 'react-icons/fa';
 
 interface IRider {
 	firstName: string;
@@ -118,7 +123,9 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
                 checkBadAuthorization(setLoggedIn, push);
             }*/
         }
-    };
+	};
+	
+	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
 
 	const defaultValidatedData = {
 		firstName: {
@@ -319,6 +326,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		setValidatedData(defaultValidatedData);
 		setShowDialog(false);
 		setRiderData(defaultRiderData);
+		setImageData(defaultImageData);
 	};
 
 	const handleOnChange = (name: string) => (
@@ -435,6 +443,22 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 				riderData,
 				options
 			);
+			const { name: filename, imageBuffer } = imageData;
+			if (filename && imageBuffer) {
+				const {
+					data: { signedUrl, imageUrl, type }
+				} = await axios.post(
+					`https://fantasy-league-eti.herokuapp.com/riders/${data._id}/image`,
+					{ filename },
+					options
+				);
+				const awsOptions = {
+					headers: {
+						'Content-Type': type
+					}
+				};
+				await axios.put(signedUrl, imageBuffer, awsOptions);
+			}
 			addNotification(
 				'Sukces',
 				'Poprawnie dodano zawodnika',
@@ -706,6 +730,33 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 											)}
 									</Select>
 								</FormControl>
+							</Grid>
+							<Grid item xs={5}>
+								<input
+									type="file"
+									accept="image/*"
+									style={{ display: 'none' }}
+									onChange={handleImgFile(setImageData)}
+									id="id-file"
+								/>
+								<label htmlFor="id-file">
+									<div className="dialog__avatar-img-box">
+										{imageData.imageUrl ? (
+											<img
+												src={
+													imageData.imageUrl as string
+												}
+												alt="user-avatar"
+												className="dialog__avatar-img"
+											/>
+										) : (
+											<FaFileUpload className="dialog__avatar-upload" />
+										)}
+										<div className="dialog__avatar-edit">
+											Edytuj
+										</div>
+									</div>
+								</label>
 							</Grid>
 							<Grid item xs={12}>
 								<Button

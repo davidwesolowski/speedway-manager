@@ -95,6 +95,7 @@ class RidersList extends Component<{}, { riders, clubs }> {
 				'https://fantasy-league-eti.herokuapp.com/riders',
 				options
 			);
+			console.log(data)
 			this.setState(() => ({
 				riders: []
 			}));
