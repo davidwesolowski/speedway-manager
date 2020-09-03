@@ -6,11 +6,12 @@ import { IconButton } from '@material-ui/core';
 import addNotification from '../utils/addNotification';
 import getToken from '../utils/getToken';
 
-class RidersList extends Component<{}, { riders }> {
+class RidersList extends Component<{}, { riders, clubs }> {
 	constructor(props) {
 		super(props);
 		this.state = {
-			riders: []
+			riders: [],
+			clubs: []
 		};
 	}
 
@@ -53,6 +54,35 @@ class RidersList extends Component<{}, { riders }> {
 		}
 	}
 
+	async getClubs() {
+		try {
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			const { data } = await axios.get(
+				'https://fantasy-league-eti.herokuapp.com/clubs',
+				options
+			);
+			this.setState(() => ({
+				clubs: []
+			}));
+			data.map(club => {
+				this.setState({
+					clubs: this.state.clubs.concat({
+						id: club._id,
+						nazwa: club.name
+					})
+				});
+			});
+		} catch (e) {
+			console.log(e.response);
+			throw new Error('Error in getting clubs!');
+		}
+	}
+
 	async getRiders() {
 		try {
 			const accessToken = getToken();
@@ -65,6 +95,7 @@ class RidersList extends Component<{}, { riders }> {
 				'https://fantasy-league-eti.herokuapp.com/riders',
 				options
 			);
+			console.log(data)
 			this.setState(() => ({
 				riders: []
 			}));
@@ -77,7 +108,8 @@ class RidersList extends Component<{}, { riders }> {
 						przydomek: rider.nickname,
 						data_urodzenia: rider.dateOfBirth,
 						zagraniczny: rider.isForeigner,
-						ksm: rider.ksm
+						ksm: rider.KSM,
+						klubId: rider.clubId
 					})
 				});
 			});
@@ -89,6 +121,7 @@ class RidersList extends Component<{}, { riders }> {
 
 	componentDidMount() {
 		this.getRiders();
+		this.getClubs();
 	}
 
 	ifForeigner(foreigner) {
@@ -111,6 +144,17 @@ class RidersList extends Component<{}, { riders }> {
 		}
 	}
 
+	getClubName(klubId) {
+		if(this.state.clubs.find(club => club.id == klubId))
+		{
+			return(this.state.clubs.find(club => club.id == klubId).nazwa)
+		}
+		else
+		{
+			return('')
+		}
+	}
+
 	renderTableData() {
 		return this.state.riders.map((rider, index) => {
 			const {
@@ -120,7 +164,8 @@ class RidersList extends Component<{}, { riders }> {
 				przydomek,
 				data_urodzenia,
 				zagraniczny,
-				ksm
+				ksm,
+				klubId
 			} = rider;
 			return (
 				<tr
@@ -141,9 +186,10 @@ class RidersList extends Component<{}, { riders }> {
 							day: '2-digit'
 						}).format(new Date(data_urodzenia))}
 					</td>
+					<td>{ksm}</td>
 					<td>{this.ifForeigner({ zagraniczny })}</td>
 					<td>{this.ifJunior({ data_urodzenia })}</td>
-					<td></td>
+					<td>{this.getClubName(klubId)}</td>
 					<td className="table-X">
 						<IconButton
 							onClick={(event: React.MouseEvent<HTMLElement>) => {
@@ -165,6 +211,7 @@ class RidersList extends Component<{}, { riders }> {
 			'Nazwisko',
 			'Przydomek',
 			'Data urodzenia',
+			'KSM',
 			'Polak',
 			'Junior',
 			'Klub'

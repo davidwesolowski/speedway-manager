@@ -95,7 +95,7 @@ const schema = Joi.object({
 			}
 			return error;
 		}),
-	ksm: Joi.number()
+	KSM: Joi.number()
 		.required()
 		.min(2.5)
 		.max(12.0)
@@ -113,8 +113,8 @@ const schema = Joi.object({
 				}
 			}
 			return error;
-		})
-	/*club: Joi.string()
+		}),
+	clubId: Joi.string()
         .min(2)
         .max(255)
         .trim()
@@ -139,7 +139,7 @@ const schema = Joi.object({
                 }
             }
             return error;
-        }),*/
+        })
 });
 
 export default function validateRiderData(data: {
@@ -148,8 +148,8 @@ export default function validateRiderData(data: {
 	nickname: string;
 	dateOfBirth: Date;
 	isForeigner: boolean;
-	ksm: number;
-	//club: string;
+	KSM: number;
+	clubId: string;
 }): ValidationResult {
 	return schema.validate(data, { abortEarly: false });
 }

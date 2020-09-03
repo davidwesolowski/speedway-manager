@@ -11,7 +11,9 @@ import {
 	DialogContent,
 	FormControl,
 	Grid,
-	Checkbox
+	Checkbox,
+	Select,
+	MenuItem
 } from '@material-ui/core';
 import { FiPlus, FiX } from 'react-icons/fi';
 import axios from 'axios';
@@ -27,6 +29,13 @@ import {
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import getToken from '../utils/getToken';
+import { useStateValue } from './AppProvider';
+import { setUser } from '../actions/userActions';
+import handleImgFile, {
+	IImageData,
+	defaultImageData
+} from '../utils/handleImgFile';
+import { FaFileUpload } from 'react-icons/fa';
 
 interface IRider {
 	firstName: string;
@@ -34,8 +43,8 @@ interface IRider {
 	nickname: string;
 	dateOfBirth: Date;
 	isForeigner: boolean;
-	ksm: number;
-	//   club: string;
+	KSM: number;
+	clubId: string;
 }
 
 interface IRider1 {
@@ -70,71 +79,142 @@ interface IValidatedData {
 		message: string;
 		error: boolean;
 	};
-	ksm: {
+	KSM: {
 		message: string;
 		error: boolean;
 	};
-	/*    club: {
+	clubId: {
         message: string;
         error: boolean;
-    };*/
+    };
 }
-
-const defaultValidatedData = {
-	firstName: {
-		message: '',
-		error: false
-	},
-	lastName: {
-		message: '',
-		error: false
-	},
-	nickname: {
-		message: '',
-		error: false
-	},
-	dateOfBirth: {
-		message: '',
-		error: false
-	},
-	isForeigner: {
-		message: '',
-		error: false
-	},
-	ksm: {
-		message: '',
-		error: false
-	}
-	/*    club: {
-        message: '',
-        error: false
-    }*/
-};
-
-const refreshPage = () => {
-	window.location.reload(false);
-};
-
-const defaultRiderData = {
-	firstName: '',
-	lastName: '',
-	nickname: '',
-	dateOfBirth: new Date(2000, 0, 1),
-	isForeigner: false,
-	ksm: 2.5
-	//   club: 'Fogo Unia Leszno'
-};
 
 const Riders: FunctionComponent<RouteComponentProps> = ({
 	history: { push }
 }) => {
+
+	const {
+        setLoggedIn,
+		dispatchUserData,
+		userData,
+    } = useStateValue();
+    
+    const fetchUserData = async () => {
+        const accessToken = getToken();
+		const options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
+			}
+		};
+        try {
+            const {
+                data: { username, email, avatarUrl }
+            } = await axios.get(
+                'https://fantasy-league-eti.herokuapp.com/users/self',
+                options
+            );
+            dispatchUserData(setUser({ username, email, avatarUrl }));
+            setLoggedIn(true);
+        } catch (e) {
+            /*const {
+                response: { data }
+            } = e;
+            if (data.statusCode == 401) {
+                checkBadAuthorization(setLoggedIn, push);
+            }*/
+        }
+	};
+	
+	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
+
+	const defaultValidatedData = {
+		firstName: {
+			message: '',
+			error: false
+		},
+		lastName: {
+			message: '',
+			error: false
+		},
+		nickname: {
+			message: '',
+			error: false
+		},
+		dateOfBirth: {
+			message: '',
+			error: false
+		},
+		isForeigner: {
+			message: '',
+			error: false
+		},
+		KSM: {
+			message: '',
+			error: false
+		},
+		clubId: {
+			message: '',
+			error: false
+		}
+	};
+	
+	const refreshPage = () => {
+		window.location.reload(false);
+	};
+	
+	const [clubs, setClubs] = useState([])
+	
+	const getClubs = async () => {
+		try {
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			const { data } = await axios.get(
+				'https://fantasy-league-eti.herokuapp.com/clubs',
+				options
+			);
+			setClubs(
+				data
+			);
+		} catch (e) {
+			console.log(e.response);
+			if (e.response.statusText == 'Unauthorized') {
+				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
+				setTimeout(() => {
+					push('/login');
+				}, 3000);
+			} else {
+				addNotification(
+					'Błąd',
+					'Nie udało się pobrać klubów z bazy',
+					'danger',
+					3000
+				);
+			}
+			throw new Error('Error in getting clubs');
+		}
+	}
+	
+	const defaultRiderData = {
+		firstName: '',
+		lastName: '',
+		nickname: '',
+		dateOfBirth: new Date(2000, 0, 1),
+		isForeigner: true,
+		KSM: 2.5,
+		clubId: ''
+	};
+	
 	const [riderData, setRiderData] = useState<IRider>(defaultRiderData);
 	const [validatedData, setValidatedData] = useState<IValidatedData>(
 		defaultValidatedData
 	);
-	//const [addRiderSuccess, setAddRiderSuccess] = useState<boolean>(false);
-	//const [addRiderError, setAddRiderError] = useState<boolean>(false);
 	const [showDialog, setShowDialog] = useState<boolean>(false);
+
+	const [tempKSM, setTempKSM] = useState<string>('');
 
 	const [exampleRiders, setExampleRiders] = useState<IRider1[]>([
 		{
@@ -248,6 +328,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		setValidatedData(defaultValidatedData);
 		setShowDialog(false);
 		setRiderData(defaultRiderData);
+		setImageData(defaultImageData);
 	};
 
 	const handleOnChange = (name: string) => (
@@ -255,10 +336,19 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 	) => {
 		event.persist();
 		if (event.target) {
-			setRiderData((prevState: IRider) => ({
-				...prevState,
-				[name]: event.target.value
-			}));
+			if(name === 'KSM')
+			{
+				setTempKSM(event.target.value);
+				setRiderData((prevState: IRider) => ({
+					...prevState,
+					[name]: parseFloat(tempKSM)
+				}));
+			} else {
+				setRiderData((prevState: IRider) => ({
+					...prevState,
+					[name]: event.target.value
+				}));
+			}
 		}
 	};
 
@@ -280,17 +370,19 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		}));
 	};
 
-	/*const handleOnChangeClub = (name: string) => (
-        event: React.ChangeEvent<HTMLSelectElement>
+	const handleOnChangeClub = (name: string) => (
+        event
     ) => {
-        event.persist();
+		event.persist();
+		console.log("Zmiana klubu");
+		console.log(event.target.value);
         if (event.target) {
             setRiderData((prevState: IRider) => ({
                 ...prevState,
                 [name]: event.target.value
             }));
         }
-    };*/
+    };
 
 	/*const addRiders = async (riderData: IRider1) => {
         try {
@@ -354,6 +446,22 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 				riderData,
 				options
 			);
+			const { name: filename, imageBuffer } = imageData;
+			if (filename && imageBuffer) {
+				const {
+					data: { signedUrl, imageUrl, type }
+				} = await axios.post(
+					`https://fantasy-league-eti.herokuapp.com/riders/${data._id}/image`,
+					{ filename },
+					options
+				);
+				const awsOptions = {
+					headers: {
+						'Content-Type': type
+					}
+				};
+				await axios.put(signedUrl, imageBuffer, awsOptions);
+			}
 			addNotification(
 				'Sukces',
 				'Poprawnie dodano zawodnika',
@@ -373,6 +481,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 				}
 			}, 1000);
 		} catch (e) {
+			console.log(e.response);
 			if (e.statusText == 'Bad Request') {
 				addNotification(
 					'Błąd!',
@@ -427,7 +536,8 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 				nickname,
 				dateOfBirth,
 				isForeigner,
-				ksm
+				KSM,
+				clubId
 			} = riderData;
 			addRider({
 				firstName,
@@ -435,21 +545,81 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 				nickname,
 				dateOfBirth,
 				isForeigner,
-				ksm
+				KSM,
+				clubId
 			});
-			/*           const {firstName, lastName, nickname, dateOfBirth, club} = riderData;
-            addRider({firstName, lastName, nickname, dateOfBirth, club});*/
 		}
 	};
 
 	/*useEffect(() => {
         exampleRiders.map(rider => addRiders(rider));
 	}, [])*/
+
+	const clubsData = [{
+		name: 'Fogo Unia Leszno'
+	},{
+		name: 'Apator Toruń'
+	},{
+		name: 'Betard Sparta Wrocław'
+	},{
+		name: 'Motor Lublin'
+	}];
+
+	const addClubsTemp = async (club) => {
+		try {
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			const { data } = await axios.post(
+				'https://fantasy-league-eti.herokuapp.com/clubs',
+				club,
+				options
+			);
+			addNotification(
+				'Sukces',
+				'Poprawnie dodano klub',
+				'success',
+				1000
+			);
+		} catch (e) {
+			if (e.statusText == 'Bad Request') {
+				addNotification(
+					'Błąd!',
+					'Podany klub już istnieje w bazie!',
+					'danger',
+					1000
+				);
+				setTimeout(() => {}, 1000);
+			} else if (e.statusText == 'Unauthorized') {
+				addNotification('Błąd!', 'Twoja sesja wygasła', 'danger', 1000);
+				setTimeout(() => {
+					push('/login');
+				}, 1000);
+			} else {
+				addNotification(
+					'Błąd!',
+					'Nie udało się dodać klubu!',
+					'danger',
+					1000
+				);
+			}
+			throw new Error('Error in adding new rider!');
+		}
+	}
+
 	useEffect(() => {
+		getClubs();
+		if (!userData.username) fetchUserData();
 		setTimeout(() => {
 			document.body.style.overflow = 'auto';
 		}, 500);
-	}, []);
+		/*clubsData.map((club, index) => {
+			addClubsTemp(club);
+		})*/
+    }, [])
 
 	return (
 		<>
@@ -556,12 +726,47 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 										label="KSM"
 										required
 										autoComplete="ksm"
-										value={riderData.ksm}
-										error={validatedData.ksm.error}
-										helperText={validatedData.ksm.message}
-										onChange={handleOnChange('ksm')}
+										value={tempKSM}
+										error={validatedData.KSM.error}
+										helperText={validatedData.KSM.message}
+										onChange={handleOnChange('KSM')}
 									/>
 								</FormControl>
+								<FormControl className="dialog__form_field_club">
+									Klub:
+									<Select value={riderData.clubId || ''} onChange={handleOnChangeClub('clubId')}>
+											{clubs.map((club, index) => 
+												<MenuItem key={index} value={club._id}>{club.name}</MenuItem>
+											)}
+									</Select>
+								</FormControl>
+							</Grid>
+							<Grid item xs={5}>
+								<input
+									type="file"
+									accept="image/*"
+									style={{ display: 'none' }}
+									onChange={handleImgFile(setImageData)}
+									id="id-file"
+								/>
+								<label htmlFor="id-file">
+									<div className="dialog__avatar-img-box">
+										{imageData.imageUrl ? (
+											<img
+												src={
+													imageData.imageUrl as string
+												}
+												alt="user-avatar"
+												className="dialog__avatar-img"
+											/>
+										) : (
+											<FaFileUpload className="dialog__avatar-upload" />
+										)}
+										<div className="dialog__avatar-edit">
+											Edytuj
+										</div>
+									</div>
+								</label>
 							</Grid>
 							<Grid item xs={12}>
 								<Button
