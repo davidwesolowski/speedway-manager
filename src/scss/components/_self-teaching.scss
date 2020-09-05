@@ -72,7 +72,11 @@
 		&-text {
 			font-family: $bebas !important;
 			letter-spacing: 0.5px !important;
-			font-size: 1.7rem !important;
+			font-size: 1.8rem !important;
 		}
 	}
+}
+
+.MuiInputBase-inputMultiline {
+	line-height: 1 !important;
 }

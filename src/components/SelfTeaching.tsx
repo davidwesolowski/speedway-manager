@@ -105,15 +105,33 @@ const SelfTeaching: FunctionComponent = () => {
 		}
 	};
 
-	const handleOnSubmit = (event: FormEvent) => {
+	const handleOnSubmit = async (event: FormEvent) => {
 		event.preventDefault();
-
-		setAnswersAndQuestions([...answersAndQuestions, input]);
-		const title = 'Sukces!';
-		const message = 'Pomyślnie dodano FAQ!';
-		const type = 'success';
-		const duration = 1500;
-		addNotification(title, message, type, duration);
+		try {
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			await axios.post(
+				'https://fantasy-league-eti.herokuapp.com/faq',
+				input,
+				options
+			);
+			setAnswersAndQuestions([...answersAndQuestions, input]);
+			setInput(defaultInput);
+			const title = 'Sukces!';
+			const message = 'Pomyślnie dodano FAQ!';
+			const type = 'success';
+			const duration = 1500;
+			addNotification(title, message, type, duration);
+		} catch (e) {
+			const { response: data } = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
+			}
+		}
 	};
 
 	useEffect(() => {
@@ -238,6 +256,7 @@ const SelfTeaching: FunctionComponent = () => {
 								<TextField
 									label="Pytanie"
 									required
+									multiline
 									value={input.question}
 									onChange={handleOnChange('question')}
 								/>
@@ -246,6 +265,7 @@ const SelfTeaching: FunctionComponent = () => {
 								<TextField
 									label="Odpowiedź"
 									required
+									multiline
 									value={input.answer}
 									onChange={handleOnChange('answer')}
 								/>
