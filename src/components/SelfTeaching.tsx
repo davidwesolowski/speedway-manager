@@ -29,6 +29,7 @@ import {
 import { FaPlusCircle } from 'react-icons/fa';
 import { FiX, FiChevronDown } from 'react-icons/fi';
 import addNotification from '../utils/addNotification';
+import Cookies from 'universal-cookie';
 
 interface IAnswerAndQuestion {
 	question: string;
@@ -116,35 +117,59 @@ const SelfTeaching: FunctionComponent = () => {
 	};
 
 	useEffect(() => {
+		const accessToken = getToken();
+		const options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
+			}
+		};
+
 		const checkIfUserLoggedIn = async () => {
 			const cookiesExist = checkCookies();
 			if (cookiesExist && !userData.username) {
-				const accessToken = getToken();
-				const options = {
-					headers: {
-						Authorization: `Bearer ${accessToken}`
-					}
-				};
-				try {
-					const {
-						data: { username, email, avatarUrl }
-					} = await axios.get(
-						'https://fantasy-league-eti.herokuapp.com/users/self',
-						options
-					);
-					dispatchUserData(setUser({ username, email, avatarUrl }));
-					setLoggedIn(true);
-				} catch (e) {
-					const {
-						response: { data }
-					} = e;
-					if (data.statusCode == 401) {
-						checkBadAuthorization(setLoggedIn, push);
-					}
-				}
+				const {
+					data: { username, email, avatarUrl }
+				} = await axios.get(
+					'https://fantasy-league-eti.herokuapp.com/users/self',
+					options
+				);
+				dispatchUserData(setUser({ username, email, avatarUrl }));
+				setLoggedIn(true);
 			}
 		};
-		checkIfUserLoggedIn();
+
+		const fetchFAQs = async () => {
+			const { data } = await axios.get(
+				'https://fantasy-league-eti.herokuapp.com/faq'
+			);
+			const fetchedData = data.map(({ answer, question }) => ({
+				answer,
+				question
+			}));
+			setAnswersAndQuestions(fetchedData);
+		};
+
+		try {
+			checkIfUserLoggedIn();
+			fetchFAQs();
+		} catch (e) {
+			const {
+				response: { data }
+			} = e;
+			const title = 'Błąd!';
+			const type = 'danger';
+			const duration = 1000;
+			if (data.statusCode == 401) {
+				const message = 'Sesja wygasła!';
+				const cookies = new Cookies();
+				cookies.remove('accessToken');
+				addNotification(title, message, type, duration);
+				setLoggedIn(false);
+			} else {
+				const message = 'Nie można wczytać FAQs!';
+				addNotification(title, message, type, duration);
+			}
+		}
 	}, []);
 
 	return (
