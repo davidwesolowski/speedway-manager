@@ -195,13 +195,15 @@ const SelfTeaching: FunctionComponent = () => {
 			<div className="selfTeaching__container">
 				<div className="selfTeaching__img"></div>
 				<Paper className="selfTeaching__box">
-					<Grid container justify="flex-end" alignItems="center">
-						<Grid item>
-							<IconButton onClick={handleOpen}>
-								<FaPlusCircle className="selfTeaching__icon" />
-							</IconButton>
+					{userData.username && (
+						<Grid container justify="flex-end" alignItems="center">
+							<Grid item>
+								<IconButton onClick={handleOpen}>
+									<FaPlusCircle className="selfTeaching__icon" />
+								</IconButton>
+							</Grid>
 						</Grid>
-					</Grid>
+					)}
 					<Grid container className="selfTeaching__fields">
 						{answersAndQuestions.map(answerAndQuestion => (
 							<Grid
