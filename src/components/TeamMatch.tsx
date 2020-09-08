@@ -21,7 +21,7 @@ interface IValidateRider {
 }
 
 const maxForeigners = 3;
-const maxAbove23YO = 5;
+const maxAbove21YO = 5;
 const maxRiders = 8;
 const maxKSM = 41.0;
 
@@ -38,6 +38,9 @@ const validateRiders = (riders: IRider[]): IValidateRider =>
 		(prev: IValidateRider, curr: IRider): IValidateRider => {
 			if (curr.nationality === 'Zagraniczny') {
 				prev.foreigners += 1;
+			}
+			if (curr.age === 'U21') {
+				prev.u21 += 1;
 			}
 			return prev;
 		},
@@ -78,6 +81,11 @@ const checkTeamMatch = (riders: IRider[]): boolean => {
 	}
 	if (result.foreigners > maxForeigners) {
 		message = `Drużyna może składać się maksymalnie z ${maxForeigners} obcokrajowców!`;
+		addNotification(title, message, type, duration);
+		alert = true;
+	}
+	if (riders.length >= 6 && result.u21 < 2) {
+		message = `Drużyna musi składać się przynajmniej z 2 juniorów!`;
 		addNotification(title, message, type, duration);
 		alert = true;
 	}
@@ -163,7 +171,9 @@ const TeamMatch: FunctionComponent = () => {
 				title={header}
 				subheader={
 					header === 'Kadra meczowa' &&
-					`Wybrano: ${right.length}/8 KSM: ${countKSM(right)}/41`
+					`Wybrano: ${right.length}/8 KSM: ${countKSM(right).toFixed(
+						2
+					)}/41`
 				}
 			/>
 			<Divider />
