@@ -231,7 +231,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 						)}
 					</TabPanel>
 					<TabPanel value={value} index={1}>
-						<TeamMatch />
+						<TeamMatch teamId={team._id} />
 					</TabPanel>
 				</div>
 			</Paper>

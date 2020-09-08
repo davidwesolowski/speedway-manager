@@ -14,6 +14,9 @@ import addNotification from '../utils/addNotification';
 import { IRider } from './TeamRiders';
 import { useStateValue } from './AppProvider';
 
+interface IProps {
+	teamId: string;
+}
 interface IValidateRider {
 	foreigners: number;
 	u21: number;
@@ -92,8 +95,8 @@ const checkTeamMatch = (riders: IRider[]): boolean => {
 	return alert;
 };
 
-const TeamMatch: FunctionComponent = () => {
-	const { teamRiders } = useStateValue();
+const TeamMatch: FunctionComponent<IProps> = ({ teamId }) => {
+	const { teamRiders, setLoggedIn } = useStateValue();
 	const [checked, setChecked] = useState<IRider[]>([]);
 	const [left, setLeft] = useState<IRider[]>(teamRiders);
 	const [right, setRight] = useState<IRider[]>([]);
