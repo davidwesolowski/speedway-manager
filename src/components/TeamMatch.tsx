@@ -7,7 +7,8 @@ import {
 	ListItem,
 	Checkbox,
 	Grid,
-	Button
+	Button,
+	Avatar
 } from '@material-ui/core';
 import addNotification from '../utils/addNotification';
 import { IRider } from './TeamRiders';
@@ -139,7 +140,7 @@ const TeamMatch: FunctionComponent = () => {
 				/>
 			</Grid>
 			<Grid item xs={1}>
-				{rider._id}
+				<Avatar src={rider.image} alt="rider-avatar" />
 			</Grid>
 			<Grid item xs={2}>
 				{`${rider.firstName} ${rider.lastName}`}
