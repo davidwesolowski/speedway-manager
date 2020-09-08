@@ -112,13 +112,14 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 							? 'Zagraniczny'
 							: 'Krajowy';
 						return {
+							_id: rider._id,
 							firstName: rider.firstName,
 							lastName: rider.lastName,
 							dateOfBirth: rider.dateOfBirth,
-							_id: rider._id,
+							image: rider.image,
+							ksm: rider.KSM,
 							nationality,
 							age,
-							ksm: 0,
 							club: ''
 						};
 					});

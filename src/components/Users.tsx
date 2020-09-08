@@ -91,13 +91,14 @@ const Users: FunctionComponent<RouteProps> = () => {
 						? 'Zagraniczny'
 						: 'Krajowy';
 					return {
+						_id: rider._id,
 						firstName: rider.firstName,
 						lastName: rider.lastName,
 						dateOfBirth: rider.dateOfBirth,
-						_id: rider._id,
+						ksm: rider.KSM,
+						image: rider.image,
 						nationality,
 						age,
-						ksm: 0,
 						club: ''
 					};
 				});
