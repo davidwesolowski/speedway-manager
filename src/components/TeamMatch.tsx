@@ -11,8 +11,12 @@ import {
 	Avatar
 } from '@material-ui/core';
 import addNotification from '../utils/addNotification';
+import axios from 'axios';
 import { IRider } from './TeamRiders';
 import { useStateValue } from './AppProvider';
+import getToken from '../utils/getToken';
+import { checkBadAuthorization } from '../utils/checkCookies';
+import { useHistory } from 'react-router-dom';
 
 interface IProps {
 	teamId: string;
@@ -24,7 +28,6 @@ interface IValidateRider {
 }
 
 const maxForeigners = 3;
-const maxAbove21YO = 5;
 const maxRiders = 8;
 const maxKSM = 41.0;
 
@@ -113,6 +116,67 @@ const TeamMatch: FunctionComponent<IProps> = ({ teamId }) => {
 			newChecked.splice(currentIndex, 1);
 		}
 		setChecked(newChecked);
+	};
+
+	const handleSubmitTeam = () => {
+		if (right.length > 0) {
+			try {
+				const accessToken = getToken();
+				const options = {
+					headers: {
+						Authorization: `Bearer ${accessToken}`
+					}
+				};
+				right.forEach(async (rider: IRider) => {
+					if (rider.isActive === false) {
+						await axios.patch(
+							`https://fantasy-league-eti.herokuapp.com/teams/${teamId}/riders/${rider._id}`,
+							{
+								isActive: true
+							},
+							options
+						);
+					}
+				});
+				left.forEach(async (rider: IRider) => {
+					if (rider.isActive === true) {
+						await axios.patch(
+							`https://fantasy-league-eti.herokuapp.com/teams/${teamId}/riders/${rider._id}`,
+							{
+								isActive: false
+							},
+							options
+						);
+					}
+				});
+
+				const title = 'Sukces!';
+				const message = 'Zgłoszono kadrę meczową!';
+				const type = 'success';
+				const duration = 2000;
+				addNotification(title, message, type, duration);
+			} catch (e) {
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
+				} else {
+					const title = 'Błąd!';
+					const message = 'Błąd przy aktualizacji zawodników!';
+					const type = 'danger';
+					const duration = 2000;
+					addNotification(title, message, type, duration);
+				}
+			}
+		} else {
+			const title = 'Informacja!';
+			const message =
+				'Musisz mieć przynajmniej jednego zawodnika w kadrze meczowej!';
+			const type = 'info';
+			const duration = 3000;
+			addNotification(title, message, type, duration);
+		}
 	};
 
 	const handleCheckRight = () => {
@@ -241,7 +305,7 @@ const TeamMatch: FunctionComponent<IProps> = ({ teamId }) => {
 			<Grid item xs={12} lg={5} style={{ alignSelf: 'flex-start' }}>
 				{customList('Chosen', right, 'Kadra meczowa')}
 			</Grid>
-			<Button onClick={handleCheckLeft} className="btn">
+			<Button onClick={handleSubmitTeam} className="btn">
 				Zgłoś drużynę
 			</Button>
 		</Grid>
