@@ -91,7 +91,7 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}
         }
     }
 
-    const [number, setNumber] = useState<number>(-1)
+    const [number, setNumber] = useState<number>(1)
 
     const handleOnChangeSelectRound = () => (
         event
@@ -100,6 +100,14 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}
         if(event.target) {
             setNumber(parseInt(event.target.value))
         };
+    }
+
+    const generateMatches = () => {
+        if(number === -1){
+            //Wszystkie kolejki
+        } else {
+            //Wybrana kolejka
+        }
     }
 
     useEffect(() => {
@@ -127,6 +135,7 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}
                             {generateRounds()}
                         </Select>
                     </div>
+                    {generateMatches()}
                 </Paper>
             </div>
         </>
