@@ -1174,56 +1174,56 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                         <div className="add-match__rider-div">
                             9.
                             <Select className="add-match__rider-select" value={home.rider_1._id || ''} onChange={handleOnChangeSelectRider('rider_1', 'home')}>
-                            {selectRiders(away.team_id, 1, 'home')}
+                            {selectRiders(home.team_id, 1, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={home.rider_1.points || ''} onChange={handleOnChangePoints('rider_1', 'home')}/>
                         </div>
                         <div className="add-match__rider-div">
                             10.
                             <Select className="add-match__rider-select" value={home.rider_2._id || ''} onChange={handleOnChangeSelectRider('rider_2', 'home')}>
-                            {selectRiders(away.team_id, 2, 'home')}
+                            {selectRiders(home.team_id, 2, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={home.rider_2.points || ''} onChange={handleOnChangePoints('rider_2', 'home')}/>
                         </div>
                         <div className="add-match__rider-div">
                             11.
                             <Select className="add-match__rider-select" value={home.rider_3._id || ''} onChange={handleOnChangeSelectRider('rider_3', 'home')}>
-                            {selectRiders(away.team_id, 3, 'home')}
+                            {selectRiders(home.team_id, 3, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={home.rider_3.points || ''} onChange={handleOnChangePoints('rider_3', 'home')}/>
                         </div>
                         <div className="add-match__rider-div">
                             12.
                             <Select className="add-match__rider-select" value={home.rider_4._id || ''} onChange={handleOnChangeSelectRider('rider_4', 'home')}>
-                            {selectRiders(away.team_id, 4, 'home')}
+                            {selectRiders(home.team_id, 4, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={home.rider_4.points || ''} onChange={handleOnChangePoints('rider_4', 'home')}/>
                         </div>
                         <div className="add-match__rider-div">
                             13.
                             <Select className="add-match__rider-select" value={home.rider_5._id || ''} onChange={handleOnChangeSelectRider('rider_5', 'home')}>
-                            {selectRiders(away.team_id, 5, 'home')}
+                            {selectRiders(home.team_id, 5, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={home.rider_5.points || ''} onChange={handleOnChangePoints('rider_5', 'home')}/>
                         </div>
                         <div className="add-match__rider-div">
                             14.
                             <Select className="add-match__rider-select" value={home.rider_6._id || ''} onChange={handleOnChangeSelectRider('rider_6', 'home')}>
-                            {selectRiders(away.team_id, 6, 'home')}
+                            {selectRiders(home.team_id, 6, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={home.rider_6.points || ''} onChange={handleOnChangePoints('rider_6', 'home')}/>
                         </div>
                         <div className="add-match__rider-div">
                             15.
                             <Select className="add-match__rider-select" value={home.rider_7._id || ''} onChange={handleOnChangeSelectRider('rider_7', 'home')}>
-                            {selectRiders(away.team_id, 7, 'home')}
+                            {selectRiders(home.team_id, 7, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={home.rider_7.points || ''} onChange={handleOnChangePoints('rider_7', 'home')}/>
                         </div>
                         <div className="add-match__rider-div">
                             16.
                             <Select className="add-match__rider-select" value={home.rider_8._id || ''} onChange={handleOnChangeSelectRider('rider_8', 'home')}>
-                            {selectRiders(away.team_id, 8, 'home')}
+                            {selectRiders(home.team_id, 8, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={home.rider_8.points || ''} onChange={handleOnChangePoints('rider_8', 'home')}/>
                         </div>

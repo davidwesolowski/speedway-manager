@@ -19,6 +19,7 @@ import FindRider from '../components/FindRider';
 import AddRiderToTeam from '../components/AddRiderToTeam';
 import Users from '../components/Users';
 import AddMatch from '../components/AddMatch';
+import ListMatches from '../components/ListMatches';
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -95,6 +96,14 @@ const AppRoute: FunctionComponent = () => {
 					render={(props: RouteComponentProps) => {
 						const cookiesExist = checkCookies();
 						if(cookiesExist) return <AddMatch {...props} />;
+						else return <Redirect to="/login" />;
+					}}
+				/>
+				<Route
+					path="/mecze"
+					render={(props: RouteComponentProps) => {
+						const cookiesExist = checkCookies();
+						if(cookiesExist) return <ListMatches {...props} />;
 						else return <Redirect to="/login" />;
 					}}
 				/>
