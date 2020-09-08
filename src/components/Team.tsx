@@ -20,7 +20,7 @@ import axios from 'axios';
 import TeamCreate from './TeamCreate';
 import TeamGeneral from './TeamGeneral';
 import { useStateValue } from './AppProvider';
-import { checkBadAuthorization } from '../validation/checkCookies';
+import { checkBadAuthorization } from '../utils/checkCookies';
 import { setUser } from '../actions/userActions';
 import TeamMatch from './TeamMatch';
 import getToken from '../utils/getToken';

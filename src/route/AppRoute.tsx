@@ -13,7 +13,7 @@ import WelcomePage from '../components/WelcomePage';
 import Login from '../components/Login';
 import Account from '../components/Account';
 import Register from '../components/Register';
-import { checkCookies } from '../validation/checkCookies';
+import { checkCookies } from '../utils/checkCookies';
 import Team from '../components/Team';
 import Riders from '../components/Riders';
 import FindRider from '../components/FindRider';
@@ -21,6 +21,7 @@ import AddRiderToTeam from '../components/AddRiderToTeam';
 import Users from '../components/Users';
 import AddMatch from '../components/AddMatch';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import SelfTeaching from '../components/SelfTeaching';
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -184,6 +185,7 @@ const RoutesAnimation = () => {
 							else return <Redirect to="/login" />;
 						}}
 					/>
+					<Route path="/samouczek" component={SelfTeaching} />
 				</Switch>
 			</CSSTransition>
 		</TransitionGroup>

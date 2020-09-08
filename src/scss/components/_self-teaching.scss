@@ -1,0 +1,82 @@
+.selfTeaching {
+	&__container {
+		grid-column: center-start / center-end;
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-family: $bebas;
+	}
+
+	&__img {
+		height: 100%;
+		width: 100%;
+		position: absolute;
+		z-index: 1;
+		background-image: url(/img/wroclaw.jpg);
+		background-size: cover;
+		filter: opacity(0.2);
+	}
+
+	&__box {
+		position: relative;
+		z-index: 1000;
+		min-width: 80vw;
+		min-height: 85%;
+		background-color: rgba(255, 255, 255, 0.8) !important;
+		padding: 1rem;
+	}
+
+	&__icon {
+		font-size: 2.5rem;
+		color: #000;
+
+		&-white {
+			color: #fff;
+		}
+	}
+
+	&__dialog {
+		.MuiDialog-paperWidthSm {
+			max-width: auto !important;
+			min-width: 35vw !important;
+
+			@media screen and (max-width: $bp-md) {
+				min-width: 60vw !important;
+			}
+
+			@media screen and (max-width: $bp-sm) {
+				min-width: 80vw !important;
+			}
+		}
+	}
+
+	&__dialogHeader {
+		font-family: $bebas !important;
+	}
+
+	&__formFields {
+		margin-bottom: $xs-margin !important;
+	}
+
+	&__fields {
+		width: 90% !important;
+		margin: 0 auto;
+	}
+
+	&__field {
+		background-color: $color-primary !important;
+		color: #fff !important;
+		margin: 0.5rem;
+
+		&-text {
+			font-family: $bebas !important;
+			letter-spacing: 0.5px !important;
+			font-size: 1.8rem !important;
+		}
+	}
+}
+
+.MuiInputBase-inputMultiline {
+	line-height: 1 !important;
+}

@@ -39,7 +39,7 @@ import handleImgFile, {
 	IImageData,
 	defaultImageData
 } from '../utils/handleImgFile';
-import { checkBadAuthorization } from '../validation/checkCookies';
+import { checkBadAuthorization } from '../utils/checkCookies';
 import getToken from '../utils/getToken';
 
 interface IState {

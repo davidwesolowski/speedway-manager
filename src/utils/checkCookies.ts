@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import Cookies from 'universal-cookie';
-import addNotification from '../utils/addNotification';
+import addNotification from './addNotification';
 import { Dispatch, SetStateAction } from 'react';
-import getToken from '../utils/getToken';
+import getToken from './getToken';
 
 export const checkCookies = (): boolean => {
 	const accessToken = getToken();
