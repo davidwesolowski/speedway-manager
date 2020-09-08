@@ -101,8 +101,13 @@ const checkTeamMatch = (riders: IRider[]): boolean => {
 const TeamMatch: FunctionComponent<IProps> = ({ teamId }) => {
 	const { teamRiders, setLoggedIn } = useStateValue();
 	const [checked, setChecked] = useState<IRider[]>([]);
-	const [left, setLeft] = useState<IRider[]>(teamRiders);
-	const [right, setRight] = useState<IRider[]>([]);
+	const [left, setLeft] = useState<IRider[]>(
+		teamRiders.filter((rider: IRider) => rider.isActive === false)
+	);
+	const [right, setRight] = useState<IRider[]>(
+		teamRiders.filter((rider: IRider) => rider.isActive === true)
+	);
+	const { push } = useHistory();
 
 	const leftChecked = intersection(checked, left);
 	const rightChecked = intersection(checked, right);
