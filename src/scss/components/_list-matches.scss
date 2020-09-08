@@ -41,5 +41,16 @@
 		font-family: $bebas !important;
 		margin-bottom: $xs-margin !important;
 		letter-spacing: 1px !important;
-	}
+    }
+    
+    &__round-div{
+        width: 100%;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    &__round-select{
+        width: 30%;
+        font-size: medium;
+    }
 }

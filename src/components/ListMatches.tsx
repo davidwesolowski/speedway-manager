@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { RouteComponentProps } from 'react-router-dom';
-import { Paper, Typography, Divider, MenuItem } from '@material-ui/core';
+import { Paper, Typography, Divider, MenuItem, InputLabel, Select } from '@material-ui/core';
 import { useStateValue } from './AppProvider';
 import getToken from '../utils/getToken';
 import axios from 'axios';
@@ -91,6 +91,17 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}
         }
     }
 
+    const [number, setNumber] = useState<number>(-1)
+
+    const handleOnChangeSelectRound = () => (
+        event
+    ) => {
+        event.persist();
+        if(event.target) {
+            setNumber(parseInt(event.target.value))
+        };
+    }
+
     useEffect(() => {
         getRounds();
         if (!userData.username) fetchUserData();
@@ -108,6 +119,14 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}
                         Rozegrane mecze
                     </Typography>
                     <Divider />
+                    <br/>
+                    <div className="list-matches__round-div">
+                        <InputLabel id="roundLabel">Kolejka:</InputLabel>
+                        <Select labelId="roundLabel" className="add-match__round-select" value={number || ''} onChange={handleOnChangeSelectRound()}>
+                            <MenuItem value="-1">Wszystkie</MenuItem>
+                            {generateRounds()}
+                        </Select>
+                    </div>
                 </Paper>
             </div>
         </>
