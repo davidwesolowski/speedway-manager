@@ -96,7 +96,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 					options
 				);
 				if (riders.length) {
-					const newRiders = riders.map(({ rider }) => {
+					const newRiders = riders.map(({ rider, isActive }) => {
 						const riderAgeYear = new Date(
 							rider.dateOfBirth
 						).getFullYear();
@@ -118,6 +118,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 							dateOfBirth: rider.dateOfBirth,
 							image: rider.image,
 							ksm: rider.KSM,
+							isActive,
 							nationality,
 							age,
 							club: ''
@@ -167,12 +168,12 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 				dispatchUserData(setUser({ username, email, avatarUrl }));
 				setLoggedIn(true);
 			} catch (e) {
-				/*const {
+				const {
 					response: { data }
 				} = e;
 				if (data.statusCode == 401) {
 					checkBadAuthorization(setLoggedIn, push);
-				}*/
+				}
 			}
 		};
 

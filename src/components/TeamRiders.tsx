@@ -20,6 +20,7 @@ export interface IRider {
 	dateOfBirth: string;
 	age: string;
 	image: string | null;
+	isActive: boolean;
 }
 
 interface IProps {
