@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { Paper, Typography, Divider, Button, InputLabel, MenuItem, Select, TextField, Dialog, DialogTitle, IconButton, DialogContent, Grid, FormControl } from "@material-ui/core";
+import { Paper, Typography, Divider, Button, InputLabel, MenuItem, Select, TextField, Dialog, DialogTitle, IconButton, DialogContent, Grid, FormControl, Checkbox } from "@material-ui/core";
 import { FiX } from "react-icons/fi";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
@@ -220,6 +220,16 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
     const [clubs, setClubs] = useState([])
     const [riders, setRiders] = useState([])
     const [dataToValidation, setDataToValidation] = useState<ITeamPointsToValidate>(defaultTeamPointsToValidate)
+    const [matchDate, setMatchDate] = useState<Date>(new Date())
+    const [wasRidden, setWasRidden] = useState<boolean>(false)
+
+    const handleOnChangeCheckbox = event => {
+		event.persist();
+		console.log(!event.target.checked);
+		if (event.target) {
+            setWasRidden(event.target.checked)
+		}
+	};
 
     const getRiders = async () => {
 		try {
@@ -459,7 +469,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
         setRoundCreate(defaultRoundCreate);
     }
 
-    const [number, setNumber] = useState<number>(0)
+    const [number, setNumber] = useState<string>('')
 
     const handleOnChangeSelectClub = (homeAway: string) => (event) => {
         event.persist();
@@ -761,6 +771,10 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
         }));
     };
 
+    const handleMatchDateOnChange = date => {
+        setMatchDate(date);
+    }
+
     const handleOnSubmitRound = (event: React.FormEvent) => {
         event.preventDefault();
         const validationResponse = validateRoundData(roundCreate);
@@ -790,7 +804,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 
     const generateRounds = () => {
         return rounds.map((round, index) => {
-            return <MenuItem key={index} value={round.number.toString()}>Runda {round.number}</MenuItem>
+            return <MenuItem key={index} value={round._id}>Runda {round.number}</MenuItem>
         })
     }
 
@@ -1004,102 +1018,10 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
         }
     }
 
-    useEffect(() => {
-        getRounds();
-        getClubs();
-        getRiders();
-        if (!userData.username) fetchUserData();
-    }, [])
-
-    return(
-        <>
-            <div className="add-match">
-                <div className="add-match__background"/>
-                <Paper className="add-match__box">
-                    <Typography variant="h2" className="add-match__header">
-                        Dodaj nowy mecz
-                    </Typography>
-                    <Divider/>
-                    <br/>
-                    <div className="add-match__round-div">
-                        <InputLabel id="roundLabel">Kolejka:</InputLabel>
-                        <Select labelId="roundLabel" className="add-match__round-select" value={number || ''} onChange={handleOnChangeSelectRound()}>
-                            <MenuItem value="New">Dodaj nową kolejkę</MenuItem>
-                            {generateRounds()}
-                        </Select>
-                    </div>
-                    <Dialog open={addRoundDialogOpen} onClose={handleClose} className="number-dialog">
-                        <DialogTitle>
-                            <div className="number-dialog__header">
-                                <Typography variant="h4" className="number-dialog__title">
-                                    Dodawanie kolejki
-                                </Typography>
-                                <IconButton onClick={handleClose} className="number-dialog__fix">
-                                    <FiX />
-                                </IconButton>
-                            </div>
-                        </DialogTitle>
-                        <DialogContent dividers>
-                            <form className="number-dialog__form">
-                                <Grid container>
-                                    <Grid item xs={7} className="number-dialog__form-fields">
-                                        <FormControl className="number-dialog__form-field">
-                                            <TextField
-                                                label="Numer kolejki"
-                                                required
-                                                autoComplete="number"
-                                                value={roundCreate.number.toString()}
-                                                error={validatedRound.number.error}
-                                                helperText={validatedRound.number.message}
-                                                onChange={handleOnChangeRoundForm()}
-                                            />
-                                        </FormControl>
-                                        <br/>
-                                        <FormControl className="number-dialog__form-field-date">
-                                            Data rozpoczęcia kolejki:
-                                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                                <KeyboardDatePicker
-                                                    margin="normal"
-                                                    id="date-picker-dialog-1"
-                                                    format="dd/MM/yyyy"
-                                                    value={roundCreate.startDate}
-                                                    onChange={handleDateBeginOnChange}
-                                                    KeyboardButtonProps={{
-                                                        'aria-label': 'change date'
-                                                    }}
-                                                />
-                                            </MuiPickersUtilsProvider>
-                                        </FormControl>
-                                        <br/>
-                                        <FormControl className="number-dialog__form-field-date">
-                                            Data zakończenia kolejki:
-                                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                                <KeyboardDatePicker
-                                                    margin="normal"
-                                                    id="date-picker-dialog-2"
-                                                    format="dd/MM/yyyy"
-                                                    value={roundCreate.endDate}
-                                                    onChange={handleDateEndOnChange}
-                                                    KeyboardButtonProps={{
-                                                        'aria-label': 'change date'
-                                                    }}
-                                                />
-                                            </MuiPickersUtilsProvider>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Button
-                                            className="number-dialog__button"
-                                            onClick={handleOnSubmitRound}
-                                        >
-                                            Dodaj
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                            </form>
-                        </DialogContent>
-                    </Dialog>
-                    <br/>
+    const selectRidersFields = () => {
+        if(wasRidden){
+            return(
+                <>
                     <div className="add-match__away-div">
                         AWAY
                         <br/>
@@ -1229,7 +1151,215 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                         </div>
                     </div>
                     <br/>
-                    <Button className="add-match__submit-button">
+                    </>
+            )
+        } else {
+            return(
+                <>
+                    <div className="add-match__away-div">
+                        AWAY
+                        <br/>
+                        <Select className="add-match__team-select" value={away.team_id || ''} onChange={handleOnChangeSelectClub('away')}> 
+                            {selectClubs('away')}
+                        </Select>
+                        <br/>
+                    </div>
+                    <div className="add-match__home-div">
+                        HOME
+                        <br/>
+                        <Select className="add-match__team-select" value={home.team_id} onChange={handleOnChangeSelectClub('home')}>
+                            {selectClubs('home')}
+                        </Select>
+                        <br/>
+                    </div>
+                </>
+            )
+        }
+    }
+
+    const addMatch = async () => {
+        try {
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			const { data } = await axios.post(
+				'https://fantasy-league-eti.herokuapp.com/matches',
+				{
+                    roundId: number,
+                    homeId: home.team_id,
+                    awayId: away.team_id,
+                    date: matchDate
+                },
+				options
+            );
+            console.log(data);
+			if(wasRidden){
+
+            }
+			addNotification(
+				'Sukces',
+				'Poprawnie dodano mecz',
+				'success',
+				1000
+			);
+			setTimeout(() => {
+				{
+					window.location.reload(false);
+				}
+			}, 1000);
+		} catch (e) {
+			console.log(e.response);
+			if (e.statusText == 'Bad Request') {
+				addNotification(
+					'Błąd!',
+					'Podany mecz już istnieje w bazie!',
+					'danger',
+					1000
+				);
+				setTimeout(() => {}, 1000);
+			} else if (e.statusText == 'Unauthorized') {
+				addNotification('Błąd!', 'Twoja sesja wygasła', 'danger', 1000);
+				setTimeout(() => {
+					push('/login');
+				}, 1000);
+			} else {
+				addNotification(
+					'Błąd!',
+					'Nie udało się dodać meczu!',
+					'danger',
+					1000
+				);
+			}
+			throw new Error('Error in adding new match!');
+		}
+    }
+
+    const handleOnSubmit = () => {
+        addMatch()
+    }
+
+    useEffect(() => {
+        getRounds();
+        getClubs();
+        getRiders();
+        if (!userData.username) fetchUserData();
+    }, [])
+
+    return(
+        <>
+            <div className="add-match">
+                <div className="add-match__background"/>
+                <Paper className="add-match__box">
+                    <Typography variant="h2" className="add-match__header">
+                        Dodaj nowy mecz
+                    </Typography>
+                    <Divider/>
+                    <br/>
+                    <div className="add-match__round-div">
+                        <InputLabel id="roundLabel">Kolejka:</InputLabel>
+                        <Select labelId="roundLabel" className="add-match__round-select" value={number || ''} onChange={handleOnChangeSelectRound()}>
+                            <MenuItem value="New">Dodaj nową kolejkę</MenuItem>
+                            {generateRounds()}
+                        </Select>
+                        <br/>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <KeyboardDatePicker
+                                margin="normal"
+                                id="date-picker-dialog-1"
+                                format="dd/MM/yyyy"
+                                value={matchDate}
+                                onChange={handleMatchDateOnChange}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change date'
+                                }}
+                            />
+                        </MuiPickersUtilsProvider>
+                        <br/>
+                        <Typography variant="h5">Czy mecz został rozegrany?</Typography>
+                        <Checkbox
+                            onChange={handleOnChangeCheckbox}
+                            size="small"
+                            className="add-match__checkbox"
+                            title="Zaznacz jeśli zawodnik jest Polakiem"
+                        />
+                    </div>
+                    <Dialog open={addRoundDialogOpen} onClose={handleClose} className="number-dialog">
+                        <DialogTitle>
+                            <div className="number-dialog__header">
+                                <Typography variant="h4" className="number-dialog__title">
+                                    Dodawanie kolejki
+                                </Typography>
+                                <IconButton onClick={handleClose} className="number-dialog__fix">
+                                    <FiX />
+                                </IconButton>
+                            </div>
+                        </DialogTitle>
+                        <DialogContent dividers>
+                            <form className="number-dialog__form">
+                                <Grid container>
+                                    <Grid item xs={7} className="number-dialog__form-fields">
+                                        <FormControl className="number-dialog__form-field">
+                                            <TextField
+                                                label="Numer kolejki"
+                                                required
+                                                autoComplete="number"
+                                                value={roundCreate.number.toString()}
+                                                error={validatedRound.number.error}
+                                                helperText={validatedRound.number.message}
+                                                onChange={handleOnChangeRoundForm()}
+                                            />
+                                        </FormControl>
+                                        <br/>
+                                        <FormControl className="number-dialog__form-field-date">
+                                            Data rozpoczęcia kolejki:
+                                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                                <KeyboardDatePicker
+                                                    margin="normal"
+                                                    id="date-picker-dialog-1"
+                                                    format="dd/MM/yyyy"
+                                                    value={roundCreate.startDate}
+                                                    onChange={handleDateBeginOnChange}
+                                                    KeyboardButtonProps={{
+                                                        'aria-label': 'change date'
+                                                    }}
+                                                />
+                                            </MuiPickersUtilsProvider>
+                                        </FormControl>
+                                        <br/>
+                                        <FormControl className="number-dialog__form-field-date">
+                                            Data zakończenia kolejki:
+                                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                                <KeyboardDatePicker
+                                                    margin="normal"
+                                                    id="date-picker-dialog-2"
+                                                    format="dd/MM/yyyy"
+                                                    value={roundCreate.endDate}
+                                                    onChange={handleDateEndOnChange}
+                                                    KeyboardButtonProps={{
+                                                        'aria-label': 'change date'
+                                                    }}
+                                                />
+                                            </MuiPickersUtilsProvider>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Button
+                                            className="number-dialog__button"
+                                            onClick={handleOnSubmitRound}
+                                        >
+                                            Dodaj
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            </form>
+                        </DialogContent>
+                    </Dialog>
+                    <br/>
+                    {selectRidersFields()}
+                    <Button className="add-match__submit-button" onClick={handleOnSubmit}>
                         Dodaj
                     </Button>
                 </Paper>
