@@ -57,5 +57,10 @@
 		font-family: $bebas;
 		font-size: 2rem;
 		text-align: center;
+
+		&:active,
+		&:visited {
+			color: #000;
+		}
 	}
 }

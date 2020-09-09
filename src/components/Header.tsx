@@ -96,6 +96,11 @@ const Header: FunctionComponent = () => {
 						Profil
 					</Link>
 				</MenuItem>
+				<MenuItem>
+					<Link to="/samouczek" className="header__menu-item">
+						Samouczek
+					</Link>
+				</MenuItem>
 				<MenuItem onClick={handleLogout}>
 					<span className="header__menu-item">Wyloguj</span>
 				</MenuItem>
