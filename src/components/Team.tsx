@@ -96,7 +96,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 					options
 				);
 				if (riders.length) {
-					const newRiders = riders.map(({ rider }) => {
+					const newRiders = riders.map(({ rider, isActive }) => {
 						const riderAgeYear = new Date(
 							rider.dateOfBirth
 						).getFullYear();
@@ -112,13 +112,15 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 							? 'Zagraniczny'
 							: 'Krajowy';
 						return {
+							_id: rider._id,
 							firstName: rider.firstName,
 							lastName: rider.lastName,
 							dateOfBirth: rider.dateOfBirth,
-							_id: rider._id,
+							image: rider.image,
+							ksm: rider.KSM,
+							isActive,
 							nationality,
 							age,
-							ksm: 0,
 							club: ''
 						};
 					});
@@ -166,12 +168,12 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 				dispatchUserData(setUser({ username, email, avatarUrl }));
 				setLoggedIn(true);
 			} catch (e) {
-				/*const {
+				const {
 					response: { data }
 				} = e;
 				if (data.statusCode == 401) {
 					checkBadAuthorization(setLoggedIn, push);
-				}*/
+				}
 			}
 		};
 
@@ -229,7 +231,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 						)}
 					</TabPanel>
 					<TabPanel value={value} index={1}>
-						<TeamMatch />
+						<TeamMatch teamId={team._id} />
 					</TabPanel>
 				</div>
 			</Paper>

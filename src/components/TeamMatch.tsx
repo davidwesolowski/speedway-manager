@@ -7,12 +7,20 @@ import {
 	ListItem,
 	Checkbox,
 	Grid,
-	Button
+	Button,
+	Avatar
 } from '@material-ui/core';
 import addNotification from '../utils/addNotification';
+import axios from 'axios';
 import { IRider } from './TeamRiders';
 import { useStateValue } from './AppProvider';
+import getToken from '../utils/getToken';
+import { checkBadAuthorization } from '../utils/checkCookies';
+import { useHistory } from 'react-router-dom';
 
+interface IProps {
+	teamId: string;
+}
 interface IValidateRider {
 	foreigners: number;
 	u21: number;
@@ -20,7 +28,6 @@ interface IValidateRider {
 }
 
 const maxForeigners = 3;
-const maxAbove23YO = 5;
 const maxRiders = 8;
 const maxKSM = 41.0;
 
@@ -37,6 +44,9 @@ const validateRiders = (riders: IRider[]): IValidateRider =>
 		(prev: IValidateRider, curr: IRider): IValidateRider => {
 			if (curr.nationality === 'Zagraniczny') {
 				prev.foreigners += 1;
+			}
+			if (curr.age === 'U21') {
+				prev.u21 += 1;
 			}
 			return prev;
 		},
@@ -80,14 +90,24 @@ const checkTeamMatch = (riders: IRider[]): boolean => {
 		addNotification(title, message, type, duration);
 		alert = true;
 	}
+	if (riders.length >= 6 && result.u21 < 2) {
+		message = `Drużyna musi składać się przynajmniej z 2 juniorów!`;
+		addNotification(title, message, type, duration);
+		alert = true;
+	}
 	return alert;
 };
 
-const TeamMatch: FunctionComponent = () => {
-	const { teamRiders } = useStateValue();
+const TeamMatch: FunctionComponent<IProps> = ({ teamId }) => {
+	const { teamRiders, setLoggedIn } = useStateValue();
 	const [checked, setChecked] = useState<IRider[]>([]);
-	const [left, setLeft] = useState<IRider[]>(teamRiders);
-	const [right, setRight] = useState<IRider[]>([]);
+	const [left, setLeft] = useState<IRider[]>(
+		teamRiders.filter((rider: IRider) => rider.isActive === false)
+	);
+	const [right, setRight] = useState<IRider[]>(
+		teamRiders.filter((rider: IRider) => rider.isActive === true)
+	);
+	const { push } = useHistory();
 
 	const leftChecked = intersection(checked, left);
 	const rightChecked = intersection(checked, right);
@@ -101,6 +121,67 @@ const TeamMatch: FunctionComponent = () => {
 			newChecked.splice(currentIndex, 1);
 		}
 		setChecked(newChecked);
+	};
+
+	const handleSubmitTeam = () => {
+		if (right.length > 0) {
+			try {
+				const accessToken = getToken();
+				const options = {
+					headers: {
+						Authorization: `Bearer ${accessToken}`
+					}
+				};
+				right.forEach(async (rider: IRider) => {
+					if (rider.isActive === false) {
+						await axios.patch(
+							`https://fantasy-league-eti.herokuapp.com/teams/${teamId}/riders/${rider._id}`,
+							{
+								isActive: true
+							},
+							options
+						);
+					}
+				});
+				left.forEach(async (rider: IRider) => {
+					if (rider.isActive === true) {
+						await axios.patch(
+							`https://fantasy-league-eti.herokuapp.com/teams/${teamId}/riders/${rider._id}`,
+							{
+								isActive: false
+							},
+							options
+						);
+					}
+				});
+
+				const title = 'Sukces!';
+				const message = 'Zgłoszono kadrę meczową!';
+				const type = 'success';
+				const duration = 2000;
+				addNotification(title, message, type, duration);
+			} catch (e) {
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
+				} else {
+					const title = 'Błąd!';
+					const message = 'Błąd przy aktualizacji zawodników!';
+					const type = 'danger';
+					const duration = 2000;
+					addNotification(title, message, type, duration);
+				}
+			}
+		} else {
+			const title = 'Informacja!';
+			const message =
+				'Musisz mieć przynajmniej jednego zawodnika w kadrze meczowej!';
+			const type = 'info';
+			const duration = 3000;
+			addNotification(title, message, type, duration);
+		}
 	};
 
 	const handleCheckRight = () => {
@@ -139,7 +220,7 @@ const TeamMatch: FunctionComponent = () => {
 				/>
 			</Grid>
 			<Grid item xs={1}>
-				{rider._id}
+				<Avatar src={rider.image} alt="rider-avatar" />
 			</Grid>
 			<Grid item xs={2}>
 				{`${rider.firstName} ${rider.lastName}`}
@@ -162,7 +243,9 @@ const TeamMatch: FunctionComponent = () => {
 				title={header}
 				subheader={
 					header === 'Kadra meczowa' &&
-					`Wybrano: ${right.length}/8 KSM: ${countKSM(right)}/41`
+					`Wybrano: ${right.length}/8 KSM: ${countKSM(right).toFixed(
+						2
+					)}/41`
 				}
 			/>
 			<Divider />
@@ -227,7 +310,7 @@ const TeamMatch: FunctionComponent = () => {
 			<Grid item xs={12} lg={5} style={{ alignSelf: 'flex-start' }}>
 				{customList('Chosen', right, 'Kadra meczowa')}
 			</Grid>
-			<Button onClick={handleCheckLeft} className="btn">
+			<Button onClick={handleSubmitTeam} className="btn">
 				Zgłoś drużynę
 			</Button>
 		</Grid>

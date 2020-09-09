@@ -6,7 +6,8 @@ import {
 	TableHead,
 	TableRow,
 	TableCell,
-	TableBody
+	TableBody,
+	Avatar
 } from '@material-ui/core';
 
 export interface IRider {
@@ -18,6 +19,8 @@ export interface IRider {
 	ksm: number;
 	dateOfBirth: string;
 	age: string;
+	image: string | null;
+	isActive: boolean;
 }
 
 interface IProps {
@@ -42,6 +45,7 @@ const TeamRiders: FunctionComponent<IProps> = ({ riders }) => {
 				<Table>
 					<TableHead>
 						<TableRow>
+							<TableCell></TableCell>
 							<TableCell>Imię</TableCell>
 							<TableCell>Nazwisko</TableCell>
 							<TableCell>Data urodzenia</TableCell>
@@ -52,6 +56,12 @@ const TeamRiders: FunctionComponent<IProps> = ({ riders }) => {
 					<TableBody>
 						{riders.map(rider => (
 							<TableRow key={rider._id} hover={true}>
+								<TableCell>
+									<Avatar
+										src={rider.image}
+										alt="rider-avatar"
+									/>
+								</TableCell>
 								<TableCell>{rider.firstName}</TableCell>
 								<TableCell>{rider.lastName}</TableCell>
 								<TableCell>
