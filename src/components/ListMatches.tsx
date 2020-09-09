@@ -6,6 +6,7 @@ import getToken from '../utils/getToken';
 import axios from 'axios';
 import { setUser } from '../actions/userActions';
 import addNotification from '../utils/addNotification';
+import ListMatchesRound from './ListMatchesRound';
 
 const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}) => {
 
@@ -45,7 +46,7 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}
 
     const generateRounds = () => {
         return rounds.map((round, index) => {
-            return <MenuItem key={index} value={round.number.toString()}>Runda {round.number}</MenuItem>
+            return <MenuItem key={index} value={round._id}>Runda {round.number}</MenuItem>
         })
     }
 
@@ -91,22 +92,47 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}
         }
     }
 
-    const [number, setNumber] = useState<number>(1)
+    const [roundId, setRoundId] = useState<string>('')
+    const [number, setNumber] = useState<number>(0)
+    const [startDate, setStartDate] = useState<Date>(new Date())
+    const [endDate, setEndDate] = useState<Date>(new Date())
 
     const handleOnChangeSelectRound = () => (
         event
     ) => {
         event.persist();
         if(event.target) {
-            setNumber(parseInt(event.target.value))
+            setRoundId(event.target.value);
+            if(event.target.value !== 'all'){
+                setNumber(rounds.find((round) => round._id === event.target.value).number)
+                setStartDate(rounds.find((round) => round._id === event.target.value).startDate)
+                setEndDate(rounds.find((round) => round._id === event.target.value).endDate)
+            }
         };
     }
 
     const generateMatches = () => {
-        if(number === -1){
-            //Wszystkie kolejki
+        if(roundId === 'all'){
+            return rounds.map((round, index) => {
+                return(
+                    <ListMatchesRound
+                        key={index}
+                        round={round.number}
+                        roundId={round._id}
+                        startDate={round.startDate.toString()}
+                        endDate={round.endDate.toString()}
+                    />
+                )
+            })
         } else {
-            //Wybrana kolejka
+            return(
+                <ListMatchesRound
+                    round={number}
+                    roundId={roundId}
+                    startDate={startDate.toString()}
+                    endDate={endDate.toString()}
+                />
+            )
         }
     }
 
@@ -130,8 +156,8 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}
                     <br/>
                     <div className="list-matches__round-div">
                         <InputLabel id="roundLabel">Kolejka:</InputLabel>
-                        <Select labelId="roundLabel" className="add-match__round-select" value={number || ''} onChange={handleOnChangeSelectRound()}>
-                            <MenuItem value="-1">Wszystkie</MenuItem>
+                        <Select labelId="roundLabel" className="add-match__round-select" value={roundId || ''} onChange={handleOnChangeSelectRound()}>
+                            <MenuItem value="all">Wszystkie</MenuItem>
                             {generateRounds()}
                         </Select>
                     </div>

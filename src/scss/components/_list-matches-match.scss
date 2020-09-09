@@ -1,0 +1,31 @@
+.list-matches-match{
+
+    width: 100%;
+
+    &__home{
+        width:35%;
+        //align-items: center;
+        float: left;
+        margin-bottom: 2% !important;
+
+    }
+
+    &__away{
+        width:35%;
+        //align-items: center;
+        float: right;
+        margin-bottom: 2% !important;
+
+    }
+
+    &__score{
+        width: 10%;
+        float: left;
+        margin-bottom: 2% !important;
+
+    }
+
+    &__club-image{
+        width: 20%;
+    }
+}
