@@ -22,6 +22,7 @@ import Users from '../components/Users';
 import AddMatch from '../components/AddMatch';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import SelfTeaching from '../components/SelfTeaching';
+import Friends from '../components/Friends';
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -116,6 +117,14 @@ const RoutesAnimation = () => {
 						render={(props: RouteComponentProps) => {
 							const cookiesExist = checkCookies();
 							if (cookiesExist) return <AddMatch {...props} />;
+							else return <Redirect to="/login" />;
+						}}
+					/>
+					<Route
+						path="/znajomi"
+						render={(props: RouteComponentProps) => {
+							const cookiesExist = checkCookies();
+							if (cookiesExist) return <Friends {...props} />;
 							else return <Redirect to="/login" />;
 						}}
 					/>
