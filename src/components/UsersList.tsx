@@ -12,7 +12,7 @@ import {
 import { FiArrowRightCircle } from 'react-icons/fi';
 import axios from 'axios';
 import { IUsers } from './Users';
-import { FaUserPlus } from 'react-icons/fa';
+import { FaUserPlus, FaUserFriends, FaUserClock } from 'react-icons/fa';
 import getToken from '../utils/getToken';
 import { useStateValue } from './AppProvider';
 import { useHistory } from 'react-router-dom';
@@ -103,8 +103,7 @@ const UsersList: FunctionComponent<IProps> = ({
 
 		fetchMyFriendsAndInvitations();
 	}, []);
-	console.log(pendingInvitations);
-	console.log(myFriends);
+
 	const isFound = (
 		<>
 			{users.map(user => (
@@ -125,19 +124,21 @@ const UsersList: FunctionComponent<IProps> = ({
 						</IconButton>
 					</TableCell>
 					<TableCell align="center">
-						<IconButton
-							disabled={
-								pendingInvitations.find(
-									invitation =>
-										invitation.invitedId == user._id
-								)
-									? true
-									: false
-							}
-							onClick={() => sendInvitation(user._id)}
-						>
-							<FaUserPlus className="users__iconButton" />
-						</IconButton>
+						{myFriends.find(
+							friend => friend.invitedId == user._id
+						) ? (
+							<FaUserFriends className="users__friend" />
+						) : pendingInvitations.find(
+								invitation => invitation.invitedId == user._id
+						  ) ? (
+							<FaUserClock className="users__iconButton" />
+						) : (
+							<IconButton
+								onClick={() => sendInvitation(user._id)}
+							>
+								<FaUserPlus className="users__iconButton" />
+							</IconButton>
+						)}
 					</TableCell>
 				</TableRow>
 			))}

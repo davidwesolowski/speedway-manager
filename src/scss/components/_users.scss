@@ -61,6 +61,11 @@
 		font-size: 2.5rem;
 	}
 
+	&__friend {
+		color: green;
+		font-size: 3rem !important;
+	}
+
 	.MuiTableCell-head {
 		background-color: $color-primary !important;
 		color: #fff !important;
