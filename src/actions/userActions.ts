@@ -1,6 +1,7 @@
 import { UPDATE_USER, SET_USER } from './actionDefinitions';
 
 export interface IUser {
+	_id?: string;
 	email?: string;
 	username?: string;
 	avatarUrl?: string | undefined;

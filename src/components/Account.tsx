@@ -297,12 +297,12 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 			};
 			try {
 				const {
-					data: { username, email, avatarUrl }
+					data: { _id, username, email, avatarUrl }
 				} = await axios.get(
 					'https://fantasy-league-eti.herokuapp.com/users/self',
 					options
 				);
-				dispatchUserData(setUser({ username, email, avatarUrl }));
+				dispatchUserData(setUser({ _id, username, email, avatarUrl }));
 				setLoggedIn(true);
 			} catch (e) {
 				const {

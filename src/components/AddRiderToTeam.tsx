@@ -37,37 +37,33 @@ interface IRider {
 const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 	history: { push }
 }) => {
-	const {
-        setLoggedIn,
-		dispatchUserData,
-		userData,
-    } = useStateValue();
-    
-    const fetchUserData = async () => {
-        const accessToken = getToken();
+	const { setLoggedIn, dispatchUserData, userData } = useStateValue();
+
+	const fetchUserData = async () => {
+		const accessToken = getToken();
 		const options = {
 			headers: {
 				Authorization: `Bearer ${accessToken}`
 			}
 		};
-        try {
-            const {
-                data: { username, email, avatarUrl }
-            } = await axios.get(
-                'https://fantasy-league-eti.herokuapp.com/users/self',
-                options
-            );
-            dispatchUserData(setUser({ username, email, avatarUrl }));
-            setLoggedIn(true);
-        } catch (e) {
-            /*const {
+		try {
+			const {
+				data: { _id, username, email, avatarUrl }
+			} = await axios.get(
+				'https://fantasy-league-eti.herokuapp.com/users/self',
+				options
+			);
+			dispatchUserData(setUser({ _id, username, email, avatarUrl }));
+			setLoggedIn(true);
+		} catch (e) {
+			/*const {
                 response: { data }
             } = e;
             if (data.statusCode == 401) {
                 checkBadAuthorization(setLoggedIn, push);
             }*/
-        }
-    };
+		}
+	};
 	const [riders, setRiders] = useState([]);
 	const [teamId, setTeamId] = useState<string>('');
 	const [teamRiders, setTeamRiders] = useState([]);
@@ -425,7 +421,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				);
 			});
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.statusText == 'Unauthorized') {
 				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
 				setTimeout(() => {
@@ -443,15 +438,14 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
-
-	const findClubName = (clubId) => {
+	const findClubName = clubId => {
 		const found = clubs.find(club => club.id == clubId);
-		if(found){
-			return found.name
+		if (found) {
+			return found.name;
 		} else {
-			return ''
+			return '';
 		}
-	}
+	};
 
 	const customList = (items, type, side) => {
 		return (
