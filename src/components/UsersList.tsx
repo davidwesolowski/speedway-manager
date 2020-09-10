@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import {
 	TableRow,
 	TableCell,
@@ -10,8 +10,14 @@ import {
 	TableBody
 } from '@material-ui/core';
 import { FiArrowRightCircle } from 'react-icons/fi';
+import axios from 'axios';
 import { IUsers } from './Users';
 import { FaUserPlus } from 'react-icons/fa';
+import getToken from '../utils/getToken';
+import { useStateValue } from './AppProvider';
+import { useHistory } from 'react-router-dom';
+import { checkBadAuthorization } from '../utils/checkCookies';
+import addNotification from '../utils/addNotification';
 
 interface IProps {
 	users: IUsers[];
@@ -22,6 +28,83 @@ const UsersList: FunctionComponent<IProps> = ({
 	users,
 	handleFetchTeamRiders
 }) => {
+	const [pendingInvitations, setPendingInvitations] = useState([]);
+	const [myFriends, setMyFriends] = useState([]);
+	const { userData, setLoggedIn } = useStateValue();
+	const { push } = useHistory();
+
+	const sendInvitation = async (friendId: string) => {
+		try {
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			await axios.post(
+				'https://fantasy-league-eti.herokuapp.com/friendlist',
+				{
+					senderId: userData._id,
+					invitedId: friendId
+				},
+				options
+			);
+
+			const title = 'Sukces!';
+			const message = 'Wysłano zaproszenie do ...';
+			const type = 'success';
+			const duration = 2000;
+			addNotification(title, message, type, duration);
+		} catch (e) {
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
+			} else {
+				const title = 'Błąd!';
+				const message =
+					'Wystąpił błąd podczas dodawania użytkownika do znajomych';
+				const type = 'danger';
+				const duration = 2000;
+				addNotification(title, message, type, duration);
+			}
+		}
+	};
+
+	useEffect(() => {
+		const fetchMyFriendsAndInvitations = async () => {
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			try {
+				const { data: invitations } = await axios.get(
+					`https://fantasy-league-eti.herokuapp.com/friendlist/myInvitations/${userData._id}`,
+					options
+				);
+				const { data: friends } = await axios.get(
+					`https://fantasy-league-eti.herokuapp.com/friendlist/myFriends/${userData._id}`,
+					options
+				);
+				setPendingInvitations(invitations);
+				setMyFriends(friends);
+			} catch (e) {
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
+				}
+			}
+		};
+
+		fetchMyFriendsAndInvitations();
+	}, []);
+	console.log(pendingInvitations);
+	console.log(myFriends);
 	const isFound = (
 		<>
 			{users.map(user => (
@@ -42,7 +125,17 @@ const UsersList: FunctionComponent<IProps> = ({
 						</IconButton>
 					</TableCell>
 					<TableCell align="center">
-						<IconButton>
+						<IconButton
+							disabled={
+								pendingInvitations.find(
+									invitation =>
+										invitation.invitedId == user._id
+								)
+									? true
+									: false
+							}
+							onClick={() => sendInvitation(user._id)}
+						>
 							<FaUserPlus className="users__iconButton" />
 						</IconButton>
 					</TableCell>
