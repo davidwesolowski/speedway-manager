@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import { FiArrowRightCircle } from 'react-icons/fi';
 import { IUsers } from './Users';
+import { FaUserPlus } from 'react-icons/fa';
 
 interface IProps {
 	users: IUsers[];
@@ -37,7 +38,12 @@ const UsersList: FunctionComponent<IProps> = ({
 							disabled={!user.teamId}
 							onClick={() => handleFetchTeamRiders(user.teamId)}
 						>
-							<FiArrowRightCircle className="users__teamButton" />
+							<FiArrowRightCircle className="users__iconButton" />
+						</IconButton>
+					</TableCell>
+					<TableCell align="center">
+						<IconButton>
+							<FaUserPlus className="users__iconButton" />
 						</IconButton>
 					</TableCell>
 				</TableRow>
@@ -58,9 +64,10 @@ const UsersList: FunctionComponent<IProps> = ({
 				<TableHead>
 					<TableRow>
 						<TableCell />
-						<TableCell>Nazwa użytkownika</TableCell>
-						<TableCell>Nazwa drużyny</TableCell>
-						<TableCell>Sprawdź skład</TableCell>
+						<TableCell align="center">Nazwa użytkownika</TableCell>
+						<TableCell align="center">Nazwa drużyny</TableCell>
+						<TableCell align="center">Sprawdź skład</TableCell>
+						<TableCell align="center">Dodaj</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>{users.length > 0 ? isFound : notFound}</TableBody>

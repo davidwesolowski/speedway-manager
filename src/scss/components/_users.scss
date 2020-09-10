@@ -45,7 +45,7 @@
 		min-height: 50vh;
 	}
 
-	&__teamButton {
+	&__iconButton {
 		font-size: 2.5rem !important;
 	}
 
@@ -85,7 +85,7 @@
 		}
 	}
 
-	.MuiTableRow-root:nth-child(even) .MuiTableCell-body &__teamButton {
+	.MuiTableRow-root:nth-child(even) .MuiTableCell-body &__iconButton {
 		color: #fff;
 	}
 
