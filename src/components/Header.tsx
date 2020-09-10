@@ -97,6 +97,11 @@ const Header: FunctionComponent = () => {
 					</Link>
 				</MenuItem>
 				<MenuItem>
+					<Link to="/znajomi" className="header__menu-item">
+						Znajomi
+					</Link>
+				</MenuItem>
+				<MenuItem>
 					<Link to="/samouczek" className="header__menu-item">
 						Samouczek
 					</Link>
