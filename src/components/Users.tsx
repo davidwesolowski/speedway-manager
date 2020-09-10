@@ -152,23 +152,31 @@ const Users: FunctionComponent<RouteProps> = () => {
 					options
 				);
 				const teams = await fetchTeams();
-				const userState = data.map(user => {
-					const team = teams.find(team => team.userId === user._id);
-					if (team) {
+				let _id = userData._id;
+				if (!userData.username) {
+					_id = await fetchUserData();
+				}
+				const userState = data
+					.filter(user => user._id !== _id)
+					.map(user => {
+						const team = teams.find(
+							team => team.userId === user._id
+						);
+						if (team) {
+							return {
+								...user,
+								teamName: team.name,
+								teamLogo: team.logoUrl,
+								teamId: team._id
+							};
+						}
 						return {
 							...user,
-							teamName: team.name,
-							teamLogo: team.logoUrl,
-							teamId: team._id
+							teamName: null,
+							teamLogo: null,
+							teamId: null
 						};
-					}
-					return {
-						...user,
-						teamName: null,
-						teamLogo: null,
-						teamId: null
-					};
-				});
+					});
 				setUsers(userState);
 			} catch (e) {
 				const {
@@ -190,6 +198,7 @@ const Users: FunctionComponent<RouteProps> = () => {
 				);
 				dispatchUserData(setUser({ _id, username, email, avatarUrl }));
 				setLoggedIn(true);
+				return _id;
 			} catch (e) {
 				/**/
 			}
@@ -197,7 +206,6 @@ const Users: FunctionComponent<RouteProps> = () => {
 
 		fetchUsers();
 
-		if (!userData.username) fetchUserData();
 		setLoading(false);
 		setTimeout(() => {
 			document.body.style.overflow = 'auto';

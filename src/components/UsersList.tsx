@@ -52,7 +52,7 @@ const UsersList: FunctionComponent<IProps> = ({
 	);
 	const notFound = (
 		<TableRow>
-			<TableCell colSpan={4} align="center">
+			<TableCell colSpan={5} align="center">
 				Nie znalezniono użytkownika.
 			</TableCell>
 		</TableRow>
