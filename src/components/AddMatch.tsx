@@ -1366,7 +1366,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                             onChange={handleOnChangeCheckbox}
                             size="small"
                             className="add-match__checkbox"
-                            title="Zaznacz jeśli zawodnik jest Polakiem"
+                            title="Zaznacz jeśli mecz został rozegrany"
                         />
                     </div>
                     <Dialog open={addRoundDialogOpen} onClose={handleClose} className="number-dialog">

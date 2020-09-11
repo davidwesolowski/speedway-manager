@@ -3,7 +3,7 @@ import axios from 'axios';
 import getToken from '../utils/getToken';
 import addNotification from '../utils/addNotification';
 import { useHistory } from 'react-router-dom';
-import { Divider, Typography, Button } from '@material-ui/core';
+import { Divider, Typography, Button, Dialog } from '@material-ui/core';
 
 interface IProps {
     matchId: string;
@@ -96,6 +96,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
     const { push } = useHistory();
     const [openScores, setOpenScores] = useState<boolean>(false);
     const [openEdit, setOpenEdit] = useState<boolean>(false);
+    const [wasRidden, setWasRidden] = useState<boolean>(false);
 
     const getClub = async (clubId: string, homeAway: string) => {
         if(homeAway === 'home'){
@@ -162,9 +163,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
     }
 
     const handleOpenScores = () => {
-        getMatchRiders();
-        setOpenScores(true);
-        console.log(matchRiders);
+        //if(wasRidden){
+            getMatchRiders();
+            setOpenScores(true);
+            console.log(matchRiders);
+        //}
     }
 
     const handleCloseScores = () => {
@@ -314,7 +317,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                             <Typography variant="h4">{away.name}</Typography>
                         </div>
                         <div className="list-matches-match__options">
-                            <Button className="list-matches-match__scores-button" onClick={handleOpenScores}>
+                            <Button className="list-matches-match__scores-button" onClick={handleOpenScores} /*disabled={!wasRidden}*/ >
                                 Wyniki
                             </Button>
                             <Button className="list-matches-match__edit-button" onClick={handleOpenEdit}>
@@ -329,6 +332,22 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
         }
     }
 
+    const generateRiderScoreDiv = (firstName, lastName, score, number) => {
+        return(
+            <>
+            <div className="scores-dialog__rider-score-div">
+                <div className="scores-dialog__rider">
+                    {number}. {firstName} {lastName}
+                </div>
+                <div className="scores-dialog__score">
+                    {score === 0 ? '' : score}
+                </div>
+            </div>
+            <Divider/>
+            </>
+        )
+    }
+
     useEffect(() => {
         getClub(homeId, 'home');
         getClub(awayId, 'away');
@@ -337,6 +356,54 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
     return(
         <>
             {generateMatchDiv()}
+            <Dialog open={openScores} onClose={handleCloseScores} className="scores-dialog">
+                <div className="scores-dialog__away">
+                    <Typography variant="h3" className="scores-dialog__club-name">
+                        {away ? away.name : ''}
+                    </Typography>
+                    <img
+                        src={
+                            away
+                                ? (away.logoUrl ? (away.logoUrl as string)
+                                : '/img/warsaw_venue.jpg') : '/img/warsaw_venue.jpg'
+                        }
+                        alt="club-logo"
+                        className="scores-dialog__club-image"
+                    />
+                    WYNIK
+                    {generateRiderScoreDiv(matchRiders.rider_1.firstName, matchRiders.rider_1.lastName, matchRiders.rider_1.score, 1)}
+                    {generateRiderScoreDiv(matchRiders.rider_2.firstName, matchRiders.rider_2.lastName, matchRiders.rider_2.score, 2)}
+                    {generateRiderScoreDiv(matchRiders.rider_3.firstName, matchRiders.rider_3.lastName, matchRiders.rider_3.score, 3)}
+                    {generateRiderScoreDiv(matchRiders.rider_4.firstName, matchRiders.rider_4.lastName, matchRiders.rider_4.score, 4)}
+                    {generateRiderScoreDiv(matchRiders.rider_5.firstName, matchRiders.rider_5.lastName, matchRiders.rider_5.score, 5)}
+                    {generateRiderScoreDiv(matchRiders.rider_6.firstName, matchRiders.rider_6.lastName, matchRiders.rider_6.score, 6)}
+                    {generateRiderScoreDiv(matchRiders.rider_7.firstName, matchRiders.rider_7.lastName, matchRiders.rider_7.score, 7)}
+                    {generateRiderScoreDiv(matchRiders.rider_8.firstName, matchRiders.rider_8.lastName, matchRiders.rider_8.score, 8)}
+                </div>
+                <div className="scores-dialog__home">
+                    <Typography variant="h3" className="scores-dialog__club-name">
+                        {home ? home.name : ''}
+                    </Typography>
+                    <img
+                        src={
+                            home
+                                ? (home.logoUrl ? (home.logoUrl as string)
+                                : '/img/warsaw_venue.jpg') : '/img/warsaw_venue.jpg'
+                        }
+                        alt="club-logo"
+                        className="scores-dialog__club-image"
+                    />
+                    WYNIK
+                    {generateRiderScoreDiv(matchRiders.rider_9.firstName, matchRiders.rider_9.lastName, matchRiders.rider_9.score, 9)}
+                    {generateRiderScoreDiv(matchRiders.rider_10.firstName, matchRiders.rider_10.lastName, matchRiders.rider_10.score, 10)}
+                    {generateRiderScoreDiv(matchRiders.rider_11.firstName, matchRiders.rider_11.lastName, matchRiders.rider_11.score, 11)}
+                    {generateRiderScoreDiv(matchRiders.rider_12.firstName, matchRiders.rider_12.lastName, matchRiders.rider_12.score, 12)}
+                    {generateRiderScoreDiv(matchRiders.rider_13.firstName, matchRiders.rider_13.lastName, matchRiders.rider_13.score, 13)}
+                    {generateRiderScoreDiv(matchRiders.rider_14.firstName, matchRiders.rider_14.lastName, matchRiders.rider_14.score, 14)}
+                    {generateRiderScoreDiv(matchRiders.rider_15.firstName, matchRiders.rider_15.lastName, matchRiders.rider_15.score, 15)}
+                    {generateRiderScoreDiv(matchRiders.rider_16.firstName, matchRiders.rider_16.lastName, matchRiders.rider_16.score, 16)}
+                </div>
+            </Dialog>
         </>
     )
 }

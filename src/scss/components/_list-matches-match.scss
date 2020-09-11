@@ -35,3 +35,44 @@
         width: 20%;
     }
 }
+
+.scores-dialog{
+    display: block;
+    overflow: auto;
+    grid-column: center-start / center-end;
+	position: relative;
+	justify-content: center;
+	align-items: center;
+    font-family: $bebas;
+    float: center;
+    width: 60vw !important;
+
+    &__away{
+        width: 50%;
+        display: block;
+        float:left;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__home{
+        width: 50%;
+        display: block;
+        float:right;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__rider-score-div{
+        display: block;
+        overflow: auto;
+    }
+
+    &__rider{
+        float:left;
+    }
+
+    &__score{
+        float:right;
+    }
+}
