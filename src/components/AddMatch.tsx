@@ -631,49 +631,49 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                     case 1:
                         setHome((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: home.rider_1._id ,points: event.target.value}
+                            [rider]: {_id: home.rider_1._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 2:
                         setHome((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: home.rider_2._id ,points: event.target.value}
+                            [rider]: {_id: home.rider_2._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 3:
                         setHome((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: home.rider_3._id ,points: event.target.value}
+                            [rider]: {_id: home.rider_3._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 4:
                         setHome((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: home.rider_4._id ,points: event.target.value}
+                            [rider]: {_id: home.rider_4._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 5:
                         setHome((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: home.rider_5._id ,points: event.target.value}
+                            [rider]: {_id: home.rider_5._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 6:
                         setHome((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: home.rider_6._id ,points: event.target.value}
+                            [rider]: {_id: home.rider_6._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 7:
                         setHome((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: home.rider_7._id ,points: event.target.value}
+                            [rider]: {_id: home.rider_7._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 8:
                         setHome((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: home.rider_8._id ,points: event.target.value}
+                            [rider]: {_id: home.rider_8._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     default:
@@ -685,49 +685,49 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                     case 1:
                         setAway((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: away.rider_1._id ,points: event.target.value}
+                            [rider]: {_id: away.rider_1._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 2:
                         setAway((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: away.rider_2._id ,points: event.target.value}
+                            [rider]: {_id: away.rider_2._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 3:
                         setAway((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: away.rider_3._id ,points: event.target.value}
+                            [rider]: {_id: away.rider_3._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 4:
                         setAway((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: away.rider_4._id ,points: event.target.value}
+                            [rider]: {_id: away.rider_4._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 5:
                         setAway((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: away.rider_5._id ,points: event.target.value}
+                            [rider]: {_id: away.rider_5._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 6:
                         setAway((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: away.rider_6._id ,points: event.target.value}
+                            [rider]: {_id: away.rider_6._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 7:
                         setAway((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: away.rider_7._id ,points: event.target.value}
+                            [rider]: {_id: away.rider_7._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 8:
                         setAway((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: away.rider_8._id ,points: event.target.value}
+                            [rider]: {_id: away.rider_8._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     default:
@@ -1195,9 +1195,23 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                 },
 				options
             );
-            console.log(data);
 			if(wasRidden){
-
+                addRiderToMatch(away.rider_1._id, data._id, away.rider_1.points, 1);
+                addRiderToMatch(away.rider_2._id, data._id, away.rider_2.points, 2);
+                addRiderToMatch(away.rider_3._id, data._id, away.rider_3.points, 3);
+                addRiderToMatch(away.rider_4._id, data._id, away.rider_4.points, 4);
+                addRiderToMatch(away.rider_5._id, data._id, away.rider_5.points, 5);
+                addRiderToMatch(away.rider_6._id, data._id, away.rider_6.points, 6);
+                addRiderToMatch(away.rider_7._id, data._id, away.rider_7.points, 7);
+                addRiderToMatch(away.rider_8._id, data._id, away.rider_8.points, 8);
+                addRiderToMatch(home.rider_1._id, data._id, home.rider_1.points, 9);
+                addRiderToMatch(home.rider_2._id, data._id, home.rider_2.points, 10);
+                addRiderToMatch(home.rider_3._id, data._id, home.rider_3.points, 11);
+                addRiderToMatch(home.rider_4._id, data._id, home.rider_4.points, 12);
+                addRiderToMatch(home.rider_5._id, data._id, home.rider_5.points, 13);
+                addRiderToMatch(home.rider_6._id, data._id, home.rider_6.points, 14);
+                addRiderToMatch(home.rider_7._id, data._id, home.rider_7.points, 15);
+                addRiderToMatch(home.rider_8._id, data._id, home.rider_8.points, 16);
             }
 			addNotification(
 				'Sukces',
@@ -1205,11 +1219,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 				'success',
 				1000
 			);
-			setTimeout(() => {
+			/*setTimeout(() => {
 				{
 					window.location.reload(false);
 				}
-			}, 1000);
+			}, 1000);*/
 		} catch (e) {
 			console.log(e.response);
 			if (e.statusText == 'Bad Request') {
@@ -1235,6 +1249,53 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 			}
 			throw new Error('Error in adding new match!');
 		}
+    }
+
+    const addRiderToMatch = async (riderId, matchId, score, number) => {
+        if(riderId !== ''){
+            try {
+                const accessToken = getToken();
+                const options = {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                };
+                const { data } = await axios.post(
+                    `https://fantasy-league-eti.herokuapp.com/match-rider/${matchId}/riders/${riderId}`,
+                    {
+                        riderId: riderId,
+                        matchId: matchId,
+                        score: score,
+                        riderNumber: number
+                    },
+                    options
+                );
+            } catch (e) {
+                console.log(e.response);
+                if (e.statusText == 'Bad Request') {
+                    addNotification(
+                        'Błąd!',
+                        'Podane punkty zawodnika już istnieją w bazie!',
+                        'danger',
+                        1000
+                    );
+                    setTimeout(() => {}, 1000);
+                } else if (e.statusText == 'Unauthorized') {
+                    addNotification('Błąd!', 'Twoja sesja wygasła', 'danger', 1000);
+                    setTimeout(() => {
+                        push('/login');
+                    }, 1000);
+                } else {
+                    addNotification(
+                        'Błąd!',
+                        'Nie udało się dodać punktów zawodnika!',
+                        'danger',
+                        1000
+                    );
+                }
+                throw new Error('Error in adding new rider to match!');
+            }
+        }
     }
 
     const handleOnSubmit = () => {
