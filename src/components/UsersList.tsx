@@ -125,7 +125,9 @@ const UsersList: FunctionComponent<IProps> = ({
 					</TableCell>
 					<TableCell align="center">
 						{myFriends.find(
-							friend => friend.invitedId == user._id
+							friend =>
+								friend.invitedId == user._id ||
+								friend.senderId == user._id
 						) ? (
 							<FaUserFriends className="users__friend" />
 						) : pendingInvitations.find(
