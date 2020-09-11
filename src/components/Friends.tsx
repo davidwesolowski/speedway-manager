@@ -1,19 +1,29 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { RouteProps, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { Paper, Typography, Divider } from '@material-ui/core';
+import {
+	Paper,
+	Typography,
+	Divider,
+	Grid,
+	CircularProgress
+} from '@material-ui/core';
 import getToken from '../utils/getToken';
 import { useStateValue } from './AppProvider';
 import { setUser } from '../actions/userActions';
 import { checkBadAuthorization } from '../utils/checkCookies';
 import { IUsers } from './Users';
+import UsersList from './UsersList';
+import { CSSTransition } from 'react-transition-group';
 
 const Friends: FunctionComponent<RouteProps> = () => {
 	const [friends, setFriends] = useState<IUsers[]>([]);
-	const { setLoggedIn, dispatchUserData, userData } = useStateValue();
+	const [loading, setLoading] = useState(true);
+	const { setLoggedIn, dispatchUserData } = useStateValue();
 	const { push } = useHistory();
 
 	useEffect(() => {
+		setLoading(true);
 		const accessToken = getToken();
 		const options = {
 			headers: {
@@ -35,7 +45,7 @@ const Friends: FunctionComponent<RouteProps> = () => {
 				const {
 					response: { data }
 				} = e;
-				if (data.statusCoed == 401) {
+				if (data.statusCode == 401) {
 					checkBadAuthorization(setLoggedIn, push);
 				}
 			}
@@ -61,16 +71,21 @@ const Friends: FunctionComponent<RouteProps> = () => {
 					const friendsWithPersonalDetails = await Promise.all(
 						allFriends.map(async friend => {
 							let _id;
+							let invited = false;
 							if (friend.invitedId != userId) {
 								_id = friend.invitedId;
 							} else if (friend.senderId != userId) {
 								_id = friend.senderId;
+								invited = true;
 							}
 							const { data: user } = await axios.get(
 								`https://fantasy-league-eti.herokuapp.com/users/${_id}`,
 								options
 							);
-							return user;
+							return {
+								...user,
+								invited
+							};
 						})
 					);
 					const friendsWithTeamDetails = friendsWithPersonalDetails.map(
@@ -106,21 +121,38 @@ const Friends: FunctionComponent<RouteProps> = () => {
 			}
 		};
 
-		fetchCurrentAndPendingFriends();
+		fetchCurrentAndPendingFriends().then(() => setLoading(false));
 
 		setTimeout(() => {
 			document.body.style.overflow = 'auto';
 		}, 3000);
 	}, []);
-
 	return (
-		<div className="friends">
+		<div className="friends users">
 			<div className="friends__background"></div>
 			<Paper className="friends__box">
 				<Typography variant="h2" className="friends__headerText">
 					Lista znajomych
 				</Typography>
 				<Divider />
+				{loading && (
+					<Grid
+						container
+						justify="center"
+						alignItems="center"
+						className="users__loading"
+					>
+						<CircularProgress />
+					</Grid>
+				)}
+				<CSSTransition
+					in={friends.length > 0}
+					timeout={300}
+					classNames="animationScaleUp"
+					unmountOnExit
+				>
+					<UsersList users={friends} />
+				</CSSTransition>
 			</Paper>
 		</div>
 	);

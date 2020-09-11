@@ -32,6 +32,7 @@ export interface IUsers {
 	teamId?: string;
 	teamName?: string;
 	teamLogo?: string;
+	invited?: boolean;
 }
 
 const Users: FunctionComponent<RouteProps> = () => {
@@ -204,9 +205,8 @@ const Users: FunctionComponent<RouteProps> = () => {
 			}
 		};
 
-		fetchUsers();
+		fetchUsers().then(() => setLoading(false));
 
-		setLoading(false);
 		setTimeout(() => {
 			document.body.style.overflow = 'auto';
 		}, 500);

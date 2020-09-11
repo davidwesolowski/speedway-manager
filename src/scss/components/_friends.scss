@@ -31,4 +31,8 @@
 		margin-bottom: $xs-margin;
 		text-align: center;
 	}
+
+	.MuiDivider-root {
+		margin-bottom: $xs-margin !important;
+	}
 }
