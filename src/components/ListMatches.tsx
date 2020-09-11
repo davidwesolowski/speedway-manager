@@ -9,9 +9,14 @@ import addNotification from '../utils/addNotification';
 import ListMatchesRound from './ListMatchesRound';
 
 interface IRider{
-    riderId: string;
-    firstName: string;
-    lastName: string;
+    _id: string,
+    firstName: string,
+    lastName: string,
+    nickname: string,
+    dateOfBirth: Date,
+    isForeigner: boolean,
+    ksm: number,
+    clubId: string
 }
 
 const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}) => {

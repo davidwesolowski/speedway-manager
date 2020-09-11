@@ -15,9 +15,14 @@ interface IProps {
 }
 
 interface IRider{
-    riderId: string;
-    firstName: string;
-    lastName: string;
+    _id: string,
+    firstName: string,
+    lastName: string,
+    nickname: string,
+    dateOfBirth: Date,
+    isForeigner: boolean,
+    ksm: number,
+    clubId: string
 }
 
 interface IMatch {
@@ -100,6 +105,7 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
                         homeScore={tempHomeScore}
                         awayScore={tempAwayScore}
                         riders={riders}
+                        date={match.date}
                     />
                     </>
                 )
