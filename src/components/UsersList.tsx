@@ -12,7 +12,12 @@ import {
 import { FiArrowRightCircle } from 'react-icons/fi';
 import axios from 'axios';
 import { IUsers } from './Users';
-import { FaUserPlus, FaUserFriends, FaUserClock } from 'react-icons/fa';
+import {
+	FaUserPlus,
+	FaUserFriends,
+	FaUserClock,
+	FaUserCheck
+} from 'react-icons/fa';
 import getToken from '../utils/getToken';
 import { useStateValue } from './AppProvider';
 import { useHistory } from 'react-router-dom';
@@ -21,14 +26,16 @@ import addNotification from '../utils/addNotification';
 
 interface IProps {
 	users: IUsers[];
-	handleFetchTeamRiders: (teamId: string) => Promise<void>;
+	handleFetchTeamRiders?: (teamId: string) => Promise<void>;
+	handleAcceptInvitation?: (userId: string) => Promise<void>;
 }
 
 const UsersList: FunctionComponent<IProps> = ({
 	users,
-	handleFetchTeamRiders
+	handleFetchTeamRiders,
+	handleAcceptInvitation
 }) => {
-	const [pendingInvitations, setPendingInvitations] = useState([]);
+	const [pendingSentInvitations, setPendingSentInvitations] = useState([]);
 	const [myFriends, setMyFriends] = useState([]);
 	const { userData, setLoggedIn } = useStateValue();
 	const { push } = useHistory();
@@ -49,9 +56,14 @@ const UsersList: FunctionComponent<IProps> = ({
 				},
 				options
 			);
+			const { data: user } = await axios.get(
+				`https://fantasy-league-eti.herokuapp.com/users/${friendId}`,
+				options
+			);
+			await fetchMyFriendsAndInvitations();
 
 			const title = 'Sukces!';
-			const message = 'Wysłano zaproszenie do ...';
+			const message = `Wysłano zaproszenie do ${user.username.toUpperCase()}`;
 			const type = 'success';
 			const duration = 2000;
 			addNotification(title, message, type, duration);
@@ -72,37 +84,64 @@ const UsersList: FunctionComponent<IProps> = ({
 		}
 	};
 
-	useEffect(() => {
-		const fetchMyFriendsAndInvitations = async () => {
-			const accessToken = getToken();
-			const options = {
-				headers: {
-					Authorization: `Bearer ${accessToken}`
-				}
-			};
-			try {
-				const { data: invitations } = await axios.get(
-					`https://fantasy-league-eti.herokuapp.com/friendlist/myInvitations/${userData._id}`,
-					options
-				);
-				const { data: friends } = await axios.get(
-					`https://fantasy-league-eti.herokuapp.com/friendlist/myFriends/${userData._id}`,
-					options
-				);
-				setPendingInvitations(invitations);
-				setMyFriends(friends);
-			} catch (e) {
-				const {
-					response: { data }
-				} = e;
-				if (data.statusCode == 401) {
-					checkBadAuthorization(setLoggedIn, push);
-				}
+	const fetchMyFriendsAndInvitations = async () => {
+		const accessToken = getToken();
+		const options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
 			}
 		};
+		try {
+			const { data: sentInvitations } = await axios.get(
+				`https://fantasy-league-eti.herokuapp.com/friendlist/myInvitations/${userData._id}`,
+				options
+			);
+			const { data: friends } = await axios.get(
+				`https://fantasy-league-eti.herokuapp.com/friendlist/myFriends/${userData._id}`,
+				options
+			);
+			setPendingSentInvitations(sentInvitations);
+			setMyFriends(friends);
+		} catch (e) {
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
+			}
+		}
+	};
 
-		fetchMyFriendsAndInvitations();
+	useEffect(() => {
+		if (handleFetchTeamRiders) {
+			fetchMyFriendsAndInvitations();
+		}
 	}, []);
+
+	const usersIcons = user =>
+		myFriends.find(
+			friend =>
+				friend.invitedId == user._id || friend.senderId == user._id
+		) ? (
+			<FaUserFriends className="users__friend" />
+		) : pendingSentInvitations.find(
+				invitation => invitation.invitedId == user._id
+		  ) ? (
+			<FaUserClock className="users__iconButton" />
+		) : (
+			<IconButton onClick={() => sendInvitation(user._id)}>
+				<FaUserPlus className="users__iconButton" />
+			</IconButton>
+		);
+
+	const friendsIcons = user =>
+		user.invited ? (
+			<IconButton onClick={() => handleAcceptInvitation(user._id)}>
+				<FaUserCheck className="users__accept" />
+			</IconButton>
+		) : (
+			<FaUserFriends className="users__friend" />
+		);
 
 	const isFound = (
 		<>
@@ -124,23 +163,9 @@ const UsersList: FunctionComponent<IProps> = ({
 						</IconButton>
 					</TableCell>
 					<TableCell align="center">
-						{myFriends.find(
-							friend =>
-								friend.invitedId == user._id ||
-								friend.senderId == user._id
-						) ? (
-							<FaUserFriends className="users__friend" />
-						) : pendingInvitations.find(
-								invitation => invitation.invitedId == user._id
-						  ) ? (
-							<FaUserClock className="users__iconButton" />
-						) : (
-							<IconButton
-								onClick={() => sendInvitation(user._id)}
-							>
-								<FaUserPlus className="users__iconButton" />
-							</IconButton>
-						)}
+						{handleFetchTeamRiders
+							? usersIcons(user)
+							: friendsIcons(user)}
 					</TableCell>
 				</TableRow>
 			))}
@@ -149,7 +174,9 @@ const UsersList: FunctionComponent<IProps> = ({
 	const notFound = (
 		<TableRow>
 			<TableCell colSpan={5} align="center">
-				Nie znalezniono użytkownika.
+				{handleFetchTeamRiders
+					? 'Nie znalezniono użytkownika.'
+					: 'Aktualnie nie masz znajomych.'}
 			</TableCell>
 		</TableRow>
 	);
@@ -163,7 +190,9 @@ const UsersList: FunctionComponent<IProps> = ({
 						<TableCell align="center">Nazwa użytkownika</TableCell>
 						<TableCell align="center">Nazwa drużyny</TableCell>
 						<TableCell align="center">Sprawdź skład</TableCell>
-						<TableCell align="center">Dodaj</TableCell>
+						<TableCell align="center">
+							{handleFetchTeamRiders ? 'Dodaj' : 'Status'}
+						</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>{users.length > 0 ? isFound : notFound}</TableBody>

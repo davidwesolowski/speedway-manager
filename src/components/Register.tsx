@@ -108,7 +108,10 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 	const registerUser = async (userData: IRegisterData) => {
 		try {
 			const {
-				data: { accessToken, _id }
+				data: {
+					accessToken,
+					user: { _id }
+				}
 			} = await axios.post(
 				'https://fantasy-league-eti.herokuapp.com/auth/register',
 				userData
