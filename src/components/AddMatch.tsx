@@ -11,6 +11,7 @@ import validateRoundData from "../validation/validateRoundData";
 import { ValidationErrorItem, string } from "@hapi/joi";
 import { setUser } from '../actions/userActions';
 import { useStateValue } from "./AppProvider";
+import validateMatchPointsData from "../validation/validateMatchPointsData";
 
 
 interface IRiderPoints{
@@ -1219,11 +1220,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 				'success',
 				1000
 			);
-			/*setTimeout(() => {
+			setTimeout(() => {
 				{
 					window.location.reload(false);
 				}
-			}, 1000);*/
+			}, 1000);
 		} catch (e) {
 			console.log(e.response);
 			if (e.statusText == 'Bad Request') {
@@ -1299,7 +1300,28 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
     }
 
     const handleOnSubmit = () => {
-        addMatch()
+        setDataToValidationFunc();
+        const validationResponse = validateMatchPointsData(dataToValidation);
+        if(validationResponse.error){
+            console.log("ERROR");
+            setValidatedPoints(()=>defaultValidatedPoints);
+            validationResponse.error.details.forEach(
+                (errorItem: ValidationErrorItem): any => {
+                    console.log(errorItem.message);
+                    setValidatedPoints((prevState: IValidatedPoints) => {
+                        return {
+                            ...prevState,
+                            [errorItem.path[0]]: {
+                                message: errorItem.message,
+                                error: true
+                            }
+                        };
+                    });
+                }
+            );
+        } else {
+            addMatch()
+        }
     }
 
     useEffect(() => {

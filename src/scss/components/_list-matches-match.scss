@@ -1,6 +1,7 @@
 .list-matches-match{
 
-    width: 100%;
+    display: block;
+    overflow: auto;
 
     &__home{
         width:35%;
@@ -13,7 +14,7 @@
     &__away{
         width:35%;
         //align-items: center;
-        float: right;
+        float: left;
         margin-bottom: 2% !important;
 
     }
@@ -22,7 +23,12 @@
         width: 10%;
         float: left;
         margin-bottom: 2% !important;
+    }
 
+    &__options{
+        width:20%;
+        float:right;
+        margin-bottom: 2% !important;
     }
 
     &__club-image{

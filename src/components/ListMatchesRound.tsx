@@ -11,6 +11,13 @@ interface IProps {
     roundId: string;
     startDate: string;
     endDate: string;
+    riders: Array<IRider>
+}
+
+interface IRider{
+    riderId: string;
+    firstName: string;
+    lastName: string;
 }
 
 interface IMatch {
@@ -26,6 +33,7 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
     roundId,
     startDate,
     endDate,
+    riders
 }) => {
     const [matches, setMatches] = useState([]);
     const [roundStartDate, setRoundStartDate] = useState<Date>(new Date(startDate));
@@ -38,6 +46,7 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
     const getMatchesOfRound = async (roundId) => {
         //pobieranie konkretnej kolejki meczów
         //temp pobranie wszystkich meczów
+        console.log(roundId)
         try {
             const accessToken = getToken();
             const options = {
@@ -46,7 +55,7 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
                 }
             };
             const { data } = await axios.get(
-                'https://fantasy-league-eti.herokuapp.com/matches',
+                `https://fantasy-league-eti.herokuapp.com/matches/inRound/${roundId}`,
                 options
             );
             setMatches([]);
@@ -90,6 +99,7 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
                         awayId={match.awayId}
                         homeScore={tempHomeScore}
                         awayScore={tempAwayScore}
+                        riders={riders}
                     />
                     </>
                 )
@@ -118,6 +128,7 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
                 >
                     {generateRoundTitle()}
                 </Typography>
+                <Divider/>
                 {generateMatches()}
             </div>
         </>

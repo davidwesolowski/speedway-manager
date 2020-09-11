@@ -3,7 +3,7 @@ import axios from 'axios';
 import getToken from '../utils/getToken';
 import addNotification from '../utils/addNotification';
 import { useHistory } from 'react-router-dom';
-import { Divider, Typography } from '@material-ui/core';
+import { Divider, Typography, Button } from '@material-ui/core';
 
 interface IProps {
     matchId: string;
@@ -11,6 +11,41 @@ interface IProps {
     awayId: string;
     homeScore: number;
     awayScore: number;
+    riders: Array<IRider1>;
+}
+
+interface IRider{
+    matchRiderId: string;
+    riderId: string;
+    firstName: string;
+    lastName: string;
+    score: number;
+    riderNumber: number;
+}
+
+interface IRider1{
+    riderId: string;
+    firstName: string;
+    lastName: string;
+}
+
+interface IRiders{
+    rider_1: IRider;
+    rider_2: IRider;
+    rider_3: IRider;
+    rider_4: IRider;
+    rider_5: IRider;
+    rider_6: IRider;
+    rider_7: IRider;
+    rider_8: IRider;
+    rider_9: IRider;
+    rider_10: IRider;
+    rider_11: IRider;
+    rider_12: IRider;
+    rider_13: IRider;
+    rider_14: IRider;
+    rider_15: IRider;
+    rider_16: IRider;
 }
 
 interface IClub {
@@ -18,18 +53,49 @@ interface IClub {
     name: string;
     logoUrl: string;
 }
+const defaultRiderData = {
+    matchRiderId: '',
+    riderId: '',
+    firstName: '',
+    lastName: '',
+    score: 0,
+    riderNumber: 0
+}
+
+const defaultRidersData = {
+    rider_1: defaultRiderData,
+    rider_2: defaultRiderData,
+    rider_3: defaultRiderData,
+    rider_4: defaultRiderData,
+    rider_5: defaultRiderData,
+    rider_6: defaultRiderData,
+    rider_7: defaultRiderData,
+    rider_8: defaultRiderData,
+    rider_9: defaultRiderData,
+    rider_10: defaultRiderData,
+    rider_11: defaultRiderData,
+    rider_12: defaultRiderData,
+    rider_13: defaultRiderData,
+    rider_14: defaultRiderData,
+    rider_15: defaultRiderData,
+    rider_16: defaultRiderData
+}
 
 const ListMatchesMatch: FunctionComponent<IProps> = ({
     matchId,
     homeId,
     awayId,
     homeScore,
-    awayScore
+    awayScore,
+    riders
 }) => {
 
     const [home, setHome] = useState<IClub>();
     const [away, setAway] = useState<IClub>();
+    const [matchRiders, setMatchRiders] = useState<IRiders>(defaultRidersData);
     const { push } = useHistory();
+    const [openScores, setOpenScores] = useState<boolean>(false);
+    const [openEdit, setOpenEdit] = useState<boolean>(false);
 
     const getClub = async (clubId: string, homeAway: string) => {
         if(homeAway === 'home'){
@@ -95,6 +161,126 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
         }
     }
 
+    const handleOpenScores = () => {
+        getMatchRiders();
+        setOpenScores(true);
+        console.log(matchRiders);
+    }
+
+    const handleCloseScores = () => {
+        setOpenScores(false)
+    }
+
+    const handleOpenEdit = () => {
+        setOpenEdit(true)
+    }
+
+    const handleCloseEdit = () => {
+        setOpenEdit(false)
+    }
+
+    const setMatchRider = (name, rider) => {
+        setMatchRiders((prevState: IRiders) => ({
+            ...prevState,
+            [name]: {
+                matchRiderId: rider._id,
+                riderId: rider.riderId,
+                firstName: rider.rider.firstName,
+                lastName: rider.rider.lastName,
+                score: rider.score,
+                riderNumber: rider.riderNumber
+            }                        
+        }));
+    }
+
+    const getMatchRiders = async () => {
+        if(matchRiders === defaultRidersData){
+            try {
+                const accessToken = getToken();
+                const options = {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                };
+                const { data } = await axios.get(
+                    `https://fantasy-league-eti.herokuapp.com/match-rider/${matchId}/riders`,
+                    options
+                );
+                data.map((rider, index) => {
+                    console.log(rider)
+                    switch(rider.riderNumber){
+                        case 1:
+                            setMatchRider('rider_1', rider);
+                            break;
+                        case 2:
+                            setMatchRider('rider_2', rider);
+                            break;
+                        case 3:
+                            setMatchRider('rider_3', rider);
+                            break;
+                        case 4:
+                            setMatchRider('rider_4', rider);
+                            break;
+                        case 5:
+                            setMatchRider('rider_5', rider);
+                            break;
+                        case 6:
+                            setMatchRider('rider_6', rider);
+                            break;
+                        case 7:
+                            setMatchRider('rider_7', rider);
+                            break;
+                        case 8:
+                            setMatchRider('rider_8', rider);
+                            break;
+                        case 9:
+                            setMatchRider('rider_9', rider);
+                            break;
+                        case 10:
+                            setMatchRider('rider_10', rider);
+                            break;
+                        case 11:
+                            setMatchRider('rider_11', rider);
+                            break;
+                        case 12:
+                            setMatchRider('rider_12', rider);
+                            break;
+                        case 13: 
+                            setMatchRider('rider_13', rider);
+                            break;
+                        case 14:
+                            setMatchRider('rider_14', rider);
+                            break;
+                        case 15:
+                            setMatchRider('rider_15', rider);
+                            break;
+                        case 16:
+                            setMatchRider('rider_16', rider);
+                            break;
+                        default:
+                            break;
+                    }
+                })
+            } catch (e) {
+                console.log(e.response);
+                if (e.response.statusText == 'Unauthorized') {
+                    addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
+                    setTimeout(() => {
+                        push('/login');
+                    }, 3000);
+                } else {
+                    addNotification(
+                        'Błąd',
+                        'Nie udało się pobrać rund z bazy',
+                        'danger',
+                        3000
+                    );
+                }
+                throw new Error('Error in getting rounds');
+            }
+        }
+    }
+
     const generateMatchDiv = () => {
         if(home && away){
             return(
@@ -127,7 +313,16 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                             />
                             <Typography variant="h4">{away.name}</Typography>
                         </div>
+                        <div className="list-matches-match__options">
+                            <Button className="list-matches-match__scores-button" onClick={handleOpenScores}>
+                                Wyniki
+                            </Button>
+                            <Button className="list-matches-match__edit-button" onClick={handleOpenEdit}>
+                                Edytuj
+                            </Button>
+                        </div>
                     </div>
+                    <Divider/>
                     <br/>
                 </>
             )

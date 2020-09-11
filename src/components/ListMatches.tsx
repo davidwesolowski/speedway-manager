@@ -8,6 +8,12 @@ import { setUser } from '../actions/userActions';
 import addNotification from '../utils/addNotification';
 import ListMatchesRound from './ListMatchesRound';
 
+interface IRider{
+    riderId: string;
+    firstName: string;
+    lastName: string;
+}
+
 const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}) => {
 
     const {
@@ -43,6 +49,7 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}
     };
 
     const [rounds, setRounds] = useState([])
+    const [riders, setRiders] = useState<IRider[]>([])
 
     const generateRounds = () => {
         return rounds.map((round, index) => {
@@ -92,6 +99,47 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}
         }
     }
 
+    const getRiders = async () => {
+        try {
+            const accessToken = getToken();
+            const options = {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            };
+            const { data } = await axios.get(
+                'https://fantasy-league-eti.herokuapp.com/riders',
+                options
+            );
+            /*data.map((rider, index) => {
+                setRiders(
+                    riders.concat({
+                        riderId: rider._id,
+                        firstName: rider.firstName,
+                        lastName: rider.lastName
+                    })
+                )
+            })*/
+            setRiders(data);
+        } catch (e) {
+            console.log(e.response);
+            if (e.response.statusText == 'Unauthorized') {
+                addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
+                setTimeout(() => {
+                    push('/login');
+                }, 3000);
+            } else {
+                addNotification(
+                    'Błąd',
+                    'Nie udało się pobrać zawodnikó z bazy',
+                    'danger',
+                    3000
+                );
+            }
+            throw new Error('Error in getting riders');
+        }
+    }
+
     const [roundId, setRoundId] = useState<string>('')
     const [number, setNumber] = useState<number>(0)
     const [startDate, setStartDate] = useState<Date>(new Date())
@@ -121,16 +169,19 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}
                         roundId={round._id}
                         startDate={round.startDate.toString()}
                         endDate={round.endDate.toString()}
+                        riders={riders}
                     />
                 )
             })
-        } else {
+        } else if(roundId !== ''){
             return(
                 <ListMatchesRound
+                    key={roundId}
                     round={number}
                     roundId={roundId}
                     startDate={startDate.toString()}
                     endDate={endDate.toString()}
+                    riders={riders}
                 />
             )
         }
@@ -139,6 +190,7 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}
     useEffect(() => {
         getRounds();
         if (!userData.username) fetchUserData();
+        getRiders();
     }, [])
 
     return(
