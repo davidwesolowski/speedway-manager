@@ -19,8 +19,51 @@ import { CSSTransition } from 'react-transition-group';
 const Friends: FunctionComponent<RouteProps> = () => {
 	const [friends, setFriends] = useState<IUsers[]>([]);
 	const [loading, setLoading] = useState(true);
-	const { setLoggedIn, dispatchUserData } = useStateValue();
+	const { setLoggedIn, dispatchUserData, userData } = useStateValue();
 	const { push } = useHistory();
+
+	const handleAcceptInvitation = async userId => {
+		try {
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			const { data } = await axios.get(
+				`https://fantasy-league-eti.herokuapp.com/friendlist/myInvitations/${userId}`,
+				options
+			);
+			const invitation = data.find(
+				invitation => invitation.invitedId === userData._id
+			);
+			if (invitation) {
+				await axios.patch(
+					`https://fantasy-league-eti.herokuapp.com/friendlist/${invitation._id}`,
+					{},
+					options
+				);
+				setFriends(
+					friends.map(friend => {
+						if (friend._id === userId) {
+							return {
+								...friend,
+								invited: false
+							};
+						}
+						return friend;
+					})
+				);
+			}
+		} catch (e) {
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
+			}
+		}
+	};
 
 	useEffect(() => {
 		setLoading(true);
@@ -72,11 +115,13 @@ const Friends: FunctionComponent<RouteProps> = () => {
 						allFriends.map(async friend => {
 							let _id;
 							let invited = false;
+							if (!friend.accepted) {
+								invited = true;
+							}
 							if (friend.invitedId != userId) {
 								_id = friend.invitedId;
 							} else if (friend.senderId != userId) {
 								_id = friend.senderId;
-								invited = true;
 							}
 							const { data: user } = await axios.get(
 								`https://fantasy-league-eti.herokuapp.com/users/${_id}`,
@@ -146,12 +191,15 @@ const Friends: FunctionComponent<RouteProps> = () => {
 					</Grid>
 				)}
 				<CSSTransition
-					in={friends.length > 0}
+					in={loading === false}
 					timeout={300}
 					classNames="animationScaleUp"
 					unmountOnExit
 				>
-					<UsersList users={friends} />
+					<UsersList
+						users={friends}
+						handleAcceptInvitation={handleAcceptInvitation}
+					/>
 				</CSSTransition>
 			</Paper>
 		</div>
