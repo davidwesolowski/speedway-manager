@@ -15,6 +15,7 @@ interface IProps {
     awayScore: number;
     riders: Array<IRider1>;
     date: Date;
+    wasRidden: boolean;
 }
 
 interface IRider{
@@ -121,7 +122,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
     homeScore,
     awayScore,
     riders,
-    date
+    date,
+    wasRidden
 }) => {
 
     const [home, setHome] = useState<IClub>();
@@ -130,7 +132,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
     const { push } = useHistory();
     const [openScores, setOpenScores] = useState<boolean>(false);
     const [openEdit, setOpenEdit] = useState<boolean>(false);
-    const [wasRidden, setWasRidden] = useState<boolean>(false);
     const [wasRiddenEdit, setWasRiddenEdit] = useState<boolean>(false);
     const [matchRidersEdit, setMatchRidersEdit] = useState<IRidersEdit>();
     const [matchDateEdit, setMatchDateEdit] = useState<Date>(new Date(date));
@@ -209,10 +210,10 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
     }
 
     const handleOpenScores = () => {
-        //if(wasRidden){
+        if(wasRidden){
             getMatchRiders();
             setOpenScores(true);
-            //}
+            }
     }
 
     const handleCloseScores = () => {
@@ -433,7 +434,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                             <Typography variant="h4">{away.name}</Typography>
                         </div>
                         <div className="list-matches-match__options">
-                            <Button className="list-matches-match__scores-button" onClick={handleOpenScores} /*disabled={!wasRidden}*/ >
+                            <Button className="list-matches-match__scores-button" onClick={handleOpenScores} disabled={!wasRidden} >
                                 Wyniki
                             </Button>
                             <Button className="list-matches-match__edit-button" onClick={handleOpenEdit}>
@@ -997,31 +998,37 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 
     const generateEditDialog = () => {
         return(
-            <Dialog open={openEdit} onClose={handleCloseEdit} className="edit-dialog">
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <KeyboardDatePicker
-                        margin="normal"
-                        id="date-picker-dialog-1"
-                        format="dd/MM/yyyy"
-                        value={matchDateEdit}
-                        onChange={handleMatchDateOnChange}
-                        KeyboardButtonProps={{
-                            'aria-label': 'change date'
-                        }}
+            <Dialog open={openEdit} onClose={handleCloseEdit} className="edit-dialog" fullWidth={true} maxWidth={'md'}>
+                <div className="edit-dialog__div">
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                            margin="normal"
+                            id="date-picker-dialog-1"
+                            format="dd/MM/yyyy"
+                            value={matchDateEdit}
+                            onChange={handleMatchDateOnChange}
+                            KeyboardButtonProps={{
+                                'aria-label': 'change date'
+                            }}
+                        />
+                    </MuiPickersUtilsProvider>
+                    <br/>
+                    <Typography variant="h5">Czy mecz został rozegrany?</Typography>
+                    <Checkbox
+                        onChange={handleOnChangeCheckbox}
+                        size="small"
+                        className="add-match__checkbox"
+                        title="Zaznacz jeśli mecz został rozegrany"
+                        checked={wasRiddenEdit}
                     />
-                </MuiPickersUtilsProvider>
-                <br/>
-                <Typography variant="h5">Czy mecz został rozegrany?</Typography>
-                <Checkbox
-                    onChange={handleOnChangeCheckbox}
-                    size="small"
-                    className="add-match__checkbox"
-                    title="Zaznacz jeśli mecz został rozegrany"
-                />
-                {selectRidersFields()}
-                <Button onClick={onClickEditButton}>
-                    Edytuj
-                </Button>
+                    <br/>
+                    <div className="edit-dialog__riders">
+                        {selectRidersFields()}
+                    </div>
+                    <Button onClick={onClickEditButton}>
+                        Edytuj
+                    </Button>
+                </div>
             </Dialog>
         )
         
@@ -1282,12 +1289,12 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
         addNotification("Sukces", "Udało się edytować mecz", "success", 1000);
         setTimeout(()=>{
             handleCloseEdit();
-            window.location.reload(false);
+            //window.location.reload(false);
         }, 1000)
     }
 
     const checkDate = async () => {
-        if(matchDateEdit != date){
+        if(matchDateEdit != date || wasRidden != wasRiddenEdit){
             try {
                 const accessToken = getToken();
                 const options = {
@@ -1297,9 +1304,10 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                 };
                 const { data } = await axios.patch(
                     `https://fantasy-league-eti.herokuapp.com/matches/${matchId}`,
-                    {date: matchDateEdit},
+                    {date: matchDateEdit, wasRidden: wasRiddenEdit},
                     options
                 );
+                console.log(wasRidden)
             } catch (e) {
                 console.log(e.response);
                 if (e.response.statusText == 'Unauthorized') {

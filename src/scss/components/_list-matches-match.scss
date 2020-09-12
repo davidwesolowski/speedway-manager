@@ -12,28 +12,33 @@
         width:35%;
         //align-items: center;
         float: left;
-        margin-bottom: 2% !important;
-
+        margin-bottom: 0.5% !important;
+        text-align: center;
+        margin-top: 0.5% !important;
     }
 
     &__away{
         width:35%;
         //align-items: center;
         float: left;
-        margin-bottom: 2% !important;
-
+        margin-bottom: 0.5% !important;
+        text-align: center;
+        margin-top: 0.5% !important;
     }
 
     &__score{
         width: 10%;
         float: left;
         margin-bottom: 2% !important;
+        text-align: center;
+        margin-top: 2% !important;
     }
 
     &__options{
         width:20%;
         float:right;
-        margin-bottom: 2% !important;
+        margin-bottom: 0.5% !important;
+        margin-top: 0.5% !important;
     }
 
     &__club-image{
@@ -105,4 +110,8 @@
     &__club-image{
         width: 100%;
     }
+}
+
+.edit-dialog{
+    text-align: center;
 }

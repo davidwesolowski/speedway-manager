@@ -1208,10 +1208,12 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                     roundId: number,
                     homeId: home.team_id,
                     awayId: away.team_id,
-                    date: matchDate
+                    date: matchDate,
+                    wasRidden: wasRidden
                 },
 				options
             );
+            console.log(wasRidden)
 			if(wasRidden){
                 addRiderToMatch(away.rider_1._id, data._id, away.rider_1.points, 1);
                 addRiderToMatch(away.rider_2._id, data._id, away.rider_2.points, 2);
@@ -1238,7 +1240,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 			);
 			setTimeout(() => {
 				{
-					window.location.reload(false);
+					//window.location.reload(false);
 				}
 			}, 1000);
 		} catch (e) {
