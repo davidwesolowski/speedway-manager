@@ -1033,6 +1033,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                         <div className="add-match__rider-div">
                             1.
                             <Select className="add-match__rider-select" value={away.rider_1._id || ''} onChange={handleOnChangeSelectRider('rider_1', 'away')}>
+                                <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                                 {selectRiders(away.team_id, 1, 'away')}
                             </Select>
                             <TextField className="add-match__rider-points" value={away.rider_1.points || ''} onChange={handleOnChangePoints('rider_1', 'away')}/>
@@ -1040,6 +1041,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                         <div className="add-match__rider-div">
                             2.
                             <Select className="add-match__rider-select" value={away.rider_2._id || ''} onChange={handleOnChangeSelectRider('rider_2', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(away.team_id, 2, 'away')}
                             </Select>
                             <TextField className="add-match__rider-points" value={away.rider_2.points || ''} onChange={handleOnChangePoints('rider_2', 'away')}/>
@@ -1047,6 +1049,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                         <div className="add-match__rider-div">
                             3.
                             <Select className="add-match__rider-select" value={away.rider_3._id || ''} onChange={handleOnChangeSelectRider('rider_3', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(away.team_id, 3, 'away')}
                             </Select>
                             <TextField className="add-match__rider-points" value={away.rider_3.points || ''} onChange={handleOnChangePoints('rider_3', 'away')}/>
@@ -1054,6 +1057,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                         <div className="add-match__rider-div">
                             4.
                             <Select className="add-match__rider-select" value={away.rider_4._id || ''} onChange={handleOnChangeSelectRider('rider_4', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(away.team_id, 4, 'away')}
                             </Select>
                             <TextField className="add-match__rider-points" value={away.rider_4.points || ''} onChange={handleOnChangePoints('rider_4', 'away')}/>
@@ -1061,6 +1065,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                         <div className="add-match__rider-div">
                             5.
                             <Select className="add-match__rider-select" value={away.rider_5._id || ''} onChange={handleOnChangeSelectRider('rider_5', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(away.team_id, 5, 'away')}
                             </Select>
                             <TextField className="add-match__rider-points" value={away.rider_5.points || ''} onChange={handleOnChangePoints('rider_5', 'away')}/>
@@ -1068,6 +1073,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                         <div className="add-match__rider-div">
                             6.
                             <Select className="add-match__rider-select" value={away.rider_6._id || ''} onChange={handleOnChangeSelectRider('rider_6', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(away.team_id, 6, 'away')}
                             </Select>
                             <TextField className="add-match__rider-points" value={away.rider_6.points || ''} onChange={handleOnChangePoints('rider_6', 'away')}/>
@@ -1075,6 +1081,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                         <div className="add-match__rider-div">
                             7.
                             <Select className="add-match__rider-select" value={away.rider_7._id || ''} onChange={handleOnChangeSelectRider('rider_7', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(away.team_id, 7, 'away')}
                             </Select>
                             <TextField className="add-match__rider-points" value={away.rider_7.points || ''} onChange={handleOnChangePoints('rider_7', 'away')}/>
@@ -1082,6 +1089,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                         <div className="add-match__rider-div">
                             8.
                             <Select className="add-match__rider-select" value={away.rider_8._id || ''} onChange={handleOnChangeSelectRider('rider_8', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(away.team_id, 8, 'away')}
                             </Select>
                             <TextField className="add-match__rider-points" value={away.rider_8.points || ''} onChange={handleOnChangePoints('rider_8', 'away')}/>
@@ -1097,6 +1105,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                         <div className="add-match__rider-div">
                             9.
                             <Select className="add-match__rider-select" value={home.rider_1._id || ''} onChange={handleOnChangeSelectRider('rider_1', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(home.team_id, 1, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={home.rider_1.points || ''} onChange={handleOnChangePoints('rider_1', 'home')}/>
@@ -1104,6 +1113,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                         <div className="add-match__rider-div">
                             10.
                             <Select className="add-match__rider-select" value={home.rider_2._id || ''} onChange={handleOnChangeSelectRider('rider_2', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(home.team_id, 2, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={home.rider_2.points || ''} onChange={handleOnChangePoints('rider_2', 'home')}/>
@@ -1111,6 +1121,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                         <div className="add-match__rider-div">
                             11.
                             <Select className="add-match__rider-select" value={home.rider_3._id || ''} onChange={handleOnChangeSelectRider('rider_3', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(home.team_id, 3, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={home.rider_3.points || ''} onChange={handleOnChangePoints('rider_3', 'home')}/>
@@ -1118,6 +1129,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                         <div className="add-match__rider-div">
                             12.
                             <Select className="add-match__rider-select" value={home.rider_4._id || ''} onChange={handleOnChangeSelectRider('rider_4', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(home.team_id, 4, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={home.rider_4.points || ''} onChange={handleOnChangePoints('rider_4', 'home')}/>
@@ -1125,6 +1137,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                         <div className="add-match__rider-div">
                             13.
                             <Select className="add-match__rider-select" value={home.rider_5._id || ''} onChange={handleOnChangeSelectRider('rider_5', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(home.team_id, 5, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={home.rider_5.points || ''} onChange={handleOnChangePoints('rider_5', 'home')}/>
@@ -1132,6 +1145,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                         <div className="add-match__rider-div">
                             14.
                             <Select className="add-match__rider-select" value={home.rider_6._id || ''} onChange={handleOnChangeSelectRider('rider_6', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(home.team_id, 6, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={home.rider_6.points || ''} onChange={handleOnChangePoints('rider_6', 'home')}/>
@@ -1139,6 +1153,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                         <div className="add-match__rider-div">
                             15.
                             <Select className="add-match__rider-select" value={home.rider_7._id || ''} onChange={handleOnChangeSelectRider('rider_7', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(home.team_id, 7, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={home.rider_7.points || ''} onChange={handleOnChangePoints('rider_7', 'home')}/>
@@ -1146,6 +1161,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                         <div className="add-match__rider-div">
                             16.
                             <Select className="add-match__rider-select" value={home.rider_8._id || ''} onChange={handleOnChangeSelectRider('rider_8', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(home.team_id, 8, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={home.rider_8.points || ''} onChange={handleOnChangePoints('rider_8', 'home')}/>

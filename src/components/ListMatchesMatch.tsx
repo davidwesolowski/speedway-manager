@@ -3,7 +3,7 @@ import axios from 'axios';
 import getToken from '../utils/getToken';
 import addNotification from '../utils/addNotification';
 import { useHistory } from 'react-router-dom';
-import { Divider, Typography, Button, Dialog, MenuItem, Select, TextField, Checkbox } from '@material-ui/core';
+import { Divider, Typography, Button, Dialog, MenuItem, Select, TextField, Checkbox, Paper } from '@material-ui/core';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
@@ -212,8 +212,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
         //if(wasRidden){
             getMatchRiders();
             setOpenScores(true);
-            console.log(matchRiders);
-        //}
+            //}
     }
 
     const handleCloseScores = () => {
@@ -221,7 +220,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
     }
 
     const setRidersEdit = () => {
-        console.log(matchRiders)
         setMatchRidersEdit({
             rider_1: {
                 points: matchRiders.rider_1.score,
@@ -295,7 +293,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
         setWasRiddenEdit(wasRidden);
         setRidersEdit();
         setOpenEdit(true);
-        console.log(openEdit)
     }
 
     const handleCloseEdit = () => {
@@ -330,7 +327,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                     options
                 );
                 data.map((rider, index) => {
-                    console.log(rider)
                     switch(rider.riderNumber){
                         case 1:
                             setMatchRider('rider_1', rider);
@@ -471,53 +467,57 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
     const generateScoresDialog = () => {
         return(
             <>
-            <Dialog open={openScores} onClose={handleCloseScores} className="scores-dialog">
-                <div className="scores-dialog__away">
-                    <Typography variant="h3" className="scores-dialog__club-name">
-                        {away ? away.name : ''}
-                    </Typography>
-                    <img
-                        src={
-                            away
-                                ? (away.logoUrl ? (away.logoUrl as string)
-                                : '/img/warsaw_venue.jpg') : '/img/warsaw_venue.jpg'
-                        }
-                        alt="club-logo"
-                        className="scores-dialog__club-image"
-                    />
-                    WYNIK
-                    {generateRiderScoreDiv(matchRiders.rider_1.firstName, matchRiders.rider_1.lastName, matchRiders.rider_1.score, 1)}
-                    {generateRiderScoreDiv(matchRiders.rider_2.firstName, matchRiders.rider_2.lastName, matchRiders.rider_2.score, 2)}
-                    {generateRiderScoreDiv(matchRiders.rider_3.firstName, matchRiders.rider_3.lastName, matchRiders.rider_3.score, 3)}
-                    {generateRiderScoreDiv(matchRiders.rider_4.firstName, matchRiders.rider_4.lastName, matchRiders.rider_4.score, 4)}
-                    {generateRiderScoreDiv(matchRiders.rider_5.firstName, matchRiders.rider_5.lastName, matchRiders.rider_5.score, 5)}
-                    {generateRiderScoreDiv(matchRiders.rider_6.firstName, matchRiders.rider_6.lastName, matchRiders.rider_6.score, 6)}
-                    {generateRiderScoreDiv(matchRiders.rider_7.firstName, matchRiders.rider_7.lastName, matchRiders.rider_7.score, 7)}
-                    {generateRiderScoreDiv(matchRiders.rider_8.firstName, matchRiders.rider_8.lastName, matchRiders.rider_8.score, 8)}
+            <Dialog open={openScores} onClose={handleCloseScores} className="scores-dialog" fullWidth={true} maxWidth={'md'}>
+                <div className="scores-dialog__div">
+                    <div className="scores-dialog__away">
+                        <Typography variant="h3" className="scores-dialog__club-name">
+                            {away ? away.name : ''}
+                        </Typography>
+                        <img
+                            src={
+                                away
+                                    ? (away.logoUrl ? (away.logoUrl as string)
+                                    : '/img/warsaw_venue.jpg') : '/img/warsaw_venue.jpg'
+                            }
+                            alt="club-logo"
+                            className="scores-dialog__club-image"
+                        />
+                        <div className="scores-dialog__club-score">WYNIK</div>
+                        {generateRiderScoreDiv(matchRiders.rider_1.firstName, matchRiders.rider_1.lastName, matchRiders.rider_1.score, 1)}
+                        {generateRiderScoreDiv(matchRiders.rider_2.firstName, matchRiders.rider_2.lastName, matchRiders.rider_2.score, 2)}
+                        {generateRiderScoreDiv(matchRiders.rider_3.firstName, matchRiders.rider_3.lastName, matchRiders.rider_3.score, 3)}
+                        {generateRiderScoreDiv(matchRiders.rider_4.firstName, matchRiders.rider_4.lastName, matchRiders.rider_4.score, 4)}
+                        {generateRiderScoreDiv(matchRiders.rider_5.firstName, matchRiders.rider_5.lastName, matchRiders.rider_5.score, 5)}
+                        {generateRiderScoreDiv(matchRiders.rider_6.firstName, matchRiders.rider_6.lastName, matchRiders.rider_6.score, 6)}
+                        {generateRiderScoreDiv(matchRiders.rider_7.firstName, matchRiders.rider_7.lastName, matchRiders.rider_7.score, 7)}
+                        {generateRiderScoreDiv(matchRiders.rider_8.firstName, matchRiders.rider_8.lastName, matchRiders.rider_8.score, 8)}
+                    </div>
+                    <div className="scores-dialog__divider"></div>
+                    <div className="scores-dialog__home">
+                        <Typography variant="h3" className="scores-dialog__club-name">
+                            {home ? home.name : ''}
+                        </Typography>
+                        <img
+                            src={
+                                home
+                                    ? (home.logoUrl ? (home.logoUrl as string)
+                                    : '/img/warsaw_venue.jpg') : '/img/warsaw_venue.jpg'
+                            }
+                            alt="club-logo"
+                            className="scores-dialog__club-image"
+                        />
+                        <div className="scores-dialog__club-score">WYNIK</div>
+                        {generateRiderScoreDiv(matchRiders.rider_9.firstName, matchRiders.rider_9.lastName, matchRiders.rider_9.score, 9)}
+                        {generateRiderScoreDiv(matchRiders.rider_10.firstName, matchRiders.rider_10.lastName, matchRiders.rider_10.score, 10)}
+                        {generateRiderScoreDiv(matchRiders.rider_11.firstName, matchRiders.rider_11.lastName, matchRiders.rider_11.score, 11)}
+                        {generateRiderScoreDiv(matchRiders.rider_12.firstName, matchRiders.rider_12.lastName, matchRiders.rider_12.score, 12)}
+                        {generateRiderScoreDiv(matchRiders.rider_13.firstName, matchRiders.rider_13.lastName, matchRiders.rider_13.score, 13)}
+                        {generateRiderScoreDiv(matchRiders.rider_14.firstName, matchRiders.rider_14.lastName, matchRiders.rider_14.score, 14)}
+                        {generateRiderScoreDiv(matchRiders.rider_15.firstName, matchRiders.rider_15.lastName, matchRiders.rider_15.score, 15)}
+                        {generateRiderScoreDiv(matchRiders.rider_16.firstName, matchRiders.rider_16.lastName, matchRiders.rider_16.score, 16)}
+                    </div>
                 </div>
-                <div className="scores-dialog__home">
-                    <Typography variant="h3" className="scores-dialog__club-name">
-                        {home ? home.name : ''}
-                    </Typography>
-                    <img
-                        src={
-                            home
-                                ? (home.logoUrl ? (home.logoUrl as string)
-                                : '/img/warsaw_venue.jpg') : '/img/warsaw_venue.jpg'
-                        }
-                        alt="club-logo"
-                        className="scores-dialog__club-image"
-                    />
-                    WYNIK
-                    {generateRiderScoreDiv(matchRiders.rider_9.firstName, matchRiders.rider_9.lastName, matchRiders.rider_9.score, 9)}
-                    {generateRiderScoreDiv(matchRiders.rider_10.firstName, matchRiders.rider_10.lastName, matchRiders.rider_10.score, 10)}
-                    {generateRiderScoreDiv(matchRiders.rider_11.firstName, matchRiders.rider_11.lastName, matchRiders.rider_11.score, 11)}
-                    {generateRiderScoreDiv(matchRiders.rider_12.firstName, matchRiders.rider_12.lastName, matchRiders.rider_12.score, 12)}
-                    {generateRiderScoreDiv(matchRiders.rider_13.firstName, matchRiders.rider_13.lastName, matchRiders.rider_13.score, 13)}
-                    {generateRiderScoreDiv(matchRiders.rider_14.firstName, matchRiders.rider_14.lastName, matchRiders.rider_14.score, 14)}
-                    {generateRiderScoreDiv(matchRiders.rider_15.firstName, matchRiders.rider_15.lastName, matchRiders.rider_15.score, 15)}
-                    {generateRiderScoreDiv(matchRiders.rider_16.firstName, matchRiders.rider_16.lastName, matchRiders.rider_16.score, 16)}
-                </div>
+                
             </Dialog>
             </>
         )
@@ -532,7 +532,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
     }
 
     const isU23 = date => {
-        console.log(new Date().getFullYear() - new Date(date).getFullYear() < 24)
         if(new Date().getFullYear() - new Date(date).getFullYear() < 24){
             return true
         } else {
@@ -554,7 +553,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
         } else {
             return riders.filter(filtered => filtered.clubId == clubId/* &&
                 (!isChosen(filtered.id, 1, homeAway) || !isChosen(filtered.id, 2, homeAway) || !isChosen(filtered.id, 3, homeAway) || !isChosen(filtered.id, 4, homeAway) || !isChosen(filtered.id, 5, homeAway))*/).map((rider, index) => {
-                    console.log(rider)
                     return <MenuItem key={index} value={rider._id}>{rider.firstName} {rider.lastName}</MenuItem>
             })
         }
@@ -562,6 +560,16 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 
     const handleMatchDateOnChange = (date) => {
         setMatchDateEdit(date);
+    }
+
+    const sumEditPoints = (homeAway) => {
+        var sum = 0;
+        if(homeAway === 'home'){
+            sum = matchRidersEdit.rider_9.points + matchRidersEdit.rider_10.points + matchRidersEdit.rider_11.points + matchRidersEdit.rider_12.points + matchRidersEdit.rider_13.points + matchRidersEdit.rider_14.points + matchRidersEdit.rider_15.points + matchRidersEdit.rider_16.points;
+        } else {
+            sum = matchRidersEdit.rider_1.points + matchRidersEdit.rider_2.points + matchRidersEdit.rider_3.points + matchRidersEdit.rider_4.points + matchRidersEdit.rider_5.points + matchRidersEdit.rider_6.points + matchRidersEdit.rider_7.points + matchRidersEdit.rider_8.points;
+        }
+        return sum;
     }
 
     const selectRidersFields = () => {
@@ -573,9 +581,12 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                         <br/>
                         {away.name}
                         <br/>
+                        {sumEditPoints('away')}
+                        <br/>
                         <div className="add-match__rider-div">
                             1.
                             <Select className="add-match__rider-select" value={matchRidersEdit.rider_1.riderId || ''} onChange={handleOnChangeSelectRider('rider_1', 'away')}>
+                                <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                                 {selectRiders(away.clubId, 1, 'away')}
                             </Select>
                             <TextField className="add-match__rider-points" value={matchRidersEdit.rider_1.points || ''} onChange={handleOnChangePoints('rider_1', 'away')}/>
@@ -583,6 +594,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                         <div className="add-match__rider-div">
                             2.
                             <Select className="add-match__rider-select" value={matchRidersEdit.rider_2.riderId || ''} onChange={handleOnChangeSelectRider('rider_2', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(away.clubId, 2, 'away')}
                             </Select>
                             <TextField className="add-match__rider-points" value={matchRidersEdit.rider_2.points || ''} onChange={handleOnChangePoints('rider_2', 'away')}/>
@@ -590,6 +602,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                         <div className="add-match__rider-div">
                             3.
                             <Select className="add-match__rider-select" value={matchRidersEdit.rider_3.riderId || ''} onChange={handleOnChangeSelectRider('rider_3', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(away.clubId, 3, 'away')}
                             </Select>
                             <TextField className="add-match__rider-points" value={matchRidersEdit.rider_3.points || ''} onChange={handleOnChangePoints('rider_3', 'away')}/>
@@ -597,6 +610,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                         <div className="add-match__rider-div">
                             4.
                             <Select className="add-match__rider-select" value={matchRidersEdit.rider_4.riderId || ''} onChange={handleOnChangeSelectRider('rider_4', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(away.clubId, 4, 'away')}
                             </Select>
                             <TextField className="add-match__rider-points" value={matchRidersEdit.rider_4.points || ''} onChange={handleOnChangePoints('rider_4', 'away')}/>
@@ -604,6 +618,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                         <div className="add-match__rider-div">
                             5.
                             <Select className="add-match__rider-select" value={matchRidersEdit.rider_5.riderId || ''} onChange={handleOnChangeSelectRider('rider_5', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(away.clubId, 5, 'away')}
                             </Select>
                             <TextField className="add-match__rider-points" value={matchRidersEdit.rider_5.points || ''} onChange={handleOnChangePoints('rider_5', 'away')}/>
@@ -611,6 +626,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                         <div className="add-match__rider-div">
                             6.
                             <Select className="add-match__rider-select" value={matchRidersEdit.rider_6.riderId || ''} onChange={handleOnChangeSelectRider('rider_6', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(away.clubId, 6, 'away')}
                             </Select>
                             <TextField className="add-match__rider-points" value={matchRidersEdit.rider_6.points || ''} onChange={handleOnChangePoints('rider_6', 'away')}/>
@@ -618,6 +634,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                         <div className="add-match__rider-div">
                             7.
                             <Select className="add-match__rider-select" value={matchRidersEdit.rider_7.riderId || ''} onChange={handleOnChangeSelectRider('rider_7', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(away.clubId, 7, 'away')}
                             </Select>
                             <TextField className="add-match__rider-points" value={matchRidersEdit.rider_7.points || ''} onChange={handleOnChangePoints('rider_7', 'away')}/>
@@ -625,6 +642,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                         <div className="add-match__rider-div">
                             8.
                             <Select className="add-match__rider-select" value={matchRidersEdit.rider_8.riderId || ''} onChange={handleOnChangeSelectRider('rider_8', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(away.clubId, 8, 'away')}
                             </Select>
                             <TextField className="add-match__rider-points" value={matchRidersEdit.rider_8.points || ''} onChange={handleOnChangePoints('rider_8', 'away')}/>
@@ -635,9 +653,12 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                         <br/>
                         {home.name}
                         <br/>
+                        {sumEditPoints('home')}
+                        <br/>
                         <div className="add-match__rider-div">
                             9.
                             <Select className="add-match__rider-select" value={matchRidersEdit.rider_9.riderId || ''} onChange={handleOnChangeSelectRider('rider_1', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(home.clubId, 1, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={matchRidersEdit.rider_9.points || ''} onChange={handleOnChangePoints('rider_1', 'home')}/>
@@ -645,6 +666,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                         <div className="add-match__rider-div">
                             10.
                             <Select className="add-match__rider-select" value={matchRidersEdit.rider_10.riderId || ''} onChange={handleOnChangeSelectRider('rider_2', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(home.clubId, 2, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={matchRidersEdit.rider_10.points || ''} onChange={handleOnChangePoints('rider_2', 'home')}/>
@@ -652,6 +674,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                         <div className="add-match__rider-div">
                             11.
                             <Select className="add-match__rider-select" value={matchRidersEdit.rider_11.riderId || ''} onChange={handleOnChangeSelectRider('rider_3', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(home.clubId, 3, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={matchRidersEdit.rider_11.points || ''} onChange={handleOnChangePoints('rider_3', 'home')}/>
@@ -659,6 +682,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                         <div className="add-match__rider-div">
                             12.
                             <Select className="add-match__rider-select" value={matchRidersEdit.rider_12.riderId || ''} onChange={handleOnChangeSelectRider('rider_4', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(home.clubId, 4, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={matchRidersEdit.rider_12.points || ''} onChange={handleOnChangePoints('rider_4', 'home')}/>
@@ -666,6 +690,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                         <div className="add-match__rider-div">
                             13.
                             <Select className="add-match__rider-select" value={matchRidersEdit.rider_13.riderId || ''} onChange={handleOnChangeSelectRider('rider_5', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(home.clubId, 5, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={matchRidersEdit.rider_13.points || ''} onChange={handleOnChangePoints('rider_5', 'home')}/>
@@ -673,6 +698,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                         <div className="add-match__rider-div">
                             14.
                             <Select className="add-match__rider-select" value={matchRidersEdit.rider_14.riderId || ''} onChange={handleOnChangeSelectRider('rider_6', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(home.clubId, 6, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={matchRidersEdit.rider_14.points || ''} onChange={handleOnChangePoints('rider_6', 'home')}/>
@@ -680,6 +706,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                         <div className="add-match__rider-div">
                             15.
                             <Select className="add-match__rider-select" value={matchRidersEdit.rider_15.riderId || ''} onChange={handleOnChangeSelectRider('rider_7', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(home.clubId, 7, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={matchRidersEdit.rider_15.points || ''} onChange={handleOnChangePoints('rider_7', 'home')}/>
@@ -687,6 +714,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                         <div className="add-match__rider-div">
                             16.
                             <Select className="add-match__rider-select" value={matchRidersEdit.rider_16.riderId || ''} onChange={handleOnChangeSelectRider('rider_8', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
                             {selectRiders(home.clubId, 8, 'home')}
                             </Select>
                             <TextField className="add-match__rider-points" value={matchRidersEdit.rider_16.points || ''} onChange={handleOnChangePoints('rider_8', 'home')}/>
@@ -696,7 +724,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                     </>
             )
         } else {
-            console.log(riders)
             return(
                 <>
                     <div className="add-match__away-div">
@@ -720,7 +747,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
         event
     ) => {
         event.persist();
-        const rider = parseInt(number.slice(-1));
+        var rider = parseInt(number.slice(-1));
         if(event.target) {
             if(homeAway === 'away'){
                 const name = `rider_${rider}`
@@ -778,53 +805,55 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                 }
             }
             else{
+                rider = rider + 8;
+                const name = `rider_${rider}`
                 switch(rider){
-                    case 1:
+                    case 9:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: event.target.value, points: matchRidersEdit.rider_1.points}
+                            [name]: {riderId: event.target.value, points: matchRidersEdit.rider_9.points}
                         }));
                         break;
-                    case 2:
+                    case 10:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: event.target.value, points: matchRidersEdit.rider_2.points}
+                            [name]: {riderId: event.target.value, points: matchRidersEdit.rider_10.points}
                         }));
                         break;
-                    case 3:
+                    case 11:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: event.target.value, points: matchRidersEdit.rider_3.points}
+                            [name]: {riderId: event.target.value, points: matchRidersEdit.rider_11.points}
                         }));
                         break;
-                    case 4:
+                    case 12:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: event.target.value, points: matchRidersEdit.rider_4.points}
+                            [name]: {riderId: event.target.value, points: matchRidersEdit.rider_12.points}
                         }));
                         break;
-                    case 5:
+                    case 13:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: event.target.value, points: matchRidersEdit.rider_5.points}
+                            [name]: {riderId: event.target.value, points: matchRidersEdit.rider_13.points}
                         }));
                         break;
-                    case 6:
+                    case 14:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: event.target.value, points: matchRidersEdit.rider_6.points}
+                            [name]: {riderId: event.target.value, points: matchRidersEdit.rider_14.points}
                         }));
                         break;
-                    case 7:
+                    case 15:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: event.target.value, points: matchRidersEdit.rider_7.points}
+                            [name]: {riderId: event.target.value, points: matchRidersEdit.rider_15.points}
                         }));
                         break;
-                    case 8:
+                    case 16:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: event.target.value, points: matchRidersEdit.rider_8.points}
+                            [name]: {riderId: event.target.value, points: matchRidersEdit.rider_16.points}
                         }));
                         break;
                     default:
@@ -846,49 +875,49 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                     case 1:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: matchRidersEdit.rider_1.riderId ,points: parseInt(event.target.value)}
+                            [name]: {riderId: matchRidersEdit.rider_1.riderId ,points: parseInt(event.target.value)||0}
                         }));
                         break;
                     case 2:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: matchRidersEdit.rider_2.riderId ,points: parseInt(event.target.value)}
+                            [name]: {riderId: matchRidersEdit.rider_2.riderId ,points: parseInt(event.target.value)||0}
                         }));
                         break;
                     case 3:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: matchRidersEdit.rider_3.riderId ,points: parseInt(event.target.value)}
+                            [name]: {riderId: matchRidersEdit.rider_3.riderId ,points: parseInt(event.target.value)||0}
                         }));
                         break;
                     case 4:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: matchRidersEdit.rider_4.riderId ,points: parseInt(event.target.value)}
+                            [name]: {riderId: matchRidersEdit.rider_4.riderId ,points: parseInt(event.target.value)||0}
                         }));
                         break;
                     case 5:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: matchRidersEdit.rider_5.riderId ,points: parseInt(event.target.value)}
+                            [name]: {riderId: matchRidersEdit.rider_5.riderId ,points: parseInt(event.target.value)||0}
                         }));
                         break;
                     case 6:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: matchRidersEdit.rider_6.riderId ,points: parseInt(event.target.value)}
+                            [name]: {riderId: matchRidersEdit.rider_6.riderId ,points: parseInt(event.target.value)||0}
                         }));
                         break;
                     case 7:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: matchRidersEdit.rider_7.riderId ,points: parseInt(event.target.value)}
+                            [name]: {riderId: matchRidersEdit.rider_7.riderId ,points: parseInt(event.target.value)||0}
                         }));
                         break;
                     case 8:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: matchRidersEdit.rider_8.riderId ,points: parseInt(event.target.value)}
+                            [name]: {riderId: matchRidersEdit.rider_8.riderId ,points: parseInt(event.target.value)||0}
                         }));
                         break;
                     default:
@@ -899,52 +928,52 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                 number = number + 8;
                 const name = `rider_${number}`
                 switch(number){
-                    case 1:
+                    case 9:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: matchRidersEdit.rider_8.riderId ,points: parseInt(event.target.value)}
+                            [name]: {riderId: matchRidersEdit.rider_9.riderId ,points: parseInt(event.target.value)||0}
                         }));
                         break;
-                    case 2:
+                    case 10:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: matchRidersEdit.rider_8.riderId ,points: parseInt(event.target.value)}
+                            [name]: {riderId: matchRidersEdit.rider_10.riderId ,points: parseInt(event.target.value)||0}
                         }));
                         break;
-                    case 3:
+                    case 11:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: matchRidersEdit.rider_8.riderId ,points: parseInt(event.target.value)}
+                            [name]: {riderId: matchRidersEdit.rider_11.riderId ,points: parseInt(event.target.value)||0}
                         }));
                         break;
-                    case 4:
+                    case 12:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: matchRidersEdit.rider_8.riderId ,points: parseInt(event.target.value)}
+                            [name]: {riderId: matchRidersEdit.rider_12.riderId ,points: parseInt(event.target.value)||0}
                         }));
                         break;
-                    case 5:
+                    case 13:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: matchRidersEdit.rider_8.riderId ,points: parseInt(event.target.value)}
+                            [name]: {riderId: matchRidersEdit.rider_13.riderId ,points: parseInt(event.target.value)||0}
                         }));
                         break;
-                    case 6:
+                    case 14:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: matchRidersEdit.rider_8.riderId ,points: parseInt(event.target.value)}
+                            [name]: {riderId: matchRidersEdit.rider_14.riderId ,points: parseInt(event.target.value)||0}
                         }));
                         break;
-                    case 7:
+                    case 15:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: matchRidersEdit.rider_8.riderId ,points: parseInt(event.target.value)}
+                            [name]: {riderId: matchRidersEdit.rider_15.riderId ,points: parseInt(event.target.value)||0}
                         }));
                         break;
-                    case 8:
+                    case 16:
                         setMatchRidersEdit((prevState: IRidersEdit) => ({
                             ...prevState,
-                            [name]: {riderId: matchRidersEdit.rider_8.riderId ,points: parseInt(event.target.value)}
+                            [name]: {riderId: matchRidersEdit.rider_16.riderId ,points: parseInt(event.target.value)||0}
                         }));
                         break;
                     default:
@@ -956,7 +985,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 
     const handleOnChangeCheckbox = event => {
 		event.persist();
-		console.log(!event.target.checked);
 		if (event.target) {
             setWasRiddenEdit(event.target.checked)
 		}
@@ -1000,112 +1028,117 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
     }
 
     const checkIfNew = (riderId, number, points) => {
-        if(number < 9){
-            if(riderId === matchRiders.rider_1.riderId){return true}
-            else if(riderId === matchRiders.rider_2.riderId){return true}
-            else if(riderId === matchRiders.rider_3.riderId){return true}
-            else if(riderId === matchRiders.rider_4.riderId){return true}
-            else if(riderId === matchRiders.rider_5.riderId){return true}
-            else if(riderId === matchRiders.rider_6.riderId){return true}
-            else if(riderId === matchRiders.rider_7.riderId){return true}
-            else if(riderId === matchRiders.rider_8.riderId){return true}
-        } else {
-            if(riderId === matchRiders.rider_9.riderId){return true}
-            else if(riderId === matchRiders.rider_10.riderId){return true}
-            else if(riderId === matchRiders.rider_11.riderId){return true}
-            else if(riderId === matchRiders.rider_12.riderId){return true}
-            else if(riderId === matchRiders.rider_13.riderId){return true}
-            else if(riderId === matchRiders.rider_14.riderId){return true}
-            else if(riderId === matchRiders.rider_15.riderId){return true}
-            else if(riderId === matchRiders.rider_16.riderId){return true}
+        if(riderId !== ''){
+            if(number < 9){
+                if(riderId === matchRiders.rider_1.riderId){return true}
+                else if(riderId === matchRiders.rider_2.riderId){return true}
+                else if(riderId === matchRiders.rider_3.riderId){return true}
+                else if(riderId === matchRiders.rider_4.riderId){return true}
+                else if(riderId === matchRiders.rider_5.riderId){return true}
+                else if(riderId === matchRiders.rider_6.riderId){return true}
+                else if(riderId === matchRiders.rider_7.riderId){return true}
+                else if(riderId === matchRiders.rider_8.riderId){return true}
+            } else {
+                if(riderId === matchRiders.rider_9.riderId){return true}
+                else if(riderId === matchRiders.rider_10.riderId){return true}
+                else if(riderId === matchRiders.rider_11.riderId){return true}
+                else if(riderId === matchRiders.rider_12.riderId){return true}
+                else if(riderId === matchRiders.rider_13.riderId){return true}
+                else if(riderId === matchRiders.rider_14.riderId){return true}
+                else if(riderId === matchRiders.rider_15.riderId){return true}
+                else if(riderId === matchRiders.rider_16.riderId){return true}
+            }
+    
+            addNewRiderMatch(riderId, matchId, number, points);
         }
-
-        addNewRiderMatch(riderId, matchId, number, points);
+        
     }
 
     const checkIfChanged = (riderId, riderMatchId, number, points) => {
-        if(number < 9){
-            if(riderId === matchRidersEdit.rider_1.riderId){
-                if(points !== matchRidersEdit.rider_1.points || number !== 1){
-                    patchRiderMatch(riderMatchId, 1, matchRidersEdit.rider_1.points);
+        if(riderId !== ''){
+            if(number < 9){
+                if(riderId === matchRidersEdit.rider_1.riderId){
+                    if(points !== matchRidersEdit.rider_1.points || number !== 1){
+                        patchRiderMatch(riderMatchId, 1, matchRidersEdit.rider_1.points);
+                    } return true;
+                } else if(riderId === matchRidersEdit.rider_2.riderId){
+                    if(points !== matchRidersEdit.rider_2.points || number !== 2){
+                        patchRiderMatch(riderMatchId, 2, matchRidersEdit.rider_2.points);
+                    } return true;
+                } else
+                if(riderId === matchRidersEdit.rider_3.riderId){
+                    if(points !== matchRidersEdit.rider_3.points || number !== 3){
+                        patchRiderMatch(riderMatchId, 3, matchRidersEdit.rider_3.points);
+                    } return true;
+                } else
+                if(riderId === matchRidersEdit.rider_4.riderId){
+                    if(points !== matchRidersEdit.rider_4.points || number !== 4){
+                        patchRiderMatch(riderMatchId, 4, matchRidersEdit.rider_4.points);
+                    } return true;
+                } else
+                if(riderId === matchRidersEdit.rider_5.riderId){
+                    if(points !== matchRidersEdit.rider_5.points || number !== 5){
+                        patchRiderMatch(riderMatchId, 5, matchRidersEdit.rider_5.points);
+                    } return true;
+                } else
+                if(riderId === matchRidersEdit.rider_6.riderId){
+                    if(points !== matchRidersEdit.rider_6.points || number !== 6){
+                        patchRiderMatch(riderMatchId, 6, matchRidersEdit.rider_6.points);
+                    } return true;
+                } else
+                if(riderId === matchRidersEdit.rider_7.riderId){
+                    if(points !== matchRidersEdit.rider_7.points || number !== 7){
+                        patchRiderMatch(riderMatchId, 7, matchRidersEdit.rider_7.points);
+                    } return true;
+                } else
+                if(riderId === matchRidersEdit.rider_8.riderId){
+                    if(points !== matchRidersEdit.rider_8.points || number !== 8){
+                        patchRiderMatch(riderMatchId, 8, matchRidersEdit.rider_8.points);
+                    } return true;
                 }
-            } else if(riderId === matchRidersEdit.rider_2.riderId){
-                if(points !== matchRidersEdit.rider_2.points || number !== 2){
-                    patchRiderMatch(riderMatchId, 2, matchRidersEdit.rider_2.points);
-                }
-            } else
-            if(riderId === matchRidersEdit.rider_3.riderId){
-                if(points !== matchRidersEdit.rider_3.points || number !== 3){
-                    patchRiderMatch(riderMatchId, 3, matchRidersEdit.rider_3.points);
-                }
-            } else
-            if(riderId === matchRidersEdit.rider_4.riderId){
-                if(points !== matchRidersEdit.rider_4.points || number !== 4){
-                    patchRiderMatch(riderMatchId, 4, matchRidersEdit.rider_4.points);
-                }
-            } else
-            if(riderId === matchRidersEdit.rider_5.riderId){
-                if(points !== matchRidersEdit.rider_5.points || number !== 5){
-                    patchRiderMatch(riderMatchId, 5, matchRidersEdit.rider_5.points);
-                }
-            } else
-            if(riderId === matchRidersEdit.rider_6.riderId){
-                if(points !== matchRidersEdit.rider_6.points || number !== 6){
-                    patchRiderMatch(riderMatchId, 6, matchRidersEdit.rider_6.points);
-                }
-            } else
-            if(riderId === matchRidersEdit.rider_7.riderId){
-                if(points !== matchRidersEdit.rider_7.points || number !== 7){
-                    patchRiderMatch(riderMatchId, 7, matchRidersEdit.rider_7.points);
-                }
-            } else
-            if(riderId === matchRidersEdit.rider_8.riderId){
-                if(points !== matchRidersEdit.rider_8.points || number !== 8){
-                    patchRiderMatch(riderMatchId, 8, matchRidersEdit.rider_8.points);
+            } else {
+                if(riderId === matchRidersEdit.rider_9.riderId){
+                    if(points !== matchRidersEdit.rider_9.points || number !== 9){
+                        patchRiderMatch(riderMatchId, 9, matchRidersEdit.rider_9.points);
+                    } return true;
+                } else if(riderId === matchRidersEdit.rider_10.riderId){
+                    if(points !== matchRidersEdit.rider_10.points || number !== 10){
+                        patchRiderMatch(riderMatchId, 10, matchRidersEdit.rider_10.points);
+                    } return true;
+                } else
+                if(riderId === matchRidersEdit.rider_11.riderId){
+                    if(points !== matchRidersEdit.rider_11.points || number !== 11){
+                        patchRiderMatch(riderMatchId, 11, matchRidersEdit.rider_11.points);
+                    } return true;
+                } else
+                if(riderId === matchRidersEdit.rider_12.riderId){
+                    if(points !== matchRidersEdit.rider_12.points || number !== 12){
+                        patchRiderMatch(riderMatchId, 12, matchRidersEdit.rider_12.points);
+                    } return true;
+                } else
+                if(riderId === matchRidersEdit.rider_13.riderId){
+                    if(points !== matchRidersEdit.rider_13.points || number !== 13){
+                        patchRiderMatch(riderMatchId, 13, matchRidersEdit.rider_13.points);
+                    } return true;
+                } else
+                if(riderId === matchRidersEdit.rider_14.riderId){
+                    if(points !== matchRidersEdit.rider_14.points || number !== 14){
+                        patchRiderMatch(riderMatchId, 14, matchRidersEdit.rider_14.points);
+                    } return true;
+                } else
+                if(riderId === matchRidersEdit.rider_15.riderId){
+                    if(points !== matchRidersEdit.rider_15.points || number !== 15){
+                        patchRiderMatch(riderMatchId, 15, matchRidersEdit.rider_15.points);
+                    } return true;
+                } else
+                if(riderId === matchRidersEdit.rider_16.riderId){
+                    if(points !== matchRidersEdit.rider_16.points || number !== 16){
+                        patchRiderMatch(riderMatchId, 16, matchRidersEdit.rider_16.points);
+                    } return true;
                 }
             }
-        } else {
-            if(riderId === matchRidersEdit.rider_9.riderId){
-                if(points !== matchRidersEdit.rider_9.points || number !== 9){
-                    patchRiderMatch(riderMatchId, 9, matchRidersEdit.rider_9.points);
-                }
-            } else if(riderId === matchRidersEdit.rider_10.riderId){
-                if(points !== matchRidersEdit.rider_10.points || number !== 10){
-                    patchRiderMatch(riderMatchId, 10, matchRidersEdit.rider_10.points);
-                }
-            } else
-            if(riderId === matchRidersEdit.rider_11.riderId){
-                if(points !== matchRidersEdit.rider_11.points || number !== 11){
-                    patchRiderMatch(riderMatchId, 11, matchRidersEdit.rider_11.points);
-                }
-            } else
-            if(riderId === matchRidersEdit.rider_12.riderId){
-                if(points !== matchRidersEdit.rider_12.points || number !== 12){
-                    patchRiderMatch(riderMatchId, 12, matchRidersEdit.rider_12.points);
-                }
-            } else
-            if(riderId === matchRidersEdit.rider_13.riderId){
-                if(points !== matchRidersEdit.rider_13.points || number !== 13){
-                    patchRiderMatch(riderMatchId, 13, matchRidersEdit.rider_13.points);
-                }
-            } else
-            if(riderId === matchRidersEdit.rider_14.riderId){
-                if(points !== matchRidersEdit.rider_14.points || number !== 14){
-                    patchRiderMatch(riderMatchId, 14, matchRidersEdit.rider_14.points);
-                }
-            } else
-            if(riderId === matchRidersEdit.rider_15.riderId){
-                if(points !== matchRidersEdit.rider_15.points || number !== 15){
-                    patchRiderMatch(riderMatchId, 15, matchRidersEdit.rider_15.points);
-                }
-            } else
-            if(riderId === matchRidersEdit.rider_16.riderId){
-                if(points !== matchRidersEdit.rider_16.points || number !== 16){
-                    patchRiderMatch(riderMatchId, 16, matchRidersEdit.rider_16.points);
-                }
-            }
+            deleteRiderMatch(riderMatchId);
         }
-        deleteRiderMatch(riderMatchId);
     }
 
     const addNewRiderMatch = async (riderId, matchId, number, points) => {
@@ -1245,6 +1278,12 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
         checkIfChanged(matchRiders.rider_14.riderId, matchRiders.rider_14.matchRiderId, matchRiders.rider_14.riderNumber, matchRiders.rider_14.score);
         checkIfChanged(matchRiders.rider_15.riderId, matchRiders.rider_15.matchRiderId, matchRiders.rider_15.riderNumber, matchRiders.rider_15.score);
         checkIfChanged(matchRiders.rider_16.riderId, matchRiders.rider_16.matchRiderId, matchRiders.rider_16.riderNumber, matchRiders.rider_16.score);
+    
+        addNotification("Sukces", "Udało się edytować mecz", "success", 1000);
+        setTimeout(()=>{
+            handleCloseEdit();
+            window.location.reload(false);
+        }, 1000)
     }
 
     const checkDate = async () => {

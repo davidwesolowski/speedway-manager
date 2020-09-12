@@ -51,7 +51,6 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
     const getMatchesOfRound = async (roundId) => {
         //pobieranie konkretnej kolejki meczów
         //temp pobranie wszystkich meczów
-        console.log(roundId)
         try {
             const accessToken = getToken();
             const options = {
@@ -65,7 +64,6 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
             );
             setMatches([]);
             setMatches(data);
-            console.log(data)
         } catch (e) {
             console.log(e.response);
             if (e.response.statusText == 'Unauthorized') {
