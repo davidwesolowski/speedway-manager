@@ -16,7 +16,8 @@ import {
 	FaUserPlus,
 	FaUserFriends,
 	FaUserClock,
-	FaUserCheck
+	FaUserCheck,
+	FaUserTimes
 } from 'react-icons/fa';
 import getToken from '../utils/getToken';
 import { useStateValue } from './AppProvider';
@@ -28,12 +29,14 @@ interface IProps {
 	users: IUsers[];
 	handleFetchTeamRiders?: (teamId: string) => Promise<void>;
 	handleAcceptInvitation?: (userId: string) => Promise<void>;
+	handleRemoveFriendOrInvitation?: (userId: string) => Promise<void>;
 }
 
 const UsersList: FunctionComponent<IProps> = ({
 	users,
 	handleFetchTeamRiders,
-	handleAcceptInvitation
+	handleAcceptInvitation,
+	handleRemoveFriendOrInvitation
 }) => {
 	const [pendingSentInvitations, setPendingSentInvitations] = useState([]);
 	const [
@@ -108,7 +111,6 @@ const UsersList: FunctionComponent<IProps> = ({
 				`https://fantasy-league-eti.herokuapp.com/friendlist/pendingInvitations/${userData._id}`,
 				options
 			);
-
 			setPendingSentInvitations(sentInvitations);
 			setMyFriends(friends);
 			setPendingReceivedInvitations(receivedInvitations);
@@ -175,19 +177,34 @@ const UsersList: FunctionComponent<IProps> = ({
 					<TableCell align="center">
 						{user.teamName || 'BRAK'}
 					</TableCell>
-					<TableCell align="center">
-						<IconButton
-							disabled={!user.teamId}
-							onClick={() => handleFetchTeamRiders(user.teamId)}
-						>
-							<FiArrowRightCircle className="users__iconButton" />
-						</IconButton>
-					</TableCell>
+					{handleFetchTeamRiders ? (
+						<TableCell align="center">
+							<IconButton
+								disabled={!user.teamId}
+								onClick={() =>
+									handleFetchTeamRiders(user.teamId)
+								}
+							>
+								<FiArrowRightCircle className="users__iconButton" />
+							</IconButton>
+						</TableCell>
+					) : null}
 					<TableCell align="center">
 						{handleFetchTeamRiders
 							? usersIcons(user)
 							: friendsIcons(user)}
 					</TableCell>
+					{!handleFetchTeamRiders ? (
+						<TableCell align="center">
+							<IconButton
+								onClick={() =>
+									handleRemoveFriendOrInvitation(user._id)
+								}
+							>
+								<FaUserTimes className="users__remove" />
+							</IconButton>
+						</TableCell>
+					) : null}
 				</TableRow>
 			))}
 		</>
@@ -210,10 +227,15 @@ const UsersList: FunctionComponent<IProps> = ({
 						<TableCell />
 						<TableCell align="center">Nazwa użytkownika</TableCell>
 						<TableCell align="center">Nazwa drużyny</TableCell>
-						<TableCell align="center">Sprawdź skład</TableCell>
+						{handleFetchTeamRiders ? (
+							<TableCell align="center">Sprawdź skład</TableCell>
+						) : null}
 						<TableCell align="center">
 							{handleFetchTeamRiders ? 'Dodaj' : 'Status'}
 						</TableCell>
+						{!handleFetchTeamRiders ? (
+							<TableCell align="center">Usuń</TableCell>
+						) : null}
 					</TableRow>
 				</TableHead>
 				<TableBody>{users.length > 0 ? isFound : notFound}</TableBody>

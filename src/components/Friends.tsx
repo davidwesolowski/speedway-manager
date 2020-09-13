@@ -22,6 +22,39 @@ const Friends: FunctionComponent<RouteProps> = () => {
 	const { setLoggedIn, dispatchUserData, userData } = useStateValue();
 	const { push } = useHistory();
 
+	const handleRemoveFriendOrInvitation = async (userId: string) => {
+		const accessToken = getToken();
+		const options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
+			}
+		};
+		const { data } = await axios.get(
+			`https://fantasy-league-eti.herokuapp.com/friendlist/myFriends/${userData._id}`,
+			options
+		);
+		const isMyFriend = data.find(
+			friend => friend.senderId === userId || friend.invitedId === userId
+		);
+		let invitationId;
+		if (isMyFriend) {
+			invitationId = isMyFriend._id;
+		} else {
+			const { data: invitations } = await axios.get(
+				`https://fantasy-league-eti.herokuapp.com/friendlist/myInvitations/${userId}`,
+				options
+			);
+			invitationId = invitations.find(
+				invitation => invitation.invitedId === userData._id
+			)._id;
+		}
+		await axios.delete(
+			`https://fantasy-league-eti.herokuapp.com/friendlist/${invitationId}`,
+			options
+		);
+		setFriends(friends.filter(friend => friend._id !== userId));
+	};
+
 	const handleAcceptInvitation = async (userId: string) => {
 		try {
 			const accessToken = getToken();
@@ -199,6 +232,9 @@ const Friends: FunctionComponent<RouteProps> = () => {
 					<UsersList
 						users={friends}
 						handleAcceptInvitation={handleAcceptInvitation}
+						handleRemoveFriendOrInvitation={
+							handleRemoveFriendOrInvitation
+						}
 					/>
 				</CSSTransition>
 			</Paper>

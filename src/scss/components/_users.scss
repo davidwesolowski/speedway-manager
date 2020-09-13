@@ -71,6 +71,11 @@
 		font-size: 3rem !important;
 	}
 
+	&__remove {
+		color: red;
+		font-size: 3rem !important;
+	}
+
 	.MuiTableCell-head {
 		background-color: $color-primary !important;
 		color: #fff !important;
