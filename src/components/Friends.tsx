@@ -22,7 +22,7 @@ const Friends: FunctionComponent<RouteProps> = () => {
 	const { setLoggedIn, dispatchUserData, userData } = useStateValue();
 	const { push } = useHistory();
 
-	const handleAcceptInvitation = async userId => {
+	const handleAcceptInvitation = async (userId: string) => {
 		try {
 			const accessToken = getToken();
 			const options = {

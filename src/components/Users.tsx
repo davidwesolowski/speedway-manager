@@ -63,6 +63,29 @@ const Users: FunctionComponent<RouteProps> = () => {
 
 	const handleCloseRiders = () => setUserTeamRiders([]);
 
+	const handleAcceptInvitation = async (userId: string) => {
+		const accessToken = getToken();
+		const options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
+			}
+		};
+		const { data } = await axios.get(
+			`https://fantasy-league-eti.herokuapp.com/friendlist/pendingInvitations/${userData._id}`,
+			options
+		);
+		const invitation = data.find(
+			invitation => invitation.senderId == userId
+		);
+		if (invitation) {
+			await axios.patch(
+				`https://fantasy-league-eti.herokuapp.com/friendlist/${invitation._id}`,
+				{},
+				options
+			);
+		}
+	};
+
 	const handleFetchTeamRiders = async (teamId: string) => {
 		const accessToken = getToken();
 		const options = {
@@ -268,6 +291,7 @@ const Users: FunctionComponent<RouteProps> = () => {
 							<UsersList
 								users={filterUsers(users)}
 								handleFetchTeamRiders={handleFetchTeamRiders}
+								handleAcceptInvitation={handleAcceptInvitation}
 							/>
 						</Grid>
 					</CSSTransition>

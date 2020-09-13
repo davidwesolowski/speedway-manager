@@ -36,6 +36,10 @@ const UsersList: FunctionComponent<IProps> = ({
 	handleAcceptInvitation
 }) => {
 	const [pendingSentInvitations, setPendingSentInvitations] = useState([]);
+	const [
+		pendingReceivedInvitations,
+		setPendingReceivedInvitations
+	] = useState([]);
 	const [myFriends, setMyFriends] = useState([]);
 	const { userData, setLoggedIn } = useStateValue();
 	const { push } = useHistory();
@@ -100,8 +104,14 @@ const UsersList: FunctionComponent<IProps> = ({
 				`https://fantasy-league-eti.herokuapp.com/friendlist/myFriends/${userData._id}`,
 				options
 			);
+			const { data: receivedInvitations } = await axios.get(
+				`https://fantasy-league-eti.herokuapp.com/friendlist/pendingInvitations/${userData._id}`,
+				options
+			);
+
 			setPendingSentInvitations(sentInvitations);
 			setMyFriends(friends);
+			setPendingReceivedInvitations(receivedInvitations);
 		} catch (e) {
 			const {
 				response: { data }
@@ -128,6 +138,17 @@ const UsersList: FunctionComponent<IProps> = ({
 				invitation => invitation.invitedId == user._id
 		  ) ? (
 			<FaUserClock className="users__iconButton" />
+		) : pendingReceivedInvitations.find(
+				invitation => invitation.senderId == user._id
+		  ) ? (
+			<IconButton
+				onClick={async () => {
+					await handleAcceptInvitation(user._id);
+					await fetchMyFriendsAndInvitations();
+				}}
+			>
+				<FaUserCheck className="users__accept" />
+			</IconButton>
 		) : (
 			<IconButton onClick={() => sendInvitation(user._id)}>
 				<FaUserPlus className="users__iconButton" />
