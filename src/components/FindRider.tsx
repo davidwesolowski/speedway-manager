@@ -35,38 +35,33 @@ interface ISelect {
 const FindRider: FunctionComponent<RouteComponentProps> = ({
 	history: { push }
 }) => {
+	const { setLoggedIn, dispatchUserData, userData } = useStateValue();
 
-	const {
-        setLoggedIn,
-		dispatchUserData,
-		userData,
-    } = useStateValue();
-    
-    const fetchUserData = async () => {
-        const accessToken = getToken();
+	const fetchUserData = async () => {
+		const accessToken = getToken();
 		const options = {
 			headers: {
 				Authorization: `Bearer ${accessToken}`
 			}
 		};
-        try {
-            const {
-                data: { username, email, avatarUrl }
-            } = await axios.get(
-                'https://fantasy-league-eti.herokuapp.com/users/self',
-                options
-            );
-            dispatchUserData(setUser({ username, email, avatarUrl }));
-            setLoggedIn(true);
-        } catch (e) {
-            /*const {
+		try {
+			const {
+				data: { _id, username, email, avatarUrl }
+			} = await axios.get(
+				'https://fantasy-league-eti.herokuapp.com/users/self',
+				options
+			);
+			dispatchUserData(setUser({ _id, username, email, avatarUrl }));
+			setLoggedIn(true);
+		} catch (e) {
+			/*const {
                 response: { data }
             } = e;
             if (data.statusCode == 401) {
                 checkBadAuthorization(setLoggedIn, push);
             }*/
-        }
-    };
+		}
+	};
 	const [riders, setRiders] = useState([]);
 	const [phrase, setPhrase] = useState<string>('');
 	const [selects, setSelects] = useState<ISelect>({
@@ -175,11 +170,7 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	const ifJunior = date => {
-		if (
-			new Date().getFullYear() -
-				new Date(date).getFullYear() <
-			22
-		) {
+		if (new Date().getFullYear() - new Date(date).getFullYear() < 22) {
 			return <FiPlus className="YesPlus"></FiPlus>;
 		} else {
 			return <FiX className="NoX"></FiX>;
@@ -295,14 +286,14 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
-	const findClubName = (clubId) => {
+	const findClubName = clubId => {
 		const found = clubs.find(club => club.id == clubId);
-		if(found){
-			return found.name
+		if (found) {
+			return found.name;
 		} else {
-			return ''
+			return '';
 		}
-	}
+	};
 
 	const renderTableData = () => {
 		useEffect(() => {
@@ -344,8 +335,8 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 							}).format(new Date(dateOfBirth))}
 						</td>
 						<td>{ksm}</td>
-						<td>{ifForeigner( isForeigner )}</td>
-						<td>{ifJunior( dateOfBirth )}</td>
+						<td>{ifForeigner(isForeigner)}</td>
+						<td>{ifJunior(dateOfBirth)}</td>
 						<td>{findClubName(clubId)}</td>
 					</tr>
 				);
@@ -382,8 +373,8 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 							}).format(new Date(dateOfBirth))}
 						</td>
 						<td>{ksm}</td>
-						<td>{ifForeigner( isForeigner )}</td>
-						<td>{ifJunior( dateOfBirth )}</td>
+						<td>{ifForeigner(isForeigner)}</td>
+						<td>{ifJunior(dateOfBirth)}</td>
 						<td>{findClubName(clubId)}</td>
 					</tr>
 				);
@@ -428,8 +419,8 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 								}).format(new Date(dateOfBirth))}
 							</td>
 							<td>{ksm}</td>
-							<td>{ifForeigner(foreigner )}</td>
-							<td>{ifJunior( dateOfBirth )}</td>
+							<td>{ifForeigner(foreigner)}</td>
+							<td>{ifJunior(dateOfBirth)}</td>
 							<td>{findClubName(clubId)}</td>
 						</tr>
 					);

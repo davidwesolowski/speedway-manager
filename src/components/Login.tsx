@@ -96,12 +96,12 @@ const Login: FunctionComponent<RouteComponentProps> = ({
 				}
 			};
 			const {
-				data: { username, email, avatarUrl }
+				data: { _id, username, email, avatarUrl }
 			} = await axios.get(
 				'https://fantasy-league-eti.herokuapp.com/users/self',
 				options
 			);
-			dispatchUserData(setUser({ username, email, avatarUrl }));
+			dispatchUserData(setUser({ _id, username, email, avatarUrl }));
 			const title = 'Sukces!';
 			const message = 'Zalogowano pomyślnie!';
 			const type = 'success';

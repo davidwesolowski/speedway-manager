@@ -84,47 +84,42 @@ interface IValidatedData {
 		error: boolean;
 	};
 	clubId: {
-        message: string;
-        error: boolean;
-    };
+		message: string;
+		error: boolean;
+	};
 }
 
 const Riders: FunctionComponent<RouteComponentProps> = ({
 	history: { push }
 }) => {
+	const { setLoggedIn, dispatchUserData, userData } = useStateValue();
 
-	const {
-        setLoggedIn,
-		dispatchUserData,
-		userData,
-    } = useStateValue();
-    
-    const fetchUserData = async () => {
-        const accessToken = getToken();
+	const fetchUserData = async () => {
+		const accessToken = getToken();
 		const options = {
 			headers: {
 				Authorization: `Bearer ${accessToken}`
 			}
 		};
-        try {
-            const {
-                data: { username, email, avatarUrl }
-            } = await axios.get(
-                'https://fantasy-league-eti.herokuapp.com/users/self',
-                options
-            );
-            dispatchUserData(setUser({ username, email, avatarUrl }));
-            setLoggedIn(true);
-        } catch (e) {
-            /*const {
+		try {
+			const {
+				data: { _id, username, email, avatarUrl }
+			} = await axios.get(
+				'https://fantasy-league-eti.herokuapp.com/users/self',
+				options
+			);
+			dispatchUserData(setUser({ _id, username, email, avatarUrl }));
+			setLoggedIn(true);
+		} catch (e) {
+			/*const {
                 response: { data }
             } = e;
             if (data.statusCode == 401) {
                 checkBadAuthorization(setLoggedIn, push);
             }*/
-        }
+		}
 	};
-	
+
 	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
 
 	const defaultValidatedData = {
@@ -157,13 +152,13 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 			error: false
 		}
 	};
-	
+
 	const refreshPage = () => {
 		window.location.reload(false);
 	};
-	
-	const [clubs, setClubs] = useState([])
-	
+
+	const [clubs, setClubs] = useState([]);
+
 	const getClubs = async () => {
 		try {
 			const accessToken = getToken();
@@ -176,9 +171,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 				'https://fantasy-league-eti.herokuapp.com/clubs',
 				options
 			);
-			setClubs(
-				data
-			);
+			setClubs(data);
 		} catch (e) {
 			console.log(e.response);
 			if (e.response.statusText == 'Unauthorized') {
@@ -196,8 +189,8 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 			}
 			throw new Error('Error in getting clubs');
 		}
-	}
-	
+	};
+
 	const defaultRiderData = {
 		firstName: '',
 		lastName: '',
@@ -207,7 +200,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		KSM: 2.5,
 		clubId: ''
 	};
-	
+
 	const [riderData, setRiderData] = useState<IRider>(defaultRiderData);
 	const [validatedData, setValidatedData] = useState<IValidatedData>(
 		defaultValidatedData
@@ -336,8 +329,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 	) => {
 		event.persist();
 		if (event.target) {
-			if(name === 'KSM')
-			{
+			if (name === 'KSM') {
 				setTempKSM(event.target.value);
 				setRiderData((prevState: IRider) => ({
 					...prevState,
@@ -370,19 +362,17 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		}));
 	};
 
-	const handleOnChangeClub = (name: string) => (
-        event
-    ) => {
+	const handleOnChangeClub = (name: string) => event => {
 		event.persist();
-		console.log("Zmiana klubu");
+		console.log('Zmiana klubu');
 		console.log(event.target.value);
-        if (event.target) {
-            setRiderData((prevState: IRider) => ({
-                ...prevState,
-                [name]: event.target.value
-            }));
-        }
-    };
+		if (event.target) {
+			setRiderData((prevState: IRider) => ({
+				...prevState,
+				[name]: event.target.value
+			}));
+		}
+	};
 
 	/*const addRiders = async (riderData: IRider1) => {
         try {
@@ -555,17 +545,22 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
         exampleRiders.map(rider => addRiders(rider));
 	}, [])*/
 
-	const clubsData = [{
-		name: 'Fogo Unia Leszno'
-	},{
-		name: 'Apator Toruń'
-	},{
-		name: 'Betard Sparta Wrocław'
-	},{
-		name: 'Motor Lublin'
-	}];
+	const clubsData = [
+		{
+			name: 'Fogo Unia Leszno'
+		},
+		{
+			name: 'Apator Toruń'
+		},
+		{
+			name: 'Betard Sparta Wrocław'
+		},
+		{
+			name: 'Motor Lublin'
+		}
+	];
 
-	const addClubsTemp = async (club) => {
+	const addClubsTemp = async club => {
 		try {
 			const accessToken = getToken();
 			const options = {
@@ -578,12 +573,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 				club,
 				options
 			);
-			addNotification(
-				'Sukces',
-				'Poprawnie dodano klub',
-				'success',
-				1000
-			);
+			addNotification('Sukces', 'Poprawnie dodano klub', 'success', 1000);
 		} catch (e) {
 			if (e.statusText == 'Bad Request') {
 				addNotification(
@@ -608,7 +598,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 			}
 			throw new Error('Error in adding new rider!');
 		}
-	}
+	};
 
 	useEffect(() => {
 		getClubs();
@@ -619,7 +609,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		/*clubsData.map((club, index) => {
 			addClubsTemp(club);
 		})*/
-    }, [])
+	}, []);
 
 	return (
 		<>
@@ -734,10 +724,18 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 								</FormControl>
 								<FormControl className="dialog__form_field_club">
 									Klub:
-									<Select value={riderData.clubId || ''} onChange={handleOnChangeClub('clubId')}>
-											{clubs.map((club, index) => 
-												<MenuItem key={index} value={club._id}>{club.name}</MenuItem>
-											)}
+									<Select
+										value={riderData.clubId || ''}
+										onChange={handleOnChangeClub('clubId')}
+									>
+										{clubs.map((club, index) => (
+											<MenuItem
+												key={index}
+												value={club._id}
+											>
+												{club.name}
+											</MenuItem>
+										))}
 									</Select>
 								</FormControl>
 							</Grid>

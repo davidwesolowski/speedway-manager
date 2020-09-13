@@ -32,6 +32,7 @@ export interface IUsers {
 	teamId?: string;
 	teamName?: string;
 	teamLogo?: string;
+	invited?: boolean;
 }
 
 const Users: FunctionComponent<RouteProps> = () => {
@@ -61,6 +62,29 @@ const Users: FunctionComponent<RouteProps> = () => {
 	};
 
 	const handleCloseRiders = () => setUserTeamRiders([]);
+
+	const handleAcceptInvitation = async (userId: string) => {
+		const accessToken = getToken();
+		const options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
+			}
+		};
+		const { data } = await axios.get(
+			`https://fantasy-league-eti.herokuapp.com/friendlist/pendingInvitations/${userData._id}`,
+			options
+		);
+		const invitation = data.find(
+			invitation => invitation.senderId == userId
+		);
+		if (invitation) {
+			await axios.patch(
+				`https://fantasy-league-eti.herokuapp.com/friendlist/${invitation._id}`,
+				{},
+				options
+			);
+		}
+	};
 
 	const handleFetchTeamRiders = async (teamId: string) => {
 		const accessToken = getToken();
@@ -152,23 +176,31 @@ const Users: FunctionComponent<RouteProps> = () => {
 					options
 				);
 				const teams = await fetchTeams();
-				const userState = data.map(user => {
-					const team = teams.find(team => team.userId === user._id);
-					if (team) {
+				let _id = userData._id;
+				if (!userData.username) {
+					_id = await fetchUserData();
+				}
+				const userState = data
+					.filter(user => user._id !== _id)
+					.map(user => {
+						const team = teams.find(
+							team => team.userId === user._id
+						);
+						if (team) {
+							return {
+								...user,
+								teamName: team.name,
+								teamLogo: team.logoUrl,
+								teamId: team._id
+							};
+						}
 						return {
 							...user,
-							teamName: team.name,
-							teamLogo: team.logoUrl,
-							teamId: team._id
+							teamName: null,
+							teamLogo: null,
+							teamId: null
 						};
-					}
-					return {
-						...user,
-						teamName: null,
-						teamLogo: null,
-						teamId: null
-					};
-				});
+					});
 				setUsers(userState);
 			} catch (e) {
 				const {
@@ -183,22 +215,21 @@ const Users: FunctionComponent<RouteProps> = () => {
 		const fetchUserData = async () => {
 			try {
 				const {
-					data: { username, email, avatarUrl }
+					data: { _id, username, email, avatarUrl }
 				} = await axios.get(
 					'https://fantasy-league-eti.herokuapp.com/users/self',
 					options
 				);
-				dispatchUserData(setUser({ username, email, avatarUrl }));
+				dispatchUserData(setUser({ _id, username, email, avatarUrl }));
 				setLoggedIn(true);
+				return _id;
 			} catch (e) {
 				/**/
 			}
 		};
 
-		fetchUsers();
+		fetchUsers().then(() => setLoading(false));
 
-		if (!userData.username) fetchUserData();
-		setLoading(false);
 		setTimeout(() => {
 			document.body.style.overflow = 'auto';
 		}, 500);
@@ -260,6 +291,7 @@ const Users: FunctionComponent<RouteProps> = () => {
 							<UsersList
 								users={filterUsers(users)}
 								handleFetchTeamRiders={handleFetchTeamRiders}
+								handleAcceptInvitation={handleAcceptInvitation}
 							/>
 						</Grid>
 					</CSSTransition>

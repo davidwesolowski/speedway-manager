@@ -154,7 +154,7 @@ const SelfTeaching: FunctionComponent = () => {
 
 		setTimeout(() => {
 			document.body.style.overflow = 'auto';
-		}, 500);
+		}, 2000);
 	}, []);
 
 	return (
