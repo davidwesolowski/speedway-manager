@@ -12,6 +12,7 @@ import { ValidationErrorItem, string } from "@hapi/joi";
 import { setUser } from '../actions/userActions';
 import { useStateValue } from "./AppProvider";
 import validateMatchPointsData from "../validation/validateMatchPointsData";
+import { checkBadAuthorization } from "../validation/checkCookies";
 
 
 interface IRiderPoints{
@@ -175,12 +176,12 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
             dispatchUserData(setUser({ username, email, avatarUrl }));
             setLoggedIn(true);
         } catch (e) {
-            /*const {
+            const {
                 response: { data }
             } = e;
             if (data.statusCode == 401) {
                 checkBadAuthorization(setLoggedIn, push);
-            }*/
+            }
         }
     };
 
