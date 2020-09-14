@@ -23,12 +23,96 @@ import AddMatch from '../components/AddMatch';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import SelfTeaching from '../components/SelfTeaching';
 import Friends from '../components/Friends';
+import ListMatches from '../components/ListMatches';
 
 const AppRoute: FunctionComponent = () => {
 	return (
 		<Router>
 			<Header />
 			<Route path="*" component={RoutesAnimation} />
+			<Switch>
+				<Route path="/" exact component={WelcomePage} />
+				<Route
+					path="/login"
+					render={(props: RouteComponentProps) => {
+						const cookiesExist = checkCookies();
+						if (cookiesExist) return <Redirect to="/druzyna" />;
+						else return <Login {...props} />;
+					}}
+				/>
+				<Route
+					path="/konto"
+					render={(props: RouteComponentProps) => {
+						const cookiesExist = checkCookies();
+						if (cookiesExist) return <Account {...props} />;
+						else return <Redirect to="/login" />;
+					}}
+				/>
+				<Route
+					path="/rejestracja"
+					render={(props: RouteComponentProps) => {
+						const cookiesExist = checkCookies();
+						if (cookiesExist) return <Redirect to="/druzyna" />;
+						else return <Register {...props} />;
+					}}
+				/>
+				<Route
+					path="/druzyna"
+					render={(props: RouteComponentProps) => {
+						const cookiesExist = checkCookies();
+						if (cookiesExist) return <Team {...props} />;
+						else return <Redirect to="/login" />;
+					}}
+				/>
+				<Route
+					path="/zawodnicy"
+					render={(props: RouteComponentProps) => {
+						const cookiesExist = checkCookies();
+						if (cookiesExist) return <Riders {...props} />;
+						else return <Redirect to="/login" />;
+					}}
+				/>
+				<Route
+					path="/szukaj"
+					render={(props: RouteComponentProps) => {
+						const cookiesExist = checkCookies();
+						if (cookiesExist) return <FindRider {...props} />;
+						else return <Redirect to="/login" />;
+					}}
+				/>
+				<Route
+					path="/dodaj-druzyna"
+					render={(props: RouteComponentProps) => {
+						const cookiesExist = checkCookies();
+						if (cookiesExist) return <AddRiderToTeam {...props} />;
+						else return <Redirect to="/login" />;
+					}}
+				/>
+				<Route
+					path="/uzytkownicy"
+					render={(props: RouteComponentProps) => {
+						const cookiesExist = checkCookies();
+						if (cookiesExist) return <Users {...props} />;
+						else return <Redirect to="/login" />;
+					}}
+				/>
+				<Route
+					path="/dodaj-mecz"
+					render={(props: RouteComponentProps) => {
+						const cookiesExist = checkCookies();
+						if(cookiesExist) return <AddMatch {...props} />;
+						else return <Redirect to="/login" />;
+					}}
+				/>
+				<Route
+					path="/mecze"
+					render={(props: RouteComponentProps) => {
+						const cookiesExist = checkCookies();
+						if(cookiesExist) return <ListMatches {...props} />;
+						else return <Redirect to="/login" />;
+					}}
+				/>
+			</Switch>
 			<Footer />
 		</Router>
 	);

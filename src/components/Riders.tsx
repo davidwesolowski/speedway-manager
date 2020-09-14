@@ -746,6 +746,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 									style={{ display: 'none' }}
 									onChange={handleImgFile(setImageData)}
 									id="id-file"
+									required
 								/>
 								<label htmlFor="id-file">
 									<div className="dialog__avatar-img-box">

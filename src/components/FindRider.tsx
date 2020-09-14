@@ -12,9 +12,9 @@ import {
 } from '@material-ui/core';
 import addNotification from '../utils/addNotification';
 import { FiX, FiPlus } from 'react-icons/fi';
-import getToken from '../utils/getToken';
 import { useStateValue } from './AppProvider';
 import { setUser } from '../actions/userActions';
+import getToken from '../utils/getToken';
 
 interface IRider {
 	id: string;

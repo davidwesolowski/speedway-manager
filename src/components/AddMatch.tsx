@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { Paper, Typography, Divider, Button, InputLabel, MenuItem, Select, TextField, Dialog, DialogTitle, IconButton, DialogContent, Grid, FormControl } from "@material-ui/core";
+import { Paper, Typography, Divider, Button, InputLabel, MenuItem, Select, TextField, Dialog, DialogTitle, IconButton, DialogContent, Grid, FormControl, Checkbox } from "@material-ui/core";
 import { FiX } from "react-icons/fi";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
@@ -11,6 +11,8 @@ import validateRoundData from "../validation/validateRoundData";
 import { ValidationErrorItem, string } from "@hapi/joi";
 import { setUser } from '../actions/userActions';
 import { useStateValue } from "./AppProvider";
+import validateMatchPointsData from "../validation/validateMatchPointsData";
+import { checkBadAuthorization } from "../validation/checkCookies";
 
 
 interface IRiderPoints{
@@ -174,12 +176,12 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
             dispatchUserData(setUser({ _id, username, email, avatarUrl }));
             setLoggedIn(true);
         } catch (e) {
-            /*const {
+            const {
                 response: { data }
             } = e;
             if (data.statusCode == 401) {
                 checkBadAuthorization(setLoggedIn, push);
-            }*/
+            }
         }
     };
 
@@ -220,6 +222,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
     const [clubs, setClubs] = useState([])
     const [riders, setRiders] = useState([])
     const [dataToValidation, setDataToValidation] = useState<ITeamPointsToValidate>(defaultTeamPointsToValidate)
+    const [matchDate, setMatchDate] = useState<Date>(new Date())
+    const [wasRidden, setWasRidden] = useState<boolean>(false)
+
+    const handleOnChangeCheckbox = event => {
+		event.persist();
+		if (event.target) {
+            setWasRidden(event.target.checked)
+		}
+	};
 
     const getRiders = async () => {
 		try {
@@ -459,7 +470,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
         setRoundCreate(defaultRoundCreate);
     }
 
-    const [number, setNumber] = useState<number>(0)
+    const [number, setNumber] = useState<string>('')
 
     const handleOnChangeSelectClub = (homeAway: string) => (event) => {
         event.persist();
@@ -621,49 +632,49 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                     case 1:
                         setHome((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: home.rider_1._id ,points: event.target.value}
+                            [rider]: {_id: home.rider_1._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 2:
                         setHome((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: home.rider_2._id ,points: event.target.value}
+                            [rider]: {_id: home.rider_2._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 3:
                         setHome((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: home.rider_3._id ,points: event.target.value}
+                            [rider]: {_id: home.rider_3._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 4:
                         setHome((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: home.rider_4._id ,points: event.target.value}
+                            [rider]: {_id: home.rider_4._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 5:
                         setHome((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: home.rider_5._id ,points: event.target.value}
+                            [rider]: {_id: home.rider_5._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 6:
                         setHome((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: home.rider_6._id ,points: event.target.value}
+                            [rider]: {_id: home.rider_6._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 7:
                         setHome((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: home.rider_7._id ,points: event.target.value}
+                            [rider]: {_id: home.rider_7._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 8:
                         setHome((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: home.rider_8._id ,points: event.target.value}
+                            [rider]: {_id: home.rider_8._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     default:
@@ -675,49 +686,49 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                     case 1:
                         setAway((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: away.rider_1._id ,points: event.target.value}
+                            [rider]: {_id: away.rider_1._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 2:
                         setAway((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: away.rider_2._id ,points: event.target.value}
+                            [rider]: {_id: away.rider_2._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 3:
                         setAway((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: away.rider_3._id ,points: event.target.value}
+                            [rider]: {_id: away.rider_3._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 4:
                         setAway((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: away.rider_4._id ,points: event.target.value}
+                            [rider]: {_id: away.rider_4._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 5:
                         setAway((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: away.rider_5._id ,points: event.target.value}
+                            [rider]: {_id: away.rider_5._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 6:
                         setAway((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: away.rider_6._id ,points: event.target.value}
+                            [rider]: {_id: away.rider_6._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 7:
                         setAway((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: away.rider_7._id ,points: event.target.value}
+                            [rider]: {_id: away.rider_7._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     case 8:
                         setAway((prevState: ITeamPoints) => ({
                             ...prevState,
-                            [rider]: {_id: away.rider_8._id ,points: event.target.value}
+                            [rider]: {_id: away.rider_8._id ,points: parseInt(event.target.value)}
                         }));
                         break;
                     default:
@@ -761,6 +772,10 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
         }));
     };
 
+    const handleMatchDateOnChange = date => {
+        setMatchDate(date);
+    }
+
     const handleOnSubmitRound = (event: React.FormEvent) => {
         event.preventDefault();
         const validationResponse = validateRoundData(roundCreate);
@@ -790,7 +805,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 
     const generateRounds = () => {
         return rounds.map((round, index) => {
-            return <MenuItem key={index} value={round.number.toString()}>Runda {round.number}</MenuItem>
+            return <MenuItem key={index} value={round._id}>Runda {round.number}</MenuItem>
         })
     }
 
@@ -808,9 +823,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                 options
             );
             addNotification("Sukces", "Poprawnie dodano rundę", "success", 2000);
-            /*setRounds(rounds.concat({
-                roundCreate
-            }))*/
             setTimeout(() => {
                 window.location.reload(false);
             }, 2000);
@@ -847,15 +859,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                 options
             );
             setRounds([]);
-            /*data.map((round, index) => {
-                setRounds(
-                    rounds.concat({
-                        startDate: round.startDate,
-                        endDate: round.endDate,
-                        number: round.number
-                    })
-                );
-            });*/
             setRounds(data);
         } catch (e) {
             console.log(e.response);
@@ -897,7 +900,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
     }
 
     const isU23 = date => {
-        console.log(new Date().getFullYear() - new Date(date).getFullYear() < 24)
         if(new Date().getFullYear() - new Date(date).getFullYear() < 24){
             return true
         } else {
@@ -1004,6 +1006,327 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
         }
     }
 
+    const selectRidersFields = () => {
+        if(wasRidden){
+            return(
+                <>
+                    <div className="add-match__away-div">
+                        AWAY
+                        <br/>
+                        <Select className="add-match__team-select" value={away.team_id || ''} onChange={handleOnChangeSelectClub('away')}> 
+                            {selectClubs('away')}
+                        </Select>
+                        <br/>
+                        <div className="add-match__rider-div">
+                            1.
+                            <Select className="add-match__rider-select" value={away.rider_1._id || ''} onChange={handleOnChangeSelectRider('rider_1', 'away')}>
+                                <MenuItem key='' value=''>Brak zawodnika</MenuItem>
+                                {selectRiders(away.team_id, 1, 'away')}
+                            </Select>
+                            <TextField className="add-match__rider-points" value={away.rider_1.points || ''} onChange={handleOnChangePoints('rider_1', 'away')}/>
+                        </div>
+                        <div className="add-match__rider-div">
+                            2.
+                            <Select className="add-match__rider-select" value={away.rider_2._id || ''} onChange={handleOnChangeSelectRider('rider_2', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
+                            {selectRiders(away.team_id, 2, 'away')}
+                            </Select>
+                            <TextField className="add-match__rider-points" value={away.rider_2.points || ''} onChange={handleOnChangePoints('rider_2', 'away')}/>
+                        </div>
+                        <div className="add-match__rider-div">
+                            3.
+                            <Select className="add-match__rider-select" value={away.rider_3._id || ''} onChange={handleOnChangeSelectRider('rider_3', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
+                            {selectRiders(away.team_id, 3, 'away')}
+                            </Select>
+                            <TextField className="add-match__rider-points" value={away.rider_3.points || ''} onChange={handleOnChangePoints('rider_3', 'away')}/>
+                        </div>
+                        <div className="add-match__rider-div">
+                            4.
+                            <Select className="add-match__rider-select" value={away.rider_4._id || ''} onChange={handleOnChangeSelectRider('rider_4', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
+                            {selectRiders(away.team_id, 4, 'away')}
+                            </Select>
+                            <TextField className="add-match__rider-points" value={away.rider_4.points || ''} onChange={handleOnChangePoints('rider_4', 'away')}/>
+                        </div>
+                        <div className="add-match__rider-div">
+                            5.
+                            <Select className="add-match__rider-select" value={away.rider_5._id || ''} onChange={handleOnChangeSelectRider('rider_5', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
+                            {selectRiders(away.team_id, 5, 'away')}
+                            </Select>
+                            <TextField className="add-match__rider-points" value={away.rider_5.points || ''} onChange={handleOnChangePoints('rider_5', 'away')}/>
+                        </div>
+                        <div className="add-match__rider-div">
+                            6.
+                            <Select className="add-match__rider-select" value={away.rider_6._id || ''} onChange={handleOnChangeSelectRider('rider_6', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
+                            {selectRiders(away.team_id, 6, 'away')}
+                            </Select>
+                            <TextField className="add-match__rider-points" value={away.rider_6.points || ''} onChange={handleOnChangePoints('rider_6', 'away')}/>
+                        </div>
+                        <div className="add-match__rider-div">
+                            7.
+                            <Select className="add-match__rider-select" value={away.rider_7._id || ''} onChange={handleOnChangeSelectRider('rider_7', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
+                            {selectRiders(away.team_id, 7, 'away')}
+                            </Select>
+                            <TextField className="add-match__rider-points" value={away.rider_7.points || ''} onChange={handleOnChangePoints('rider_7', 'away')}/>
+                        </div>
+                        <div className="add-match__rider-div">
+                            8.
+                            <Select className="add-match__rider-select" value={away.rider_8._id || ''} onChange={handleOnChangeSelectRider('rider_8', 'away')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
+                            {selectRiders(away.team_id, 8, 'away')}
+                            </Select>
+                            <TextField className="add-match__rider-points" value={away.rider_8.points || ''} onChange={handleOnChangePoints('rider_8', 'away')}/>
+                        </div>
+                    </div>
+                    <div className="add-match__home-div">
+                        HOME
+                        <br/>
+                        <Select className="add-match__team-select" value={home.team_id} onChange={handleOnChangeSelectClub('home')}>
+                            {selectClubs('home')}
+                        </Select>
+                        <br/>
+                        <div className="add-match__rider-div">
+                            9.
+                            <Select className="add-match__rider-select" value={home.rider_1._id || ''} onChange={handleOnChangeSelectRider('rider_1', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
+                            {selectRiders(home.team_id, 1, 'home')}
+                            </Select>
+                            <TextField className="add-match__rider-points" value={home.rider_1.points || ''} onChange={handleOnChangePoints('rider_1', 'home')}/>
+                        </div>
+                        <div className="add-match__rider-div">
+                            10.
+                            <Select className="add-match__rider-select" value={home.rider_2._id || ''} onChange={handleOnChangeSelectRider('rider_2', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
+                            {selectRiders(home.team_id, 2, 'home')}
+                            </Select>
+                            <TextField className="add-match__rider-points" value={home.rider_2.points || ''} onChange={handleOnChangePoints('rider_2', 'home')}/>
+                        </div>
+                        <div className="add-match__rider-div">
+                            11.
+                            <Select className="add-match__rider-select" value={home.rider_3._id || ''} onChange={handleOnChangeSelectRider('rider_3', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
+                            {selectRiders(home.team_id, 3, 'home')}
+                            </Select>
+                            <TextField className="add-match__rider-points" value={home.rider_3.points || ''} onChange={handleOnChangePoints('rider_3', 'home')}/>
+                        </div>
+                        <div className="add-match__rider-div">
+                            12.
+                            <Select className="add-match__rider-select" value={home.rider_4._id || ''} onChange={handleOnChangeSelectRider('rider_4', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
+                            {selectRiders(home.team_id, 4, 'home')}
+                            </Select>
+                            <TextField className="add-match__rider-points" value={home.rider_4.points || ''} onChange={handleOnChangePoints('rider_4', 'home')}/>
+                        </div>
+                        <div className="add-match__rider-div">
+                            13.
+                            <Select className="add-match__rider-select" value={home.rider_5._id || ''} onChange={handleOnChangeSelectRider('rider_5', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
+                            {selectRiders(home.team_id, 5, 'home')}
+                            </Select>
+                            <TextField className="add-match__rider-points" value={home.rider_5.points || ''} onChange={handleOnChangePoints('rider_5', 'home')}/>
+                        </div>
+                        <div className="add-match__rider-div">
+                            14.
+                            <Select className="add-match__rider-select" value={home.rider_6._id || ''} onChange={handleOnChangeSelectRider('rider_6', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
+                            {selectRiders(home.team_id, 6, 'home')}
+                            </Select>
+                            <TextField className="add-match__rider-points" value={home.rider_6.points || ''} onChange={handleOnChangePoints('rider_6', 'home')}/>
+                        </div>
+                        <div className="add-match__rider-div">
+                            15.
+                            <Select className="add-match__rider-select" value={home.rider_7._id || ''} onChange={handleOnChangeSelectRider('rider_7', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
+                            {selectRiders(home.team_id, 7, 'home')}
+                            </Select>
+                            <TextField className="add-match__rider-points" value={home.rider_7.points || ''} onChange={handleOnChangePoints('rider_7', 'home')}/>
+                        </div>
+                        <div className="add-match__rider-div">
+                            16.
+                            <Select className="add-match__rider-select" value={home.rider_8._id || ''} onChange={handleOnChangeSelectRider('rider_8', 'home')}>
+                            <MenuItem key='' value=''>Brak zawodnika</MenuItem>
+                            {selectRiders(home.team_id, 8, 'home')}
+                            </Select>
+                            <TextField className="add-match__rider-points" value={home.rider_8.points || ''} onChange={handleOnChangePoints('rider_8', 'home')}/>
+                        </div>
+                    </div>
+                    <br/>
+                    </>
+            )
+        } else {
+            return(
+                <>
+                    <div className="add-match__away-div">
+                        AWAY
+                        <br/>
+                        <Select className="add-match__team-select" value={away.team_id || ''} onChange={handleOnChangeSelectClub('away')}> 
+                            {selectClubs('away')}
+                        </Select>
+                        <br/>
+                    </div>
+                    <div className="add-match__home-div">
+                        HOME
+                        <br/>
+                        <Select className="add-match__team-select" value={home.team_id} onChange={handleOnChangeSelectClub('home')}>
+                            {selectClubs('home')}
+                        </Select>
+                        <br/>
+                    </div>
+                </>
+            )
+        }
+    }
+
+    const addMatch = async () => {
+        try {
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			const { data } = await axios.post(
+				'https://fantasy-league-eti.herokuapp.com/matches',
+				{
+                    roundId: number,
+                    homeId: home.team_id,
+                    awayId: away.team_id,
+                    date: matchDate,
+                    wasRidden: wasRidden
+                },
+				options
+            );
+			if(wasRidden){
+                addRiderToMatch(away.rider_1._id, data._id, away.rider_1.points, 1);
+                addRiderToMatch(away.rider_2._id, data._id, away.rider_2.points, 2);
+                addRiderToMatch(away.rider_3._id, data._id, away.rider_3.points, 3);
+                addRiderToMatch(away.rider_4._id, data._id, away.rider_4.points, 4);
+                addRiderToMatch(away.rider_5._id, data._id, away.rider_5.points, 5);
+                addRiderToMatch(away.rider_6._id, data._id, away.rider_6.points, 6);
+                addRiderToMatch(away.rider_7._id, data._id, away.rider_7.points, 7);
+                addRiderToMatch(away.rider_8._id, data._id, away.rider_8.points, 8);
+                addRiderToMatch(home.rider_1._id, data._id, home.rider_1.points, 9);
+                addRiderToMatch(home.rider_2._id, data._id, home.rider_2.points, 10);
+                addRiderToMatch(home.rider_3._id, data._id, home.rider_3.points, 11);
+                addRiderToMatch(home.rider_4._id, data._id, home.rider_4.points, 12);
+                addRiderToMatch(home.rider_5._id, data._id, home.rider_5.points, 13);
+                addRiderToMatch(home.rider_6._id, data._id, home.rider_6.points, 14);
+                addRiderToMatch(home.rider_7._id, data._id, home.rider_7.points, 15);
+                addRiderToMatch(home.rider_8._id, data._id, home.rider_8.points, 16);
+            }
+			addNotification(
+				'Sukces',
+				'Poprawnie dodano mecz',
+				'success',
+				1000
+			);
+			setTimeout(() => {
+				{
+					window.location.reload(false);
+				}
+			}, 1000);
+		} catch (e) {
+			console.log(e.response);
+			if (e.statusText == 'Bad Request') {
+				addNotification(
+					'Błąd!',
+					'Podany mecz już istnieje w bazie!',
+					'danger',
+					1000
+				);
+				setTimeout(() => {}, 1000);
+			} else if (e.statusText == 'Unauthorized') {
+				addNotification('Błąd!', 'Twoja sesja wygasła', 'danger', 1000);
+				setTimeout(() => {
+					push('/login');
+				}, 1000);
+			} else {
+				addNotification(
+					'Błąd!',
+					'Nie udało się dodać meczu!',
+					'danger',
+					1000
+				);
+			}
+			throw new Error('Error in adding new match!');
+		}
+    }
+
+    const addRiderToMatch = async (riderId, matchId, score, number) => {
+        if(riderId !== ''){
+            try {
+                const accessToken = getToken();
+                const options = {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                };
+                const { data } = await axios.post(
+                    `https://fantasy-league-eti.herokuapp.com/match-rider/${matchId}/riders/${riderId}`,
+                    {
+                        riderId: riderId,
+                        matchId: matchId,
+                        score: score,
+                        riderNumber: number
+                    },
+                    options
+                );
+            } catch (e) {
+                console.log(e.response);
+                if (e.statusText == 'Bad Request') {
+                    addNotification(
+                        'Błąd!',
+                        'Podane punkty zawodnika już istnieją w bazie!',
+                        'danger',
+                        1000
+                    );
+                    setTimeout(() => {}, 1000);
+                } else if (e.statusText == 'Unauthorized') {
+                    addNotification('Błąd!', 'Twoja sesja wygasła', 'danger', 1000);
+                    setTimeout(() => {
+                        push('/login');
+                    }, 1000);
+                } else {
+                    addNotification(
+                        'Błąd!',
+                        'Nie udało się dodać punktów zawodnika!',
+                        'danger',
+                        1000
+                    );
+                }
+                throw new Error('Error in adding new rider to match!');
+            }
+        }
+    }
+
+    const handleOnSubmit = () => {
+        setDataToValidationFunc();
+        const validationResponse = validateMatchPointsData(dataToValidation);
+        if(validationResponse.error){
+            setValidatedPoints(()=>defaultValidatedPoints);
+            validationResponse.error.details.forEach(
+                (errorItem: ValidationErrorItem): any => {
+                    console.log(errorItem.message);
+                    setValidatedPoints((prevState: IValidatedPoints) => {
+                        return {
+                            ...prevState,
+                            [errorItem.path[0]]: {
+                                message: errorItem.message,
+                                error: true
+                            }
+                        };
+                    });
+                }
+            );
+        } else {
+            addMatch()
+        }
+    }
+
     useEffect(() => {
         getRounds();
         getClubs();
@@ -1027,6 +1350,27 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                             <MenuItem value="New">Dodaj nową kolejkę</MenuItem>
                             {generateRounds()}
                         </Select>
+                        <br/>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <KeyboardDatePicker
+                                margin="normal"
+                                id="date-picker-dialog-1"
+                                format="dd/MM/yyyy"
+                                value={matchDate}
+                                onChange={handleMatchDateOnChange}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change date'
+                                }}
+                            />
+                        </MuiPickersUtilsProvider>
+                        <br/>
+                        <Typography variant="h5">Czy mecz został rozegrany?</Typography>
+                        <Checkbox
+                            onChange={handleOnChangeCheckbox}
+                            size="small"
+                            className="add-match__checkbox"
+                            title="Zaznacz jeśli mecz został rozegrany"
+                        />
                     </div>
                     <Dialog open={addRoundDialogOpen} onClose={handleClose} className="number-dialog">
                         <DialogTitle>
@@ -1100,136 +1444,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                         </DialogContent>
                     </Dialog>
                     <br/>
-                    <div className="add-match__away-div">
-                        AWAY
-                        <br/>
-                        <Select className="add-match__team-select" value={away.team_id || ''} onChange={handleOnChangeSelectClub('away')}> 
-                            {selectClubs('away')}
-                        </Select>
-                        <br/>
-                        <div className="add-match__rider-div">
-                            1.
-                            <Select className="add-match__rider-select" value={away.rider_1._id || ''} onChange={handleOnChangeSelectRider('rider_1', 'away')}>
-                                {selectRiders(away.team_id, 1, 'away')}
-                            </Select>
-                            <TextField className="add-match__rider-points" value={away.rider_1.points || ''} onChange={handleOnChangePoints('rider_1', 'away')}/>
-                        </div>
-                        <div className="add-match__rider-div">
-                            2.
-                            <Select className="add-match__rider-select" value={away.rider_2._id || ''} onChange={handleOnChangeSelectRider('rider_2', 'away')}>
-                            {selectRiders(away.team_id, 2, 'away')}
-                            </Select>
-                            <TextField className="add-match__rider-points" value={away.rider_2.points || ''} onChange={handleOnChangePoints('rider_2', 'away')}/>
-                        </div>
-                        <div className="add-match__rider-div">
-                            3.
-                            <Select className="add-match__rider-select" value={away.rider_3._id || ''} onChange={handleOnChangeSelectRider('rider_3', 'away')}>
-                            {selectRiders(away.team_id, 3, 'away')}
-                            </Select>
-                            <TextField className="add-match__rider-points" value={away.rider_3.points || ''} onChange={handleOnChangePoints('rider_3', 'away')}/>
-                        </div>
-                        <div className="add-match__rider-div">
-                            4.
-                            <Select className="add-match__rider-select" value={away.rider_4._id || ''} onChange={handleOnChangeSelectRider('rider_4', 'away')}>
-                            {selectRiders(away.team_id, 4, 'away')}
-                            </Select>
-                            <TextField className="add-match__rider-points" value={away.rider_4.points || ''} onChange={handleOnChangePoints('rider_4', 'away')}/>
-                        </div>
-                        <div className="add-match__rider-div">
-                            5.
-                            <Select className="add-match__rider-select" value={away.rider_5._id || ''} onChange={handleOnChangeSelectRider('rider_5', 'away')}>
-                            {selectRiders(away.team_id, 5, 'away')}
-                            </Select>
-                            <TextField className="add-match__rider-points" value={away.rider_5.points || ''} onChange={handleOnChangePoints('rider_5', 'away')}/>
-                        </div>
-                        <div className="add-match__rider-div">
-                            6.
-                            <Select className="add-match__rider-select" value={away.rider_6._id || ''} onChange={handleOnChangeSelectRider('rider_6', 'away')}>
-                            {selectRiders(away.team_id, 6, 'away')}
-                            </Select>
-                            <TextField className="add-match__rider-points" value={away.rider_6.points || ''} onChange={handleOnChangePoints('rider_6', 'away')}/>
-                        </div>
-                        <div className="add-match__rider-div">
-                            7.
-                            <Select className="add-match__rider-select" value={away.rider_7._id || ''} onChange={handleOnChangeSelectRider('rider_7', 'away')}>
-                            {selectRiders(away.team_id, 7, 'away')}
-                            </Select>
-                            <TextField className="add-match__rider-points" value={away.rider_7.points || ''} onChange={handleOnChangePoints('rider_7', 'away')}/>
-                        </div>
-                        <div className="add-match__rider-div">
-                            8.
-                            <Select className="add-match__rider-select" value={away.rider_8._id || ''} onChange={handleOnChangeSelectRider('rider_8', 'away')}>
-                            {selectRiders(away.team_id, 8, 'away')}
-                            </Select>
-                            <TextField className="add-match__rider-points" value={away.rider_8.points || ''} onChange={handleOnChangePoints('rider_8', 'away')}/>
-                        </div>
-                    </div>
-                    <div className="add-match__home-div">
-                        HOME
-                        <br/>
-                        <Select className="add-match__team-select" value={home.team_id} onChange={handleOnChangeSelectClub('home')}>
-                            {selectClubs('home')}
-                        </Select>
-                        <br/>
-                        <div className="add-match__rider-div">
-                            9.
-                            <Select className="add-match__rider-select" value={home.rider_1._id || ''} onChange={handleOnChangeSelectRider('rider_1', 'home')}>
-                            {selectRiders(away.team_id, 1, 'home')}
-                            </Select>
-                            <TextField className="add-match__rider-points" value={home.rider_1.points || ''} onChange={handleOnChangePoints('rider_1', 'home')}/>
-                        </div>
-                        <div className="add-match__rider-div">
-                            10.
-                            <Select className="add-match__rider-select" value={home.rider_2._id || ''} onChange={handleOnChangeSelectRider('rider_2', 'home')}>
-                            {selectRiders(away.team_id, 2, 'home')}
-                            </Select>
-                            <TextField className="add-match__rider-points" value={home.rider_2.points || ''} onChange={handleOnChangePoints('rider_2', 'home')}/>
-                        </div>
-                        <div className="add-match__rider-div">
-                            11.
-                            <Select className="add-match__rider-select" value={home.rider_3._id || ''} onChange={handleOnChangeSelectRider('rider_3', 'home')}>
-                            {selectRiders(away.team_id, 3, 'home')}
-                            </Select>
-                            <TextField className="add-match__rider-points" value={home.rider_3.points || ''} onChange={handleOnChangePoints('rider_3', 'home')}/>
-                        </div>
-                        <div className="add-match__rider-div">
-                            12.
-                            <Select className="add-match__rider-select" value={home.rider_4._id || ''} onChange={handleOnChangeSelectRider('rider_4', 'home')}>
-                            {selectRiders(away.team_id, 4, 'home')}
-                            </Select>
-                            <TextField className="add-match__rider-points" value={home.rider_4.points || ''} onChange={handleOnChangePoints('rider_4', 'home')}/>
-                        </div>
-                        <div className="add-match__rider-div">
-                            13.
-                            <Select className="add-match__rider-select" value={home.rider_5._id || ''} onChange={handleOnChangeSelectRider('rider_5', 'home')}>
-                            {selectRiders(away.team_id, 5, 'home')}
-                            </Select>
-                            <TextField className="add-match__rider-points" value={home.rider_5.points || ''} onChange={handleOnChangePoints('rider_5', 'home')}/>
-                        </div>
-                        <div className="add-match__rider-div">
-                            14.
-                            <Select className="add-match__rider-select" value={home.rider_6._id || ''} onChange={handleOnChangeSelectRider('rider_6', 'home')}>
-                            {selectRiders(away.team_id, 6, 'home')}
-                            </Select>
-                            <TextField className="add-match__rider-points" value={home.rider_6.points || ''} onChange={handleOnChangePoints('rider_6', 'home')}/>
-                        </div>
-                        <div className="add-match__rider-div">
-                            15.
-                            <Select className="add-match__rider-select" value={home.rider_7._id || ''} onChange={handleOnChangeSelectRider('rider_7', 'home')}>
-                            {selectRiders(away.team_id, 7, 'home')}
-                            </Select>
-                            <TextField className="add-match__rider-points" value={home.rider_7.points || ''} onChange={handleOnChangePoints('rider_7', 'home')}/>
-                        </div>
-                        <div className="add-match__rider-div">
-                            16.
-                            <Select className="add-match__rider-select" value={home.rider_8._id || ''} onChange={handleOnChangeSelectRider('rider_8', 'home')}>
-                            {selectRiders(away.team_id, 8, 'home')}
-                            </Select>
-                            <TextField className="add-match__rider-points" value={home.rider_8.points || ''} onChange={handleOnChangePoints('rider_8', 'home')}/>
-                        </div>
-                    </div>
-                    <br/>
-                    <Button className="add-match__submit-button">
+                    {selectRidersFields()}
+                    <Button className="add-match__submit-button" onClick={handleOnSubmit}>
                         Dodaj
                     </Button>
                 </Paper>
