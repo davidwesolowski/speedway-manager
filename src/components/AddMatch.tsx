@@ -12,7 +12,7 @@ import { ValidationErrorItem, string } from "@hapi/joi";
 import { setUser } from '../actions/userActions';
 import { useStateValue } from "./AppProvider";
 import validateMatchPointsData from "../validation/validateMatchPointsData";
-import { checkBadAuthorization } from "../validation/checkCookies";
+import { checkBadAuthorization } from "../utils/checkCookies";
 
 
 interface IRiderPoints{
@@ -168,12 +168,12 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 		};
         try {
             const {
-                data: { _id, username, email, avatarUrl }
+                data: { username, email, avatarUrl }
             } = await axios.get(
                 'https://fantasy-league-eti.herokuapp.com/users/self',
                 options
             );
-            dispatchUserData(setUser({ _id, username, email, avatarUrl }));
+            dispatchUserData(setUser({ username, email, avatarUrl }));
             setLoggedIn(true);
         } catch (e) {
             const {
