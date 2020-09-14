@@ -226,7 +226,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 
     const handleOnChangeCheckbox = event => {
 		event.persist();
-		console.log(!event.target.checked);
 		if (event.target) {
             setWasRidden(event.target.checked)
 		}
@@ -823,9 +822,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                 options
             );
             addNotification("Sukces", "Poprawnie dodano rundę", "success", 2000);
-            /*setRounds(rounds.concat({
-                roundCreate
-            }))*/
             setTimeout(() => {
                 window.location.reload(false);
             }, 2000);
@@ -862,15 +858,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                 options
             );
             setRounds([]);
-            /*data.map((round, index) => {
-                setRounds(
-                    rounds.concat({
-                        startDate: round.startDate,
-                        endDate: round.endDate,
-                        number: round.number
-                    })
-                );
-            });*/
             setRounds(data);
         } catch (e) {
             console.log(e.response);
@@ -912,7 +899,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
     }
 
     const isU23 = date => {
-        console.log(new Date().getFullYear() - new Date(date).getFullYear() < 24)
         if(new Date().getFullYear() - new Date(date).getFullYear() < 24){
             return true
         } else {
@@ -1213,7 +1199,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                 },
 				options
             );
-            console.log(wasRidden)
 			if(wasRidden){
                 addRiderToMatch(away.rider_1._id, data._id, away.rider_1.points, 1);
                 addRiderToMatch(away.rider_2._id, data._id, away.rider_2.points, 2);
@@ -1321,7 +1306,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
         setDataToValidationFunc();
         const validationResponse = validateMatchPointsData(dataToValidation);
         if(validationResponse.error){
-            console.log("ERROR");
             setValidatedPoints(()=>defaultValidatedPoints);
             validationResponse.error.details.forEach(
                 (errorItem: ValidationErrorItem): any => {

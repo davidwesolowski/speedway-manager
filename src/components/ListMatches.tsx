@@ -75,15 +75,6 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}
                 options
             );
             setRounds([]);
-            /*data.map((round, index) => {
-                setRounds(
-                    rounds.concat({
-                        startDate: round.startDate,
-                        endDate: round.endDate,
-                        number: round.number
-                    })
-                );
-            });*/
             setRounds(data);
         } catch (e) {
             console.log(e.response);
@@ -116,15 +107,7 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}
                 'https://fantasy-league-eti.herokuapp.com/riders',
                 options
             );
-            /*data.map((rider, index) => {
-                setRiders(
-                    riders.concat({
-                        riderId: rider._id,
-                        firstName: rider.firstName,
-                        lastName: rider.lastName
-                    })
-                )
-            })*/
+
             setRiders(data);
         } catch (e) {
             console.log(e.response);

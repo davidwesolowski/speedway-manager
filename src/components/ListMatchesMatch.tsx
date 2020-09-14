@@ -401,6 +401,18 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
         }
     }
 
+    const generateScore = () => {
+        if(wasRidden){
+            return(
+                <Typography variant="h3">{homeScore}:{awayScore}</Typography>
+            )
+        } else {
+            return(
+                <Typography variant="h5">{(new Date(date)).toLocaleDateString()}</Typography>
+            )
+        }
+    }
+
     const generateMatchDiv = () => {
         if(home && away){
             return(
@@ -419,7 +431,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                             <Typography variant="h4">{home.name}</Typography>
                         </div>
                         <div className="list-matches-match__score">
-                            <Typography variant="h3">55:35</Typography>
+                            {generateScore()}
                         </div>
                         <div className="list-matches-match__away">
                             <img
@@ -483,7 +495,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                             alt="club-logo"
                             className="scores-dialog__club-image"
                         />
-                        <div className="scores-dialog__club-score">WYNIK</div>
+                        <div className="scores-dialog__club-score">{awayScore}</div>
                         {generateRiderScoreDiv(matchRiders.rider_1.firstName, matchRiders.rider_1.lastName, matchRiders.rider_1.score, 1)}
                         {generateRiderScoreDiv(matchRiders.rider_2.firstName, matchRiders.rider_2.lastName, matchRiders.rider_2.score, 2)}
                         {generateRiderScoreDiv(matchRiders.rider_3.firstName, matchRiders.rider_3.lastName, matchRiders.rider_3.score, 3)}
@@ -507,7 +519,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                             alt="club-logo"
                             className="scores-dialog__club-image"
                         />
-                        <div className="scores-dialog__club-score">WYNIK</div>
+                        <div className="scores-dialog__club-score">{homeScore}</div>
                         {generateRiderScoreDiv(matchRiders.rider_9.firstName, matchRiders.rider_9.lastName, matchRiders.rider_9.score, 9)}
                         {generateRiderScoreDiv(matchRiders.rider_10.firstName, matchRiders.rider_10.lastName, matchRiders.rider_10.score, 10)}
                         {generateRiderScoreDiv(matchRiders.rider_11.firstName, matchRiders.rider_11.lastName, matchRiders.rider_11.score, 11)}
@@ -1306,7 +1318,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                     {date: matchDateEdit, wasRidden: wasRiddenEdit},
                     options
                 );
-                console.log(wasRidden)
             } catch (e) {
                 console.log(e.response);
                 if (e.response.statusText == 'Unauthorized') {

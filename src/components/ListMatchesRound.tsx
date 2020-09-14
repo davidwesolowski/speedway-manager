@@ -62,7 +62,6 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
                 `https://fantasy-league-eti.herokuapp.com/matches?roundId=${roundId}`,
                 options
             );
-            console.log(data);
             setMatches([]);
             setMatches(data);
         } catch (e) {
@@ -94,7 +93,6 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
         }
         else if(round !== 0){
             return matches.map((match, index) => {
-                console.log(match)
                 return(
                     <>
                     <ListMatchesMatch
@@ -102,8 +100,8 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
                         matchId={match._id}
                         homeId={match.homeId}
                         awayId={match.awayId}
-                        homeScore={tempHomeScore}
-                        awayScore={tempAwayScore}
+                        homeScore={match.homeScore}
+                        awayScore={match.awayScore}
                         riders={riders}
                         date={match.date}
                         wasRidden={match.wasRidden}
