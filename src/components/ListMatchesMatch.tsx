@@ -324,7 +324,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                     }
                 };
                 const { data } = await axios.get(
-                    `https://fantasy-league-eti.herokuapp.com/match-rider/${matchId}/riders`,
+                    `https://fantasy-league-eti.herokuapp.com/match/${matchId}/riders`,
                     options
                 );
                 data.map((rider, index) => {
@@ -1061,90 +1061,90 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
         
     }
 
-    const checkIfChanged = (riderId, riderMatchId, number, points) => {
+    const checkIfChanged = (riderId, matchId, number, points) => {
         if(riderId !== ''){
             if(number < 9){
                 if(riderId === matchRidersEdit.rider_1.riderId){
                     if(points !== matchRidersEdit.rider_1.points || number !== 1){
-                        patchRiderMatch(riderMatchId, 1, matchRidersEdit.rider_1.points);
+                        patchRiderMatch(matchId, riderId, 1, matchRidersEdit.rider_1.points);
                     } return true;
                 } else if(riderId === matchRidersEdit.rider_2.riderId){
                     if(points !== matchRidersEdit.rider_2.points || number !== 2){
-                        patchRiderMatch(riderMatchId, 2, matchRidersEdit.rider_2.points);
+                        patchRiderMatch(matchId, riderId, 2, matchRidersEdit.rider_2.points);
                     } return true;
                 } else
                 if(riderId === matchRidersEdit.rider_3.riderId){
                     if(points !== matchRidersEdit.rider_3.points || number !== 3){
-                        patchRiderMatch(riderMatchId, 3, matchRidersEdit.rider_3.points);
+                        patchRiderMatch(matchId, riderId, 3, matchRidersEdit.rider_3.points);
                     } return true;
                 } else
                 if(riderId === matchRidersEdit.rider_4.riderId){
                     if(points !== matchRidersEdit.rider_4.points || number !== 4){
-                        patchRiderMatch(riderMatchId, 4, matchRidersEdit.rider_4.points);
+                        patchRiderMatch(matchId, riderId, 4, matchRidersEdit.rider_4.points);
                     } return true;
                 } else
                 if(riderId === matchRidersEdit.rider_5.riderId){
                     if(points !== matchRidersEdit.rider_5.points || number !== 5){
-                        patchRiderMatch(riderMatchId, 5, matchRidersEdit.rider_5.points);
+                        patchRiderMatch(matchId, riderId, 5, matchRidersEdit.rider_5.points);
                     } return true;
                 } else
                 if(riderId === matchRidersEdit.rider_6.riderId){
                     if(points !== matchRidersEdit.rider_6.points || number !== 6){
-                        patchRiderMatch(riderMatchId, 6, matchRidersEdit.rider_6.points);
+                        patchRiderMatch(matchId, riderId, 6, matchRidersEdit.rider_6.points);
                     } return true;
                 } else
                 if(riderId === matchRidersEdit.rider_7.riderId){
                     if(points !== matchRidersEdit.rider_7.points || number !== 7){
-                        patchRiderMatch(riderMatchId, 7, matchRidersEdit.rider_7.points);
+                        patchRiderMatch(matchId, riderId, 7, matchRidersEdit.rider_7.points);
                     } return true;
                 } else
                 if(riderId === matchRidersEdit.rider_8.riderId){
                     if(points !== matchRidersEdit.rider_8.points || number !== 8){
-                        patchRiderMatch(riderMatchId, 8, matchRidersEdit.rider_8.points);
+                        patchRiderMatch(matchId, riderId, 8, matchRidersEdit.rider_8.points);
                     } return true;
                 }
             } else {
                 if(riderId === matchRidersEdit.rider_9.riderId){
                     if(points !== matchRidersEdit.rider_9.points || number !== 9){
-                        patchRiderMatch(riderMatchId, 9, matchRidersEdit.rider_9.points);
+                        patchRiderMatch(matchId, riderId, 9, matchRidersEdit.rider_9.points);
                     } return true;
                 } else if(riderId === matchRidersEdit.rider_10.riderId){
                     if(points !== matchRidersEdit.rider_10.points || number !== 10){
-                        patchRiderMatch(riderMatchId, 10, matchRidersEdit.rider_10.points);
+                        patchRiderMatch(matchId, riderId, 10, matchRidersEdit.rider_10.points);
                     } return true;
                 } else
                 if(riderId === matchRidersEdit.rider_11.riderId){
                     if(points !== matchRidersEdit.rider_11.points || number !== 11){
-                        patchRiderMatch(riderMatchId, 11, matchRidersEdit.rider_11.points);
+                        patchRiderMatch(matchId, riderId, 11, matchRidersEdit.rider_11.points);
                     } return true;
                 } else
                 if(riderId === matchRidersEdit.rider_12.riderId){
                     if(points !== matchRidersEdit.rider_12.points || number !== 12){
-                        patchRiderMatch(riderMatchId, 12, matchRidersEdit.rider_12.points);
+                        patchRiderMatch(matchId, riderId, 12, matchRidersEdit.rider_12.points);
                     } return true;
                 } else
                 if(riderId === matchRidersEdit.rider_13.riderId){
                     if(points !== matchRidersEdit.rider_13.points || number !== 13){
-                        patchRiderMatch(riderMatchId, 13, matchRidersEdit.rider_13.points);
+                        patchRiderMatch(matchId, riderId, 13, matchRidersEdit.rider_13.points);
                     } return true;
                 } else
                 if(riderId === matchRidersEdit.rider_14.riderId){
                     if(points !== matchRidersEdit.rider_14.points || number !== 14){
-                        patchRiderMatch(riderMatchId, 14, matchRidersEdit.rider_14.points);
+                        patchRiderMatch(matchId, riderId, 14, matchRidersEdit.rider_14.points);
                     } return true;
                 } else
                 if(riderId === matchRidersEdit.rider_15.riderId){
                     if(points !== matchRidersEdit.rider_15.points || number !== 15){
-                        patchRiderMatch(riderMatchId, 15, matchRidersEdit.rider_15.points);
+                        patchRiderMatch(matchId, riderId, 15, matchRidersEdit.rider_15.points);
                     } return true;
                 } else
                 if(riderId === matchRidersEdit.rider_16.riderId){
                     if(points !== matchRidersEdit.rider_16.points || number !== 16){
-                        patchRiderMatch(riderMatchId, 16, matchRidersEdit.rider_16.points);
+                        patchRiderMatch(matchId, riderId, 16, matchRidersEdit.rider_16.points);
                     } return true;
                 }
             }
-            deleteRiderMatch(riderMatchId);
+            deleteRiderMatch(matchId, riderId);
         }
     }
 
@@ -1157,10 +1157,9 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                 }
             };
             const { data } = await axios.post(
-                `https://fantasy-league-eti.herokuapp.com/match-rider/${matchId}/riders/${riderId}`,
+                `https://fantasy-league-eti.herokuapp.com/match/${matchId}/riders`,
                 {
                     riderId: riderId,
-                    matchId: matchId,
                     score: points,
                     riderNumber: number
                 },
@@ -1185,7 +1184,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
         }
     }
 
-    const patchRiderMatch = async (riderMatchId, number, points) => {
+    const patchRiderMatch = async (matchId, riderId, number, points) => {
         try {
             const accessToken = getToken();
             const options = {
@@ -1194,7 +1193,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                 }
             };
             const { data } = await axios.patch(
-                `https://fantasy-league-eti.herokuapp.com/match-rider/${riderMatchId}`,
+                `https://fantasy-league-eti.herokuapp.com/match/${matchId}/riders/${riderId}`,
                 {
                     score: points,
                     riderNumber: number
@@ -1220,7 +1219,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
         }
     }
 
-    const deleteRiderMatch = async (riderMatchId) => {
+    const deleteRiderMatch = async (matchId, riderId) => {
         try {
             const accessToken = getToken();
             const options = {
@@ -1229,7 +1228,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                 }
             };
             const { data } = await axios.delete(
-                `https://fantasy-league-eti.herokuapp.com/match-rider/${riderMatchId}`,
+                `https://fantasy-league-eti.herokuapp.com/match/${matchId}/riders/${riderId}`,
                 options
             );
         } catch (e) {
@@ -1269,27 +1268,27 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
         checkIfNew(matchRidersEdit.rider_15.riderId, 15, matchRidersEdit.rider_15.points);
         checkIfNew(matchRidersEdit.rider_16.riderId, 16, matchRidersEdit.rider_16.points);
 
-        checkIfChanged(matchRiders.rider_1.riderId, matchRiders.rider_1.matchRiderId, matchRiders.rider_1.riderNumber, matchRiders.rider_1.score);
-        checkIfChanged(matchRiders.rider_2.riderId, matchRiders.rider_2.matchRiderId, matchRiders.rider_2.riderNumber, matchRiders.rider_2.score);
-        checkIfChanged(matchRiders.rider_3.riderId, matchRiders.rider_3.matchRiderId, matchRiders.rider_3.riderNumber, matchRiders.rider_3.score);
-        checkIfChanged(matchRiders.rider_4.riderId, matchRiders.rider_4.matchRiderId, matchRiders.rider_4.riderNumber, matchRiders.rider_4.score);
-        checkIfChanged(matchRiders.rider_5.riderId, matchRiders.rider_5.matchRiderId, matchRiders.rider_5.riderNumber, matchRiders.rider_5.score);
-        checkIfChanged(matchRiders.rider_6.riderId, matchRiders.rider_6.matchRiderId, matchRiders.rider_6.riderNumber, matchRiders.rider_6.score);
-        checkIfChanged(matchRiders.rider_7.riderId, matchRiders.rider_7.matchRiderId, matchRiders.rider_7.riderNumber, matchRiders.rider_7.score);
-        checkIfChanged(matchRiders.rider_8.riderId, matchRiders.rider_8.matchRiderId, matchRiders.rider_8.riderNumber, matchRiders.rider_8.score);
-        checkIfChanged(matchRiders.rider_9.riderId, matchRiders.rider_9.matchRiderId, matchRiders.rider_9.riderNumber, matchRiders.rider_9.score);
-        checkIfChanged(matchRiders.rider_10.riderId, matchRiders.rider_10.matchRiderId, matchRiders.rider_10.riderNumber, matchRiders.rider_10.score);
-        checkIfChanged(matchRiders.rider_11.riderId, matchRiders.rider_11.matchRiderId, matchRiders.rider_11.riderNumber, matchRiders.rider_11.score);
-        checkIfChanged(matchRiders.rider_12.riderId, matchRiders.rider_12.matchRiderId, matchRiders.rider_12.riderNumber, matchRiders.rider_12.score);
-        checkIfChanged(matchRiders.rider_13.riderId, matchRiders.rider_13.matchRiderId, matchRiders.rider_13.riderNumber, matchRiders.rider_13.score);
-        checkIfChanged(matchRiders.rider_14.riderId, matchRiders.rider_14.matchRiderId, matchRiders.rider_14.riderNumber, matchRiders.rider_14.score);
-        checkIfChanged(matchRiders.rider_15.riderId, matchRiders.rider_15.matchRiderId, matchRiders.rider_15.riderNumber, matchRiders.rider_15.score);
-        checkIfChanged(matchRiders.rider_16.riderId, matchRiders.rider_16.matchRiderId, matchRiders.rider_16.riderNumber, matchRiders.rider_16.score);
+        checkIfChanged(matchRiders.rider_1.riderId, matchId, matchRiders.rider_1.riderNumber, matchRiders.rider_1.score);
+        checkIfChanged(matchRiders.rider_2.riderId, matchId, matchRiders.rider_2.riderNumber, matchRiders.rider_2.score);
+        checkIfChanged(matchRiders.rider_3.riderId, matchId, matchRiders.rider_3.riderNumber, matchRiders.rider_3.score);
+        checkIfChanged(matchRiders.rider_4.riderId, matchId, matchRiders.rider_4.riderNumber, matchRiders.rider_4.score);
+        checkIfChanged(matchRiders.rider_5.riderId, matchId, matchRiders.rider_5.riderNumber, matchRiders.rider_5.score);
+        checkIfChanged(matchRiders.rider_6.riderId, matchId, matchRiders.rider_6.riderNumber, matchRiders.rider_6.score);
+        checkIfChanged(matchRiders.rider_7.riderId, matchId, matchRiders.rider_7.riderNumber, matchRiders.rider_7.score);
+        checkIfChanged(matchRiders.rider_8.riderId, matchId, matchRiders.rider_8.riderNumber, matchRiders.rider_8.score);
+        checkIfChanged(matchRiders.rider_9.riderId, matchId, matchRiders.rider_9.riderNumber, matchRiders.rider_9.score);
+        checkIfChanged(matchRiders.rider_10.riderId, matchId, matchRiders.rider_10.riderNumber, matchRiders.rider_10.score);
+        checkIfChanged(matchRiders.rider_11.riderId, matchId, matchRiders.rider_11.riderNumber, matchRiders.rider_11.score);
+        checkIfChanged(matchRiders.rider_12.riderId, matchId, matchRiders.rider_12.riderNumber, matchRiders.rider_12.score);
+        checkIfChanged(matchRiders.rider_13.riderId, matchId, matchRiders.rider_13.riderNumber, matchRiders.rider_13.score);
+        checkIfChanged(matchRiders.rider_14.riderId, matchId, matchRiders.rider_14.riderNumber, matchRiders.rider_14.score);
+        checkIfChanged(matchRiders.rider_15.riderId, matchId, matchRiders.rider_15.riderNumber, matchRiders.rider_15.score);
+        checkIfChanged(matchRiders.rider_16.riderId, matchId, matchRiders.rider_16.riderNumber, matchRiders.rider_16.score);
     
         addNotification("Sukces", "Udało się edytować mecz", "success", 1000);
         setTimeout(()=>{
             handleCloseEdit();
-            //window.location.reload(false);
+            window.location.reload(false);
         }, 1000)
     }
 
