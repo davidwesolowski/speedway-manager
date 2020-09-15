@@ -115,6 +115,30 @@ const defaultRidersData = {
     rider_16: defaultRiderData
 }
 
+const defaultRiderEditData = {
+    riderId: '',
+    points: 0
+}
+
+const defaultRidersEditData = {
+    rider_1: defaultRiderEditData,
+    rider_2: defaultRiderEditData,
+    rider_3: defaultRiderEditData,
+    rider_4: defaultRiderEditData,
+    rider_5: defaultRiderEditData,
+    rider_6: defaultRiderEditData,
+    rider_7: defaultRiderEditData,
+    rider_8: defaultRiderEditData,
+    rider_9: defaultRiderEditData,
+    rider_10: defaultRiderEditData,
+    rider_11: defaultRiderEditData,
+    rider_12: defaultRiderEditData,
+    rider_13: defaultRiderEditData,
+    rider_14: defaultRiderEditData,
+    rider_15: defaultRiderEditData,
+    rider_16: defaultRiderEditData
+}
+
 const ListMatchesMatch: FunctionComponent<IProps> = ({
     matchId,
     homeId,
@@ -133,7 +157,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
     const [openScores, setOpenScores] = useState<boolean>(false);
     const [openEdit, setOpenEdit] = useState<boolean>(false);
     const [wasRiddenEdit, setWasRiddenEdit] = useState<boolean>(false);
-    const [matchRidersEdit, setMatchRidersEdit] = useState<IRidersEdit>();
+    const [matchRidersEdit, setMatchRidersEdit] = useState<IRidersEdit>(defaultRidersEditData);
     const [matchDateEdit, setMatchDateEdit] = useState<Date>(new Date(date));
 
 
@@ -292,7 +316,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
     const handleOpenEdit = () => {
         getMatchRiders();
         setWasRiddenEdit(wasRidden);
-        setRidersEdit();
+        //setRidersEdit();
         setOpenEdit(true);
     }
 
@@ -311,6 +335,13 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                 score: rider.score,
                 riderNumber: rider.riderNumber
             }                        
+        }));
+        setMatchRidersEdit((prevState: IRidersEdit) => ({
+            ...prevState,
+            [name] : {
+                riderId: rider.riderId,
+                points: rider.score
+            }
         }));
     }
 
@@ -391,7 +422,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                 } else {
                     addNotification(
                         'Błąd',
-                        'Nie udało się pobrać rund z bazy',
+                        'Nie udało się pobrać zawodników z bazy',
                         'danger',
                         3000
                     );
@@ -410,6 +441,49 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
             return(
                 <Typography variant="h5">{(new Date(date)).toLocaleDateString()}</Typography>
             )
+        }
+    }
+
+    const handleDeleteMatch = async () => {
+        try {
+            const accessToken = getToken();
+            const options = {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            };
+            const { data } = await axios.delete(
+                `https://fantasy-league-eti.herokuapp.com/matches/${matchId}`,
+                options
+            );
+            addNotification("Sukces", "Udało się usunąć mecz", "success", 1000);
+            setTimeout(() => {
+                window.location.reload(false);
+            }, 1500);
+        } catch (e) {
+            console.log(e.response);
+            if (e.statusText == 'Bad Request') {
+                addNotification(
+                    'Błąd!',
+                    'Nie ma takiego meczu w bazie!',
+                    'danger',
+                    1000
+                );
+                setTimeout(() => {}, 1000);
+            } else if (e.statusText == 'Unauthorized') {
+                addNotification('Błąd!', 'Twoja sesja wygasła', 'danger', 1000);
+                setTimeout(() => {
+                    push('/login');
+                }, 1000);
+            } else {
+                addNotification(
+                    'Błąd!',
+                    'Nie udało się usunąć meczu!',
+                    'danger',
+                    1000
+                );
+            }
+            throw new Error('Error in deleting match!');
         }
     }
 
@@ -451,6 +525,9 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                             </Button>
                             <Button className="list-matches-match__edit-button" onClick={handleOpenEdit}>
                                 Edytuj
+                            </Button>
+                            <Button className="list-matches-match__edit-button" onClick={handleDeleteMatch}>
+                                Usuń
                             </Button>
                         </div>
                     </div>
@@ -1187,12 +1264,12 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
             } else {
                 addNotification(
                     'Błąd',
-                    'Nie udało się pobrać rund z bazy',
+                    'Nie udało się dodać zawodnika do meczu',
                     'danger',
                     3000
                 );
             }
-            throw new Error('Error in getting rounds');
+            throw new Error('Error in adding rider to match');
         }
     }
 
@@ -1222,12 +1299,12 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
             } else {
                 addNotification(
                     'Błąd',
-                    'Nie udało się pobrać rund z bazy',
+                    'Nie udało się edytować zawodnika w meczu',
                     'danger',
                     3000
                 );
             }
-            throw new Error('Error in getting rounds');
+            throw new Error('Error in editing rider in match');
         }
     }
 
@@ -1253,12 +1330,12 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
             } else {
                 addNotification(
                     'Błąd',
-                    'Nie udało się pobrać rund z bazy',
+                    'Nie udało się usunąć zawodnika z meczu',
                     'danger',
                     3000
                 );
             }
-            throw new Error('Error in getting rounds');
+            throw new Error('Error in deleting rider from match');
         }
     }
 
@@ -1328,12 +1405,12 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                 } else {
                     addNotification(
                         'Błąd',
-                        'Nie udało się pobrać rund z bazy',
+                        'Nie udało się edytować meczu w bazie',
                         'danger',
                         3000
                     );
                 }
-                throw new Error('Error in getting rounds');
+                throw new Error('Error in editing match');
             }
         }
     }
