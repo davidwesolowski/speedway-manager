@@ -115,6 +115,30 @@ const defaultRidersData = {
     rider_16: defaultRiderData
 }
 
+const defaultRiderEditData = {
+    riderId: '',
+    points: 0
+}
+
+const defaultRidersEditData = {
+    rider_1: defaultRiderEditData,
+    rider_2: defaultRiderEditData,
+    rider_3: defaultRiderEditData,
+    rider_4: defaultRiderEditData,
+    rider_5: defaultRiderEditData,
+    rider_6: defaultRiderEditData,
+    rider_7: defaultRiderEditData,
+    rider_8: defaultRiderEditData,
+    rider_9: defaultRiderEditData,
+    rider_10: defaultRiderEditData,
+    rider_11: defaultRiderEditData,
+    rider_12: defaultRiderEditData,
+    rider_13: defaultRiderEditData,
+    rider_14: defaultRiderEditData,
+    rider_15: defaultRiderEditData,
+    rider_16: defaultRiderEditData
+}
+
 const ListMatchesMatch: FunctionComponent<IProps> = ({
     matchId,
     homeId,
@@ -133,7 +157,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
     const [openScores, setOpenScores] = useState<boolean>(false);
     const [openEdit, setOpenEdit] = useState<boolean>(false);
     const [wasRiddenEdit, setWasRiddenEdit] = useState<boolean>(false);
-    const [matchRidersEdit, setMatchRidersEdit] = useState<IRidersEdit>();
+    const [matchRidersEdit, setMatchRidersEdit] = useState<IRidersEdit>(defaultRidersEditData);
     const [matchDateEdit, setMatchDateEdit] = useState<Date>(new Date(date));
 
 
@@ -292,7 +316,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
     const handleOpenEdit = () => {
         getMatchRiders();
         setWasRiddenEdit(wasRidden);
-        setRidersEdit();
+        //setRidersEdit();
         setOpenEdit(true);
     }
 
@@ -311,6 +335,13 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
                 score: rider.score,
                 riderNumber: rider.riderNumber
             }                        
+        }));
+        setMatchRidersEdit((prevState: IRidersEdit) => ({
+            ...prevState,
+            [name] : {
+                riderId: rider.riderId,
+                points: rider.score
+            }
         }));
     }
 

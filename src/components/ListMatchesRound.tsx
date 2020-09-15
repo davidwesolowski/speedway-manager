@@ -41,16 +41,9 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
     riders
 }) => {
     const [matches, setMatches] = useState([]);
-    const [roundStartDate, setRoundStartDate] = useState<Date>(new Date(startDate));
-    const [roundEndDate, setRoundEndDate] = useState<Date>(new Date(endDate));
     const { push } = useHistory();
 
-    const [tempHomeScore, setTempHomeScore] = useState<number>(0)
-    const [tempAwayScore, setTempAwayScore] = useState<number>(0)
-
     const getMatchesOfRound = async (roundId) => {
-        //pobieranie konkretnej kolejki meczów
-        //temp pobranie wszystkich meczów
         try {
             const accessToken = getToken();
             const options = {
@@ -96,7 +89,7 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
                 return(
                     <>
                     <ListMatchesMatch
-                        key={index}
+                        key={`${index}_${match.homeId}`}
                         matchId={match._id}
                         homeId={match.homeId}
                         awayId={match.awayId}
@@ -115,7 +108,7 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
     const generateRoundTitle = () => {
         if(round !== 0){
             return(
-                `Kolejka ${round}.`
+                `Kolejka ${round}. ( ${(new Date(startDate)).toLocaleDateString()} - ${(new Date(endDate)).toLocaleDateString()} )`
             )
         }
     }

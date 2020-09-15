@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useState } from 'react'
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 import { Paper, Typography, Divider, MenuItem, InputLabel, Select } from '@material-ui/core';
 import { useStateValue } from './AppProvider';
 import getToken from '../utils/getToken';
@@ -7,6 +7,7 @@ import axios from 'axios';
 import { setUser } from '../actions/userActions';
 import addNotification from '../utils/addNotification';
 import ListMatchesRound from './ListMatchesRound';
+import { checkBadAuthorization } from '../utils/checkCookies';
 
 interface IRider{
     _id: string,
@@ -26,7 +27,7 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}
 		dispatchUserData,
 		userData,
     } = useStateValue();
-    
+
     const fetchUserData = async () => {
         const accessToken = getToken();
 		const options = {
@@ -44,12 +45,12 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}
             dispatchUserData(setUser({ username, email, avatarUrl }));
             setLoggedIn(true);
         } catch (e) {
-            /*const {
+            const {
                 response: { data }
             } = e;
             if (data.statusCode == 401) {
                 checkBadAuthorization(setLoggedIn, push);
-            }*/
+            }
         }
     };
 
@@ -119,7 +120,7 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}
             } else {
                 addNotification(
                     'Błąd',
-                    'Nie udało się pobrać zawodnikó z bazy',
+                    'Nie udało się pobrać zawodników z bazy',
                     'danger',
                     3000
                 );
