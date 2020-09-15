@@ -480,11 +480,19 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                     ...prevState,
                     team_id: event.target.value
                 }));
+                setDataToValidation((prevState: ITeamPointsToValidate) => ({
+                    ...prevState,
+                    home_id: event.target.value
+                }));
             }
             else{
                 setAway((prevState: ITeamPoints) => ({
                     ...prevState,
                     team_id: event.target.value
+                }));
+                setDataToValidation((prevState: ITeamPointsToValidate) => ({
+                    ...prevState,
+                    away_id: event.target.value
                 }));
             }
         };
@@ -634,11 +642,19 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                             ...prevState,
                             [rider]: {_id: home.rider_1._id ,points: parseInt(event.target.value)}
                         }));
+                        setDataToValidation((prevState: ITeamPointsToValidate) => ({
+                            ...prevState,
+                            points_9: parseInt(event.target.value)
+                        }));
                         break;
                     case 2:
                         setHome((prevState: ITeamPoints) => ({
                             ...prevState,
                             [rider]: {_id: home.rider_2._id ,points: parseInt(event.target.value)}
+                        }));
+                        setDataToValidation((prevState: ITeamPointsToValidate) => ({
+                            ...prevState,
+                            points_10: parseInt(event.target.value)
                         }));
                         break;
                     case 3:
@@ -647,10 +663,18 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                             [rider]: {_id: home.rider_3._id ,points: parseInt(event.target.value)}
                         }));
                         break;
+                        setDataToValidation((prevState: ITeamPointsToValidate) => ({
+                            ...prevState,
+                            points_11: parseInt(event.target.value)
+                        }));
                     case 4:
                         setHome((prevState: ITeamPoints) => ({
                             ...prevState,
                             [rider]: {_id: home.rider_4._id ,points: parseInt(event.target.value)}
+                        }));
+                        setDataToValidation((prevState: ITeamPointsToValidate) => ({
+                            ...prevState,
+                            points_12: parseInt(event.target.value)
                         }));
                         break;
                     case 5:
@@ -658,11 +682,19 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                             ...prevState,
                             [rider]: {_id: home.rider_5._id ,points: parseInt(event.target.value)}
                         }));
+                        setDataToValidation((prevState: ITeamPointsToValidate) => ({
+                            ...prevState,
+                            points_13: parseInt(event.target.value)
+                        }));
                         break;
                     case 6:
                         setHome((prevState: ITeamPoints) => ({
                             ...prevState,
                             [rider]: {_id: home.rider_6._id ,points: parseInt(event.target.value)}
+                        }));
+                        setDataToValidation((prevState: ITeamPointsToValidate) => ({
+                            ...prevState,
+                            points_14: parseInt(event.target.value)
                         }));
                         break;
                     case 7:
@@ -670,11 +702,19 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                             ...prevState,
                             [rider]: {_id: home.rider_7._id ,points: parseInt(event.target.value)}
                         }));
+                        setDataToValidation((prevState: ITeamPointsToValidate) => ({
+                            ...prevState,
+                            points_15: parseInt(event.target.value)
+                        }));
                         break;
                     case 8:
                         setHome((prevState: ITeamPoints) => ({
                             ...prevState,
                             [rider]: {_id: home.rider_8._id ,points: parseInt(event.target.value)}
+                        }));
+                        setDataToValidation((prevState: ITeamPointsToValidate) => ({
+                            ...prevState,
+                            points_16: parseInt(event.target.value)
                         }));
                         break;
                     default:
@@ -688,11 +728,19 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                             ...prevState,
                             [rider]: {_id: away.rider_1._id ,points: parseInt(event.target.value)}
                         }));
+                        setDataToValidation((prevState: ITeamPointsToValidate) => ({
+                            ...prevState,
+                            points_1: parseInt(event.target.value)
+                        }));
                         break;
                     case 2:
                         setAway((prevState: ITeamPoints) => ({
                             ...prevState,
                             [rider]: {_id: away.rider_2._id ,points: parseInt(event.target.value)}
+                        }));
+                        setDataToValidation((prevState: ITeamPointsToValidate) => ({
+                            ...prevState,
+                            points_2: parseInt(event.target.value)
                         }));
                         break;
                     case 3:
@@ -700,11 +748,19 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                             ...prevState,
                             [rider]: {_id: away.rider_3._id ,points: parseInt(event.target.value)}
                         }));
+                        setDataToValidation((prevState: ITeamPointsToValidate) => ({
+                            ...prevState,
+                            points_3: parseInt(event.target.value)
+                        }));
                         break;
                     case 4:
                         setAway((prevState: ITeamPoints) => ({
                             ...prevState,
                             [rider]: {_id: away.rider_4._id ,points: parseInt(event.target.value)}
+                        }));
+                        setDataToValidation((prevState: ITeamPointsToValidate) => ({
+                            ...prevState,
+                            points_4: parseInt(event.target.value)
                         }));
                         break;
                     case 5:
@@ -712,11 +768,19 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                             ...prevState,
                             [rider]: {_id: away.rider_5._id ,points: parseInt(event.target.value)}
                         }));
+                        setDataToValidation((prevState: ITeamPointsToValidate) => ({
+                            ...prevState,
+                            points_5: parseInt(event.target.value)
+                        }));
                         break;
                     case 6:
                         setAway((prevState: ITeamPoints) => ({
                             ...prevState,
                             [rider]: {_id: away.rider_6._id ,points: parseInt(event.target.value)}
+                        }));
+                        setDataToValidation((prevState: ITeamPointsToValidate) => ({
+                            ...prevState,
+                            points_6: parseInt(event.target.value)
                         }));
                         break;
                     case 7:
@@ -724,11 +788,19 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                             ...prevState,
                             [rider]: {_id: away.rider_7._id ,points: parseInt(event.target.value)}
                         }));
+                        setDataToValidation((prevState: ITeamPointsToValidate) => ({
+                            ...prevState,
+                            points_7: parseInt(event.target.value)
+                        }));
                         break;
                     case 8:
                         setAway((prevState: ITeamPoints) => ({
                             ...prevState,
                             [rider]: {_id: away.rider_8._id ,points: parseInt(event.target.value)}
+                        }));
+                        setDataToValidation((prevState: ITeamPointsToValidate) => ({
+                            ...prevState,
+                            points_8: parseInt(event.target.value)
                         }));
                         break;
                     default:
@@ -1224,11 +1296,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 				'success',
 				1000
 			);
-			setTimeout(() => {
+			/*setTimeout(() => {
 				{
 					window.location.reload(false);
 				}
-			}, 1000);
+			}, 1000);*/
 		} catch (e) {
 			console.log(e.response);
 			if (e.statusText == 'Bad Request') {
@@ -1266,10 +1338,9 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                     }
                 };
                 const { data } = await axios.post(
-                    `https://fantasy-league-eti.herokuapp.com/match-rider/${matchId}/riders/${riderId}`,
+                    `https://fantasy-league-eti.herokuapp.com/match/${matchId}/riders`,
                     {
                         riderId: riderId,
-                        matchId: matchId,
                         score: score,
                         riderNumber: number
                     },
@@ -1304,7 +1375,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
     }
 
     const handleOnSubmit = () => {
-        setDataToValidationFunc();
+        //setDataToValidationFunc();
         const validationResponse = validateMatchPointsData(dataToValidation);
         if(validationResponse.error){
             setValidatedPoints(()=>defaultValidatedPoints);
@@ -1332,7 +1403,12 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
         getClubs();
         getRiders();
         if (!userData.username) fetchUserData();
+        setTimeout(() => {
+            document.body.style.overflow = 'auto';
+        }, 3000)
     }, [])
+
+
 
     return(
         <>

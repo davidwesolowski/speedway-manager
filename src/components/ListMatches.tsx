@@ -174,6 +174,9 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}
                 />
             )
         }
+        setTimeout(() => {
+            document.body.style.overflow = 'auto';
+        }, 3000)
     }
 
     useEffect(() => {
@@ -181,6 +184,8 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}
         if (!userData.username) fetchUserData();
         getRiders();
     }, [])
+
+
 
     return(
         <>
