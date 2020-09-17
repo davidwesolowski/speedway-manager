@@ -24,6 +24,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import SelfTeaching from '../components/SelfTeaching';
 import Friends from '../components/Friends';
 import ListMatches from '../components/ListMatches';
+import Leagues from '../components/Leagues';
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -135,6 +136,14 @@ const RoutesAnimation = () => {
 						render={(props: RouteComponentProps) => {
 							const cookiesExist = checkCookies();
 							if(cookiesExist) return <ListMatches {...props} />;
+							else return <Redirect to="/login" />;
+						}}
+					/>
+					<Route
+						path="/ligi"
+						render={(props: RouteComponentProps) => {
+							const cookiesExist = checkCookies();
+							if(cookiesExist) return <Leagues {...props} />;
 							else return <Redirect to="/login" />;
 						}}
 					/>
