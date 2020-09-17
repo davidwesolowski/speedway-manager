@@ -203,7 +203,7 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({history: { push }}
                     <div className="list-matches__round-div">
                         <InputLabel id="roundLabel">Kolejka:</InputLabel>
                         <Select labelId="roundLabel" className="add-match__round-select" value={roundId || ''} onChange={handleOnChangeSelectRound()}>
-                            <MenuItem value="all">Wszystkie</MenuItem>
+                            <MenuItem key="0000" value="all">Wszystkie</MenuItem>
                             {generateRounds()}
                         </Select>
                     </div>

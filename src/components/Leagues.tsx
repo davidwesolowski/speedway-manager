@@ -1,13 +1,26 @@
-import { Divider, IconButton, Paper, Typography } from '@material-ui/core';
+import { ValidationErrorItem } from '@hapi/joi';
+import { Button, Dialog, DialogContent, DialogTitle, Divider, FormControl, Grid, IconButton, MenuItem, Paper, Select, TextField, Typography } from '@material-ui/core';
 import axios from 'axios';
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { FiXCircle } from 'react-icons/fi';
+import { FiPlus, FiX, FiXCircle } from 'react-icons/fi';
 import { RouteComponentProps } from 'react-router-dom';
 import { setUser } from '../actions/userActions';
 import addNotification from '../utils/addNotification';
 import { checkBadAuthorization } from '../utils/checkCookies';
 import getToken from '../utils/getToken';
+import validateLeagueData from '../validation/validateLeagueData';
 import { useStateValue } from './AppProvider';
+
+interface IValidatedData{
+    name: {
+        message: string;
+        error: boolean;
+    };
+    country: {
+        message: string;
+        error: boolean;
+    }
+}
 
 const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) => {
 
@@ -45,7 +58,31 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
 
     const [leagues, setLeagues] = useState([]);
     const [addLeagueName, setAddLeagueName] = useState<string>('');
-    const [addLeagueCountry, setAddLeagueCountry] = useState<string>('');
+    const [addLeagueCountry, setAddLeagueCountry] = useState<string>('Polska');
+    const [openDialog, setOpenDialog] = useState<boolean>(false);
+
+    const defaultValidatedData = {
+        name: {
+            message: '',
+            error: false
+        },
+        country: {
+            message: '',
+            error: false
+        }
+    }
+
+    const [validatedData, setValidatedData] = useState<IValidatedData>(defaultValidatedData);
+
+    const handleOpenDialog = () => {
+        setOpenDialog(true)
+    }
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+        setAddLeagueCountry('Polska');
+        setAddLeagueName('');
+    }
 
     const [tempLeagues, setTempLeagues] = useState([
         {
@@ -208,6 +245,108 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
         )
     }
 
+    const handleOnChangeName = () => (event: React.ChangeEvent<HTMLInputElement>) => {
+        event.persist();
+        if(event.target){
+            setAddLeagueName(event.target.value);
+        }
+    }
+
+    const handleOnChangeCountry = () => event => {
+        event.persist();
+        if(event.target){
+            setAddLeagueCountry(event.target.value);
+        }
+    }
+
+    const handleOnSubmit = (event: React.FormEvent) => {
+        event.preventDefault();
+        console.log("SUBMIT");
+        const validationResponse = validateLeagueData({name: addLeagueName, country: addLeagueCountry});
+        if (validationResponse.error){
+            setValidatedData(() => defaultValidatedData);
+            validationResponse.error.details.forEach(
+                (errorItem: ValidationErrorItem): any => {
+                    console.log(errorItem.message);
+                    setValidatedData((prevState: IValidatedData) => {
+                        return{
+                            ...prevState,
+                            [errorItem.path[0]]: {
+                                message: errorItem.message,
+                                error: true
+                            }
+                        };
+                    });
+                }
+            );
+        } else {
+            addLeague();
+        }
+    }
+
+    const generateDialog = () => {
+        return(
+            <>
+                <div>
+                    <Dialog open={openDialog} onClose={handleCloseDialog} className="leagues-dialog">
+                        <DialogTitle>
+                            <div className="leagues-dialog__header">
+                                <Typography variant="h4" className="leagues-dialog__title">
+                                    Dodawanie ligi
+                                </Typography>
+                                <IconButton
+                                    onClick={handleCloseDialog}
+                                    className="leagues-dialog__fix"
+                                >
+                                    <FiX />
+                                </IconButton>
+                            </div>
+                        </DialogTitle>
+                        <DialogContent dividers>
+                            <form className="leagues-dialog__form" onSubmit={handleOnSubmit}>
+                                <Grid container>
+                                    <Grid item xs={7} className="leagues-dialog__fields">
+                                        <FormControl className="leagues-dialog__text-field">
+                                            <TextField
+                                                label="Nazwa ligi"
+                                                required
+                                                autoComplete="league"
+                                                value={addLeagueName}
+                                                error={validatedData.name.error}
+                                                helperText={validatedData.name.message}
+                                                onChange={handleOnChangeName()}
+                                            />
+                                        </FormControl>
+                                        <FormControl className="leagues-dialog__select-field">
+                                            Kraj:
+                                            <Select
+                                                value={addLeagueCountry || ''}
+                                                onChange={handleOnChangeCountry()}
+                                            >
+                                                <MenuItem value="Polska">Polska</MenuItem>
+                                                <MenuItem value="Wielka Brytania">Wielka Brytania</MenuItem>
+                                                <MenuItem value="Szwecja">Szwecja</MenuItem>
+                                                <MenuItem value="Dania">Dania</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Button
+                                            className="btn leagues-dialog__form_button"
+                                            type="submit"
+                                        >
+                                            Dodaj
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            </form>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            </>
+        )
+    }
+
     useEffect(() => {
         if (!userData.username) fetchUserData();
     }, [])
@@ -223,9 +362,16 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
                     >
                         Ligi
                     </Typography>
+                    <IconButton
+                        onClick={handleOpenDialog}
+                        className="leagues__fiplus"
+                    >
+                        <FiPlus />
+                    </IconButton>
                     <Divider />
                     <br/>
                     {generateTable()}
+                    {generateDialog()}
                 </Paper>
             </div>
         </>

@@ -374,54 +374,6 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
-	/*const addRiders = async (riderData: IRider1) => {
-        try {
-            console.log("Dodawanie zawodnika");
-            const cookies = new Cookies();
-            const access_token = cookies.get("access_token");
-            const options = {
-                headers: {
-                    Authorization: `Bearer ${access_token}`
-                }
-            };
-            const {
-                data
-            } = await axios.post(
-                'https://fantasy-league-eti.herokuapp.com/riders',
-                riderData,
-                options
-            );
-            addNotification("Sukces", "Poprawnie dodano zawodnika", "success", 1000);
-            setValidatedData(defaultValidatedData);
-            setRiderData(defaultRiderData); 
-            setTimeout(() => {
-                {handleClose()};
-            }, 10);
-            setTimeout(() => {
-                {refreshPage()};
-            }, 1000);
-        } catch (e) {
-            if(e.statusText == "Bad Request")
-            {
-                addNotification("Błąd!", "Podany zawodnik już istnieje w bazie!", "danger",1000);
-                setTimeout(() => {
-                }, 1000);
-            }
-            else if(e.statusText == "Unauthorized")
-            {
-                addNotification("Błąd!", "Twoja sesja wygasła", "danger", 1000);
-                setTimeout(() => {
-                    push('/login');
-                }, 1000);
-            }
-            else
-            {
-                addNotification("Błąd!", "Nie udało się dodać zawodnika!", "danger",1000);
-            }
-            throw new Error('Error in adding new rider!');
-        }
-    };*/
-
 	const addRider = async (riderData: IRider) => {
 		try {
 			console.log('Dodawanie zawodnika');
@@ -541,74 +493,12 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
-	/*useEffect(() => {
-        exampleRiders.map(rider => addRiders(rider));
-	}, [])*/
-
-	const clubsData = [
-		{
-			name: 'Fogo Unia Leszno'
-		},
-		{
-			name: 'Apator Toruń'
-		},
-		{
-			name: 'Betard Sparta Wrocław'
-		},
-		{
-			name: 'Motor Lublin'
-		}
-	];
-
-	const addClubsTemp = async club => {
-		try {
-			const accessToken = getToken();
-			const options = {
-				headers: {
-					Authorization: `Bearer ${accessToken}`
-				}
-			};
-			const { data } = await axios.post(
-				'https://fantasy-league-eti.herokuapp.com/clubs',
-				club,
-				options
-			);
-			addNotification('Sukces', 'Poprawnie dodano klub', 'success', 1000);
-		} catch (e) {
-			if (e.statusText == 'Bad Request') {
-				addNotification(
-					'Błąd!',
-					'Podany klub już istnieje w bazie!',
-					'danger',
-					1000
-				);
-				setTimeout(() => {}, 1000);
-			} else if (e.statusText == 'Unauthorized') {
-				addNotification('Błąd!', 'Twoja sesja wygasła', 'danger', 1000);
-				setTimeout(() => {
-					push('/login');
-				}, 1000);
-			} else {
-				addNotification(
-					'Błąd!',
-					'Nie udało się dodać klubu!',
-					'danger',
-					1000
-				);
-			}
-			throw new Error('Error in adding new rider!');
-		}
-	};
-
 	useEffect(() => {
 		getClubs();
 		if (!userData.username) fetchUserData();
 		setTimeout(() => {
 			document.body.style.overflow = 'auto';
 		}, 500);
-		/*clubsData.map((club, index) => {
-			addClubsTemp(club);
-		})*/
 	}, []);
 
 	return (
@@ -784,19 +674,3 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 };
 
 export default Riders;
-
-/*
-<FormControl className="dialog__form_field_club">
-    Klub:
-    <select value={riderData.club} onChange={handleOnChangeClub('club')} className="dialog__choose_list">
-        <option value="Fogo Unia Leszno">Fogo Unia Leszno</option>
-        <option value="forBet Włókniarz Częstochowa">forBet Włókniarz Częstochowa</option>
-        <option value="RM Solar Falubaz Zielona Góra">RM Solar Falubaz Zielona Góra</option>
-        <option value="Motor Lublin">Motor Lublin</option>
-        <option value="Betard Sparta Wrocław">Betard Sparta Wrocław</option>
-        <option value="MRGARDEN GKM Grudziądz">MRGARDEN GKM Grudziądz</option>
-        <option value="Moje Bermudy Stal Gorzów">Moje Bermudy Stal Gorzów</option>
-        <option value="PGG ROW Rybnik">PGG ROW Rybnik</option>
-    </select>
-</FormControl>
-*/
