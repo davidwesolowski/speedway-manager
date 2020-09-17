@@ -1296,11 +1296,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 				'success',
 				1000
 			);
-			/*setTimeout(() => {
+			setTimeout(() => {
 				{
 					window.location.reload(false);
 				}
-			}, 1000);*/
+			}, 1000);
 		} catch (e) {
 			console.log(e.response);
 			if (e.statusText == 'Bad Request') {
