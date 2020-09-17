@@ -25,6 +25,7 @@ import SelfTeaching from '../components/SelfTeaching';
 import Friends from '../components/Friends';
 import ListMatches from '../components/ListMatches';
 import Leagues from '../components/Leagues';
+import UserRankingLeagues from '../components/UserRankingLeagues';
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -144,6 +145,14 @@ const RoutesAnimation = () => {
 						render={(props: RouteComponentProps) => {
 							const cookiesExist = checkCookies();
 							if(cookiesExist) return <Leagues {...props} />;
+							else return <Redirect to="/login" />;
+						}}
+					/>
+					<Route
+						path="/moje-ligi"
+						render={(props: RouteComponentProps) => {
+							const cookiesExist = checkCookies();
+							if(cookiesExist) return <UserRankingLeagues {...props} />;
 							else return <Redirect to="/login" />;
 						}}
 					/>
