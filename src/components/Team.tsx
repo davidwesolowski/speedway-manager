@@ -25,6 +25,7 @@ import { setUser } from '../actions/userActions';
 import TeamMatch from './TeamMatch';
 import getToken from '../utils/getToken';
 import { setTeamRiders } from '../actions/teamRidersActions';
+import fetchUserData from '../utils/fetchUserData';
 
 interface ITabPanelProps {
 	children?: ReactNode;
@@ -157,28 +158,9 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 				}*/
 			}
 		};
-		const fetchUserData = async () => {
-			try {
-				const {
-					data: { _id, username, email, avatarUrl }
-				} = await axios.get(
-					'https://fantasy-league-eti.herokuapp.com/users/self',
-					options
-				);
-				dispatchUserData(setUser({ _id, username, email, avatarUrl }));
-				setLoggedIn(true);
-			} catch (e) {
-				const {
-					response: { data }
-				} = e;
-				if (data.statusCode == 401) {
-					checkBadAuthorization(setLoggedIn, push);
-				}
-			}
-		};
-
 		fetchTeam();
-		if (!userData.username) fetchUserData();
+		if (!userData.username)
+			fetchUserData(dispatchUserData, setLoggedIn, push);
 		setLoading(false);
 		setTimeout(() => {
 			document.body.style.overflow = 'auto';

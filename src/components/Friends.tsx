@@ -10,11 +10,11 @@ import {
 } from '@material-ui/core';
 import getToken from '../utils/getToken';
 import { useStateValue } from './AppProvider';
-import { setUser } from '../actions/userActions';
 import { checkBadAuthorization } from '../utils/checkCookies';
 import { IUsers } from './Users';
 import UsersList from './UsersList';
 import { CSSTransition } from 'react-transition-group';
+import fetchUserData from '../utils/fetchUserData';
 
 const Friends: FunctionComponent<RouteProps> = () => {
 	const [friends, setFriends] = useState<IUsers[]>([]);
@@ -106,30 +106,14 @@ const Friends: FunctionComponent<RouteProps> = () => {
 				Authorization: `Bearer ${accessToken}`
 			}
 		};
-		const fetchUserData = async () => {
-			try {
-				const {
-					data: { _id, username, email, avatarUrl }
-				} = await axios.get(
-					'https://fantasy-league-eti.herokuapp.com/users/self',
-					options
-				);
-				dispatchUserData(setUser({ _id, username, email, avatarUrl }));
-				setLoggedIn(true);
-				return _id;
-			} catch (e) {
-				const {
-					response: { data }
-				} = e;
-				if (data.statusCode == 401) {
-					checkBadAuthorization(setLoggedIn, push);
-				}
-			}
-		};
 
 		const fetchCurrentAndPendingFriends = async () => {
 			try {
-				const userId = await fetchUserData();
+				const userId = await fetchUserData(
+					dispatchUserData,
+					setLoggedIn,
+					push
+				);
 				if (userId) {
 					const { data: currentFriends } = await axios.get(
 						`https://fantasy-league-eti.herokuapp.com/friendlist/myFriends/${userId}`,

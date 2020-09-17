@@ -30,7 +30,6 @@ import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import getToken from '../utils/getToken';
 import { useStateValue } from './AppProvider';
-import { setUser } from '../actions/userActions';
 import handleImgFile, {
 	IImageData,
 	defaultImageData

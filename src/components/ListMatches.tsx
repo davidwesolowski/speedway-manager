@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import {
 	Paper,
 	Typography,
@@ -11,10 +11,8 @@ import {
 import { useStateValue } from './AppProvider';
 import getToken from '../utils/getToken';
 import axios from 'axios';
-import { setUser } from '../actions/userActions';
 import addNotification from '../utils/addNotification';
 import ListMatchesRound from './ListMatchesRound';
-import { checkBadAuthorization } from '../utils/checkCookies';
 import fetchUserData from '../utils/fetchUserData';
 
 interface IRider {
