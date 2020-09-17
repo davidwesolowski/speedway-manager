@@ -123,7 +123,7 @@ const RoutesAnimation = () => {
 							const isAdmin = checkAdminRole(userData.role);
 							if (!cookiesExist) return <Redirect to="/login" />;
 							if (isAdmin && cookiesExist) {
-								return <Redirect to="/dodaj-mecz" />;
+								return <AddMatch {...props} />;
 							} else return <Redirect to="/druzyna" />;
 						}}
 					/>
