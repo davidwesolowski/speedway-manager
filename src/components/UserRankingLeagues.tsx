@@ -1,21 +1,23 @@
-import { Divider, IconButton, Paper, Typography } from '@material-ui/core';
+import { ValidationErrorItem } from '@hapi/joi';
+import { Button, Dialog, DialogContent, DialogTitle, Divider, FormControl, Grid, IconButton, MenuItem, Paper, Select, TextField, Typography } from '@material-ui/core';
 import axios from 'axios';
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { FiPlus, FiXCircle } from 'react-icons/fi';
+import { FiPlus, FiX, FiXCircle } from 'react-icons/fi';
 import { RouteComponentProps } from 'react-router-dom';
 import { setUser } from '../actions/userActions';
 import { checkBadAuthorization } from '../utils/checkCookies';
 import getToken from '../utils/getToken';
+import validateUserLeagueData from '../validation/validateUserLeagueData';
 import { useStateValue } from './AppProvider';
 
-interface IValidationData{
+interface IValidatedData{
     name: {
         message: string;
-        error: string;
+        error: boolean;
     };
     mainLeague: {
         message: string;
-        error: string;
+        error: boolean;
     }
 }
 
@@ -53,10 +55,23 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
         }
     };
 
+    const defaultValidatedData = {
+        name: {
+            message: '',
+            error: false
+        },
+        mainLeague: {
+            message: '',
+            error: false
+        }
+    }
+
     const [openDialog, setOpenDialog] = useState<boolean>(false);
     const [addUserLeagueName, setAddUserLeagueName] = useState<string>('');
     const [leagues, setLeagues] = useState([]);
     const [addUserLeagueMainLeague, setAddUserLeagueMainLeague] = useState<string>('');
+
+    const [validatedData, setValidatedData] = useState<IValidatedData>(defaultValidatedData);
 
     const [tempLeagues, setTempLeagues] = useState([
         {name: "Liga 1", mainLeague: "Glowna 1", owner: "Wlasciciel 1"},
@@ -187,6 +202,108 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
         )
     }
 
+    const handleOnChangeName = () => (event: React.ChangeEvent<HTMLInputElement>) => {
+        event.persist();
+        if(event.target){
+            setAddUserLeagueName(event.target.value);
+        }
+    }
+
+    const handleOnSubmit = (event: React.FormEvent) => {
+        event.preventDefault();
+        console.log("SUBMIT");
+        const validationResponse = validateUserLeagueData({name: addUserLeagueName, mainLeague: addUserLeagueMainLeague});
+        if (validationResponse.error){
+            setValidatedData(() => defaultValidatedData);
+            validationResponse.error.details.forEach(
+                (errorItem: ValidationErrorItem): any => {
+                    console.log(errorItem.message);
+                    setValidatedData((prevState: IValidatedData) => {
+                        return{
+                            ...prevState,
+                            [errorItem.path[0]]: {
+                                message: errorItem.message,
+                                error: true
+                            }
+                        };
+                    });
+                }
+            );
+        } else {
+            addUserLeague();
+        }
+    }
+
+    const handleOnChangeMainLeague = () => event => {
+        event.persist();
+        if(event.target){
+            setAddUserLeagueMainLeague(event.target.value);
+        }
+    }
+
+    const generateDialog = () => {
+        return(
+            <>
+                <div>
+                    <Dialog open={openDialog} onClose={handleCloseDialog} className="user-leagues-dialog">
+                        <DialogTitle>
+                            <div className="user-leagues-dialog__header">
+                                <Typography variant="h4" className="user-leagues-dialog__title">
+                                    Dodawanie ligi
+                                </Typography>
+                                <IconButton
+                                    onClick={handleCloseDialog}
+                                    className="user-leagues-dialog__fix"
+                                >
+                                    <FiX />
+                                </IconButton>
+                            </div>
+                        </DialogTitle>
+                        <DialogContent dividers>
+                            <form className="user-leagues-dialog__form" onSubmit={handleOnSubmit}>
+                                <Grid container>
+                                    <Grid item xs={7} className="user-leagues-dialog__fields">
+                                        <FormControl className="user-leagues-dialog__text-field">
+                                            <TextField
+                                                label="Nazwa ligi"
+                                                required
+                                                autoComplete="league"
+                                                value={addUserLeagueName}
+                                                error={validatedData.name.error}
+                                                helperText={validatedData.name.message}
+                                                onChange={handleOnChangeName()}
+                                            />
+                                        </FormControl>
+                                        <FormControl className="user-leagues-dialog__select-field">
+                                            Kraj:
+                                            <Select
+                                                value={addUserLeagueMainLeague || ''}
+                                                onChange={handleOnChangeMainLeague()}
+                                            >
+                                                <MenuItem value="Polska">Polska</MenuItem>
+                                                <MenuItem value="Wielka Brytania">Wielka Brytania</MenuItem>
+                                                <MenuItem value="Szwecja">Szwecja</MenuItem>
+                                                <MenuItem value="Dania">Dania</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Button
+                                            className="btn user-leagues-dialog__form_button"
+                                            type="submit"
+                                        >
+                                            Dodaj
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            </form>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            </>
+        )
+    }
+
     useEffect(() => {
         if (!userData.username) fetchUserData();
     }, [])
@@ -211,6 +328,7 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
                     <Divider />
                     <br/>
                     {generateTable()}
+                    {generateDialog()}
                 </Paper>
             </div>
         </>
