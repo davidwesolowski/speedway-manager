@@ -24,6 +24,8 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import SelfTeaching from '../components/SelfTeaching';
 import Friends from '../components/Friends';
 import ListMatches from '../components/ListMatches';
+import { useStateValue } from '../components/AppProvider';
+import checkAdminRole from '../utils/checkAdminRole';
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -37,6 +39,7 @@ const AppRoute: FunctionComponent = () => {
 
 const RoutesAnimation = () => {
 	const location = useLocation();
+	const { userData } = useStateValue();
 	document.body.style.overflow = 'hidden';
 	return (
 		<TransitionGroup component={null}>
@@ -117,8 +120,11 @@ const RoutesAnimation = () => {
 						path="/dodaj-mecz"
 						render={(props: RouteComponentProps) => {
 							const cookiesExist = checkCookies();
-							if (cookiesExist) return <AddMatch {...props} />;
-							else return <Redirect to="/login" />;
+							const isAdmin = checkAdminRole(userData.role);
+							if (!cookiesExist) return <Redirect to="/login" />;
+							if (isAdmin && cookiesExist) {
+								return <Redirect to="/dodaj-mecz" />;
+							} else return <Redirect to="/druzyna" />;
 						}}
 					/>
 					<Route
@@ -134,7 +140,7 @@ const RoutesAnimation = () => {
 						path="/mecze"
 						render={(props: RouteComponentProps) => {
 							const cookiesExist = checkCookies();
-							if(cookiesExist) return <ListMatches {...props} />;
+							if (cookiesExist) return <ListMatches {...props} />;
 							else return <Redirect to="/login" />;
 						}}
 					/>
