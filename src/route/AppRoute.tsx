@@ -26,6 +26,7 @@ import Friends from '../components/Friends';
 import ListMatches from '../components/ListMatches';
 import { useStateValue } from '../components/AppProvider';
 import checkAdminRole from '../utils/checkAdminRole';
+import ClubLeagueCreate from '../components/ClubLeagueCreate';
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -138,6 +139,15 @@ const RoutesAnimation = () => {
 						render={(props: RouteComponentProps) => {
 							const cookiesExist = checkCookies();
 							if (cookiesExist) return <ListMatches {...props} />;
+							else return <Redirect to="/login" />;
+						}}
+					/>
+					<Route
+						path="/kluby"
+						render={(props: RouteComponentProps) => {
+							const cookiesExist = checkCookies();
+							if (cookiesExist)
+								return <ClubLeagueCreate {...props} />;
 							else return <Redirect to="/login" />;
 						}}
 					/>

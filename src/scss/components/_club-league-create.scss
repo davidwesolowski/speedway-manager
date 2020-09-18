@@ -1,0 +1,26 @@
+.clubLeague {
+	&__container {
+		grid-column: center-start / center-end;
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	&__img {
+		background-image: url(/img/wroclaw.jpg);
+		position: absolute;
+		z-index: 1;
+		height: 100%;
+		width: 100%;
+		background-size: cover;
+		filter: opacity(0.2);
+	}
+
+	&__box {
+		position: relative;
+		z-index: 1000;
+		background-color: #fff;
+		padding: 2rem;
+	}
+}
