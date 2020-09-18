@@ -31,6 +31,8 @@ import { FiX, FiChevronDown } from 'react-icons/fi';
 import addNotification from '../utils/addNotification';
 import Cookies from 'universal-cookie';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import fetchUserData from '../utils/fetchUserData';
+import checkAdminRole from '../utils/checkAdminRole';
 
 interface IAnswerAndQuestion {
 	question: string;
@@ -108,14 +110,7 @@ const SelfTeaching: FunctionComponent = () => {
 		const checkIfUserLoggedIn = async () => {
 			const cookiesExist = checkCookies();
 			if (cookiesExist && !userData.username) {
-				const {
-					data: { username, email, avatarUrl }
-				} = await axios.get(
-					'https://fantasy-league-eti.herokuapp.com/users/self',
-					options
-				);
-				dispatchUserData(setUser({ username, email, avatarUrl }));
-				setLoggedIn(true);
+				await fetchUserData(dispatchUserData, setLoggedIn, push);
 			}
 		};
 
@@ -162,7 +157,7 @@ const SelfTeaching: FunctionComponent = () => {
 			<div className="selfTeaching__container">
 				<div className="selfTeaching__img"></div>
 				<Paper className="selfTeaching__box">
-					{userData.username && (
+					{checkAdminRole(userData.role) && (
 						<Grid container justify="flex-end" alignItems="center">
 							<Grid item>
 								<IconButton onClick={handleOpen}>

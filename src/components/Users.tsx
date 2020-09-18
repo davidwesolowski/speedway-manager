@@ -16,7 +16,6 @@ import {
 import { FiSearch, FiX } from 'react-icons/fi';
 import { RouteProps, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { setUser } from '../actions/userActions';
 import { useStateValue } from './AppProvider';
 import { checkBadAuthorization } from '../utils/checkCookies';
 import UsersList from './UsersList';
@@ -24,6 +23,7 @@ import getToken from '../utils/getToken';
 import TeamRiders, { IRider } from './TeamRiders';
 import addNotification from '../utils/addNotification';
 import { CSSTransition } from 'react-transition-group';
+import fetchUserData from '../utils/fetchUserData';
 
 export interface IUsers {
 	_id: string;
@@ -178,7 +178,11 @@ const Users: FunctionComponent<RouteProps> = () => {
 				const teams = await fetchTeams();
 				let _id = userData._id;
 				if (!userData.username) {
-					_id = await fetchUserData();
+					_id = await fetchUserData(
+						dispatchUserData,
+						setLoggedIn,
+						push
+					);
 				}
 				const userState = data
 					.filter(user => user._id !== _id)
@@ -209,22 +213,6 @@ const Users: FunctionComponent<RouteProps> = () => {
 				if (data.statusCode == 401) {
 					checkBadAuthorization(setLoggedIn, push);
 				}
-			}
-		};
-
-		const fetchUserData = async () => {
-			try {
-				const {
-					data: { _id, username, email, avatarUrl }
-				} = await axios.get(
-					'https://fantasy-league-eti.herokuapp.com/users/self',
-					options
-				);
-				dispatchUserData(setUser({ _id, username, email, avatarUrl }));
-				setLoggedIn(true);
-				return _id;
-			} catch (e) {
-				/**/
 			}
 		};
 

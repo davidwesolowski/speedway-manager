@@ -46,7 +46,7 @@ const Header: FunctionComponent = () => {
 							</Link>
 						</li>
 						<li className="header__item">
-							<Link to="/" className="header__link">
+							<Link to="/mecze" className="header__link">
 								Wyniki meczów
 							</Link>
 						</li>

@@ -5,6 +5,7 @@ export interface IUser {
 	email?: string;
 	username?: string;
 	avatarUrl?: string | undefined;
+	role?: string;
 }
 
 export interface UserAction {

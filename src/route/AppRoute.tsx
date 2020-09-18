@@ -24,6 +24,8 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import SelfTeaching from '../components/SelfTeaching';
 import Friends from '../components/Friends';
 import ListMatches from '../components/ListMatches';
+import { useStateValue } from '../components/AppProvider';
+import checkAdminRole from '../utils/checkAdminRole';
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -117,8 +119,9 @@ const RoutesAnimation = () => {
 						path="/dodaj-mecz"
 						render={(props: RouteComponentProps) => {
 							const cookiesExist = checkCookies();
-							if (cookiesExist) return <AddMatch {...props} />;
-							else return <Redirect to="/login" />;
+							if (cookiesExist) {
+								return <AddMatch {...props} />;
+							} else return <Redirect to="/login" />;
 						}}
 					/>
 					<Route
@@ -134,7 +137,7 @@ const RoutesAnimation = () => {
 						path="/mecze"
 						render={(props: RouteComponentProps) => {
 							const cookiesExist = checkCookies();
-							if(cookiesExist) return <ListMatches {...props} />;
+							if (cookiesExist) return <ListMatches {...props} />;
 							else return <Redirect to="/login" />;
 						}}
 					/>

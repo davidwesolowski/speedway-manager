@@ -83,25 +83,19 @@ const Login: FunctionComponent<RouteComponentProps> = ({
 	const loginUser = async (user: IUser) => {
 		try {
 			const {
-				data: { accessToken }
+				data: {
+					accessToken,
+					user: { _id, username, email, avatarUrl, role }
+				}
 			} = await axios.post(
 				'https://fantasy-league-eti.herokuapp.com/auth/login',
 				user
 			);
 			const cookies = new Cookies();
 			cookies.set('accessToken', accessToken, { path: '/' });
-			const options = {
-				headers: {
-					Authorization: `Bearer ${accessToken}`
-				}
-			};
-			const {
-				data: { _id, username, email, avatarUrl }
-			} = await axios.get(
-				'https://fantasy-league-eti.herokuapp.com/users/self',
-				options
+			dispatchUserData(
+				setUser({ _id, username, email, avatarUrl, role })
 			);
-			dispatchUserData(setUser({ _id, username, email, avatarUrl }));
 			const title = 'Sukces!';
 			const message = 'Zalogowano pomyślnie!';
 			const type = 'success';
