@@ -1,11 +1,9 @@
 .clubLeague {
-	&__container {
-		grid-column: center-start / center-end;
-		position: relative;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
+	grid-column: center-start / center-end;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
 	&__img {
 		background-image: url(/img/wroclaw.jpg);
@@ -50,5 +48,47 @@
 
 	&__btn {
 		width: 100%;
+	}
+
+	& .MuiTableCell-head {
+		background-color: $color-primary !important;
+		color: #fff !important;
+		font-size: 1.8rem;
+		font-family: $bebas !important;
+		border: 1px solid $color-primary-light;
+
+		&:first-child {
+			border: none !important;
+		}
+		&:nth-child(2) {
+			border-left: none;
+		}
+	}
+
+	& .MuiTableRow-root:nth-child(even) .MuiTableCell-body {
+		background-color: $color-primary-light;
+		color: #fff;
+
+		.MuiIconButton-root:hover {
+			background-color: #b9b0b083;
+		}
+	}
+
+	& .MuiTableRow-root:nth-child(even) .MuiTableCell-body &__iconButton {
+		color: #fff;
+	}
+
+	& .MuiTableCell-body {
+		font-size: 1.7rem;
+		font-family: $bebas !important;
+		border: 1px solid $color-primary;
+	}
+
+	& .MuiTableCell-root {
+		padding: 1rem !important;
+	}
+
+	& .MuiTable-root {
+		border: 1px solid $color-primary;
 	}
 }
