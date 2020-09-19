@@ -209,6 +209,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 							<TeamCreate
 								updatedTeam={updatedTeam}
 								setUpdatedTeam={setUpdatedTeam}
+								url="https://fantasy-league-eti.herokuapp.com/teams"
 							/>
 						)}
 					</TabPanel>

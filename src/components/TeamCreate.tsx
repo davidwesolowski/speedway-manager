@@ -19,7 +19,6 @@ import {
 } from '@material-ui/core';
 import { FaFileUpload } from 'react-icons/fa';
 import axios from 'axios';
-import Cookies from 'universal-cookie';
 import handleImgFile, {
 	IImageData,
 	defaultImageData
@@ -36,8 +35,9 @@ interface ITeamState {
 }
 
 interface IProps {
-	updatedTeam: boolean;
-	setUpdatedTeam: Dispatch<SetStateAction<boolean>>;
+	updatedTeam?: boolean;
+	setUpdatedTeam?: Dispatch<SetStateAction<boolean>>;
+	url: string;
 }
 
 type SelectType = {
@@ -58,7 +58,8 @@ const leagues: string[] = [
 
 const TeamCreate: FunctionComponent<IProps> = ({
 	updatedTeam,
-	setUpdatedTeam
+	setUpdatedTeam,
+	url
 }) => {
 	const [team, setTeam] = useState<ITeamState>(defaultTeam);
 	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
@@ -88,11 +89,7 @@ const TeamCreate: FunctionComponent<IProps> = ({
 			};
 			const {
 				data: { _id }
-			} = await axios.post(
-				'https://fantasy-league-eti.herokuapp.com/teams',
-				{ name },
-				options
-			);
+			} = await axios.post(url, { name }, options);
 			const typeNotification = 'success';
 			const title = 'Sukces!';
 			let message = 'Pomyślnie stworzono drużynę!';
@@ -102,11 +99,7 @@ const TeamCreate: FunctionComponent<IProps> = ({
 			const { name: filename, imageBuffer } = imageData;
 			const {
 				data: { signedUrl, imageUrl, type }
-			} = await axios.post(
-				`https://fantasy-league-eti.herokuapp.com/teams/${_id}/logo`,
-				{ filename },
-				options
-			);
+			} = await axios.post(`${url}/${_id}/logo`, { filename }, options);
 
 			const awsOptions = {
 				headers: {
@@ -151,10 +144,14 @@ const TeamCreate: FunctionComponent<IProps> = ({
 	return (
 		<div className="team-create-container">
 			<Typography className="heading-3 team-create-container__heading">
-				Stwórz drużynę
+				Stwórz {updatedTeam ? 'drużynę' : 'klub'}
 			</Typography>
 			<form
-				className="team-create-container__form"
+				className={
+					updatedTeam
+						? 'team-create-container__form'
+						: 'team-create-container__formClub'
+				}
 				encType="multipart/form-data"
 				onSubmit={handleOnSubmit}
 			>

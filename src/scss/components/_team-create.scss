@@ -27,6 +27,24 @@
 		}
 	}
 
+	&__formClub {
+		margin-top: $xs-margin;
+		width: 90%;
+		margin: 0 auto;
+
+		& .MuiFormControl-root {
+			min-width: 100%;
+		}
+
+		&-field {
+			margin-bottom: $xs-margin !important;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			width: 100%;
+		}
+	}
+
 	&__menu {
 		font-size: 1.6rem !important;
 	}
