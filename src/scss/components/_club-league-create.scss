@@ -20,7 +20,7 @@
 		z-index: 1000;
 		padding: 2rem;
 		min-width: 80vw;
-		min-height: 70%;
+		min-height: 85%;
 	}
 
 	&__heading {
@@ -63,6 +63,10 @@
 		&:nth-child(2) {
 			border-left: none;
 		}
+	}
+
+	& .MuiTableRow-root:nth-child(even) .MuiTableCell-body &__iconButton {
+		color: #fff;
 	}
 
 	& .MuiTableRow-root:nth-child(even) .MuiTableCell-body {

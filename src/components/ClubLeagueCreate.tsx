@@ -7,9 +7,11 @@ import React, {
 } from 'react';
 import { RouteProps, useHistory } from 'react-router-dom';
 import {
+	Avatar,
 	Button,
 	FormControl,
 	Grid,
+	IconButton,
 	Paper,
 	Table,
 	TableBody,
@@ -26,21 +28,31 @@ import fetchUserData from '../utils/fetchUserData';
 import getToken from '../utils/getToken';
 import { checkBadAuthorization } from '../utils/checkCookies';
 import addNotification from '../utils/addNotification';
+import { CSSTransition } from 'react-transition-group';
+import { FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
 
-interface ILeagueState {
+interface ILeague {
 	_id?: string;
 	name: string;
 	country: string;
 }
 
-const defaultLeague: ILeagueState = {
+interface IClubs {
+	_id: string;
+	name: string;
+	imageUrl: string | null;
+	leagueName: string;
+}
+
+const defaultLeague: ILeague = {
 	name: '',
 	country: ''
 };
 
 const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 	const [league, setLeague] = useState(defaultLeague);
-	const [leagues, setLeagues] = useState<ILeagueState[]>([]);
+	const [leagues, setLeagues] = useState<ILeague[]>([]);
+	const [clubs, setClubs] = useState<IClubs[]>([]);
 	const { dispatchUserData, setLoggedIn, userData } = useStateValue();
 	const { push } = useHistory();
 
@@ -98,18 +110,49 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 		}
 	};
 
-	const clubsRender = clubs => {
-		<Table>
-			<TableHead>
-				<TableRow>
-					<TableCell />
-					<TableCell align="center">Nazwa</TableCell>
-					<TableCell align="center">Liga</TableCell>
-				</TableRow>
-			</TableHead>
-			<TableBody></TableBody>
-		</Table>;
-	};
+	const clubsRender = () => (
+		<CSSTransition
+			in={clubs.length > 0}
+			timeout={300}
+			classNames="animationScaleUp"
+			unmountOnExit
+		>
+			<Table>
+				<TableHead>
+					<TableRow>
+						<TableCell />
+						<TableCell align="center">Nazwa</TableCell>
+						<TableCell align="center">Liga</TableCell>
+						<TableCell align="center">Edytuj</TableCell>
+						<TableCell align="center">Usuń</TableCell>
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{clubs.map(club => (
+						<TableRow key={club.name}>
+							<TableCell align="center">
+								<Avatar src={club.imageUrl} alt="club-logo" />
+							</TableCell>
+							<TableCell align="center">{club.name}</TableCell>
+							<TableCell align="center">
+								{club.leagueName}
+							</TableCell>
+							<TableCell align="center">
+								<IconButton>
+									<FaPencilAlt className="clubLeague__iconButton" />
+								</IconButton>
+							</TableCell>
+							<TableCell align="center">
+								<IconButton>
+									<FaTrashAlt className="clubLeague__iconButton" />
+								</IconButton>
+							</TableCell>
+						</TableRow>
+					))}
+				</TableBody>
+			</Table>
+		</CSSTransition>
+	);
 
 	useEffect(() => {
 		const accessToken = getToken();
@@ -124,13 +167,13 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 					'https://fantasy-league-eti.herokuapp.com/leagues',
 					options
 				);
-				setLeagues(
-					data.map(({ _id, name, country }) => ({
-						_id,
-						name,
-						country
-					}))
-				);
+				const leagues = data.map(({ _id, name, country }) => ({
+					_id,
+					name,
+					country
+				}));
+				setLeagues(leagues);
+				return leagues;
 			} catch (e) {
 				const {
 					response: { data }
@@ -147,9 +190,50 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 			}
 		};
 
-		fetchLeagues();
+		const fetchClubs = async () => {
+			try {
+				const { data } = await axios.get(
+					'https://fantasy-league-eti.herokuapp.com/clubs',
+					options
+				);
+				const leagues = await fetchLeagues();
+				const clubs = data.map(club => {
+					const league = leagues.find(
+						league => league._id === club.leagueId
+					);
+					if (league)
+						return {
+							name: club.name,
+							imageUrl: club.imageUrl,
+							leagueName: league.name
+						};
+					return {
+						name: club.name,
+						imageUrl: club.imageUrl,
+						leagueName: ''
+					};
+				});
+				setClubs(clubs);
+			} catch (e) {
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
+				} else {
+					const title = 'Błąd!';
+					const message = 'Nie udało się pobrać klubów!';
+					const type = 'danger';
+					const duration = 1500;
+					addNotification(title, message, type, duration);
+				}
+			}
+		};
+
 		if (!userData.username)
 			fetchUserData(dispatchUserData, setLoggedIn, push);
+
+		fetchClubs();
 	}, []);
 
 	return (
@@ -157,7 +241,9 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 			<div className="clubLeague__img"></div>
 			<Paper className="clubLeague__box">
 				<Grid container>
-					<Grid item xs={12} sm={6}></Grid>
+					<Grid item xs={12} sm={6}>
+						{clubsRender()}
+					</Grid>
 					<Grid item xs={12} sm={6}>
 						<Grid container>
 							<Grid item xs={12}>
