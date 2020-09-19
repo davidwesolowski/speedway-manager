@@ -1,5 +1,5 @@
-import React, { FunctionComponent } from 'react';
-import { RouteProps } from 'react-router-dom';
+import React, { FunctionComponent, useEffect } from 'react';
+import { RouteProps, useHistory } from 'react-router-dom';
 import {
 	Button,
 	FormControl,
@@ -9,8 +9,18 @@ import {
 	Typography
 } from '@material-ui/core';
 import TeamCreate from './TeamCreate';
+import { useStateValue } from './AppProvider';
+import fetchUserData from '../utils/fetchUserData';
 
 const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
+	const { dispatchUserData, setLoggedIn, userData } = useStateValue();
+	const { push } = useHistory();
+
+	useEffect(() => {
+		if (!userData.username)
+			fetchUserData(dispatchUserData, setLoggedIn, push);
+	}, []);
+
 	return (
 		<div className="clubLeague__container">
 			<div className="clubLeague__img"></div>
