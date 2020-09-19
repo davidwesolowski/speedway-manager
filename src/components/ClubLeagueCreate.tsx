@@ -28,6 +28,7 @@ import { checkBadAuthorization } from '../utils/checkCookies';
 import addNotification from '../utils/addNotification';
 
 interface ILeagueState {
+	_id?: string;
 	name: string;
 	country: string;
 }
@@ -39,6 +40,7 @@ const defaultLeague: ILeagueState = {
 
 const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 	const [league, setLeague] = useState(defaultLeague);
+	const [leagues, setLeagues] = useState<ILeagueState[]>([]);
 	const { dispatchUserData, setLoggedIn, userData } = useStateValue();
 	const { push } = useHistory();
 
@@ -86,6 +88,12 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 			} = e;
 			if (data.statusCode == 401) {
 				checkBadAuthorization(setLoggedIn, push);
+			} else {
+				const title = 'Błąd!';
+				const message = 'Nie udało się dodać ligi!';
+				const type = 'danger';
+				const duration = 1500;
+				addNotification(title, message, type, duration);
 			}
 		}
 	};
@@ -104,6 +112,42 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 	};
 
 	useEffect(() => {
+		const accessToken = getToken();
+		const options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
+			}
+		};
+		const fetchLeagues = async () => {
+			try {
+				const { data } = await axios.get(
+					'https://fantasy-league-eti.herokuapp.com/leagues',
+					options
+				);
+				setLeagues(
+					data.map(({ _id, name, country }) => ({
+						_id,
+						name,
+						country
+					}))
+				);
+			} catch (e) {
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
+				} else {
+					const title = 'Błąd!';
+					const message = 'Nie udało się pobrać lig!';
+					const type = 'danger';
+					const duration = 1500;
+					addNotification(title, message, type, duration);
+				}
+			}
+		};
+
+		fetchLeagues();
 		if (!userData.username)
 			fetchUserData(dispatchUserData, setLoggedIn, push);
 	}, []);
