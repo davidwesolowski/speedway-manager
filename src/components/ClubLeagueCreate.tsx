@@ -1,4 +1,10 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, {
+	ChangeEvent,
+	FormEvent,
+	FunctionComponent,
+	useEffect,
+	useState
+} from 'react';
 import { RouteProps, useHistory } from 'react-router-dom';
 import {
 	Button,
@@ -12,7 +18,18 @@ import TeamCreate from './TeamCreate';
 import { useStateValue } from './AppProvider';
 import fetchUserData from '../utils/fetchUserData';
 
+interface ILeagueState {
+	name: string;
+	country: string;
+}
+
+const defaultLeague: ILeagueState = {
+	name: '',
+	country: ''
+};
+
 const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
+	const [league, setLeague] = useState(defaultLeague);
 	const { dispatchUserData, setLoggedIn, userData } = useStateValue();
 	const { push } = useHistory();
 
@@ -20,6 +37,18 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 		if (!userData.username)
 			fetchUserData(dispatchUserData, setLoggedIn, push);
 	}, []);
+
+	const handleOnChange = (fieldName: string) => (
+		event: ChangeEvent<HTMLInputElement>
+	) => {
+		event.persist();
+		if (event.target) {
+			setLeague(prev => ({
+				...prev,
+				[fieldName]: event.target.value
+			}));
+		}
+	};
 
 	return (
 		<div className="clubLeague__container">
@@ -38,12 +67,22 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 							<Grid container>
 								<Grid item xs={12}>
 									<FormControl className="clubLeague__form-field">
-										<TextField label="Liga" required />
+										<TextField
+											label="Liga"
+											required
+											value={league.name}
+											onChange={handleOnChange('name')}
+										/>
 									</FormControl>
 								</Grid>
 								<Grid item xs={12}>
 									<FormControl className="clubLeague__form-field">
-										<TextField label="Kraj" required />
+										<TextField
+											label="Kraj"
+											required
+											value={league.country}
+											onChange={handleOnChange('country')}
+										/>
 									</FormControl>
 								</Grid>
 								<Grid item xs={12}>
