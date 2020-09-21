@@ -5,7 +5,8 @@ import React, {
 	FormEvent,
 	useContext,
 	SetStateAction,
-	Dispatch
+	Dispatch,
+	useEffect
 } from 'react';
 import {
 	Typography,
@@ -28,6 +29,7 @@ import { useHistory } from 'react-router-dom';
 import { checkBadAuthorization } from '../utils/checkCookies';
 import { AppContext } from './AppProvider';
 import getToken from '../utils/getToken';
+import { ILeague } from './Team';
 
 interface ITeamState {
 	name: string;
@@ -38,6 +40,7 @@ interface IProps {
 	updatedTeam?: boolean;
 	setUpdatedTeam?: Dispatch<SetStateAction<boolean>>;
 	url: string;
+	leagues: ILeague[];
 }
 
 type SelectType = {
@@ -50,16 +53,11 @@ const defaultTeam: ITeamState = {
 	league: ''
 };
 
-const leagues: string[] = [
-	'PGE Ekstraliga',
-	'eWINNER 1. Liga',
-	'2. Liga żużlowa'
-];
-
 const TeamCreate: FunctionComponent<IProps> = ({
 	updatedTeam,
 	setUpdatedTeam,
-	url
+	url,
+	leagues
 }) => {
 	const [team, setTeam] = useState<ITeamState>(defaultTeam);
 	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
@@ -180,13 +178,13 @@ const TeamCreate: FunctionComponent<IProps> = ({
 								value={team.league}
 								onChange={handleOnChange('league')}
 							>
-								{leagues.map((league: string) => (
+								{leagues.map((league: ILeague) => (
 									<MenuItem
-										key={league}
-										value={league}
+										key={league._id}
+										value={league.name}
 										className="team-create-container__menu"
 									>
-										{league}
+										{league.name}
 									</MenuItem>
 								))}
 							</Select>

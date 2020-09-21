@@ -35,7 +35,7 @@ import { CSSTransition } from 'react-transition-group';
 import { FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
 
 interface ILeague {
-	_id?: string;
+	_id: string;
 	name: string;
 	country: string;
 }
@@ -48,6 +48,7 @@ interface IClub {
 }
 
 const defaultLeague: ILeague = {
+	_id: '',
 	name: '',
 	country: ''
 };
@@ -150,6 +151,8 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 				},
 				options
 			);
+			setLeagues([...leagues, league]);
+			setLeague(defaultLeague);
 			const title = 'Sukces!';
 			const message = 'Pomyślnie dodano ligę!';
 			const type = 'success';
@@ -315,7 +318,10 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 						<Grid item xs={12} sm={6}>
 							<Grid container>
 								<Grid item xs={12}>
-									<TeamCreate url="https://fantasy-league-eti.herokuapp.com/clubs" />
+									<TeamCreate
+										url="https://fantasy-league-eti.herokuapp.com/clubs"
+										leagues={leagues}
+									/>
 								</Grid>
 								<Grid item xs={12}>
 									<Typography className="heading-3 clubLeague__heading">
