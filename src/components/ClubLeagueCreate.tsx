@@ -9,6 +9,9 @@ import { RouteProps, useHistory } from 'react-router-dom';
 import {
 	Avatar,
 	Button,
+	Dialog,
+	DialogActions,
+	DialogTitle,
 	FormControl,
 	Grid,
 	IconButton,
@@ -37,7 +40,7 @@ interface ILeague {
 	country: string;
 }
 
-interface IClubs {
+interface IClub {
 	_id: string;
 	name: string;
 	imageUrl: string | null;
@@ -49,12 +52,70 @@ const defaultLeague: ILeague = {
 	country: ''
 };
 
+const defaultClub: IClub = {
+	_id: '',
+	name: '',
+	imageUrl: '',
+	leagueName: ''
+};
+
 const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 	const [league, setLeague] = useState(defaultLeague);
 	const [leagues, setLeagues] = useState<ILeague[]>([]);
-	const [clubs, setClubs] = useState<IClubs[]>([]);
+	const [club, setClub] = useState<IClub>(defaultClub);
+	const [clubs, setClubs] = useState<IClub[]>([]);
+	const [removeDialog, setRemoveDialog] = useState(false);
 	const { dispatchUserData, setLoggedIn, userData } = useStateValue();
 	const { push } = useHistory();
+
+	const handleShowRemoveDialog = (id: string) => () => {
+		setRemoveDialog(true);
+		const club = clubs.find(club => club._id === id);
+		setClub(club);
+	};
+	const handleCloseRemoveDialog = () => {
+		setRemoveDialog(false);
+		setClub(defaultClub);
+	};
+
+	const removeClub = async () => {
+		try {
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			const { _id } = club;
+			if (_id) {
+				await axios.delete(
+					`https://fantasy-league-eti.herokuapp.com/clubs/${_id}`,
+					options
+				);
+				setClubs(clubs.filter(club => club._id !== _id));
+				setClub(defaultClub);
+				handleCloseRemoveDialog();
+				const title = 'Sukces!';
+				const message = 'Pomyślne usunięcie klubu!';
+				const type = 'success';
+				const duration = 1500;
+				addNotification(title, message, type, duration);
+			}
+		} catch (e) {
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
+			} else {
+				const title = 'Błąd!';
+				const message = 'Nie udało się usunąć klubu!';
+				const type = 'danger';
+				const duration = 1500;
+				addNotification(title, message, type, duration);
+			}
+		}
+	};
 
 	const handleOnChange = (fieldName: string) => (
 		event: ChangeEvent<HTMLInputElement>
@@ -143,7 +204,9 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 								</IconButton>
 							</TableCell>
 							<TableCell align="center">
-								<IconButton>
+								<IconButton
+									onClick={handleShowRemoveDialog(club._id)}
+								>
 									<FaTrashAlt className="clubLeague__iconButton" />
 								</IconButton>
 							</TableCell>
@@ -153,7 +216,6 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 			</Table>
 		</CSSTransition>
 	);
-
 	useEffect(() => {
 		const accessToken = getToken();
 		const options = {
@@ -203,11 +265,13 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 					);
 					if (league)
 						return {
+							_id: club._id,
 							name: club.name,
 							imageUrl: club.imageUrl,
 							leagueName: league.name
 						};
 					return {
+						_id: club._id,
 						name: club.name,
 						imageUrl: club.imageUrl,
 						leagueName: ''
@@ -234,70 +298,95 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 			fetchUserData(dispatchUserData, setLoggedIn, push);
 
 		fetchClubs();
+		setTimeout(() => {
+			document.body.style.overflow = 'auto';
+		}, 1000);
 	}, []);
 
 	return (
-		<div className="clubLeague">
-			<div className="clubLeague__img"></div>
-			<Paper className="clubLeague__box">
-				<Grid container>
-					<Grid item xs={12} sm={6}>
-						{clubsRender()}
-					</Grid>
-					<Grid item xs={12} sm={6}>
-						<Grid container>
-							<Grid item xs={12}>
-								<TeamCreate url="https://fantasy-league-eti.herokuapp.com/clubs" />
-							</Grid>
-							<Grid item xs={12}>
-								<Typography className="heading-3 clubLeague__heading">
-									Utwórz ligę
-								</Typography>
-								<form
-									className="clubLeague__form"
-									onSubmit={handleOnSubmit}
-								>
-									<Grid container justify="center">
-										<Grid item xs={12} md={10}>
-											<FormControl className="clubLeague__form-field">
-												<TextField
-													label="Liga"
-													required
-													value={league.name}
-													onChange={handleOnChange(
-														'name'
-													)}
-												/>
-											</FormControl>
+		<>
+			<div className="clubLeague">
+				<div className="clubLeague__img"></div>
+				<Paper className="clubLeague__box">
+					<Grid container>
+						<Grid item xs={12} sm={6}>
+							{clubsRender()}
+						</Grid>
+						<Grid item xs={12} sm={6}>
+							<Grid container>
+								<Grid item xs={12}>
+									<TeamCreate url="https://fantasy-league-eti.herokuapp.com/clubs" />
+								</Grid>
+								<Grid item xs={12}>
+									<Typography className="heading-3 clubLeague__heading">
+										Utwórz ligę
+									</Typography>
+									<form
+										className="clubLeague__form"
+										onSubmit={handleOnSubmit}
+									>
+										<Grid container justify="center">
+											<Grid item xs={12} md={10}>
+												<FormControl className="clubLeague__form-field">
+													<TextField
+														label="Liga"
+														required
+														value={league.name}
+														onChange={handleOnChange(
+															'name'
+														)}
+													/>
+												</FormControl>
+											</Grid>
+											<Grid item xs={12} md={10}>
+												<FormControl className="clubLeague__form-field">
+													<TextField
+														label="Kraj"
+														required
+														value={league.country}
+														onChange={handleOnChange(
+															'country'
+														)}
+													/>
+												</FormControl>
+											</Grid>
+											<Grid item xs={12} md={10}>
+												<Button
+													type="submit"
+													className="btn clubLeague__btn"
+												>
+													Utwórz
+												</Button>
+											</Grid>
 										</Grid>
-										<Grid item xs={12} md={10}>
-											<FormControl className="clubLeague__form-field">
-												<TextField
-													label="Kraj"
-													required
-													value={league.country}
-													onChange={handleOnChange(
-														'country'
-													)}
-												/>
-											</FormControl>
-										</Grid>
-										<Grid item xs={12} md={10}>
-											<Button
-												type="submit"
-												className="btn clubLeague__btn"
-											>
-												Utwórz
-											</Button>
-										</Grid>
-									</Grid>
-								</form>
+									</form>
+								</Grid>
 							</Grid>
 						</Grid>
 					</Grid>
-				</Grid>
-			</Paper>
-		</div>
+				</Paper>
+			</div>
+			<Dialog open={removeDialog} onClose={handleCloseRemoveDialog}>
+				<DialogTitle>
+					<div>
+						<Typography variant="h4" className="dialog__title">
+							Czy na pewno chcesz usunąć drużynę?
+						</Typography>
+					</div>
+				</DialogTitle>
+				<DialogActions>
+					<Button className="btn" onClick={handleCloseRemoveDialog}>
+						Anuluj
+					</Button>
+					<Button
+						className="btn dialog__button-approve"
+						onClick={removeClub}
+					>
+						Usuń
+					</Button>
+				</DialogActions>
+			</Dialog>
+		</>
 	);
 };
 
