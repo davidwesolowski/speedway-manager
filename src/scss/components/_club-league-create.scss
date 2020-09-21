@@ -29,6 +29,11 @@
 		text-align: center;
 	}
 
+	&__clubHeading {
+		font-family: $bebas !important;
+		text-align: center;
+	}
+
 	&__form {
 		width: 90%;
 		margin: 0 auto;
@@ -48,6 +53,10 @@
 
 	&__btn {
 		width: 100%;
+	}
+
+	& .MuiDivider-root {
+		margin-bottom: $xs-margin !important;
 	}
 
 	& .MuiTableCell-head {

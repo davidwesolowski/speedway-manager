@@ -12,6 +12,7 @@ import {
 	Dialog,
 	DialogActions,
 	DialogTitle,
+	Divider,
 	FormControl,
 	Grid,
 	IconButton,
@@ -33,6 +34,7 @@ import { checkBadAuthorization } from '../utils/checkCookies';
 import addNotification from '../utils/addNotification';
 import { CSSTransition } from 'react-transition-group';
 import { FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
+import checkAdminRole from '../utils/checkAdminRole';
 
 interface ILeague {
 	_id: string;
@@ -68,6 +70,7 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 	const [removeDialog, setRemoveDialog] = useState(false);
 	const { dispatchUserData, setLoggedIn, userData } = useStateValue();
 	const { push } = useHistory();
+	const isAdmin = checkAdminRole(userData.role);
 
 	const handleShowRemoveDialog = (id: string) => () => {
 		setRemoveDialog(true);
@@ -312,63 +315,71 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 				<div className="clubLeague__img"></div>
 				<Paper className="clubLeague__box">
 					<Grid container>
-						<Grid item xs={12} sm={6}>
+						<Grid item xs={12} md={isAdmin ? 6 : 12}>
+							<Typography className="heading-2 clubLeague__clubHeading">
+								Kluby
+							</Typography>
+							<Divider />
 							{clubsRender()}
 						</Grid>
-						<Grid item xs={12} sm={6}>
-							<Grid container>
-								<Grid item xs={12}>
-									<TeamCreate
-										url="https://fantasy-league-eti.herokuapp.com/clubs"
-										leagues={leagues}
-									/>
-								</Grid>
-								<Grid item xs={12}>
-									<Typography className="heading-3 clubLeague__heading">
-										Utwórz ligę
-									</Typography>
-									<form
-										className="clubLeague__form"
-										onSubmit={handleOnSubmit}
-									>
-										<Grid container justify="center">
-											<Grid item xs={12} md={10}>
-												<FormControl className="clubLeague__form-field">
-													<TextField
-														label="Liga"
-														required
-														value={league.name}
-														onChange={handleOnChange(
-															'name'
-														)}
-													/>
-												</FormControl>
+						{isAdmin && (
+							<Grid item xs={12} md={6}>
+								<Grid container>
+									<Grid item xs={12}>
+										<TeamCreate
+											url="https://fantasy-league-eti.herokuapp.com/clubs"
+											leagues={leagues}
+										/>
+									</Grid>
+									<Grid item xs={12}>
+										<Typography className="heading-3 clubLeague__heading">
+											Utwórz ligę
+										</Typography>
+										<form
+											className="clubLeague__form"
+											onSubmit={handleOnSubmit}
+										>
+											<Grid container justify="center">
+												<Grid item xs={12} md={10}>
+													<FormControl className="clubLeague__form-field">
+														<TextField
+															label="Liga"
+															required
+															value={league.name}
+															onChange={handleOnChange(
+																'name'
+															)}
+														/>
+													</FormControl>
+												</Grid>
+												<Grid item xs={12} md={10}>
+													<FormControl className="clubLeague__form-field">
+														<TextField
+															label="Kraj"
+															required
+															value={
+																league.country
+															}
+															onChange={handleOnChange(
+																'country'
+															)}
+														/>
+													</FormControl>
+												</Grid>
+												<Grid item xs={12} md={10}>
+													<Button
+														type="submit"
+														className="btn clubLeague__btn"
+													>
+														Utwórz
+													</Button>
+												</Grid>
 											</Grid>
-											<Grid item xs={12} md={10}>
-												<FormControl className="clubLeague__form-field">
-													<TextField
-														label="Kraj"
-														required
-														value={league.country}
-														onChange={handleOnChange(
-															'country'
-														)}
-													/>
-												</FormControl>
-											</Grid>
-											<Grid item xs={12} md={10}>
-												<Button
-													type="submit"
-													className="btn clubLeague__btn"
-												>
-													Utwórz
-												</Button>
-											</Grid>
-										</Grid>
-									</form>
+										</form>
+									</Grid>
 								</Grid>
 							</Grid>
-						</Grid>
+						)}
 					</Grid>
 				</Paper>
 			</div>
