@@ -985,35 +985,35 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                 case 1:
                     if(id === home.rider_2._id || id === home.rider_3._id || id === home.rider_4._id || id === home.rider_5._id || id === home.rider_6._id || id === home.rider_7._id || id === home.rider_8._id){
                         return true
-                    }
+                    }break;
                 case 2:
                     if(id === home.rider_1._id || id === home.rider_3._id || id === home.rider_4._id || id === home.rider_5._id || id === home.rider_6._id || id === home.rider_7._id || id === home.rider_8._id){
                         return true
-                    }
+                    }break;
                 case 3:
                     if(id === home.rider_2._id || id === home.rider_1._id || id === home.rider_4._id || id === home.rider_5._id || id === home.rider_6._id || id === home.rider_7._id || id === home.rider_8._id){
                         return true
-                    }
+                    }break;
                 case 4:
                     if(id === home.rider_2._id || id === home.rider_3._id || id === home.rider_1._id || id === home.rider_5._id || id === home.rider_6._id || id === home.rider_7._id || id === home.rider_8._id){
                         return true
-                    }
+                    }break;
                 case 5:
                     if(id === home.rider_2._id || id === home.rider_3._id || id === home.rider_4._id || id === home.rider_1._id || id === home.rider_6._id || id === home.rider_7._id || id === home.rider_8._id){
                         return true
-                    }
+                    }break;
                 case 6:
                     if(id === home.rider_2._id || id === home.rider_3._id || id === home.rider_4._id || id === home.rider_5._id || id === home.rider_1._id || id === home.rider_7._id || id === home.rider_8._id){
                         return true
-                    }
+                    }break;
                 case 7:
                     if(id === home.rider_2._id || id === home.rider_3._id || id === home.rider_4._id || id === home.rider_5._id || id === home.rider_6._id || id === home.rider_1._id || id === home.rider_8._id){
                         return true
-                    }
+                    }break;
                 case 8:
                     if(id === home.rider_2._id || id === home.rider_3._id || id === home.rider_4._id || id === home.rider_5._id || id === home.rider_6._id || id === home.rider_7._id || id === home.rider_1._id){
                         return true
-                    }
+                    }break;
                 default:
                     break;
             }
@@ -1023,35 +1023,35 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
                 case 1:
                     if(id === away.rider_2._id || id === away.rider_3._id || id === away.rider_4._id || id === away.rider_5._id || id === away.rider_6._id || id === away.rider_7._id || id === away.rider_8._id){
                         return true
-                    }
+                    }break;
                 case 2:
                     if(id === away.rider_1._id || id === away.rider_3._id || id === away.rider_4._id || id === away.rider_5._id || id === away.rider_6._id || id === away.rider_7._id || id === away.rider_8._id){
                         return true
-                    }
+                    }break;
                 case 3:
                     if(id === away.rider_2._id || id === away.rider_1._id || id === away.rider_4._id || id === away.rider_5._id || id === away.rider_6._id || id === away.rider_7._id || id === away.rider_8._id){
                         return true
-                    }
+                    }break;
                 case 4:
                     if(id === away.rider_2._id || id === away.rider_3._id || id === away.rider_1._id || id === away.rider_5._id || id === away.rider_6._id || id === away.rider_7._id || id === away.rider_8._id){
                         return true
-                    }
+                    }break;
                 case 5:
                     if(id === away.rider_2._id || id === away.rider_3._id || id === away.rider_4._id || id === away.rider_1._id || id === away.rider_6._id || id === away.rider_7._id || id === away.rider_8._id){
                         return true
-                    }
+                    }break;
                 case 6:
                     if(id === away.rider_2._id || id === away.rider_3._id || id === away.rider_4._id || id === away.rider_5._id || id === away.rider_1._id || id === away.rider_7._id || id === away.rider_8._id){
                         return true
-                    }
+                    }break;
                 case 7:
                     if(id === away.rider_2._id || id === away.rider_3._id || id === away.rider_4._id || id === away.rider_5._id || id === away.rider_6._id || id === away.rider_1._id || id === away.rider_8._id){
                         return true
-                    }
+                    }break;
                 case 8:
                     if(id === away.rider_2._id || id === away.rider_3._id || id === away.rider_4._id || id === away.rider_5._id || id === away.rider_6._id || id === away.rider_7._id || id === away.rider_1._id){
                         return true
-                    }
+                    }break;
                 default:
                     break;
             }

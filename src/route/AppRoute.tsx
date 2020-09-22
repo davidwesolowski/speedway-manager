@@ -26,6 +26,7 @@ import Friends from '../components/Friends';
 import ListMatches from '../components/ListMatches';
 import Leagues from '../components/Leagues';
 import UserRankingLeagues from '../components/UserRankingLeagues';
+import TeamHistory from '../components/TeamHistory';
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -153,6 +154,14 @@ const RoutesAnimation = () => {
 						render={(props: RouteComponentProps) => {
 							const cookiesExist = checkCookies();
 							if(cookiesExist) return <UserRankingLeagues {...props} />;
+							else return <Redirect to="/login" />;
+						}}
+					/>
+					<Route
+						path="/historia"
+						render={(props: RouteComponentProps) => {
+							const cookiesExist = checkCookies();
+							if(cookiesExist) return <TeamHistory {...props} />;
 							else return <Redirect to="/login" />;
 						}}
 					/>
