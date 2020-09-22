@@ -37,10 +37,11 @@ interface ITeamState {
 }
 
 interface IProps {
-	updatedTeam?: boolean;
-	setUpdatedTeam?: Dispatch<SetStateAction<boolean>>;
+	updatedTeam: boolean;
+	setUpdatedTeam: Dispatch<SetStateAction<boolean>>;
 	url: string;
 	leagues: ILeague[];
+	club?: boolean;
 }
 
 type SelectType = {
@@ -57,7 +58,8 @@ const TeamCreate: FunctionComponent<IProps> = ({
 	updatedTeam,
 	setUpdatedTeam,
 	url,
-	leagues
+	leagues,
+	club
 }) => {
 	const [team, setTeam] = useState<ITeamState>(defaultTeam);
 	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
@@ -79,18 +81,39 @@ const TeamCreate: FunctionComponent<IProps> = ({
 	const createTeam = async (team: ITeamState, imageData: IImageData) => {
 		try {
 			const accessToken = getToken();
-			const { name, league } = team;
 			const options = {
 				headers: {
 					Authorization: `Bearer ${accessToken}`
 				}
 			};
-			const {
-				data: { _id }
-			} = await axios.post(url, { name }, options);
+			let _id;
+			if (club) {
+				const leagueId = leagues.find(
+					league => league.name === team.league
+				)._id;
+				const { data } = await axios.post(
+					url,
+					{
+						name: team.name,
+						leagueId
+					},
+					options
+				);
+				_id = data._id;
+			} else {
+				const { data } = await axios.post(
+					url,
+					{ name: team.name },
+					options
+				);
+				_id = data._id;
+			}
 			const typeNotification = 'success';
+			let message;
+			club
+				? (message = 'Pomyślnie dodano klub!')
+				: (message = 'Pomyślnie dodano drużynę!');
 			const title = 'Sukces!';
-			let message = 'Pomyślnie stworzono drużynę!';
 			const duration = 2000;
 			addNotification(title, message, typeNotification, duration);
 
@@ -105,9 +128,13 @@ const TeamCreate: FunctionComponent<IProps> = ({
 				}
 			};
 			await axios.put(signedUrl, imageBuffer, awsOptions);
-			message = 'Pomyślnie dodano logo drużyny!';
+			club
+				? (message = 'Pomyślnie dodano logo klubu!')
+				: (message = 'Pomyślnie dodano logo drużyny!');
 			addNotification(title, message, typeNotification, duration);
 			setTimeout(() => {
+				setTeam(defaultTeam);
+				setImageData(defaultImageData);
 				setUpdatedTeam(!updatedTeam);
 			}, duration);
 		} catch (e) {
@@ -142,13 +169,13 @@ const TeamCreate: FunctionComponent<IProps> = ({
 	return (
 		<div className="team-create-container">
 			<Typography className="heading-3 team-create-container__heading">
-				Stwórz {updatedTeam ? 'drużynę' : 'klub'}
+				Stwórz {club ? 'klub' : 'drużynę'}
 			</Typography>
 			<form
 				className={
-					updatedTeam
-						? 'team-create-container__form'
-						: 'team-create-container__formClub'
+					club
+						? 'team-create-container__formClub'
+						: 'team-create-container__form'
 				}
 				encType="multipart/form-data"
 				onSubmit={handleOnSubmit}

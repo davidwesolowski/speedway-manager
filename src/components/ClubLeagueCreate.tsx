@@ -68,6 +68,7 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 	const [club, setClub] = useState<IClub>(defaultClub);
 	const [clubs, setClubs] = useState<IClub[]>([]);
 	const [removeDialog, setRemoveDialog] = useState(false);
+	const [updateClub, setUpdateClub] = useState(false);
 	const { dispatchUserData, setLoggedIn, userData } = useStateValue();
 	const { push } = useHistory();
 	const isAdmin = checkAdminRole(userData.role);
@@ -307,7 +308,7 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 		setTimeout(() => {
 			document.body.style.overflow = 'auto';
 		}, 1000);
-	}, []);
+	}, [updateClub]);
 
 	return (
 		<>
@@ -329,6 +330,9 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 										<TeamCreate
 											url="https://fantasy-league-eti.herokuapp.com/clubs"
 											leagues={leagues}
+											club={true}
+											updatedTeam={updateClub}
+											setUpdatedTeam={setUpdateClub}
 										/>
 									</Grid>
 									<Grid item xs={12}>
