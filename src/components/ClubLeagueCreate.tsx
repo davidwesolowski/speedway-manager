@@ -11,6 +11,7 @@ import {
 	Button,
 	Dialog,
 	DialogActions,
+	DialogContent,
 	DialogTitle,
 	Divider,
 	FormControl,
@@ -35,6 +36,7 @@ import addNotification from '../utils/addNotification';
 import { CSSTransition } from 'react-transition-group';
 import { FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
 import checkAdminRole from '../utils/checkAdminRole';
+import { FiX } from 'react-icons/fi';
 
 interface ILeague {
 	_id: string;
@@ -68,6 +70,7 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 	const [club, setClub] = useState<IClub>(defaultClub);
 	const [clubs, setClubs] = useState<IClub[]>([]);
 	const [removeDialog, setRemoveDialog] = useState(false);
+	const [editDialog, setEditDialog] = useState(false);
 	const [updateClub, setUpdateClub] = useState(false);
 	const { dispatchUserData, setLoggedIn, userData } = useStateValue();
 	const { push } = useHistory();
@@ -80,6 +83,17 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 	};
 	const handleCloseRemoveDialog = () => {
 		setRemoveDialog(false);
+		setClub(defaultClub);
+	};
+
+	const handleShowEditDialog = (id: string) => () => {
+		setEditDialog(true);
+		const club = clubs.find(club => club._id === id);
+		setClub(club);
+	};
+
+	const handleCloseEditDialog = () => {
+		setEditDialog(false);
 		setClub(defaultClub);
 	};
 
@@ -206,7 +220,9 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 								{club.leagueName}
 							</TableCell>
 							<TableCell align="center">
-								<IconButton>
+								<IconButton
+									onClick={handleShowEditDialog(club._id)}
+								>
 									<FaPencilAlt className="clubLeague__iconButton" />
 								</IconButton>
 							</TableCell>
@@ -330,7 +346,7 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 										<TeamCreate
 											url="https://fantasy-league-eti.herokuapp.com/clubs"
 											leagues={leagues}
-											club={true}
+											isClub={true}
 											updatedTeam={updateClub}
 											setUpdatedTeam={setUpdateClub}
 										/>
@@ -406,6 +422,27 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 						Usuń
 					</Button>
 				</DialogActions>
+			</Dialog>
+			<Dialog open={editDialog} onClose={handleCloseEditDialog}>
+				<DialogTitle>
+					<div className="dialog__header">
+						<Typography variant="h4" className="dialog__title">
+							Edycja klubu
+						</Typography>
+						<IconButton onClick={handleCloseEditDialog}>
+							<FiX />
+						</IconButton>
+					</div>
+				</DialogTitle>
+				<DialogContent>
+					<TeamCreate
+						url="https://fantasy-league-eti.herokuapp.com/clubs"
+						leagues={leagues}
+						isClub={true}
+						updatedTeam={updateClub}
+						setUpdatedTeam={setUpdateClub}
+					/>
+				</DialogContent>
 			</Dialog>
 		</>
 	);

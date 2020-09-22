@@ -41,7 +41,7 @@ interface IProps {
 	setUpdatedTeam: Dispatch<SetStateAction<boolean>>;
 	url: string;
 	leagues: ILeague[];
-	club?: boolean;
+	isClub?: boolean;
 }
 
 type SelectType = {
@@ -59,7 +59,7 @@ const TeamCreate: FunctionComponent<IProps> = ({
 	setUpdatedTeam,
 	url,
 	leagues,
-	club
+	isClub
 }) => {
 	const [team, setTeam] = useState<ITeamState>(defaultTeam);
 	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
@@ -87,7 +87,7 @@ const TeamCreate: FunctionComponent<IProps> = ({
 				}
 			};
 			let _id;
-			if (club) {
+			if (isClub) {
 				const leagueId = leagues.find(
 					league => league.name === team.league
 				)._id;
@@ -110,7 +110,7 @@ const TeamCreate: FunctionComponent<IProps> = ({
 			}
 			const typeNotification = 'success';
 			let message;
-			club
+			isClub
 				? (message = 'Pomyślnie dodano klub!')
 				: (message = 'Pomyślnie dodano drużynę!');
 			const title = 'Sukces!';
@@ -128,7 +128,7 @@ const TeamCreate: FunctionComponent<IProps> = ({
 				}
 			};
 			await axios.put(signedUrl, imageBuffer, awsOptions);
-			club
+			isClub
 				? (message = 'Pomyślnie dodano logo klubu!')
 				: (message = 'Pomyślnie dodano logo drużyny!');
 			addNotification(title, message, typeNotification, duration);
@@ -169,11 +169,11 @@ const TeamCreate: FunctionComponent<IProps> = ({
 	return (
 		<div className="team-create-container">
 			<Typography className="heading-3 team-create-container__heading">
-				Stwórz {club ? 'klub' : 'drużynę'}
+				Stwórz {isClub ? 'klub' : 'drużynę'}
 			</Typography>
 			<form
 				className={
-					club
+					isClub
 						? 'team-create-container__formClub'
 						: 'team-create-container__form'
 				}
