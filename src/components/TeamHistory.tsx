@@ -197,6 +197,9 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
     useEffect(() => {
         if (!userData.username) fetchUserData();
         getRounds();
+        setTimeout(() => {
+			document.body.style.overflow = 'auto';
+		}, 2000);
     }, [])
 
     return(
@@ -217,15 +220,15 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
                         {generateRounds()}
                     </Select>
                     <br/>
-                    <div className='history__riders-list'>
-                        {generateTable()}
-                    </div>
                     <div className='history__full-score'>
                         <Typography variant='h1' className='history__full-score-text'>
                             Łączny wynik:
                             <br/>
                             69
                         </Typography>
+                    </div>
+                    <div className='history__riders-list'>
+                        {generateTable()}
                     </div>
                 </Paper>
             </div>

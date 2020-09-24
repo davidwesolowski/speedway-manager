@@ -46,12 +46,40 @@
         width: 50%;
         float: right;
         font-size: xx-large;
+
+        @media only screen and (max-width: $bp-md) {
+            width: 100%;
+            font-size: medium;
+            float: none;
+            padding-top: 2rem;
+        }
+    
+        @media only screen and (max-width: $bp-sm) {
+            width: 100%;
+            font-size: medium;
+            float: none;
+            padding-top: 2rem;
+        }
     }
 
     &__away-div{
         width: 50%;
         float: left;
         font-size: xx-large;
+
+        @media only screen and (max-width: $bp-md) {
+            width: 100%;
+            font-size: medium;
+            float: none;
+            padding-top: 1rem;
+        }
+    
+        @media only screen and (max-width: $bp-sm) {
+            width: 100%;
+            font-size: medium;
+            float: none;
+            padding-top: 1rem;
+        }
     }
 
     &__team-select{
@@ -67,6 +95,14 @@
         width: 60%;
         margin-left: 2%;
         height: 100% !important;
+        
+        @media only screen and (max-width: $bp-md) {
+            padding-right: 1rem;
+        }
+    
+        @media only screen and (max-width: $bp-sm) {
+            padding-right: 1rem;
+        }
     }
 
     &__rider-points{

@@ -22,6 +22,19 @@
 		min-width: 45vw;
         padding: 3rem 2rem;
         width: 90%;
+        display: block;
+        overflow: auto;
+
+        @media only screen and (max-width: $bp-md) {
+			min-width: 85%;
+			min-height: 100%;
+			padding: 2rem 1rem;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			min-width: 95%;
+			padding: 1rem 0.5rem;
+		}
     }
 
     &__header{
@@ -83,6 +96,17 @@ table{
     font-size: x-large;
     border: 2px solid black;
     text-align: center;
+    
+
+    @media only screen and (max-width: $bp-md) {
+        font-size: medium !important;
+        padding-right: 1.25rem;
+    }
+
+    @media only screen and (max-width: $bp-sm) {
+        font-size: medium !important;
+        padding-right: 1.25rem;
+    }
 }
 
 td{

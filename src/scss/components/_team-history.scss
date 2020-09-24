@@ -40,7 +40,17 @@
 		font-family: $bebas !important;
 		margin-bottom: $xs-margin !important;
 		letter-spacing: 1px !important;
-    }
+	}
+	
+	&__full-score-text{
+		@media only screen and (max-width: $bp-md) {
+			font-size: x-large !important;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			font-size: x-large !important;
+		}
+	}
 
     &__full-score{
         width: 50%;
@@ -48,7 +58,17 @@
         display: block;
         overflow: auto;
         justify-content: center;
-        text-align: center;
+		text-align: center;
+		
+		@media only screen and (max-width: $bp-md) {
+			width: 100%;
+			font-size: medium;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			width: 100%;
+			font-size: medium;
+		}
     }
 
     &__riders-list{
@@ -57,7 +77,17 @@
         display: block;
         overflow: auto;
         justify-content: center;
-        text-align: center;
+		text-align: center;
+		
+		@media only screen and (max-width: $bp-md) {
+			width: 100%;
+			font-size: medium;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			width: 100%;
+			font-size: medium;
+		}
     }
 
     .MuiTableCell-head {
