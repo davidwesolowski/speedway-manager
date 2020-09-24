@@ -24,7 +24,27 @@ interface IProps {
 	users: IRankingUser[];
 }
 
+const compare = (userA: IRankingUser, userB: IRankingUser): number => {
+	if (userA.points <= userB.points) return 1;
+	else return -1;
+};
+
+const getPositions = (users: IRankingUser[]) => {
+	const positions = [];
+	let position = 1;
+	for (let i = 0; i < users.length; i++) {
+		if (i === 0) {
+			positions.push(position);
+		} else if (users[i].points === users[i - 1].points) positions.push('');
+		else positions.push(++position);
+	}
+	return positions;
+};
+
 const RankingUsersList: FunctionComponent<IProps> = ({ users }) => {
+	const sortedUsers = users.sort(compare);
+	const positions = getPositions(sortedUsers);
+
 	return (
 		<CSSTransition
 			in={users.length > 0}
@@ -51,10 +71,10 @@ const RankingUsersList: FunctionComponent<IProps> = ({ users }) => {
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{users.map((user, index) => (
+								{sortedUsers.map((user, index) => (
 									<TableRow key={user._id} hover={true}>
 										<TableCell align="center">
-											{index + 1}
+											{positions[index]}
 										</TableCell>
 										<TableCell align="center">
 											<Avatar
