@@ -60,7 +60,6 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({
 			setRounds(data);
 			data.length ? setRoundId(data[0]._id) : null;
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.statusText == 'Unauthorized') {
 				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
 				setTimeout(() => {
@@ -93,7 +92,6 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({
 
 			setRiders(data);
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.statusText == 'Unauthorized') {
 				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
 				setTimeout(() => {

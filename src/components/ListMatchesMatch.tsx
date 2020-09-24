@@ -775,7 +775,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				)
 				.map((rider, index) => {
 					return (
-						<MenuItem key={index} value={rider._id}>
+						<MenuItem key={rider._id} value={rider._id}>
 							{rider.firstName} {rider.lastName}
 						</MenuItem>
 					);
@@ -790,7 +790,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				)
 				.map((rider, index) => {
 					return (
-						<MenuItem key={index} value={rider._id}>
+						<MenuItem key={rider._id} value={rider._id}>
 							{rider.firstName} {rider.lastName}
 						</MenuItem>
 					);
@@ -805,7 +805,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				)
 				.map((rider, index) => {
 					return (
-						<MenuItem key={index} value={rider._id}>
+						<MenuItem key={rider._id} value={rider._id}>
 							{rider.firstName} {rider.lastName}
 						</MenuItem>
 					);
