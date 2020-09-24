@@ -1,0 +1,111 @@
+.clubLeague {
+	grid-column: center-start / center-end;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	&__img {
+		background-image: url(/img/wroclaw.jpg);
+		position: absolute;
+		z-index: 1;
+		height: 100%;
+		width: 100%;
+		background-size: cover;
+		filter: opacity(0.2);
+	}
+
+	&__box {
+		position: relative;
+		z-index: 1000;
+		padding: 2rem;
+		min-width: 80vw;
+		min-height: 85%;
+	}
+
+	&__heading {
+		font-family: $poppins !important;
+		margin-top: $m-margin !important;
+		text-align: center;
+	}
+
+	&__clubHeading {
+		font-family: $bebas !important;
+		text-align: center;
+	}
+
+	&__form {
+		width: 90%;
+		margin: 0 auto;
+
+		& .MuiFormControl-root {
+			min-width: 100%;
+		}
+
+		&-field {
+			margin-bottom: $xs-margin !important;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			width: 100%;
+		}
+	}
+
+	&__btn {
+		width: 100%;
+	}
+
+	& .MuiDivider-root {
+		margin-bottom: $xs-margin !important;
+	}
+
+	& .MuiTableCell-head {
+		background-color: $color-primary !important;
+		color: #fff !important;
+		font-size: 1.8rem;
+		font-family: $bebas !important;
+		border: 1px solid $color-primary-light;
+
+		&:first-child {
+			border: none !important;
+		}
+		&:nth-child(2) {
+			border-left: none;
+		}
+	}
+
+	& .MuiTableRow-root:nth-child(even) .MuiTableCell-body &__iconButton {
+		color: #fff;
+	}
+
+	& .MuiTableRow-root:nth-child(even) .MuiTableCell-body {
+		background-color: $color-primary-light;
+		color: #fff;
+
+		.MuiIconButton-root:hover {
+			background-color: #b9b0b083;
+		}
+	}
+
+	& .MuiTableRow-root:nth-child(even) .MuiTableCell-body &__iconButton {
+		color: #fff;
+	}
+
+	& .MuiTableCell-body {
+		font-size: 1.7rem;
+		font-family: $bebas !important;
+		border: 1px solid $color-primary;
+	}
+
+	& .MuiTableCell-root {
+		padding: 1rem !important;
+	}
+
+	& .MuiTable-root {
+		border: 1px solid $color-primary;
+	}
+
+	& .MuiAvatar-root {
+		margin: 0 auto;
+	}
+}
