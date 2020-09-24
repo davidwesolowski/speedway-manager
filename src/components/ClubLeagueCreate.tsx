@@ -198,8 +198,12 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 						<TableCell />
 						<TableCell align="center">Nazwa</TableCell>
 						<TableCell align="center">Liga</TableCell>
-						<TableCell align="center">Edytuj</TableCell>
-						<TableCell align="center">Usuń</TableCell>
+						{isAdmin && (
+							<>
+								<TableCell align="center">Edytuj</TableCell>
+								<TableCell align="center">Usuń</TableCell>
+							</>
+						)}
 					</TableRow>
 				</TableHead>
 				<TableBody>
@@ -212,18 +216,26 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 							<TableCell align="center">
 								{club.leagueName}
 							</TableCell>
-							<TableCell align="center">
-								<IconButton onClick={handleShowEdit(club._id)}>
-									<FaPencilAlt className="clubLeague__iconButton" />
-								</IconButton>
-							</TableCell>
-							<TableCell align="center">
-								<IconButton
-									onClick={handleShowRemoveDialog(club._id)}
-								>
-									<FaTrashAlt className="clubLeague__iconButton" />
-								</IconButton>
-							</TableCell>
+							{isAdmin && (
+								<>
+									<TableCell align="center">
+										<IconButton
+											onClick={handleShowEdit(club._id)}
+										>
+											<FaPencilAlt className="clubLeague__iconButton" />
+										</IconButton>
+									</TableCell>
+									<TableCell align="center">
+										<IconButton
+											onClick={handleShowRemoveDialog(
+												club._id
+											)}
+										>
+											<FaTrashAlt className="clubLeague__iconButton" />
+										</IconButton>
+									</TableCell>
+								</>
+							)}
 						</TableRow>
 					))}
 				</TableBody>
