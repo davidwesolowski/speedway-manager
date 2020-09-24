@@ -11,7 +11,13 @@ import {
 	InputAdornment,
 	Grid,
 	CircularProgress,
-	IconButton
+	IconButton,
+	TableContainer,
+	Table,
+	TableHead,
+	TableRow,
+	TableCell,
+	TableBody
 } from '@material-ui/core';
 import { FiSearch, FiX } from 'react-icons/fi';
 import { RouteProps, useHistory } from 'react-router-dom';
@@ -264,6 +270,48 @@ const Users: FunctionComponent<RouteProps> = () => {
 					justify="center"
 					alignItems="flex-start"
 				>
+					{!loading && (
+						<CSSTransition
+							in={users.length == 0}
+							timeout={300}
+							classNames="animationScaleUp"
+							unmountOnExit
+						>
+							<Grid item>
+								<TableContainer>
+									<Table>
+										<TableHead>
+											<TableRow>
+												<TableCell />
+												<TableCell align="center">
+													Nazwa użytkownika
+												</TableCell>
+												<TableCell align="center">
+													Nazwa drużyny
+												</TableCell>
+												<TableCell align="center">
+													Sprawdź skład
+												</TableCell>
+												<TableCell align="center">
+													Dodaj
+												</TableCell>
+											</TableRow>
+										</TableHead>
+										<TableBody>
+											<TableRow>
+												<TableCell
+													colSpan={5}
+													align="center"
+												>
+													Nie znalezniono użytkowniów.
+												</TableCell>
+											</TableRow>
+										</TableBody>
+									</Table>
+								</TableContainer>
+							</Grid>
+						</CSSTransition>
+					)}
 					<CSSTransition
 						in={users.length > 0}
 						timeout={300}
