@@ -51,6 +51,9 @@
 
 	&__btn {
 		width: 100%;
+		&-editClub {
+			margin-bottom: $xs-margin !important;
+		}
 	}
 
 	&__img-box {
@@ -59,6 +62,12 @@
 		align-items: center;
 		justify-content: center;
 		width: 100%;
+	}
+
+	&__teamImgLabel {
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 
 	&__img-upload {
@@ -70,7 +79,7 @@
 		border-radius: 50%;
 		cursor: pointer;
 		object-fit: contain;
-		width: 65%;
-		height: 65%;
+		width: calc(#{$icons-size} + 2rem);
+		height: calc(#{$icons-size} + 2rem);
 	}
 }
