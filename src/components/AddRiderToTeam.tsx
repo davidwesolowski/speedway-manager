@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
+import React, { FunctionComponent, useState, useEffect, Fragment } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import axios from 'axios';
 import {
@@ -68,7 +68,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 			});
 			getTeams(data);
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.statusText == 'Unauthorized') {
 				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
 				setTimeout(() => {
@@ -101,7 +100,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 			setTeamId(data[0]._id);
 			getTeamRiders(riders, data);
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.statusText == 'Unauthorized') {
 				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
 				setTimeout(() => {
@@ -152,7 +150,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				setLists(riders, []);
 			}
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.statusText == 'Unauthorized') {
 				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
 				setTimeout(() => {
@@ -425,9 +422,8 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 						const labelId = `transfer-list-item-${rider.id}-label`;
 						if (type === 'Polish') {
 							return (
-								<>
+								<Fragment key={rider._id}>
 									<ListItem
-										key={rider._id}
 										role="listitem"
 										button
 										onClick={handleToggle(rider, type)}
@@ -463,13 +459,12 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 										/>
 									</ListItem>
 									<Divider />
-								</>
+								</Fragment>
 							);
 						} else if (type === 'Foreign') {
 							return (
-								<>
+								<Fragment key={rider._id}>
 									<ListItem
-										key={rider._id}
 										role="listitem"
 										button
 										onClick={handleToggle(rider, type)}
@@ -505,13 +500,12 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 										/>
 									</ListItem>
 									<Divider />
-								</>
+								</Fragment>
 							);
 						} else {
 							return (
-								<>
+								<Fragment key={rider._id}>
 									<ListItem
-										key={rider._id}
 										role="listitem"
 										button
 										onClick={handleToggle(rider, type)}
@@ -547,7 +541,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 										/>
 									</ListItem>
 									<Divider />
-								</>
+								</Fragment>
 							);
 						}
 					})}
@@ -571,7 +565,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				options
 			);
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.statusText == 'Unauthorized') {
 				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
 				setTimeout(() => {
@@ -602,7 +595,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				options
 			);
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.statusText == 'Unauthorized') {
 				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
 				setTimeout(() => {
