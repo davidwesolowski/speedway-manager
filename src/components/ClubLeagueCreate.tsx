@@ -322,8 +322,8 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 			<div className="clubLeague">
 				<div className="clubLeague__img"></div>
 				<Paper className="clubLeague__box">
-					<Grid container>
-						<Grid item xs={12} md={isAdmin ? 6 : 12}>
+					<Grid container justify="center">
+						<Grid item xs={12} md={isAdmin ? 6 : 10}>
 							<Typography className="heading-2 clubLeague__clubHeading">
 								Kluby
 							</Typography>

@@ -248,6 +248,14 @@ const TeamCreate: FunctionComponent<IProps> = ({
 		}
 	};
 
+	const cancelEditingClub = () => {
+		setEditClubData({
+			...defaultTeam,
+			_id: '',
+			imageUrl: ''
+		});
+	};
+
 	const handleOnSubmit = (event: FormEvent) => {
 		event.preventDefault();
 		if (editClubData) {
@@ -353,14 +361,33 @@ const TeamCreate: FunctionComponent<IProps> = ({
 						</div>
 					</Grid>
 					<Grid item xs={12} md={10}>
-						<Button
-							type="submit"
-							className="btn team-create-container__btn"
-						>
-							{editClubData && editClubData._id
-								? 'Edytuj'
-								: 'Utwórz'}
-						</Button>
+						{editClubData && editClubData._id ? (
+							<Grid container spacing={2}>
+								<Grid item xs={6}>
+									<Button
+										type="submit"
+										className="btn team-create-container__btn"
+									>
+										Edytuj
+									</Button>
+								</Grid>
+								<Grid item xs={6}>
+									<Button
+										className="btn team-create-container__btn"
+										onClick={cancelEditingClub}
+									>
+										Anuluj
+									</Button>
+								</Grid>
+							</Grid>
+						) : (
+							<Button
+								type="submit"
+								className="btn team-create-container__btn"
+							>
+								Utwórz
+							</Button>
+						)}
 					</Grid>
 				</Grid>
 			</form>
