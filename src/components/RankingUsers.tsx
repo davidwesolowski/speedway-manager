@@ -1,6 +1,6 @@
 import { Divider, Paper, Typography } from '@material-ui/core';
 import axios from 'axios';
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { setUser } from '../actions/userActions';
 import { checkBadAuthorization } from '../utils/checkCookies';
@@ -40,6 +40,8 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
             }
         }
     };
+
+    const [selectedRanking, setSelectedRanking] = useState<string>('');
 
     useEffect(() => {
         if (!userData.username) fetchUserData();

@@ -145,7 +145,7 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
         if(results.find((result) => result.round._id === round)){
             setHistoryRiders((results.find((result) => result.round._id === round)).riders);
         } else {
-
+            setHistoryRiders([])
         }
     }
 
