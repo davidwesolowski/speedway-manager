@@ -191,7 +191,7 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({
 						<Select
 							labelId="roundLabel"
 							className="add-match__round-select"
-							value={(rounds.length && rounds[0]._id) || ''}
+							value={roundId || ''}
 							onChange={handleOnChangeSelectRound()}
 						>
 							<MenuItem value="all">Wszystkie</MenuItem>

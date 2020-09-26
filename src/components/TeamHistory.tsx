@@ -46,6 +46,8 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
     const [selectedRound, setSelectedRound] = useState<string>('all');
     const [historyRiders, setHistoryRiders] = useState([]);
     const [updatedRiders, setUpdatedRiders] = useState<boolean>(true);
+    const [team, setTeam] = useState([]);
+    const [historyResults, setHistoryResults] = useState([]);
 
     const [tempHistoryRiders, setTempHistoryRiders] = useState([
         {
@@ -106,10 +108,8 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
         }
     }
 
-    const getHistoryRiders = async () => {
-        setUpdatedRiders(false);
-
-        /*try{
+    const getHistoryResults = async (teamId) => {
+        try{
             const accessToken = getToken();
             const options = {
                 headers: {
@@ -117,11 +117,12 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
                 }
             };
             const {data} = await axios.get(
-                'https://fantasy-league-eti.herokuapp.com/history-riders',
+                `https://fantasy-league-eti.herokuapp.com/teams/${teamId}/results`,
                 options
             );
 
-            setHistoryRiders(data);
+            setHistoryResults(data);
+            getHistoryRiders(data, selectedRound);
         } catch (e) {
             const {
                 response: { data }
@@ -137,9 +138,48 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
                 );
             }
             throw new Error('Error in getting rounds');
-        }*/
+        }
+    }
 
-        setUpdatedRiders(true);
+    const getHistoryRiders = (results, round) => {
+        if(results.find((result) => result.round._id === round)){
+            setHistoryRiders((results.find((result) => result.round._id === round)).riders);
+        } else {
+
+        }
+    }
+
+    const getTeam = async () => {
+        try{
+            const accessToken = getToken();
+            const options = {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            };
+            const {data} = await axios.get(
+                'https://fantasy-league-eti.herokuapp.com/teams',
+                options
+            );
+
+            setTeam(data);
+            getHistoryResults(data[0]._id);
+        } catch (e) {
+            const {
+                response: { data }
+            } = e;
+            if (data.statusCode == 401) {
+                checkBadAuthorization(setLoggedIn, push);
+            } else {
+                addNotification(
+                    'Błąd',
+                    'Nie udało się pobrać drużyn z bazy',
+                    'danger',
+                    3000
+                );
+            }
+            throw new Error('Error in getting rounds');
+        }
     }
 
     const generateRounds = () => {
@@ -154,49 +194,89 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
         event.persist();
         if(event.target){
             setSelectedRound(event.target.value);
+            getHistoryRiders(historyResults, event.target.value);
         }
     }
 
     const generateTable = () => {
-        if(updatedRiders){
-            return(
-                <TableContainer>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
+        return(
+            <TableContainer>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell></TableCell>
+                            <TableCell>Imię</TableCell>
+                            <TableCell>Nazwisko</TableCell>
+                            <TableCell>KSM</TableCell>
+                            {/* <TableCell>Klub</TableCell> */}
+                            <TableCell>Wynik</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {historyRiders.map(rider => (
+                            <TableRow key={rider.riderId} hover={true}>
                                 <TableCell></TableCell>
-                                <TableCell>Imię</TableCell>
-                                <TableCell>Nazwisko</TableCell>
-                                <TableCell>KSM</TableCell>
-                                <TableCell>Klub</TableCell>
-                                <TableCell>Wynik</TableCell>
+                                <TableCell>{rider.firstName}</TableCell>
+                                <TableCell>{rider.lastName}</TableCell>
+                                <TableCell>{rider.KSM}</TableCell>
+                                {/*<TableCell>{rider.club}</TableCell>*/}
+                                <TableCell>{rider.score}</TableCell>
                             </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {tempHistoryRiders.map(rider => (
-                                <TableRow key={rider._id} hover={true}>
-                                    <TableCell></TableCell>
-                                    <TableCell>{rider.firstName}</TableCell>
-                                    <TableCell>{rider.lastName}</TableCell>
-                                    <TableCell>{rider.KSM}</TableCell>
-                                    <TableCell>{rider.club}</TableCell>
-                                    <TableCell>{rider.score}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            ) 
-        } else {
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        )
+    }
+
+    const postToUpdateAssigns = async () => {
+        try{
+            const accessToken = getToken();
+            const options = {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            };
+            const {data} = await axios.post(
+                'https://fantasy-league-eti.herokuapp.com/rounds/resolve-current',
+                options
+            );
+        } catch (e) {
+            const {
+                response: { data }
+            } = e;
+            if (data.statusCode == 401) {
+                checkBadAuthorization(setLoggedIn, push);
+            } else {
+                addNotification(
+                    'Błąd',
+                    'Nie udało się pobrać rund z bazy',
+                    'danger',
+                    3000
+                );
+            }
+            throw new Error('Error in getting rounds');
+        }
+    }
+
+    const getTotalScore = () => {
+        if(historyResults.find((result) => result.round._id === selectedRound)){
             return(
-                <div></div>
-            )
+                <Typography variant='h1' className='history__full-score-text'>
+                    Łączny wynik:
+                    <br/>
+                    {historyResults.find((result) => result.round._id === selectedRound).score}
+                </Typography>)
+        } else {
+            return('')
         }
     }
 
     useEffect(() => {
         if (!userData.username) fetchUserData();
         getRounds();
+        getTeam();
+        //postToUpdateAssigns();
         setTimeout(() => {
 			document.body.style.overflow = 'auto';
 		}, 2000);
@@ -221,11 +301,7 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
                     </Select>
                     <br/>
                     <div className='history__full-score'>
-                        <Typography variant='h1' className='history__full-score-text'>
-                            Łączny wynik:
-                            <br/>
-                            69
-                        </Typography>
+                        {getTotalScore()}
                     </div>
                     <div className='history__riders-list'>
                         {generateTable()}
