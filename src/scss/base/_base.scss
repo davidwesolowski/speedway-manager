@@ -30,8 +30,11 @@ body {
 	display: grid;
 	grid-template-rows: 4.5rem minmax(calc(100vh - 8.5rem), 1fr) 3rem; // 100vh - header(4.5) - footer(3rem) - padding w footerze(2rem/2)
 	grid-template-columns:
-		[full-start] minmax(3rem, 10rem)
-		[center-start] 1fr [center-end] minmax(3rem, 10rem)
+		[full-start] minmax(1rem, 10rem)
+		[center-start] minmax(min-content, max-content) [center-end] minmax(
+			1rem,
+			10rem
+		)
 		[full-end];
 }
 
