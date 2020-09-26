@@ -11,7 +11,8 @@ import {
 	IconButton,
 	Avatar,
 	Menu,
-	MenuItem
+	MenuItem,
+	Hidden
 } from '@material-ui/core';
 import { FaUserCircle } from 'react-icons/fa';
 import { AppContext } from './AppProvider';
@@ -35,68 +36,72 @@ const Header: FunctionComponent = () => {
 	};
 
 	const unauthorized = () => (
-		<ul className="header__nav">
-			<li className="header__item">
-				<Link to="/" className="header__link">
-					Start
-				</Link>
-			</li>
-			<li className="header__item">
-				<Link to="/mecze" className="header__link">
-					Wyniki meczów
-				</Link>
-			</li>
-			<li className="header__item">
-				<Link to="/samouczek" className="header__link">
-					Samouczek
-				</Link>
-			</li>
-			<li className="header__item">
-				<Link to="/kluby" className="header__link">
-					Kluby
-				</Link>
-			</li>
-		</ul>
+		<Hidden xsDown>
+			<ul className="header__nav">
+				<li className="header__item">
+					<Link to="/" className="header__link">
+						Start
+					</Link>
+				</li>
+				<li className="header__item">
+					<Link to="/mecze" className="header__link">
+						Wyniki meczów
+					</Link>
+				</li>
+				<li className="header__item">
+					<Link to="/samouczek" className="header__link">
+						Samouczek
+					</Link>
+				</li>
+				<li className="header__item">
+					<Link to="/kluby" className="header__link">
+						Kluby
+					</Link>
+				</li>
+			</ul>
+		</Hidden>
 	);
 
 	const authorized = () => (
-		<ul className="header__nav">
-			<li className="header__item">
-				<Link to="/" className="header__link">
-					Start
-				</Link>
-			</li>
-			<li className="header__item">
-				<Link to="/mecze" className="header__link">
-					Wyniki meczów
-				</Link>
-			</li>
-			<li className="header__item">
-				<Link to="/druzyna" className="header__link">
-					Drużyna
-				</Link>
-			</li>
-			<li className="header__item">
-				<Link to="/ranking" className="header__link">
-					Ranking
-				</Link>
-			</li>
-			<li className="header__item">
-				<Link to="/uzytkownicy" className="header__link">
-					Użytkownicy
-				</Link>
-			</li>
-			<li className="header__item">
-				<Link to="/zawodnicy" className="header__link">
-					Zawodnicy
-				</Link>
-			</li>
-			<li className="header__item">
-				<Link to="/samouczek" className="header__link">
-					Samouczek
-				</Link>
-			</li>
-		</ul>
+		<Hidden smDown>
+			<ul className="header__nav">
+				<li className="header__item">
+					<Link to="/" className="header__link">
+						Start
+					</Link>
+				</li>
+				<li className="header__item">
+					<Link to="/mecze" className="header__link">
+						Wyniki meczów
+					</Link>
+				</li>
+				<li className="header__item">
+					<Link to="/druzyna" className="header__link">
+						Drużyna
+					</Link>
+				</li>
+				<li className="header__item">
+					<Link to="/ranking" className="header__link">
+						Ranking
+					</Link>
+				</li>
+				<li className="header__item">
+					<Link to="/uzytkownicy" className="header__link">
+						Użytkownicy
+					</Link>
+				</li>
+				<li className="header__item">
+					<Link to="/zawodnicy" className="header__link">
+						Zawodnicy
+					</Link>
+				</li>
+				<li className="header__item">
+					<Link to="/samouczek" className="header__link">
+						Samouczek
+					</Link>
+				</li>
+			</ul>
+		</Hidden>
 	);
 
 	return (
