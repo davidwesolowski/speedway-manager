@@ -30,7 +30,8 @@ const defaultUserData: IUser = {
 	_id: '',
 	email: '',
 	username: '',
-	avatarUrl: ''
+	avatarUrl: '',
+	role: ''
 };
 
 const defaultUserContext: IAppContext = {

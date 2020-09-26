@@ -11,12 +11,17 @@ import {
 	InputAdornment,
 	Grid,
 	CircularProgress,
-	IconButton
+	IconButton,
+	TableContainer,
+	Table,
+	TableHead,
+	TableRow,
+	TableCell,
+	TableBody
 } from '@material-ui/core';
 import { FiSearch, FiX } from 'react-icons/fi';
 import { RouteProps, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { setUser } from '../actions/userActions';
 import { useStateValue } from './AppProvider';
 import { checkBadAuthorization } from '../utils/checkCookies';
 import UsersList from './UsersList';
@@ -24,6 +29,7 @@ import getToken from '../utils/getToken';
 import TeamRiders, { IRider } from './TeamRiders';
 import addNotification from '../utils/addNotification';
 import { CSSTransition } from 'react-transition-group';
+import fetchUserData from '../utils/fetchUserData';
 
 export interface IUsers {
 	_id: string;
@@ -178,7 +184,11 @@ const Users: FunctionComponent<RouteProps> = () => {
 				const teams = await fetchTeams();
 				let _id = userData._id;
 				if (!userData.username) {
-					_id = await fetchUserData();
+					_id = await fetchUserData(
+						dispatchUserData,
+						setLoggedIn,
+						push
+					);
 				}
 				const userState = data
 					.filter(user => user._id !== _id)
@@ -209,22 +219,6 @@ const Users: FunctionComponent<RouteProps> = () => {
 				if (data.statusCode == 401) {
 					checkBadAuthorization(setLoggedIn, push);
 				}
-			}
-		};
-
-		const fetchUserData = async () => {
-			try {
-				const {
-					data: { _id, username, email, avatarUrl }
-				} = await axios.get(
-					'https://fantasy-league-eti.herokuapp.com/users/self',
-					options
-				);
-				dispatchUserData(setUser({ _id, username, email, avatarUrl }));
-				setLoggedIn(true);
-				return _id;
-			} catch (e) {
-				/**/
 			}
 		};
 
@@ -276,6 +270,48 @@ const Users: FunctionComponent<RouteProps> = () => {
 					justify="center"
 					alignItems="flex-start"
 				>
+					{!loading && (
+						<CSSTransition
+							in={users.length == 0}
+							timeout={300}
+							classNames="animationScaleUp"
+							unmountOnExit
+						>
+							<Grid item>
+								<TableContainer>
+									<Table>
+										<TableHead>
+											<TableRow>
+												<TableCell />
+												<TableCell align="center">
+													Nazwa użytkownika
+												</TableCell>
+												<TableCell align="center">
+													Nazwa drużyny
+												</TableCell>
+												<TableCell align="center">
+													Sprawdź skład
+												</TableCell>
+												<TableCell align="center">
+													Dodaj
+												</TableCell>
+											</TableRow>
+										</TableHead>
+										<TableBody>
+											<TableRow>
+												<TableCell
+													colSpan={5}
+													align="center"
+												>
+													Nie znalezniono użytkowniów.
+												</TableCell>
+											</TableRow>
+										</TableBody>
+									</Table>
+								</TableContainer>
+							</Grid>
+						</CSSTransition>
+					)}
 					<CSSTransition
 						in={users.length > 0}
 						timeout={300}

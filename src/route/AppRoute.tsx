@@ -27,6 +27,9 @@ import ListMatches from '../components/ListMatches';
 import Leagues from '../components/Leagues';
 import UserRankingLeagues from '../components/UserRankingLeagues';
 import TeamHistory from '../components/TeamHistory';
+import { useStateValue } from '../components/AppProvider';
+import checkAdminRole from '../utils/checkAdminRole';
+import ClubLeagueCreate from '../components/ClubLeagueCreate';
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -120,8 +123,9 @@ const RoutesAnimation = () => {
 						path="/dodaj-mecz"
 						render={(props: RouteComponentProps) => {
 							const cookiesExist = checkCookies();
-							if (cookiesExist) return <AddMatch {...props} />;
-							else return <Redirect to="/login" />;
+							if (cookiesExist) {
+								return <AddMatch {...props} />;
+							} else return <Redirect to="/login" />;
 						}}
 					/>
 					<Route
@@ -137,7 +141,16 @@ const RoutesAnimation = () => {
 						path="/mecze"
 						render={(props: RouteComponentProps) => {
 							const cookiesExist = checkCookies();
-							if(cookiesExist) return <ListMatches {...props} />;
+							if (cookiesExist) return <ListMatches {...props} />;
+							else return <Redirect to="/login" />;
+						}}
+					/>
+					<Route
+						path="/kluby"
+						render={(props: RouteComponentProps) => {
+							const cookiesExist = checkCookies();
+							if (cookiesExist)
+								return <ClubLeagueCreate {...props} />;
 							else return <Redirect to="/login" />;
 						}}
 					/>

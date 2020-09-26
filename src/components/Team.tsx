@@ -25,6 +25,7 @@ import { setUser } from '../actions/userActions';
 import TeamMatch from './TeamMatch';
 import getToken from '../utils/getToken';
 import { setTeamRiders } from '../actions/teamRidersActions';
+import fetchUserData from '../utils/fetchUserData';
 
 interface ITabPanelProps {
 	children?: ReactNode;
@@ -38,10 +39,20 @@ interface ITeamState {
 	_id: string;
 }
 
+export interface ILeague {
+	_id: string;
+	name: string;
+}
+
 const defaultTeamState = {
 	name: '',
 	logoUrl: '',
 	_id: ''
+};
+
+const defaultLeague: ILeague = {
+	_id: '-1',
+	name: 'Brak lig'
 };
 
 const TabPanel = (props: ITabPanelProps) => {
@@ -67,6 +78,7 @@ const a11yProps = (index: any) => ({
 const Team: FunctionComponent<RouteComponentProps> = () => {
 	const [value, setValue] = useState<number>(0);
 	const [team, setTeam] = useState<ITeamState>(defaultTeamState);
+	const [leagues, setLeagues] = useState<ILeague[]>([defaultLeague]);
 	const [updatedTeam, setUpdatedTeam] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(true);
 	const { push } = useHistory();
@@ -157,16 +169,18 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 				}*/
 			}
 		};
-		const fetchUserData = async () => {
+		const fetchLeagues = async () => {
 			try {
-				const {
-					data: { _id, username, email, avatarUrl }
-				} = await axios.get(
-					'https://fantasy-league-eti.herokuapp.com/users/self',
+				const { data } = await axios.get(
+					'https://fantasy-league-eti.herokuapp.com/leagues',
 					options
 				);
-				dispatchUserData(setUser({ _id, username, email, avatarUrl }));
-				setLoggedIn(true);
+				const leagues = data.map(({ _id, name }) => ({
+					_id,
+					name
+				}));
+				setLeagues(leagues);
+				return leagues;
 			} catch (e) {
 				const {
 					response: { data }
@@ -176,10 +190,10 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 				}
 			}
 		};
-
-		fetchTeam();
-		if (!userData.username) fetchUserData();
-		setLoading(false);
+		if (!userData.username)
+			fetchUserData(dispatchUserData, setLoggedIn, push);
+		fetchLeagues();
+		fetchTeam().then(() => setLoading(false));
 		setTimeout(() => {
 			document.body.style.overflow = 'auto';
 		}, 500);
@@ -227,6 +241,8 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 							<TeamCreate
 								updatedTeam={updatedTeam}
 								setUpdatedTeam={setUpdatedTeam}
+								leagues={leagues}
+								url="https://fantasy-league-eti.herokuapp.com/teams"
 							/>
 						)}
 					</TabPanel>

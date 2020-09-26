@@ -46,7 +46,6 @@ const UsersList: FunctionComponent<IProps> = ({
 	const [myFriends, setMyFriends] = useState([]);
 	const { userData, setLoggedIn } = useStateValue();
 	const { push } = useHistory();
-
 	const sendInvitation = async (friendId: string) => {
 		try {
 			const accessToken = getToken();

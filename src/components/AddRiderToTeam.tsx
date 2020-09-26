@@ -1,15 +1,10 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
+import React, { FunctionComponent, useState, useEffect, Fragment } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import Cookies from 'universal-cookie';
 import axios from 'axios';
 import {
 	Paper,
 	Typography,
 	Divider,
-	TextField,
-	InputLabel,
-	Select,
-	MenuItem,
 	List,
 	ListItem,
 	ListItemIcon,
@@ -20,8 +15,8 @@ import {
 } from '@material-ui/core';
 import addNotification from '../utils/addNotification';
 import getToken from '../utils/getToken';
-import { setUser } from '../actions/userActions';
 import { useStateValue } from './AppProvider';
+import fetchUserData from '../utils/fetchUserData';
 
 interface IRider {
 	id: string;
@@ -38,32 +33,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 	history: { push }
 }) => {
 	const { setLoggedIn, dispatchUserData, userData } = useStateValue();
-
-	const fetchUserData = async () => {
-		const accessToken = getToken();
-		const options = {
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		};
-		try {
-			const {
-				data: { _id, username, email, avatarUrl }
-			} = await axios.get(
-				'https://fantasy-league-eti.herokuapp.com/users/self',
-				options
-			);
-			dispatchUserData(setUser({ _id, username, email, avatarUrl }));
-			setLoggedIn(true);
-		} catch (e) {
-			/*const {
-                response: { data }
-            } = e;
-            if (data.statusCode == 401) {
-                checkBadAuthorization(setLoggedIn, push);
-            }*/
-		}
-	};
 	const [riders, setRiders] = useState([]);
 	const [teamId, setTeamId] = useState<string>('');
 	const [teamRiders, setTeamRiders] = useState([]);
@@ -99,7 +68,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 			});
 			getTeams(data);
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.statusText == 'Unauthorized') {
 				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
 				setTimeout(() => {
@@ -132,7 +100,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 			setTeamId(data[0]._id);
 			getTeamRiders(riders, data);
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.statusText == 'Unauthorized') {
 				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
 				setTimeout(() => {
@@ -183,7 +150,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				setLists(riders, []);
 			}
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.statusText == 'Unauthorized') {
 				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
 				setTimeout(() => {
@@ -456,9 +422,8 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 						const labelId = `transfer-list-item-${rider.id}-label`;
 						if (type === 'Polish') {
 							return (
-								<>
+								<Fragment key={rider._id}>
 									<ListItem
-										key={rider._id}
 										role="listitem"
 										button
 										onClick={handleToggle(rider, type)}
@@ -494,13 +459,12 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 										/>
 									</ListItem>
 									<Divider />
-								</>
+								</Fragment>
 							);
 						} else if (type === 'Foreign') {
 							return (
-								<>
+								<Fragment key={rider._id}>
 									<ListItem
-										key={rider._id}
 										role="listitem"
 										button
 										onClick={handleToggle(rider, type)}
@@ -536,13 +500,12 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 										/>
 									</ListItem>
 									<Divider />
-								</>
+								</Fragment>
 							);
 						} else {
 							return (
-								<>
+								<Fragment key={rider._id}>
 									<ListItem
-										key={rider._id}
 										role="listitem"
 										button
 										onClick={handleToggle(rider, type)}
@@ -578,7 +541,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 										/>
 									</ListItem>
 									<Divider />
-								</>
+								</Fragment>
 							);
 						}
 					})}
@@ -602,7 +565,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				options
 			);
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.statusText == 'Unauthorized') {
 				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
 				setTimeout(() => {
@@ -633,7 +595,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				options
 			);
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.statusText == 'Unauthorized') {
 				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
 				setTimeout(() => {
@@ -693,7 +654,8 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 	useEffect(() => {
 		getRiders();
 		getClubs();
-		if (!userData.username) fetchUserData();
+		if (!userData.username)
+			fetchUserData(dispatchUserData, setLoggedIn, push);
 	}, []);
 
 	return (

@@ -30,12 +30,13 @@ import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import getToken from '../utils/getToken';
 import { useStateValue } from './AppProvider';
-import { setUser } from '../actions/userActions';
 import handleImgFile, {
 	IImageData,
 	defaultImageData
 } from '../utils/handleImgFile';
 import { FaFileUpload } from 'react-icons/fa';
+import fetchUserData from '../utils/fetchUserData';
+import checkAdminRole from '../utils/checkAdminRole';
 
 interface IRider {
 	firstName: string;
@@ -93,32 +94,6 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 	history: { push }
 }) => {
 	const { setLoggedIn, dispatchUserData, userData } = useStateValue();
-
-	const fetchUserData = async () => {
-		const accessToken = getToken();
-		const options = {
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		};
-		try {
-			const {
-				data: { _id, username, email, avatarUrl }
-			} = await axios.get(
-				'https://fantasy-league-eti.herokuapp.com/users/self',
-				options
-			);
-			dispatchUserData(setUser({ _id, username, email, avatarUrl }));
-			setLoggedIn(true);
-		} catch (e) {
-			/*const {
-                response: { data }
-            } = e;
-            if (data.statusCode == 401) {
-                checkBadAuthorization(setLoggedIn, push);
-            }*/
-		}
-	};
 
 	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
 
@@ -495,7 +470,8 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 
 	useEffect(() => {
 		getClubs();
-		if (!userData.username) fetchUserData();
+		if (!userData.username)
+			fetchUserData(dispatchUserData, setLoggedIn, push);
 		setTimeout(() => {
 			document.body.style.overflow = 'auto';
 		}, 500);
@@ -510,9 +486,14 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 						Zawodnicy
 					</Typography>
 					<Divider />
-					<IconButton className="riders__fiplus" onClick={handleOpen}>
-						<FiPlus />
-					</IconButton>
+					{checkAdminRole(userData.role) && (
+						<IconButton
+							className="riders__fiplus"
+							onClick={handleOpen}
+						>
+							<FiPlus />
+						</IconButton>
+					)}
 					<RidersList />
 				</Paper>
 			</div>

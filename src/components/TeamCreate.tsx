@@ -5,7 +5,8 @@ import React, {
 	FormEvent,
 	useContext,
 	SetStateAction,
-	Dispatch
+	Dispatch,
+	useEffect
 } from 'react';
 import {
 	Typography,
@@ -19,7 +20,6 @@ import {
 } from '@material-ui/core';
 import { FaFileUpload } from 'react-icons/fa';
 import axios from 'axios';
-import Cookies from 'universal-cookie';
 import handleImgFile, {
 	IImageData,
 	defaultImageData
@@ -29,15 +29,24 @@ import { useHistory } from 'react-router-dom';
 import { checkBadAuthorization } from '../utils/checkCookies';
 import { AppContext } from './AppProvider';
 import getToken from '../utils/getToken';
+import { ILeague } from './Team';
+import { IClub } from './ClubLeagueCreate';
 
 interface ITeamState {
 	name: string;
-	league: string;
+	leagueName: string;
+	_id?: string;
+	imageUrl?: string;
 }
 
 interface IProps {
 	updatedTeam: boolean;
 	setUpdatedTeam: Dispatch<SetStateAction<boolean>>;
+	url: string;
+	leagues: ILeague[];
+	isClub?: boolean;
+	editClubData?: ITeamState;
+	setEditClubData?: Dispatch<SetStateAction<IClub>>;
 }
 
 type SelectType = {
@@ -47,18 +56,17 @@ type SelectType = {
 
 const defaultTeam: ITeamState = {
 	name: '',
-	league: ''
+	leagueName: ''
 };
-
-const leagues: string[] = [
-	'PGE Ekstraliga',
-	'eWINNER 1. Liga',
-	'2. Liga żużlowa'
-];
 
 const TeamCreate: FunctionComponent<IProps> = ({
 	updatedTeam,
-	setUpdatedTeam
+	setUpdatedTeam,
+	url,
+	leagues,
+	isClub,
+	editClubData,
+	setEditClubData
 }) => {
 	const [team, setTeam] = useState<ITeamState>(defaultTeam);
 	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
@@ -80,45 +88,73 @@ const TeamCreate: FunctionComponent<IProps> = ({
 	const createTeam = async (team: ITeamState, imageData: IImageData) => {
 		try {
 			const accessToken = getToken();
-			const { name, league } = team;
 			const options = {
 				headers: {
 					Authorization: `Bearer ${accessToken}`
 				}
 			};
-			const {
-				data: { _id }
-			} = await axios.post(
-				'https://fantasy-league-eti.herokuapp.com/teams',
-				{ name },
-				options
-			);
+			let _id;
+			if (isClub) {
+				const leagueId = leagues.find(
+					league => league.name === team.leagueName
+				)._id;
+				const { data } = await axios.post(
+					url,
+					{
+						name: team.name,
+						leagueId
+					},
+					options
+				);
+				_id = data._id;
+			} else {
+				const { data } = await axios.post(
+					url,
+					{ name: team.name },
+					options
+				);
+				_id = data._id;
+			}
 			const typeNotification = 'success';
+			let message;
+			isClub
+				? (message = 'Pomyślnie dodano klub!')
+				: (message = 'Pomyślnie dodano drużynę!');
 			const title = 'Sukces!';
-			let message = 'Pomyślnie stworzono drużynę!';
 			const duration = 2000;
 			addNotification(title, message, typeNotification, duration);
+			if (_id) {
+				const { name: filename, imageBuffer } = imageData;
+				const {
+					data: { signedUrl, imageUrl, type }
+				} = await axios.post(
+					`${url}/${_id}/logo`,
+					{ filename },
+					options
+				);
 
-			const { name: filename, imageBuffer } = imageData;
-			const {
-				data: { signedUrl, imageUrl, type }
-			} = await axios.post(
-				`https://fantasy-league-eti.herokuapp.com/teams/${_id}/logo`,
-				{ filename },
-				options
-			);
-
-			const awsOptions = {
-				headers: {
-					'Content-Type': type
-				}
-			};
-			await axios.put(signedUrl, imageBuffer, awsOptions);
-			message = 'Pomyślnie dodano logo drużyny!';
-			addNotification(title, message, typeNotification, duration);
-			setTimeout(() => {
-				setUpdatedTeam(!updatedTeam);
-			}, duration);
+				const awsOptions = {
+					headers: {
+						'Content-Type': type
+					}
+				};
+				await axios.put(signedUrl, imageBuffer, awsOptions);
+				isClub
+					? (message = 'Pomyślnie dodano logo klubu!')
+					: (message = 'Pomyślnie dodano logo drużyny!');
+				addNotification(title, message, typeNotification, duration);
+				setTimeout(() => {
+					setTeam(defaultTeam);
+					setImageData(defaultImageData);
+					setUpdatedTeam(!updatedTeam);
+				}, duration);
+			} else {
+				const title = 'Informacja!';
+				const message = 'Musisz stworzyć drużynę!';
+				const type = 'info';
+				const duration = 1500;
+				addNotification(title, message, type, duration);
+			}
 		} catch (e) {
 			const {
 				response: { data }
@@ -135,9 +171,96 @@ const TeamCreate: FunctionComponent<IProps> = ({
 		}
 	};
 
+	const editClub = async () => {
+		try {
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			let edited = false;
+			if (
+				team.name !== editClubData.name ||
+				team.leagueName !== editClubData.leagueName
+			) {
+				const leagueId = leagues.find(
+					league => league.name === team.leagueName
+				)._id;
+				await axios.patch(
+					`${url}/${team._id}`,
+					{
+						name: team.name,
+						leagueId
+					},
+					options
+				);
+				edited = true;
+			}
+
+			if (imageData.imageBuffer) {
+				const { name: filename, imageBuffer } = imageData;
+				const {
+					data: { signedUrl, type }
+				} = await axios.post(
+					`${url}/${team._id}/logo`,
+					{ filename },
+					options
+				);
+				const awsOptions = {
+					headers: {
+						'Content-Type': type
+					}
+				};
+				await axios.put(signedUrl, imageBuffer, awsOptions);
+				edited = true;
+			}
+			if (edited) {
+				const title = 'Sukces!';
+				const message = 'Pomyślnie edytowano klub!';
+				const type = 'success';
+				const duration = 1500;
+				setEditClubData({
+					...defaultTeam,
+					_id: '',
+					imageUrl: ''
+				});
+				setTeam(defaultTeam);
+				addNotification(title, message, type, duration);
+				setTimeout(() => {
+					setUpdatedTeam(!updatedTeam);
+				}, duration);
+			}
+		} catch (e) {
+			const {
+				response: { data }
+			} = e;
+			console.log(e.response);
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
+			} else {
+				const title = 'Błąd!';
+				const message = 'Edycja klubu nie powiodła się!';
+				const type = 'danger';
+				const duration = 3000;
+				addNotification(title, message, type, duration);
+			}
+		}
+	};
+
+	const cancelEditingClub = () => {
+		setEditClubData({
+			...defaultTeam,
+			_id: '',
+			imageUrl: ''
+		});
+	};
+
 	const handleOnSubmit = (event: FormEvent) => {
 		event.preventDefault();
-		if (imageData.imageBuffer) {
+		if (editClubData) {
+			editClub();
+		} else if (imageData.imageBuffer) {
 			createTeam(team, imageData);
 		} else {
 			const title = 'Informacja!';
@@ -148,13 +271,24 @@ const TeamCreate: FunctionComponent<IProps> = ({
 		}
 	};
 
+	useEffect(() => {
+		if (editClubData) {
+			setTeam(editClubData);
+		}
+	}, [editClubData]);
+
 	return (
 		<div className="team-create-container">
 			<Typography className="heading-3 team-create-container__heading">
-				Stwórz drużynę
+				{editClubData && editClubData._id ? 'Edytuj' : 'Stwórz'}{' '}
+				{isClub ? 'klub' : 'drużynę'}
 			</Typography>
 			<form
-				className="team-create-container__form"
+				className={
+					isClub
+						? 'team-create-container__formClub'
+						: 'team-create-container__form'
+				}
 				encType="multipart/form-data"
 				onSubmit={handleOnSubmit}
 			>
@@ -180,16 +314,16 @@ const TeamCreate: FunctionComponent<IProps> = ({
 							<InputLabel id="id-league">Liga</InputLabel>
 							<Select
 								labelId="id-league"
-								value={team.league}
-								onChange={handleOnChange('league')}
+								value={team.leagueName}
+								onChange={handleOnChange('leagueName')}
 							>
-								{leagues.map((league: string) => (
+								{leagues.map((league: ILeague) => (
 									<MenuItem
-										key={league}
-										value={league}
+										key={league._id}
+										value={league.name}
 										className="team-create-container__menu"
 									>
-										{league}
+										{league.name}
 									</MenuItem>
 								))}
 							</Select>
@@ -204,10 +338,19 @@ const TeamCreate: FunctionComponent<IProps> = ({
 								style={{ display: 'none' }}
 								onChange={handleImgFile(setImageData)}
 							/>
-							<label htmlFor="id-file">
+							<label
+								htmlFor="id-file"
+								className="team-create-container__teamImgLabel"
+							>
 								{imageData.imageUrl ? (
 									<img
 										src={imageData.imageUrl as string}
+										alt="team-logo"
+										className="team-create-container__img"
+									/>
+								) : editClubData && editClubData.imageUrl ? (
+									<img
+										src={editClubData.imageUrl as string}
 										alt="team-logo"
 										className="team-create-container__img"
 									/>
@@ -218,12 +361,33 @@ const TeamCreate: FunctionComponent<IProps> = ({
 						</div>
 					</Grid>
 					<Grid item xs={12} md={10}>
-						<Button
-							type="submit"
-							className="btn team-create-container__btn"
-						>
-							Utwórz
-						</Button>
+						{editClubData && editClubData._id ? (
+							<Grid container spacing={2}>
+								<Grid item xs={6}>
+									<Button
+										type="submit"
+										className="btn team-create-container__btn"
+									>
+										Edytuj
+									</Button>
+								</Grid>
+								<Grid item xs={6}>
+									<Button
+										className="btn team-create-container__btn"
+										onClick={cancelEditingClub}
+									>
+										Anuluj
+									</Button>
+								</Grid>
+							</Grid>
+						) : (
+							<Button
+								type="submit"
+								className="btn team-create-container__btn"
+							>
+								Utwórz
+							</Button>
+						)}
 					</Grid>
 				</Grid>
 			</form>
