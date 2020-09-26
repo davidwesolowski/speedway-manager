@@ -1,4 +1,4 @@
-import { Divider, Paper, Typography } from '@material-ui/core';
+import { Divider, MenuItem, Paper, Select, Typography } from '@material-ui/core';
 import axios from 'axios';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -6,6 +6,16 @@ import { setUser } from '../actions/userActions';
 import { checkBadAuthorization } from '../utils/checkCookies';
 import getToken from '../utils/getToken';
 import { useStateValue } from './AppProvider';
+import RankingUsersList from './RankingUsersList';
+
+interface IRankingUser {
+	_id: string;
+	avatarUrl: string | null;
+	name: string;
+	teamLogo: string | null;
+	teamName: string;
+	points: number;
+}
 
 const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}) => {
     
@@ -42,9 +52,67 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
     };
 
     const [selectedRanking, setSelectedRanking] = useState<string>('');
+    const [userRankings, setUserRankings] = useState([]);
+    const [rankingUsers, setRankingUsers] = useState<IRankingUser[]>([]);
+
+    const handleOnChangeSelect = () => event => {
+        event.persist();
+        if(event.target){
+            setSelectedRanking(event.target.value);
+            getRankingUsersList(event.target.value);
+        }
+    }
+
+    const getUserRankings = async () => {
+        //Do pobrania listy rankingów użytkownika + globalnego
+        //setUserRankings()
+
+        generateRankingsSelect();
+    }
+
+    const generateRankingsSelect = () => {
+        //Do wygenerowania MenuItems z pobranej listy rankingów użytkownika + globalnego
+        //userRankings.map()
+    }
+
+    const getRankingUsersList = async (rankingId) => {
+        //Do pobierania uzytkownikow umiejscowionych w rankingu
+        //setRankingUsers()
+        if(rankingId === 'global'){
+
+        } else {
+
+        }
+    }
+
+    const tempRankingData = [
+        {
+            _id: 'fffff',
+            avatarUrl: '',
+            name: 'DOMINOX',
+            teamLogo: '',
+            teamName: 'pasikoniki',
+            points: 10008,
+        }
+    ]
+
+    const generateRankingTable = () => {
+        //Do wygenerowania komponentu RankingUsersList na podstawie odpowiedniej listy userów
+        //RankingUserList
+        if(rankingUsers){
+            return(
+                <RankingUsersList
+                    users={rankingUsers}
+                />
+            )
+        }
+    }
 
     useEffect(() => {
         if (!userData.username) fetchUserData();
+        getUserRankings();
+        getRankingUsersList('global');
+        setRankingUsers(tempRankingData)
     }, [])
 
     return(
@@ -60,6 +128,13 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
                     </Typography>
                     <Divider />
                     <br/>
+                    <Select value={selectedRanking || ''} onChange={handleOnChangeSelect()}>
+                        <MenuItem key='global' value='global'>Ranking globalny</MenuItem>
+                        {generateRankingsSelect()}
+                    </Select>
+                    <br/>
+                    <br/>
+                    {generateRankingTable()}
                 </Paper>
             </div>
         </>
