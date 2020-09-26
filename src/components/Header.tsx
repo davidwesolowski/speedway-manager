@@ -34,52 +34,101 @@ const Header: FunctionComponent = () => {
 		push('/login');
 	};
 
+	const unauthorized = () => (
+		<ul className="header__nav">
+			<li className="header__item">
+				<Link to="/" className="header__link">
+					Start
+				</Link>
+			</li>
+			<li className="header__item">
+				<Link to="/mecze" className="header__link">
+					Wyniki meczów
+				</Link>
+			</li>
+			<li className="header__item">
+				<Link to="/samouczek" className="header__link">
+					Samouczek
+				</Link>
+			</li>
+			<li className="header__item">
+				<Link to="/kluby" className="header__link">
+					Kluby
+				</Link>
+			</li>
+		</ul>
+	);
+
+	const authorized = () => (
+		<ul className="header__nav">
+			<li className="header__item">
+				<Link to="/" className="header__link">
+					Start
+				</Link>
+			</li>
+			<li className="header__item">
+				<Link to="/mecze" className="header__link">
+					Wyniki meczów
+				</Link>
+			</li>
+			<li className="header__item">
+				<Link to="/druzyna" className="header__link">
+					Drużyna
+				</Link>
+			</li>
+			<li className="header__item">
+				<Link to="/ranking" className="header__link">
+					Ranking
+				</Link>
+			</li>
+			<li className="header__item">
+				<Link to="/uzytkownicy" className="header__link">
+					Użytkownicy
+				</Link>
+			</li>
+			<li className="header__item">
+				<Link to="/zawodnicy" className="header__link">
+					Zawodnicy
+				</Link>
+			</li>
+			<li className="header__item">
+				<Link to="/samouczek" className="header__link">
+					Samouczek
+				</Link>
+			</li>
+		</ul>
+	);
+
 	return (
 		<>
 			<AppBar position="sticky" className="header">
 				<Toolbar className="header__toolbar">
 					<div className="header__logo">LOGO</div>
-					<ul className="header__nav">
-						<li className="header__item">
-							<Link to="/" className="header__link">
-								Start
-							</Link>
-						</li>
-						<li className="header__item">
-							<Link to="/mecze" className="header__link">
-								Wyniki meczów
-							</Link>
-						</li>
-						<li className="header__item">
-							<Link to="/druzyna" className="header__link">
-								Drużyna
-							</Link>
-						</li>
-						<li>
-							<Link to="/uzytkownicy" className="header__link">
-								Użytkownicy
-							</Link>
-						</li>
-					</ul>
 					{loggedIn ? (
-						<IconButton onClick={handleProfileMenuOpen}>
-							<Avatar
-								alt="user-avatar"
-								className="header__avatar"
-								src={userData.avatarUrl}
-							/>
-							<span className="header__username">
-								{userData.username}
-							</span>
-						</IconButton>
+						<>
+							{authorized()}
+							<IconButton onClick={handleProfileMenuOpen}>
+								<Avatar
+									alt="user-avatar"
+									className="header__avatar"
+									src={userData.avatarUrl}
+								/>
+								<span className="header__username">
+									{userData.username}
+								</span>
+							</IconButton>
+						</>
 					) : (
-						<Link
-							to="/login"
-							className="header__link header__login"
-						>
-							<div>Zaloguj</div>
-							<FaUserCircle />
-						</Link>
+						<>
+							{unauthorized()}
+							<Link
+								to="/login"
+								className="header__link header__login"
+							>
+								<div>Zaloguj</div>
+								<FaUserCircle />
+							</Link>
+						</>
 					)}
 				</Toolbar>
 			</AppBar>
