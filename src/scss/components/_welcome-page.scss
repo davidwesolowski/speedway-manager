@@ -6,11 +6,12 @@
 	grid-template-rows: 10rem 1fr;
 	padding: 1rem;
 
-	@media screen and (max-width: $bp-sm) {
-		grid-column: full-start / full-end;
+	@media screen and (max-width: $bp-md) {
+		grid-row-gap: 1rem;
 	}
 
-	@media screen and (max-width: $bp-xs) {
+	@media screen and (max-width: $bp-sm) {
+		grid-column: full-start / full-end;
 		grid-row-gap: 2rem;
 	}
 

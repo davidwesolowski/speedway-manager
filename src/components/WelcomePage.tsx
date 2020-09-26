@@ -1,9 +1,19 @@
 import React, { FunctionComponent, useEffect } from 'react';
 import { FaCoins } from 'react-icons/fa';
 import { BsBarChartFill, BsTrophy } from 'react-icons/bs';
+import { checkCookies } from '../utils/checkCookies';
+import fetchUserData from '../utils/fetchUserData';
+import { useStateValue } from './AppProvider';
+import { useHistory } from 'react-router-dom';
 
 const WelcomePage: FunctionComponent = () => {
+	const { dispatchUserData, setLoggedIn } = useStateValue();
+	const { push } = useHistory();
+
 	useEffect(() => {
+		if (checkCookies()) {
+			fetchUserData(dispatchUserData, setLoggedIn, push);
+		}
 		setTimeout(() => {
 			document.body.style.overflowY = 'auto';
 		}, 500);
