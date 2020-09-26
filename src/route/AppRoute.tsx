@@ -30,6 +30,7 @@ import TeamHistory from '../components/TeamHistory';
 import { useStateValue } from '../components/AppProvider';
 import checkAdminRole from '../utils/checkAdminRole';
 import ClubLeagueCreate from '../components/ClubLeagueCreate';
+import RankingUsers from '../components/RankingUsers';
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -175,6 +176,14 @@ const RoutesAnimation = () => {
 						render={(props: RouteComponentProps) => {
 							const cookiesExist = checkCookies();
 							if(cookiesExist) return <TeamHistory {...props} />;
+							else return <Redirect to="/login" />;
+						}}
+					/>
+					<Route
+						path="/ranking"
+						render={(props: RouteComponentProps) => {
+							const cookiesExist = checkCookies();
+							if(cookiesExist) return <RankingUsers {...props} />;
 							else return <Redirect to="/login" />;
 						}}
 					/>
