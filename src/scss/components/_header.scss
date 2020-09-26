@@ -37,6 +37,29 @@
 		text-decoration: none;
 	}
 
+	&__mobileLink {
+		color: #000;
+		text-decoration: none;
+		font-size: 2.5rem;
+		font-family: $bebas;
+		letter-spacing: 0.5px;
+	}
+
+	&__mobileIcon {
+		color: #fff;
+		font-size: 2.5rem;
+	}
+
+	&__drawerClose {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+	}
+
+	&__drawerCloseIcon {
+		font-size: 2.5rem;
+	}
+
 	&__login {
 		padding: 1rem;
 		display: flex;
@@ -68,4 +91,7 @@
 			color: #000;
 		}
 	}
+}
+.MuiDrawer-paper {
+	min-width: 100% !important;
 }
