@@ -7,6 +7,8 @@
 	align-items: center;
 	font-family: $bebas;
 
+	@media screen and (max-width: $bp-sm) {         grid-column: full-start / full-end;}
+
 	&__background {
 		height: 100%;
 		width: 100%;

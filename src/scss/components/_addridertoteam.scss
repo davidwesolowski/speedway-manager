@@ -7,6 +7,8 @@
     font-family: $bebas !important;
     text-align: center;
 
+    @media screen and (max-width: $bp-sm) {         grid-column: full-start / full-end;}
+
     &__background{
         background-image: url("/img/warsaw_venue.jpg");
         height: 100%;
