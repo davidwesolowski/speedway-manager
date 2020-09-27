@@ -149,14 +149,24 @@ const Header: FunctionComponent = () => {
 			<List>
 				{loggedIn
 					? authorizedMenuItems.map(({ link, name }) => (
-							<ListItem key={link} divider button>
+							<ListItem
+								key={link}
+								divider
+								button
+								onClick={() => setMobileOpen(false)}
+							>
 								<Link to={link} className="header__mobileLink">
 									{name}
 								</Link>
 							</ListItem>
 					  ))
 					: unauthorizedMenuItems.map(({ link, name }) => (
-							<ListItem key={link} divider button>
+							<ListItem
+								key={link}
+								divider
+								button
+								onClick={() => setMobileOpen(false)}
+							>
 								<Link to={link} className="header__mobileLink">
 									{name}
 								</Link>
