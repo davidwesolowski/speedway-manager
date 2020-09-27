@@ -79,7 +79,41 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
         //Do pobierania uzytkownikow umiejscowionych w rankingu
         //setRankingUsers()
         if(rankingId === 'global'){
-
+            const accessToken = getToken();
+            const options = {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            };
+            try {
+                const {
+                    data
+                } = await axios.get(
+                    'https://fantasy-league-eti.herokuapp.com/rankings/global',
+                    options
+                );
+                console.log(data)
+                setRankingUsers([]);
+                data.map(user => {
+                    setRankingUsers(rankingUsers => 
+                        rankingUsers.concat({
+                            _id: user.userid,
+                            avatarUrl: user.avatarUrl,
+                            name: user.username,
+                            teamLogo: user.teamlogourl,
+                            teamName: user.teamname,
+                            points: user.score
+                        })
+                    );
+                });
+            } catch (e) {
+                const {
+                    response: { data }
+                } = e;
+                if (data.statusCode == 401) {
+                    checkBadAuthorization(setLoggedIn, push);
+                }
+            }
         } else {
 
         }
@@ -112,7 +146,7 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
         if (!userData.username) fetchUserData();
         getUserRankings();
         getRankingUsersList('global');
-        setRankingUsers(tempRankingData)
+        //setRankingUsers(tempRankingData)
     }, [])
 
     return(
@@ -132,8 +166,8 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
                         <MenuItem key='global' value='global'>Ranking globalny</MenuItem>
                         {generateRankingsSelect()}
                     </Select>
-                    <br/>
-                    <br/>
+                    {/* <br/> */}
+                    {/* <br/> */}
                     {generateRankingTable()}
                 </Paper>
             </div>
