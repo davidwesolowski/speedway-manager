@@ -100,13 +100,6 @@ const SelfTeaching: FunctionComponent = () => {
 	};
 
 	useEffect(() => {
-		const accessToken = getToken();
-		const options = {
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		};
-
 		const checkIfUserLoggedIn = async () => {
 			const cookiesExist = checkCookies();
 			if (cookiesExist && !userData.username) {
@@ -157,7 +150,7 @@ const SelfTeaching: FunctionComponent = () => {
 			<div className="selfTeaching__container">
 				<div className="selfTeaching__img"></div>
 				<Paper className="selfTeaching__box">
-					{checkAdminRole(userData.role) && (
+					{checkAdminRole(userData.role) && checkCookies() && (
 						<Grid container justify="flex-end" alignItems="center">
 							<Grid item>
 								<IconButton onClick={handleOpen}>

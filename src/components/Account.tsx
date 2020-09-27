@@ -84,7 +84,7 @@ const defaultValidateData: IValidateData = {
 
 const defaultAccountData: IState = {
 	username: '',
-	club: 'Apator',
+	club: '',
 	points: 0,
 	position: -1,
 	password: '',
@@ -289,7 +289,47 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	useEffect(() => {
-		if (!userData.email) fetchUserData(dispatchUserData, setLoggedIn, push);
+		const accessToken = getToken();
+		const options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
+			}
+		};
+		const fetchTeamAndScore = async () => {
+			const { data } = await axios.get(
+				'https://fantasy-league-eti.herokuapp.com/rankings/global',
+				options
+			);
+			let _id = userData._id;
+			if (!userData.username)
+				_id = await fetchUserData(dispatchUserData, setLoggedIn, push);
+			if (data) {
+				const team = data.find(
+					rankingItem => rankingItem.userid === _id
+				);
+				const uniqueRanking = data
+					.map(rankingItem => rankingItem.score)
+					.filter(
+						(score, index, self) => self.indexOf(score) === index
+					)
+					.sort((scoreA, scoreB) => {
+						if (scoreA <= scoreB) return 1;
+						else return -1;
+					});
+				const position = uniqueRanking.indexOf(team.score) + 1;
+				if (team) {
+					setAccountData({
+						...accountData,
+						position,
+						club: team.teamname,
+						points: team.score || 0
+					});
+				}
+			}
+		};
+
+		fetchTeamAndScore();
+
 		setTimeout(() => {
 			document.body.style.overflow = 'auto';
 		}, 2000);
@@ -351,7 +391,10 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 								className="account-info__stats"
 							>
 								<strong>Nazwa klubu:</strong>{' '}
-								<Link to="/klub" className="account-info__club">
+								<Link
+									to="/druzyna"
+									className="account-info__club"
+								>
 									{accountData.club}
 								</Link>
 							</Typography>

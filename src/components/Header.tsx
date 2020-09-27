@@ -11,14 +11,88 @@ import {
 	IconButton,
 	Avatar,
 	Menu,
-	MenuItem
+	MenuItem,
+	Hidden,
+	Divider,
+	List,
+	ListItem,
+	Drawer,
+	ListItemText
 } from '@material-ui/core';
 import { FaUserCircle } from 'react-icons/fa';
 import { AppContext } from './AppProvider';
 import Cookies from 'universal-cookie';
+import { FiChevronLeft, FiMenu } from 'react-icons/fi';
+
+const unauthorizedMenuItems = [
+	{
+		link: '/',
+		name: 'Start',
+		icon: ''
+	},
+	{
+		link: '/mecze',
+		name: 'Wyniki',
+		icon: ''
+	},
+	{
+		link: '/samouczek',
+		name: 'Samouczek',
+		icon: ''
+	},
+	{
+		link: '/kluby',
+		name: 'Kluby',
+		icon: ''
+	}
+];
+
+const authorizedMenuItems = [
+	{
+		link: '/',
+		name: 'Start',
+		icon: ''
+	},
+	{
+		link: '/mecze',
+		name: 'Wyniki',
+		icon: ''
+	},
+	{
+		link: '/druzyna',
+		name: 'Drużyna',
+		icon: ''
+	},
+	{
+		link: '/ranking',
+		name: 'Ranking',
+		icon: ''
+	},
+	{
+		link: '/uzytkownicy',
+		name: 'Użytkownicy',
+		icon: ''
+	},
+	{
+		link: '/zawodnicy',
+		name: 'Zawodnicy',
+		icon: ''
+	},
+	{
+		link: '/kluby',
+		name: 'Kluby',
+		icon: ''
+	},
+	{
+		link: '/samouczek',
+		name: 'Samouczek',
+		icon: ''
+	}
+];
 
 const Header: FunctionComponent = () => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const [mobileOpen, setMobileOpen] = useState(false);
 	const { push } = useHistory();
 	const { userData, loggedIn, setLoggedIn } = useContext(AppContext);
 	const isMenuOpen = Boolean(anchorEl);
@@ -34,55 +108,122 @@ const Header: FunctionComponent = () => {
 		push('/login');
 	};
 
+	const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
+
+	const unauthorized = (
+		<Hidden xsDown>
+			<ul className="header__nav">
+				{unauthorizedMenuItems.map(({ link, name }) => (
+					<li className="header__item" key={link}>
+						<Link to={link} className="header__link">
+							{name}
+						</Link>
+					</li>
+				))}
+			</ul>
+		</Hidden>
+	);
+
+	const authorized = (
+		<Hidden smDown>
+			<ul className="header__nav">
+				{authorizedMenuItems.map(({ link, name }) => (
+					<li className="header__item" key={link}>
+						<Link to={link} className="header__link">
+							{name}
+						</Link>
+					</li>
+				))}
+			</ul>
+		</Hidden>
+	);
+
+	const drawer = (
+		<div>
+			<div className="header__drawerClose">
+				<IconButton onClick={handleDrawerToggle}>
+					<FiChevronLeft className="header__drawerCloseIcon" />
+				</IconButton>
+			</div>
+			<Divider />
+			<List>
+				{loggedIn
+					? authorizedMenuItems.map(({ link, name }) => (
+							<ListItem
+								key={link}
+								divider
+								button
+								onClick={() => setMobileOpen(false)}
+							>
+								<Link to={link} className="header__mobileLink">
+									{name}
+								</Link>
+							</ListItem>
+					  ))
+					: unauthorizedMenuItems.map(({ link, name }) => (
+							<ListItem
+								key={link}
+								divider
+								button
+								onClick={() => setMobileOpen(false)}
+							>
+								<Link to={link} className="header__mobileLink">
+									{name}
+								</Link>
+							</ListItem>
+					  ))}
+			</List>
+		</div>
+	);
+
 	return (
 		<>
 			<AppBar position="sticky" className="header">
 				<Toolbar className="header__toolbar">
-					<div className="header__logo">LOGO</div>
-					<ul className="header__nav">
-						<li className="header__item">
-							<Link to="/" className="header__link">
-								Start
-							</Link>
-						</li>
-						<li className="header__item">
-							<Link to="/mecze" className="header__link">
-								Wyniki meczów
-							</Link>
-						</li>
-						<li className="header__item">
-							<Link to="/druzyna" className="header__link">
-								Drużyna
-							</Link>
-						</li>
-						<li>
-							<Link to="/uzytkownicy" className="header__link">
-								Użytkownicy
-							</Link>
-						</li>
-					</ul>
-					{loggedIn ? (
-						<IconButton onClick={handleProfileMenuOpen}>
-							<Avatar
-								alt="user-avatar"
-								className="header__avatar"
-								src={userData.avatarUrl}
-							/>
-							<span className="header__username">
-								{userData.username}
-							</span>
+					<Hidden mdUp={loggedIn} smUp={!loggedIn}>
+						<IconButton onClick={handleDrawerToggle}>
+							<FiMenu className="header__mobileIcon" />
 						</IconButton>
+					</Hidden>
+					<div className="header__logo">LOGO</div>
+					{loggedIn ? (
+						<>
+							{authorized}
+							<IconButton onClick={handleProfileMenuOpen}>
+								<Avatar
+									alt="user-avatar"
+									className="header__avatar"
+									src={userData.avatarUrl}
+								/>
+								<span className="header__username">
+									{userData.username}
+								</span>
+							</IconButton>
+						</>
 					) : (
-						<Link
-							to="/login"
-							className="header__link header__login"
-						>
-							<div>Zaloguj</div>
-							<FaUserCircle />
-						</Link>
+						<>
+							{unauthorized}
+							<Link
+								to="/login"
+								className="header__link header__login"
+							>
+								<div>Zaloguj</div>
+								<FaUserCircle />
+							</Link>
+						</>
 					)}
 				</Toolbar>
 			</AppBar>
+			<Hidden mdUp={loggedIn} smUp={!loggedIn}>
+				<Drawer
+					anchor="left"
+					open={mobileOpen}
+					onClose={handleDrawerToggle}
+					ModalProps={{ keepMounted: true }}
+				>
+					{drawer}
+				</Drawer>
+			</Hidden>
 			<Menu
 				anchorEl={anchorEl}
 				anchorOrigin={{ vertical: 'top', horizontal: 'right' }}

@@ -6,6 +6,10 @@
 	align-items: center;
 	font-family: $bebas !important;
 
+	@media screen and (max-width: $bp-sm) {
+		grid-column: full-start / full-end;
+	}
+
 	&__background {
 		background-image: url('/img/warsaw_venue.jpg');
 		height: 100%;
@@ -20,7 +24,7 @@
 		position: relative;
 		z-index: 1000;
 		min-width: 45vw;
-		min-height: 70vh;
+		min-height: 85%;
 		padding: 3rem 2rem;
 		width: 90%;
 	}
@@ -121,7 +125,6 @@
 	@media only screen and (max-width: $bp-sm) {
 		&__headerText {
 			margin-bottom: $xs-margin !important;
-			margin-right: 0 !important;
 		}
 
 		&__container {
