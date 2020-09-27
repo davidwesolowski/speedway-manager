@@ -6,6 +6,10 @@
 	align-items: center;
 	font-family: $bebas !important;
 
+	@media screen and (max-width: $bp-sm) {
+		grid-column: full-start / full-end;
+	}
+
 	&__background {
 		background-image: url('/img/wroclaw.jpg');
 		background-size: cover;

@@ -5,6 +5,10 @@
 	justify-content: center;
 	align-items: center;
 
+	@media screen and (max-width: $bp-sm) {
+		grid-column: full-start / full-end;
+	}
+
 	&__img {
 		background-image: url(/img/wroclaw.jpg);
 		position: absolute;

@@ -6,6 +6,10 @@
 		justify-content: center;
 		align-items: center;
 		font-family: $bebas;
+
+		@media screen and (max-width: $bp-sm) {
+			grid-column: full-start / full-end;
+		}
 	}
 
 	&__img {
