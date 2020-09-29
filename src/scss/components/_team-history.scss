@@ -1,5 +1,4 @@
-.rankingUsers {
-
+.history {
 	grid-column: center-start / center-end;
 	position: relative;
 	display: flex;
@@ -44,43 +43,75 @@
 		margin-bottom: $xs-margin !important;
 		letter-spacing: 1px !important;
 	}
+	
+	&__full-score-text{
+		@media only screen and (max-width: $bp-md) {
+			font-size: x-large !important;
+		}
 
-	& .MuiTableCell-head {
+		@media only screen and (max-width: $bp-sm) {
+			font-size: x-large !important;
+		}
+	}
+
+    &__full-score{
+        width: 50%;
+        float: right;
+        display: block;
+        overflow: auto;
+        justify-content: center;
+		text-align: center;
+		
+		@media only screen and (max-width: $bp-md) {
+			width: 100%;
+			font-size: medium;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			width: 100%;
+			font-size: medium;
+		}
+    }
+
+    &__riders-list{
+        width: 50%;
+        float: left;
+        display: block;
+        overflow: auto;
+        justify-content: center;
+		text-align: center;
+		
+		@media only screen and (max-width: $bp-md) {
+			width: 100%;
+			font-size: medium;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			width: 100%;
+			font-size: medium;
+		}
+    }
+
+    .MuiTableCell-head {
 		background-color: $color-primary !important;
 		color: #fff !important;
-		font-size: 1.8rem;
+		font-size: 1.7rem;
 		font-family: $bebas !important;
 		border: 1px solid $color-primary-light;
-
-		&:first-child {
-			border: none !important;
-		}
-		&:nth-child(2) {
-			border-left: none;
-		}
 	}
 
-	& .MuiTableRow-root:nth-child(even) .MuiTableCell-body {
+	.MuiTableRow-root:nth-child(even) .MuiTableCell-body {
 		background-color: $color-primary-light;
 		color: #fff;
-
-		.MuiIconButton-root:hover {
-			background-color: #b9b0b083;
-		}
 	}
 
-	& .MuiTableCell-body {
-		font-size: 1.7rem;
+	.MuiTableCell-body {
+		font-size: 1.6rem;
 		font-family: $bebas !important;
 		border: 1px solid $color-primary;
 	}
 
-	& .MuiTableCell-root {
-		padding: 1rem !important;
-		border: none;
-	}
-
-	& .MuiTable-root {
+	.MuiTable-root {
 		border: 1px solid $color-primary;
 	}
 }

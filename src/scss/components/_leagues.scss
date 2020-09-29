@@ -1,5 +1,4 @@
-.rankingUsers {
-
+.leagues {
 	grid-column: center-start / center-end;
 	position: relative;
 	display: flex;
@@ -43,44 +42,5 @@
 		font-family: $bebas !important;
 		margin-bottom: $xs-margin !important;
 		letter-spacing: 1px !important;
-	}
-
-	& .MuiTableCell-head {
-		background-color: $color-primary !important;
-		color: #fff !important;
-		font-size: 1.8rem;
-		font-family: $bebas !important;
-		border: 1px solid $color-primary-light;
-
-		&:first-child {
-			border: none !important;
-		}
-		&:nth-child(2) {
-			border-left: none;
-		}
-	}
-
-	& .MuiTableRow-root:nth-child(even) .MuiTableCell-body {
-		background-color: $color-primary-light;
-		color: #fff;
-
-		.MuiIconButton-root:hover {
-			background-color: #b9b0b083;
-		}
-	}
-
-	& .MuiTableCell-body {
-		font-size: 1.7rem;
-		font-family: $bebas !important;
-		border: 1px solid $color-primary;
-	}
-
-	& .MuiTableCell-root {
-		padding: 1rem !important;
-		border: none;
-	}
-
-	& .MuiTable-root {
-		border: 1px solid $color-primary;
-	}
+    }
 }

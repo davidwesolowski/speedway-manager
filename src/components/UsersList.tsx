@@ -7,9 +7,9 @@ import {
 	TableContainer,
 	Table,
 	TableHead,
-	TableBody
+	TableBody, Dialog, DialogTitle, Typography, DialogContent, Grid, FormControl, TextField, Select, MenuItem, Button
 } from '@material-ui/core';
-import { FiArrowRightCircle } from 'react-icons/fi';
+import { FiArrowRightCircle, FiPlus, FiX } from 'react-icons/fi';
 import axios from 'axios';
 import { IUsers } from './Users';
 import {
@@ -197,6 +197,17 @@ const UsersList: FunctionComponent<IProps> = ({
 						<TableCell align="center">
 							<IconButton
 								onClick={() =>
+									openAddToLeagueDialog(user._id)
+								}
+							>
+								<FiPlus className="users__addToLeague" />
+							</IconButton>
+						</TableCell>
+					) : null}
+					{!handleFetchTeamRiders ? (
+						<TableCell align="center">
+							<IconButton
+								onClick={() =>
 									handleRemoveFriendOrInvitation(user._id)
 								}
 							>
@@ -218,7 +229,78 @@ const UsersList: FunctionComponent<IProps> = ({
 		</TableRow>
 	);
 
+	const [openAddLeagueDialog, setOpenAddLeagueDialog] = useState<boolean>(false);
+	const [friendToLeague, setFriendToLeague] = useState<string>('');
+	const [leagueToAddFriend, setLeagueToAddFriend] = useState<string>('');
+	const [userLeagues, setUserLeagues] = useState([]);
+
+	const handleOnChangeSelectLeague = () => event => {
+		event.persist();
+		if(event.target){
+			setLeagueToAddFriend(event.target.value);
+		}
+	}
+
+	const openAddToLeagueDialog = (userId) => {
+		setFriendToLeague(userId);
+		setOpenAddLeagueDialog(true);
+	}
+
+	const closeAddToLeagueDialog = () => {
+		setFriendToLeague('');
+		setOpenAddLeagueDialog(false);
+	}
+
+	const handleOnSubmit = () => {
+		//submit dodania znajomego do ligi
+	}
+
+	const generateUsersLeagues = () => {
+		//tworzenie MenuItems z lig uzytkownika
+		return(
+			<MenuItem key="lolol" value="lolol">MLeko</MenuItem>
+		)
+	}
+
+	const getUsersLeagues = async () => {
+		//pobranie lig użytkownika
+	}
+
 	return (
+		<>
+		<Dialog className="users-dialog" onClose={closeAddToLeagueDialog} open={openAddLeagueDialog}>
+			<DialogTitle>
+				<div className="users-dialog__header">
+					<Typography variant="h4" className="users-dialog__title">
+						Dodawanie znajomego do ligi
+					</Typography>
+					<IconButton
+						onClick={closeAddToLeagueDialog}
+						className="users-dialog__fix"
+					>
+						<FiX />
+					</IconButton>
+				</div>
+			</DialogTitle>
+			<DialogContent dividers>
+				<form className="users-dialog__form" onSubmit={handleOnSubmit}>
+					<Grid container>
+						<Grid item xs={7} className="users-dialog__form_fields">
+							<FormControl className="users-dialog__form_field">
+								<Select onChange={handleOnChangeSelectLeague()} value={leagueToAddFriend || ''} className="users-dialog__select">
+									{generateUsersLeagues()}
+								</Select>
+							</FormControl>
+						</Grid>
+						<Grid>
+							<Button type="submit" className="users-dialog__submit">
+								Dodaj
+							</Button>
+						</Grid>
+					</Grid>
+				</form>
+			</DialogContent>	
+		</Dialog>
 		<TableContainer>
 			<Table>
 				<TableHead>
@@ -233,6 +315,9 @@ const UsersList: FunctionComponent<IProps> = ({
 							{handleFetchTeamRiders ? 'Dodaj' : 'Status'}
 						</TableCell>
 						{!handleFetchTeamRiders ? (
+							<TableCell align="center">Dodaj do ligi</TableCell>
+						) : null}
+						{!handleFetchTeamRiders ? (
 							<TableCell align="center">Usuń</TableCell>
 						) : null}
 					</TableRow>
@@ -240,6 +325,7 @@ const UsersList: FunctionComponent<IProps> = ({
 				<TableBody>{users.length > 0 ? isFound : notFound}</TableBody>
 			</Table>
 		</TableContainer>
+		</>
 	);
 };
 

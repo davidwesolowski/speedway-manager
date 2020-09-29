@@ -24,9 +24,13 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import SelfTeaching from '../components/SelfTeaching';
 import Friends from '../components/Friends';
 import ListMatches from '../components/ListMatches';
+import Leagues from '../components/Leagues';
+import UserRankingLeagues from '../components/UserRankingLeagues';
+import TeamHistory from '../components/TeamHistory';
 import { useStateValue } from '../components/AppProvider';
 import checkAdminRole from '../utils/checkAdminRole';
 import ClubLeagueCreate from '../components/ClubLeagueCreate';
+import RankingUsers from '../components/RankingUsers';
 
 const AppRoute: FunctionComponent = () => {
 	return (
@@ -148,6 +152,38 @@ const RoutesAnimation = () => {
 							const cookiesExist = checkCookies();
 							if (cookiesExist)
 								return <ClubLeagueCreate {...props} />;
+							else return <Redirect to="/login" />;
+						}}
+					/>
+					<Route
+						path="/ligi"
+						render={(props: RouteComponentProps) => {
+							const cookiesExist = checkCookies();
+							if(cookiesExist) return <Leagues {...props} />;
+							else return <Redirect to="/login" />;
+						}}
+					/>
+					<Route
+						path="/moje-ligi"
+						render={(props: RouteComponentProps) => {
+							const cookiesExist = checkCookies();
+							if(cookiesExist) return <UserRankingLeagues {...props} />;
+							else return <Redirect to="/login" />;
+						}}
+					/>
+					<Route
+						path="/historia"
+						render={(props: RouteComponentProps) => {
+							const cookiesExist = checkCookies();
+							if(cookiesExist) return <TeamHistory {...props} />;
+							else return <Redirect to="/login" />;
+						}}
+					/>
+					<Route
+						path="/ranking"
+						render={(props: RouteComponentProps) => {
+							const cookiesExist = checkCookies();
+							if(cookiesExist) return <RankingUsers {...props} />;
 							else return <Redirect to="/login" />;
 						}}
 					/>

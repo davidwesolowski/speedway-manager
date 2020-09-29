@@ -15,6 +15,16 @@
         margin-bottom: 0.5% !important;
         text-align: center;
         margin-top: 0.5% !important;
+
+        @media only screen and (max-width: $bp-md) {
+            width: 35%;
+            font-size: medium;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			width: 35%;
+            font-size: medium;
+		}
     }
 
     &__away{
@@ -24,6 +34,16 @@
         margin-bottom: 0.5% !important;
         text-align: center;
         margin-top: 0.5% !important;
+
+        @media only screen and (max-width: $bp-md) {
+            width: 35%;
+            font-size: medium;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			width: 35%;
+            font-size: medium;
+		}
     }
 
     &__score{
@@ -32,6 +52,16 @@
         margin-bottom: 2% !important;
         text-align: center;
         margin-top: 2% !important;
+
+        @media only screen and (max-width: $bp-md) {
+            width: 30%;
+            font-size: medium;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			width: 30%;
+            font-size: medium;
+		}
     }
 
     &__options{
@@ -39,6 +69,22 @@
         float:right;
         margin-bottom: 0.5% !important;
         margin-top: 0.5% !important;
+        display: block;
+        overflow: auto;
+
+        @media only screen and (max-width: $bp-md) {
+            width: 100%;
+            font-size: medium;
+            float: none;
+            align-items: center;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			width: 100%;
+            font-size: medium;
+            float: none;
+            align-items: center;
+		}
     }
 
     &__club-image{
