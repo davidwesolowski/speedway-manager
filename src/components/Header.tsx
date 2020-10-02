@@ -117,7 +117,7 @@ const Header: FunctionComponent = () => {
 	const { push } = useHistory();
 	const { userData, loggedIn, setLoggedIn } = useContext(AppContext);
 	const isMenuOpen = Boolean(anchorEl);
-	const isAdmin = checkAdminRole(userData.role);
+	const isAdmin = checkAdminRole(userData.role) && loggedIn;
 
 	const handleProfileMenuOpen = (event: MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -160,6 +160,16 @@ const Header: FunctionComponent = () => {
 		</Hidden>
 	);
 
+	const adminHeader = (
+		<ul className="header__nav">
+			<li className="header__item" onClick={handleDrawerToggle}>
+				<span className="header__link header__link-admin">
+					Panel administratora
+				</span>
+			</li>
+		</ul>
+	);
+
 	const drawer = (
 		<div>
 			<div className="header__drawerClose">
@@ -169,7 +179,20 @@ const Header: FunctionComponent = () => {
 			</div>
 			<Divider />
 			<List>
-				{loggedIn
+				{isAdmin
+					? adminMenuItems.map(({ link, name }) => (
+							<ListItem
+								key={link}
+								divider
+								button
+								onClick={() => setMobileOpen(false)}
+							>
+								<Link to={link} className="header__mobileLink">
+									{name}
+								</Link>
+							</ListItem>
+					  ))
+					: loggedIn
 					? authorizedMenuItems.map(({ link, name }) => (
 							<ListItem
 								key={link}
@@ -202,13 +225,17 @@ const Header: FunctionComponent = () => {
 		<>
 			<AppBar position="sticky" className="header">
 				<Toolbar className="header__toolbar">
-					<Hidden mdUp={loggedIn} smUp={!loggedIn}>
-						<IconButton onClick={handleDrawerToggle}>
-							<FiMenu className="header__mobileIcon" />
-						</IconButton>
-					</Hidden>
+					{!isAdmin && (
+						<Hidden mdUp={loggedIn} smUp={!loggedIn}>
+							<IconButton onClick={handleDrawerToggle}>
+								<FiMenu className="header__mobileIcon" />
+							</IconButton>
+						</Hidden>
+					)}
 					<div className="header__logo">LOGO</div>
-					{loggedIn ? (
+					{isAdmin ? (
+						adminHeader
+					) : loggedIn ? (
 						<>
 							{authorized}
 							<IconButton onClick={handleProfileMenuOpen}>
