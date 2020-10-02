@@ -220,7 +220,6 @@ const Header: FunctionComponent = () => {
 			</List>
 		</div>
 	);
-
 	return (
 		<>
 			<AppBar position="sticky" className="header">
@@ -263,16 +262,28 @@ const Header: FunctionComponent = () => {
 					)}
 				</Toolbar>
 			</AppBar>
-			<Hidden mdUp={loggedIn} smUp={!loggedIn}>
+			{isAdmin ? (
 				<Drawer
 					anchor="left"
 					open={mobileOpen}
 					onClose={handleDrawerToggle}
 					ModalProps={{ keepMounted: true }}
+					className="adminDrawer"
 				>
 					{drawer}
 				</Drawer>
-			</Hidden>
+			) : (
+				<Hidden mdUp={loggedIn} smUp={!loggedIn}>
+					<Drawer
+						anchor="left"
+						open={mobileOpen}
+						onClose={handleDrawerToggle}
+						ModalProps={{ keepMounted: true }}
+					>
+						{drawer}
+					</Drawer>
+				</Hidden>
+			)}
 			<Menu
 				anchorEl={anchorEl}
 				anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
