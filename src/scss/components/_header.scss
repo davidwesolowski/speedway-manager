@@ -97,6 +97,20 @@
 		}
 	}
 }
+
+.adminDrawer {
+	.MuiDrawer-paper {
+		min-width: 50% !important;
+		background-color: rgba(255, 255, 255, 0.95) !important;
+		@media only screen and (max-width: $bp-md) {
+			min-width: 70% !important;
+		}
+		@media only screen and (max-width: $bp-sm) {
+			min-width: 100% !important;
+		}
+	}
+}
+
 .MuiDrawer-paper {
 	min-width: 100% !important;
 	background-color: rgba(255, 255, 255, 0.95) !important;
