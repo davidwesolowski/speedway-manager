@@ -23,70 +23,91 @@ import { FaUserCircle } from 'react-icons/fa';
 import { AppContext } from './AppProvider';
 import Cookies from 'universal-cookie';
 import { FiChevronLeft, FiMenu } from 'react-icons/fi';
+import checkAdminRole from '../utils/checkAdminRole';
 
 const unauthorizedMenuItems = [
 	{
 		link: '/',
-		name: 'Start',
-		icon: ''
+		name: 'Start'
 	},
 	{
 		link: '/mecze',
-		name: 'Wyniki',
-		icon: ''
+		name: 'Wyniki'
 	},
 	{
 		link: '/samouczek',
-		name: 'Samouczek',
-		icon: ''
+		name: 'Samouczek'
 	},
 	{
 		link: '/kluby',
-		name: 'Kluby',
-		icon: ''
+		name: 'Kluby'
 	}
 ];
 
 const authorizedMenuItems = [
 	{
 		link: '/',
-		name: 'Start',
-		icon: ''
+		name: 'Start'
 	},
 	{
 		link: '/mecze',
-		name: 'Wyniki',
-		icon: ''
+		name: 'Wyniki'
 	},
 	{
 		link: '/druzyna',
-		name: 'Drużyna',
-		icon: ''
+		name: 'Drużyna'
 	},
 	{
 		link: '/ranking',
-		name: 'Ranking',
-		icon: ''
+		name: 'Ranking'
 	},
 	{
 		link: '/uzytkownicy',
-		name: 'Użytkownicy',
-		icon: ''
+		name: 'Użytkownicy'
 	},
 	{
 		link: '/zawodnicy',
-		name: 'Zawodnicy',
-		icon: ''
+		name: 'Zawodnicy'
 	},
 	{
 		link: '/kluby',
-		name: 'Kluby',
-		icon: ''
+		name: 'Kluby'
 	},
 	{
 		link: '/samouczek',
-		name: 'Samouczek',
-		icon: ''
+		name: 'Samouczek'
+	}
+];
+
+const adminMenuItems = [
+	...authorizedMenuItems,
+	{
+		link: '/konto',
+		name: 'Konto'
+	},
+	{
+		link: '/dodaj-druzyna',
+		name: 'Dodaj zawodników do drużyny'
+	},
+	{
+		link: '/dodaj-mecz',
+		name: 'Dodaj mecz'
+	},
+	{
+		link: '/znajomi',
+		name: 'Znajomi'
+	},
+	{
+		link: '/ligi',
+		name: 'Ligi'
+	},
+	{
+		link: '/moje-ligi',
+		name: 'Moje ligi'
+	},
+	{
+		link: '/historia',
+		name: 'Historia'
 	}
 ];
 
@@ -96,6 +117,7 @@ const Header: FunctionComponent = () => {
 	const { push } = useHistory();
 	const { userData, loggedIn, setLoggedIn } = useContext(AppContext);
 	const isMenuOpen = Boolean(anchorEl);
+	const isAdmin = checkAdminRole(userData.role);
 
 	const handleProfileMenuOpen = (event: MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
