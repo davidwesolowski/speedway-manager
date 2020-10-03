@@ -296,18 +296,20 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 			}
 		};
 		const fetchTeamAndScore = async () => {
-			const { data } = await axios.get(
+			const {
+				data: { scoreboard }
+			} = await axios.get(
 				'https://fantasy-league-eti.herokuapp.com/rankings/global',
 				options
 			);
 			let _id = userData._id;
-			if (!userData.username)
+			if (!_id)
 				_id = await fetchUserData(dispatchUserData, setLoggedIn, push);
-			if (data) {
-				const team = data.find(
+			if (scoreboard.length) {
+				const team = scoreboard.find(
 					rankingItem => rankingItem.userid === _id
 				);
-				const uniqueRanking = data
+				const uniqueRanking = scoreboard
 					.map(rankingItem => rankingItem.score)
 					.filter(
 						(score, index, self) => self.indexOf(score) === index
@@ -316,13 +318,20 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 						if (scoreA <= scoreB) return 1;
 						else return -1;
 					});
-				const position = uniqueRanking.indexOf(team.score) + 1;
 				if (team) {
+					const position = uniqueRanking.indexOf(team.score) + 1;
 					setAccountData({
 						...accountData,
 						position,
 						club: team.teamname,
 						points: team.score || 0
+					});
+				} else {
+					setAccountData({
+						...accountData,
+						position: -1,
+						club: 'BRAK',
+						points: 0
 					});
 				}
 			}

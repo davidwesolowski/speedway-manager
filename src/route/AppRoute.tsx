@@ -27,8 +27,6 @@ import ListMatches from '../components/ListMatches';
 import Leagues from '../components/Leagues';
 import UserRankingLeagues from '../components/UserRankingLeagues';
 import TeamHistory from '../components/TeamHistory';
-import { useStateValue } from '../components/AppProvider';
-import checkAdminRole from '../utils/checkAdminRole';
 import ClubLeagueCreate from '../components/ClubLeagueCreate';
 import RankingUsers from '../components/RankingUsers';
 
@@ -159,7 +157,7 @@ const RoutesAnimation = () => {
 						path="/ligi"
 						render={(props: RouteComponentProps) => {
 							const cookiesExist = checkCookies();
-							if(cookiesExist) return <Leagues {...props} />;
+							if (cookiesExist) return <Leagues {...props} />;
 							else return <Redirect to="/login" />;
 						}}
 					/>
@@ -167,7 +165,8 @@ const RoutesAnimation = () => {
 						path="/moje-ligi"
 						render={(props: RouteComponentProps) => {
 							const cookiesExist = checkCookies();
-							if(cookiesExist) return <UserRankingLeagues {...props} />;
+							if (cookiesExist)
+								return <UserRankingLeagues {...props} />;
 							else return <Redirect to="/login" />;
 						}}
 					/>
@@ -175,7 +174,7 @@ const RoutesAnimation = () => {
 						path="/historia"
 						render={(props: RouteComponentProps) => {
 							const cookiesExist = checkCookies();
-							if(cookiesExist) return <TeamHistory {...props} />;
+							if (cookiesExist) return <TeamHistory {...props} />;
 							else return <Redirect to="/login" />;
 						}}
 					/>
@@ -183,7 +182,8 @@ const RoutesAnimation = () => {
 						path="/ranking"
 						render={(props: RouteComponentProps) => {
 							const cookiesExist = checkCookies();
-							if(cookiesExist) return <RankingUsers {...props} />;
+							if (cookiesExist)
+								return <RankingUsers {...props} />;
 							else return <Redirect to="/login" />;
 						}}
 					/>

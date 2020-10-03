@@ -23,70 +23,91 @@ import { FaUserCircle } from 'react-icons/fa';
 import { AppContext } from './AppProvider';
 import Cookies from 'universal-cookie';
 import { FiChevronLeft, FiMenu } from 'react-icons/fi';
+import checkAdminRole from '../utils/checkAdminRole';
 
 const unauthorizedMenuItems = [
 	{
 		link: '/',
-		name: 'Start',
-		icon: ''
+		name: 'Start'
 	},
 	{
 		link: '/mecze',
-		name: 'Wyniki',
-		icon: ''
+		name: 'Wyniki'
 	},
 	{
 		link: '/samouczek',
-		name: 'Samouczek',
-		icon: ''
+		name: 'Samouczek'
 	},
 	{
 		link: '/kluby',
-		name: 'Kluby',
-		icon: ''
+		name: 'Kluby'
 	}
 ];
 
 const authorizedMenuItems = [
 	{
 		link: '/',
-		name: 'Start',
-		icon: ''
+		name: 'Start'
 	},
 	{
 		link: '/mecze',
-		name: 'Wyniki',
-		icon: ''
+		name: 'Wyniki'
 	},
 	{
 		link: '/druzyna',
-		name: 'Drużyna',
-		icon: ''
+		name: 'Drużyna'
 	},
 	{
 		link: '/ranking',
-		name: 'Ranking',
-		icon: ''
+		name: 'Ranking'
 	},
 	{
 		link: '/uzytkownicy',
-		name: 'Użytkownicy',
-		icon: ''
+		name: 'Użytkownicy'
 	},
 	{
 		link: '/zawodnicy',
-		name: 'Zawodnicy',
-		icon: ''
+		name: 'Zawodnicy'
 	},
 	{
 		link: '/kluby',
-		name: 'Kluby',
-		icon: ''
+		name: 'Kluby'
 	},
 	{
 		link: '/samouczek',
-		name: 'Samouczek',
-		icon: ''
+		name: 'Samouczek'
+	}
+];
+
+const adminMenuItems = [
+	...authorizedMenuItems,
+	{
+		link: '/konto',
+		name: 'Konto'
+	},
+	{
+		link: '/dodaj-druzyna',
+		name: 'Dodaj zawodników do drużyny'
+	},
+	{
+		link: '/dodaj-mecz',
+		name: 'Dodaj mecz'
+	},
+	{
+		link: '/znajomi',
+		name: 'Znajomi'
+	},
+	{
+		link: '/ligi',
+		name: 'Ligi'
+	},
+	{
+		link: '/moje-ligi',
+		name: 'Moje ligi'
+	},
+	{
+		link: '/historia',
+		name: 'Historia'
 	}
 ];
 
@@ -96,6 +117,7 @@ const Header: FunctionComponent = () => {
 	const { push } = useHistory();
 	const { userData, loggedIn, setLoggedIn } = useContext(AppContext);
 	const isMenuOpen = Boolean(anchorEl);
+	const isAdmin = checkAdminRole(userData.role) && loggedIn;
 
 	const handleProfileMenuOpen = (event: MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -138,6 +160,30 @@ const Header: FunctionComponent = () => {
 		</Hidden>
 	);
 
+	const adminHeader = (
+		<ul className="header__nav">
+			<li className="header__item" onClick={handleDrawerToggle}>
+				<span className="header__link header__link-admin">
+					Panel administratora
+				</span>
+			</li>
+		</ul>
+	);
+
+	const menuItemsList = (menuItems: { name: string; link: string }[]) =>
+		menuItems.map(({ link, name }, index) => (
+			<ListItem
+				key={link}
+				divider={index + 1 == menuItems.length ? false : true}
+				button
+				onClick={() => setMobileOpen(false)}
+			>
+				<Link to={link} className="header__mobileLink">
+					{name}
+				</Link>
+			</ListItem>
+		));
+
 	const drawer = (
 		<div>
 			<div className="header__drawerClose">
@@ -147,46 +193,29 @@ const Header: FunctionComponent = () => {
 			</div>
 			<Divider />
 			<List>
-				{loggedIn
-					? authorizedMenuItems.map(({ link, name }) => (
-							<ListItem
-								key={link}
-								divider
-								button
-								onClick={() => setMobileOpen(false)}
-							>
-								<Link to={link} className="header__mobileLink">
-									{name}
-								</Link>
-							</ListItem>
-					  ))
-					: unauthorizedMenuItems.map(({ link, name }) => (
-							<ListItem
-								key={link}
-								divider
-								button
-								onClick={() => setMobileOpen(false)}
-							>
-								<Link to={link} className="header__mobileLink">
-									{name}
-								</Link>
-							</ListItem>
-					  ))}
+				{isAdmin
+					? menuItemsList(adminMenuItems)
+					: loggedIn
+					? menuItemsList(authorizedMenuItems)
+					: menuItemsList(unauthorizedMenuItems)}
 			</List>
 		</div>
 	);
-
 	return (
 		<>
 			<AppBar position="sticky" className="header">
 				<Toolbar className="header__toolbar">
-					<Hidden mdUp={loggedIn} smUp={!loggedIn}>
-						<IconButton onClick={handleDrawerToggle}>
-							<FiMenu className="header__mobileIcon" />
-						</IconButton>
-					</Hidden>
+					{!isAdmin && (
+						<Hidden mdUp={loggedIn} smUp={!loggedIn}>
+							<IconButton onClick={handleDrawerToggle}>
+								<FiMenu className="header__mobileIcon" />
+							</IconButton>
+						</Hidden>
+					)}
 					<div className="header__logo">LOGO</div>
-					{loggedIn ? (
+					{isAdmin ? (
+						adminHeader
+					) : loggedIn ? (
 						<>
 							{authorized}
 							<IconButton onClick={handleProfileMenuOpen}>
@@ -214,16 +243,28 @@ const Header: FunctionComponent = () => {
 					)}
 				</Toolbar>
 			</AppBar>
-			<Hidden mdUp={loggedIn} smUp={!loggedIn}>
+			{isAdmin ? (
 				<Drawer
 					anchor="left"
 					open={mobileOpen}
 					onClose={handleDrawerToggle}
 					ModalProps={{ keepMounted: true }}
+					className="adminDrawer"
 				>
 					{drawer}
 				</Drawer>
-			</Hidden>
+			) : (
+				<Hidden mdUp={loggedIn} smUp={!loggedIn}>
+					<Drawer
+						anchor="left"
+						open={mobileOpen}
+						onClose={handleDrawerToggle}
+						ModalProps={{ keepMounted: true }}
+					>
+						{drawer}
+					</Drawer>
+				</Hidden>
+			)}
 			<Menu
 				anchorEl={anchorEl}
 				anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
