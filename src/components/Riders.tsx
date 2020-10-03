@@ -37,6 +37,7 @@ import handleImgFile, {
 import { FaFileUpload } from 'react-icons/fa';
 import fetchUserData from '../utils/fetchUserData';
 import checkAdminRole from '../utils/checkAdminRole';
+import { checkBadAuthorization } from '../utils/checkCookies';
 
 interface IRider {
 	firstName: string;
@@ -148,12 +149,11 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 			);
 			setClubs(data);
 		} catch (e) {
-			console.log(e.response);
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				addNotification(
 					'Błąd',
@@ -162,7 +162,6 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 					3000
 				);
 			}
-			throw new Error('Error in getting clubs');
 		}
 	};
 
@@ -321,7 +320,6 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 
 	const handleOnChangeCheckbox = event => {
 		event.persist();
-		console.log(!event.target.checked);
 		if (event.target) {
 			setRiderData((prevState: IRider) => ({
 				...prevState,
@@ -339,8 +337,6 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 
 	const handleOnChangeClub = (name: string) => event => {
 		event.persist();
-		console.log('Zmiana klubu');
-		console.log(event.target.value);
 		if (event.target) {
 			setRiderData((prevState: IRider) => ({
 				...prevState,
@@ -351,7 +347,6 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 
 	const addRider = async (riderData: IRider) => {
 		try {
-			console.log('Dodawanie zawodnika');
 			const accessToken = getToken();
 			const options = {
 				headers: {
@@ -398,20 +393,18 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 				}
 			}, 1000);
 		} catch (e) {
-			console.log(e.response);
-			if (e.statusText == 'Bad Request') {
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
+			} else if (data.statusCode == 404) {
 				addNotification(
 					'Błąd!',
 					'Podany zawodnik już istnieje w bazie!',
 					'danger',
 					1000
 				);
-				setTimeout(() => {}, 1000);
-			} else if (e.statusText == 'Unauthorized') {
-				addNotification('Błąd!', 'Twoja sesja wygasła', 'danger', 1000);
-				setTimeout(() => {
-					push('/login');
-				}, 1000);
 			} else {
 				addNotification(
 					'Błąd!',
@@ -420,20 +413,16 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 					1000
 				);
 			}
-			throw new Error('Error in adding new rider!');
 		}
 	};
 
 	const handleOnSubmit = (event: React.FormEvent) => {
-		console.log('Submit');
 		event.preventDefault();
 		const validationResponse = validateRiderData(riderData);
 		if (validationResponse.error) {
-			console.log('ERROR');
 			setValidatedData(() => defaultValidatedData);
 			validationResponse.error.details.forEach(
 				(errorItem: ValidationErrorItem): any => {
-					console.log(errorItem.message);
 					setValidatedData((prevState: IValidatedData) => {
 						return {
 							...prevState,
@@ -446,7 +435,6 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 				}
 			);
 		} else {
-			console.log('Add rider start');
 			const {
 				firstName,
 				lastName,
