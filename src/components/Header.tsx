@@ -170,6 +170,20 @@ const Header: FunctionComponent = () => {
 		</ul>
 	);
 
+	const menuItemsList = (menuItems: { name: string; link: string }[]) =>
+		menuItems.map(({ link, name }, index) => (
+			<ListItem
+				key={link}
+				divider={index + 1 == menuItems.length ? false : true}
+				button
+				onClick={() => setMobileOpen(false)}
+			>
+				<Link to={link} className="header__mobileLink">
+					{name}
+				</Link>
+			</ListItem>
+		));
+
 	const drawer = (
 		<div>
 			<div className="header__drawerClose">
@@ -180,43 +194,10 @@ const Header: FunctionComponent = () => {
 			<Divider />
 			<List>
 				{isAdmin
-					? adminMenuItems.map(({ link, name }) => (
-							<ListItem
-								key={link}
-								divider
-								button
-								onClick={() => setMobileOpen(false)}
-							>
-								<Link to={link} className="header__mobileLink">
-									{name}
-								</Link>
-							</ListItem>
-					  ))
+					? menuItemsList(adminMenuItems)
 					: loggedIn
-					? authorizedMenuItems.map(({ link, name }) => (
-							<ListItem
-								key={link}
-								divider
-								button
-								onClick={() => setMobileOpen(false)}
-							>
-								<Link to={link} className="header__mobileLink">
-									{name}
-								</Link>
-							</ListItem>
-					  ))
-					: unauthorizedMenuItems.map(({ link, name }) => (
-							<ListItem
-								key={link}
-								divider
-								button
-								onClick={() => setMobileOpen(false)}
-							>
-								<Link to={link} className="header__mobileLink">
-									{name}
-								</Link>
-							</ListItem>
-					  ))}
+					? menuItemsList(authorizedMenuItems)
+					: menuItemsList(unauthorizedMenuItems)}
 			</List>
 		</div>
 	);
