@@ -15,6 +15,7 @@ import { FiX, FiPlus } from 'react-icons/fi';
 import { useStateValue } from './AppProvider';
 import getToken from '../utils/getToken';
 import fetchUserData from '../utils/fetchUserData';
+import { checkBadAuthorization } from '../utils/checkCookies';
 
 interface IRider {
 	id: string;
@@ -47,8 +48,6 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 	//const [filteredNationality, setFilteredNationality] = useState([]);
 	//const [filteredAge, setFilteredAge] = useState([]);
 
-	document.body.style.overflow = 'auto';
-
 	const getRiders = async () => {
 		try {
 			const accessToken = getToken();
@@ -77,12 +76,11 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 				);
 			});
 		} catch (e) {
-			console.log(e.response);
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				addNotification(
 					'Błąd',
@@ -91,7 +89,6 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 					3000
 				);
 			}
-			throw new Error('Error in getting riders');
 		}
 	};
 
@@ -117,12 +114,11 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 				);
 			});
 		} catch (e) {
-			console.log(e.response);
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				addNotification(
 					'Błąd',
@@ -131,7 +127,6 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 					3000
 				);
 			}
-			throw new Error('Error in getting clubs');
 		}
 	};
 
@@ -442,6 +437,9 @@ const FindRider: FunctionComponent<RouteComponentProps> = ({
 		getClubs();
 		if (!userData.username)
 			fetchUserData(dispatchUserData, setLoggedIn, push);
+		setTimeout(() => {
+			document.body.style.overflowY = 'auto';
+		}, 500);
 	}, []);
 
 	return (

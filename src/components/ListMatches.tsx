@@ -14,6 +14,7 @@ import axios from 'axios';
 import addNotification from '../utils/addNotification';
 import ListMatchesRound from './ListMatchesRound';
 import fetchUserData from '../utils/fetchUserData';
+import { checkBadAuthorization } from '../utils/checkCookies';
 
 interface IRider {
 	_id: string;
@@ -60,11 +61,11 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({
 			setRounds(data);
 			data.length ? setRoundId(data[0]._id) : null;
 		} catch (e) {
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				addNotification(
 					'Błąd',
@@ -92,11 +93,11 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({
 
 			setRiders(data);
 		} catch (e) {
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				addNotification(
 					'Błąd',
@@ -105,7 +106,6 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({
 					3000
 				);
 			}
-			throw new Error('Error in getting riders');
 		}
 	};
 

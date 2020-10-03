@@ -11,8 +11,7 @@ import {
 	MenuItem,
 	Select,
 	TextField,
-	Checkbox,
-	Paper
+	Checkbox
 } from '@material-ui/core';
 import {
 	MuiPickersUtilsProvider,
@@ -21,6 +20,7 @@ import {
 import DateFnsUtils from '@date-io/date-fns';
 import checkAdminRole from '../utils/checkAdminRole';
 import { useStateValue } from './AppProvider';
+import { checkBadAuthorization } from '../utils/checkCookies';
 
 interface IProps {
 	matchId: string;
@@ -175,7 +175,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 		defaultRidersEditData
 	);
 	const [matchDateEdit, setMatchDateEdit] = useState<Date>(new Date(date));
-	const { userData } = useStateValue();
+	const { userData, setLoggedIn } = useStateValue();
 
 	const getClub = async (clubId: string, homeAway: string) => {
 		if (homeAway === 'home') {
@@ -196,12 +196,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					logoUrl: data.logoUrl
 				});
 			} catch (e) {
-				console.log(e.response);
-				if (e.response.statusText == 'Unauthorized') {
-					addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-					setTimeout(() => {
-						push('/login');
-					}, 3000);
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
 				} else {
 					addNotification(
 						'Błąd',
@@ -210,7 +209,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 						3000
 					);
 				}
-				throw new Error('Error in getting home');
 			}
 		} else {
 			try {
@@ -230,12 +228,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					logoUrl: data.logoUrl
 				});
 			} catch (e) {
-				console.log(e.response);
-				if (e.response.statusText == 'Unauthorized') {
-					addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-					setTimeout(() => {
-						push('/login');
-					}, 3000);
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
 				} else {
 					addNotification(
 						'Błąd',
@@ -244,7 +241,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 						3000
 					);
 				}
-				throw new Error('Error in getting away');
 			}
 		}
 	};
@@ -429,12 +425,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					}
 				});
 			} catch (e) {
-				console.log(e.response);
-				if (e.response.statusText == 'Unauthorized') {
-					addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-					setTimeout(() => {
-						push('/login');
-					}, 3000);
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
 				} else {
 					addNotification(
 						'Błąd',
@@ -443,7 +438,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 						3000
 					);
 				}
-				throw new Error('Error in getting rounds');
 			}
 		}
 	};
@@ -481,20 +475,18 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				window.location.reload(false);
 			}, 1500);
 		} catch (e) {
-			console.log(e.response);
-			if (e.statusText == 'Bad Request') {
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
+			} else if (data.statusCode == 404) {
 				addNotification(
 					'Błąd!',
 					'Nie ma takiego meczu w bazie!',
 					'danger',
 					1000
 				);
-				setTimeout(() => {}, 1000);
-			} else if (e.statusText == 'Unauthorized') {
-				addNotification('Błąd!', 'Twoja sesja wygasła', 'danger', 1000);
-				setTimeout(() => {
-					push('/login');
-				}, 1000);
 			} else {
 				addNotification(
 					'Błąd!',
@@ -503,7 +495,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					1000
 				);
 			}
-			throw new Error('Error in deleting match!');
 		}
 	};
 
@@ -1941,12 +1932,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				options
 			);
 		} catch (e) {
-			console.log(e.response);
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				addNotification(
 					'Błąd',
@@ -1955,7 +1945,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					3000
 				);
 			}
-			throw new Error('Error in adding rider to match');
 		}
 	};
 
@@ -1976,12 +1965,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				options
 			);
 		} catch (e) {
-			console.log(e.response);
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				addNotification(
 					'Błąd',
@@ -1990,7 +1978,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					3000
 				);
 			}
-			throw new Error('Error in editing rider in match');
 		}
 	};
 
@@ -2007,12 +1994,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				options
 			);
 		} catch (e) {
-			console.log(e.response);
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				addNotification(
 					'Błąd',
@@ -2021,7 +2007,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					3000
 				);
 			}
-			throw new Error('Error in deleting rider from match');
 		}
 	};
 
@@ -2226,12 +2211,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					options
 				);
 			} catch (e) {
-				console.log(e.response);
-				if (e.response.statusText == 'Unauthorized') {
-					addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-					setTimeout(() => {
-						push('/login');
-					}, 3000);
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
 				} else {
 					addNotification(
 						'Błąd',
@@ -2240,7 +2224,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 						3000
 					);
 				}
-				throw new Error('Error in editing match');
 			}
 		}
 	};

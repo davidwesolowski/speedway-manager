@@ -5,6 +5,8 @@ import getToken from '../utils/getToken';
 import axios from 'axios';
 import addNotification from '../utils/addNotification';
 import { useHistory } from 'react-router-dom';
+import { checkBadAuthorization } from '../utils/checkCookies';
+import { useStateValue } from './AppProvider';
 
 interface IProps {
 	round: number;
@@ -42,6 +44,7 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
 }) => {
 	const [matches, setMatches] = useState([]);
 	const { push } = useHistory();
+	const { setLoggedIn } = useStateValue();
 
 	const getMatchesOfRound = async roundId => {
 		try {
@@ -58,12 +61,11 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
 			setMatches([]);
 			setMatches(data);
 		} catch (e) {
-			console.log(e.response);
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				addNotification(
 					'Błąd',
@@ -72,7 +74,6 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
 					3000
 				);
 			}
-			throw new Error('Error in getting matches');
 		}
 	};
 
@@ -84,7 +85,7 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
 				</>
 			);
 		} else if (round !== 0) {
-			return matches.map((match, index) => {
+			return matches.map(match => {
 				return (
 					<ListMatchesMatch
 						key={match._id}
