@@ -28,8 +28,7 @@ import getToken from '../utils/getToken';
 import axios from 'axios';
 import addNotification from '../utils/addNotification';
 import validateRoundData from '../validation/validateRoundData';
-import { ValidationErrorItem, string } from '@hapi/joi';
-import { setUser } from '../actions/userActions';
+import { ValidationErrorItem } from '@hapi/joi';
 import { useStateValue } from './AppProvider';
 import validateMatchPointsData from '../validation/validateMatchPointsData';
 import { checkBadAuthorization } from '../utils/checkCookies';
@@ -254,12 +253,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 				);
 			});
 		} catch (e) {
-			console.log(e.response);
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				addNotification(
 					'Błąd',
@@ -268,7 +266,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 					3000
 				);
 			}
-			throw new Error('Error in getting riders');
 		}
 	};
 
@@ -294,12 +291,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 				);
 			});
 		} catch (e) {
-			console.log(e.response);
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				addNotification(
 					'Błąd',
@@ -308,7 +304,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 					3000
 				);
 			}
-			throw new Error('Error in getting clubs');
 		}
 	};
 
@@ -977,7 +972,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 			setValidatedRound(() => defaultValidatedRound);
 			validationResponse.error.details.forEach(
 				(errorItem: ValidationErrorItem): any => {
-					console.log(errorItem.message);
 					setValidatedRound((prevState: IValidatedRound) => {
 						return {
 							...prevState,
@@ -1031,12 +1025,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 			}, 2000);
 			setRoundCreate(defaultRoundCreate);
 		} catch (e) {
-			console.log(e.response);
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				addNotification(
 					'Błąd',
@@ -1045,7 +1038,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 					3000
 				);
 			}
-			throw new Error('Error in adding rounds');
 		}
 	};
 
@@ -1064,12 +1056,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 			setRounds([]);
 			setRounds(data);
 		} catch (e) {
-			console.log(e.response);
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				addNotification(
 					'Błąd',
@@ -1078,7 +1069,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 					3000
 				);
 			}
-			throw new Error('Error in getting rounds');
 		}
 	};
 
@@ -1952,20 +1942,18 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 				}
 			}, 1000);
 		} catch (e) {
-			console.log(e.response);
-			if (e.statusText == 'Bad Request') {
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
+			} else if (data.statusCode == 404) {
 				addNotification(
 					'Błąd!',
 					'Podany mecz już istnieje w bazie!',
 					'danger',
 					1000
 				);
-				setTimeout(() => {}, 1000);
-			} else if (e.statusText == 'Unauthorized') {
-				addNotification('Błąd!', 'Twoja sesja wygasła', 'danger', 1000);
-				setTimeout(() => {
-					push('/login');
-				}, 1000);
 			} else {
 				addNotification(
 					'Błąd!',
@@ -1974,7 +1962,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 					1000
 				);
 			}
-			throw new Error('Error in adding new match!');
 		}
 	};
 
@@ -1997,25 +1984,18 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 					options
 				);
 			} catch (e) {
-				console.log(e.response);
-				if (e.statusText == 'Bad Request') {
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
+				} else if (data.statusCode == 404) {
 					addNotification(
 						'Błąd!',
 						'Podane punkty zawodnika już istnieją w bazie!',
 						'danger',
 						1000
 					);
-					setTimeout(() => {}, 1000);
-				} else if (e.statusText == 'Unauthorized') {
-					addNotification(
-						'Błąd!',
-						'Twoja sesja wygasła',
-						'danger',
-						1000
-					);
-					setTimeout(() => {
-						push('/login');
-					}, 1000);
 				} else {
 					addNotification(
 						'Błąd!',
@@ -2024,7 +2004,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 						1000
 					);
 				}
-				throw new Error('Error in adding new rider to match!');
 			}
 		}
 	};
@@ -2036,7 +2015,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 			setValidatedPoints(() => defaultValidatedPoints);
 			validationResponse.error.details.forEach(
 				(errorItem: ValidationErrorItem): any => {
-					console.log(errorItem.message);
 					setValidatedPoints((prevState: IValidatedPoints) => {
 						return {
 							...prevState,
