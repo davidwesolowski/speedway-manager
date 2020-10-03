@@ -17,6 +17,7 @@ import addNotification from '../utils/addNotification';
 import getToken from '../utils/getToken';
 import { useStateValue } from './AppProvider';
 import fetchUserData from '../utils/fetchUserData';
+import { checkBadAuthorization } from '../utils/checkCookies';
 
 interface IRider {
 	id: string;
@@ -68,11 +69,11 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 			});
 			getTeams(data);
 		} catch (e) {
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				addNotification(
 					'Błąd',
@@ -81,7 +82,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 					3000
 				);
 			}
-			throw new Error('Error in getting riders');
 		}
 	};
 
@@ -100,11 +100,11 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 			setTeamId(data[0]._id);
 			getTeamRiders(riders, data);
 		} catch (e) {
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				addNotification(
 					'Błąd',
@@ -113,7 +113,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 					3000
 				);
 			}
-			throw new Error('Error in getting riders');
 		}
 	};
 
@@ -150,11 +149,11 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				setLists(riders, []);
 			}
 		} catch (e) {
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				addNotification(
 					'Błąd',
@@ -163,7 +162,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 					3000
 				);
 			}
-			throw new Error('Error in getting riders');
 		}
 	};
 
@@ -387,11 +385,11 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				);
 			});
 		} catch (e) {
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				addNotification(
 					'Błąd',
@@ -400,7 +398,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 					3000
 				);
 			}
-			throw new Error('Error in getting clubs');
 		}
 	};
 
@@ -565,11 +562,11 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				options
 			);
 		} catch (e) {
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				addNotification(
 					'Błąd',
@@ -578,7 +575,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 					3000
 				);
 			}
-			throw new Error('Error in getting riders');
 		}
 	};
 
@@ -595,11 +591,11 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				options
 			);
 		} catch (e) {
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				addNotification(
 					'Błąd',
@@ -608,7 +604,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 					3000
 				);
 			}
-			throw new Error('Error in getting riders');
 		}
 	};
 
