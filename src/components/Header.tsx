@@ -213,22 +213,18 @@ const Header: FunctionComponent = () => {
 						</Hidden>
 					)}
 					<div className="header__logo">LOGO</div>
-					{isAdmin ? (
-						adminHeader
-					) : loggedIn ? (
-						<>
-							{authorized}
-							<IconButton onClick={handleProfileMenuOpen}>
-								<Avatar
-									alt="user-avatar"
-									className="header__avatar"
-									src={userData.avatarUrl}
-								/>
-								<span className="header__username">
-									{userData.username}
-								</span>
-							</IconButton>
-						</>
+					{isAdmin ? adminHeader : loggedIn && authorized}
+					{loggedIn ? (
+						<IconButton onClick={handleProfileMenuOpen}>
+							<Avatar
+								alt="user-avatar"
+								className="header__avatar"
+								src={userData.avatarUrl}
+							/>
+							<span className="header__username">
+								{userData.username}
+							</span>
+						</IconButton>
 					) : (
 						<>
 							{unauthorized}
