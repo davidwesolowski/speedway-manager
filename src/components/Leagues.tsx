@@ -1,5 +1,5 @@
 import { ValidationErrorItem } from '@hapi/joi';
-import { Button, Dialog, DialogContent, DialogTitle, Divider, FormControl, Grid, IconButton, MenuItem, Paper, Select, TextField, Typography } from '@material-ui/core';
+import { Button, Dialog, DialogContent, DialogTitle, Divider, FormControl, Grid, IconButton, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@material-ui/core';
 import axios from 'axios';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { FiPlus, FiX, FiXCircle } from 'react-icons/fi';
@@ -203,17 +203,13 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
     const renderTableData = () => {
         return tempLeagues.map((league, index) => {
             return(
-                <tr
+                <TableRow
 					key={index}
-					style={
-						index % 2
-							? { background: 'white' }
-							: { background: '#dddddd' }
-					}
+
 				>
-                    <td>{league.name}</td>
-                    <td>{league.country}</td>
-                    <td className="table-X">
+                    <TableCell>{league.name}</TableCell>
+                    <TableCell>{league.country}</TableCell>
+                    <TableCell className="table-X">
 						<IconButton
 							onClick={(event: React.MouseEvent<HTMLElement>) => {
 								//deleteLeague(league._id);
@@ -222,25 +218,29 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
 						>
 							<FiXCircle />
 						</IconButton>
-					</td>
-                </tr>
+					</TableCell>
+                </TableRow>
             )
         })
     }
 
     const generateTable = () => {
         return(
-            <div>
-				<table id="riders-list">
-					<tbody>
-						<tr>
-							<th>NAZWA</th>
-                            <th>KRAJ</th>
-                            <th>USUŃ</th>
-						</tr>
-						{renderTableData()}
-					</tbody>
-				</table>
+            <div className='leagues-table'>
+                <TableContainer>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>NAZWA</TableCell>
+                                <TableCell>KRAJ</TableCell>
+                                <TableCell>USUŃ</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {renderTableData()}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
 			</div>
         )
     }
@@ -260,7 +260,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
     }
 
     const handleOnSubmit = (event: React.FormEvent) => {
-        event.preventDefault();
+        event.persist();
         console.log("SUBMIT");
         const validationResponse = validateLeagueData({name: addLeagueName, country: addLeagueCountry});
         if (validationResponse.error){

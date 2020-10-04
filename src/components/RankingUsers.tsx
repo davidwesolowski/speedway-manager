@@ -92,16 +92,15 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
                     'https://fantasy-league-eti.herokuapp.com/rankings/global',
                     options
                 );
-                console.log(data)
                 setRankingUsers([]);
-                data.map(user => {
+                data.scoreboard.map(user => {
                     setRankingUsers(rankingUsers => 
                         rankingUsers.concat({
-                            _id: user.userid,
+                            _id: user.userId,
                             avatarUrl: user.avatarUrl,
                             name: user.username,
-                            teamLogo: user.teamlogourl,
-                            teamName: user.teamname,
+                            teamLogo: user.teamLogoUrl,
+                            teamName: user.teamName,
                             points: user.score
                         })
                     );
@@ -119,17 +118,6 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
         }
     }
 
-    const tempRankingData = [
-        {
-            _id: 'fffff',
-            avatarUrl: '',
-            name: 'DOMINOX',
-            teamLogo: '',
-            teamName: 'pasikoniki',
-            points: 10008,
-        }
-    ]
-
     const generateRankingTable = () => {
         //Do wygenerowania komponentu RankingUsersList na podstawie odpowiedniej listy userów
         //RankingUserList
@@ -146,7 +134,6 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
         if (!userData.username) fetchUserData();
         getUserRankings();
         getRankingUsersList('global');
-        //setRankingUsers(tempRankingData)
     }, [])
 
     return(
@@ -162,7 +149,7 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
                     </Typography>
                     <Divider />
                     <br/>
-                    <Select value={selectedRanking || ''} onChange={handleOnChangeSelect()}>
+                    <Select value={selectedRanking || 'global'} onChange={handleOnChangeSelect()}>
                         <MenuItem key='global' value='global'>Ranking globalny</MenuItem>
                         {generateRankingsSelect()}
                     </Select>
