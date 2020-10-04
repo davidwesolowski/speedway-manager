@@ -2,13 +2,18 @@ import React, { Component, FunctionComponent, useEffect, useState } from 'react'
 import { FiX, FiXCircle, FiPlus } from 'react-icons/fi';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
-import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import { IconButton, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@material-ui/core';
 import addNotification from '../utils/addNotification';
 import getToken from '../utils/getToken';
 import checkAdminRole from '../utils/checkAdminRole';
 import { RouteComponentProps, RouteProps, useHistory } from 'react-router-dom';
 import { useStateValue } from './AppProvider';
 import { checkBadAuthorization } from '../utils/checkCookies';
+
+interface ISelect {
+	nationality: string;
+	age: string;
+}
 
 const RidersList : FunctionComponent<RouteProps> = () => {
 
@@ -23,7 +28,7 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 	const [clubs, setClubs] = useState([]);
 	const [riders, setRiders] = useState([]);
 	const isAdmin = checkAdminRole(userData.role);
-
+	const [filteredRiders, setFilteredRiders] = useState([]);
 
 	const deleteRiders = async (id) => {
 		try {
@@ -118,7 +123,6 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 				'https://fantasy-league-eti.herokuapp.com/riders',
 				options
 			);
-			console.log(data)
 			setRiders([]);
 			data.map(rider => {
 				setRiders(riders =>
@@ -154,7 +158,7 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 	}
 
 	const ifForeigner = (foreigner) => {
-		if (foreigner.zagraniczny == true) {
+		if (foreigner == true) {
 			return <FiX className="NoX"></FiX>;
 		} else {
 			return <FiPlus className="YesPlus"></FiPlus>;
@@ -164,7 +168,7 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 	const ifJunior = (date) => {
 		if (
 			new Date().getFullYear() -
-				new Date(date.data_urodzenia).getFullYear() <
+				new Date(date).getFullYear() <
 			22
 		) {
 			return <FiPlus className="YesPlus"></FiPlus>;
@@ -173,7 +177,7 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 		}
 	}
 
-	const getClubName = (klubId) => {
+	const findClubName = (klubId) => {
 		if(clubs.find(club => club.id == klubId))
 		{
 			return(clubs.find(club => club.id == klubId).nazwa)
@@ -184,50 +188,251 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 		}
 	}
 
+	const filtr = () => {
+		if (selects.age == 'U23') {
+			if (selects.nationality == 'All') {
+				setFilteredRiders(
+					riders.filter(
+						rider =>
+							new Date().getFullYear() -
+								new Date(rider.data_urodzenia).getFullYear() <
+							24
+					)
+				);
+			} else if (selects.nationality == 'Polish') {
+				setFilteredRiders(
+					riders.filter(
+						rider =>
+							rider.zagraniczny == false &&
+							new Date().getFullYear() -
+								new Date(rider.data_urodzenia).getFullYear() <
+								24
+					)
+				);
+			} else {
+				setFilteredRiders(
+					riders.filter(
+						rider =>
+							rider.zagraniczny == true &&
+							new Date().getFullYear() -
+								new Date(rider.data_urodzenia).getFullYear() <
+								24
+					)
+				);
+			}
+		} else if (selects.age == 'U21') {
+			if (selects.nationality == 'All') {
+				setFilteredRiders(
+					riders.filter(
+						rider =>
+							new Date().getFullYear() -
+								new Date(rider.data_urodzenia).getFullYear() <
+							22
+					)
+				);
+			} else if (selects.nationality == 'Polish') {
+				setFilteredRiders(
+					riders.filter(
+						rider =>
+							rider.zagraniczny == false &&
+							new Date().getFullYear() -
+								new Date(rider.data_urodzenia).getFullYear() <
+								22
+					)
+				);
+			} else {
+				setFilteredRiders(
+					riders.filter(
+						rider =>
+							rider.zagraniczny == true &&
+							new Date().getFullYear() -
+								new Date(rider.data_urodzenia).getFullYear() <
+								22
+					)
+				);
+			}
+		} else if (selects.age == '22+') {
+			if (selects.nationality == 'All') {
+				setFilteredRiders(
+					riders.filter(
+						rider =>
+							new Date().getFullYear() -
+								new Date(rider.data_urodzenia).getFullYear() >
+							21
+					)
+				);
+			} else if (selects.nationality == 'Polish') {
+				setFilteredRiders(
+					riders.filter(
+						rider =>
+							rider.zagraniczny == false &&
+							new Date().getFullYear() -
+								new Date(rider.data_urodzenia).getFullYear() >
+								21
+					)
+				);
+			} else {
+				setFilteredRiders(
+					riders.filter(
+						rider =>
+							rider.zagraniczny == true &&
+							new Date().getFullYear() -
+								new Date(rider.data_urodzenia).getFullYear() >
+								21
+					)
+				);
+			}
+		} else {
+			if (selects.nationality == 'Polish') {
+				setFilteredRiders(
+					riders.filter(rider => rider.zagraniczny == false)
+				);
+			} else if (selects.nationality == 'All') {
+				setFilteredRiders(riders);
+			} else {
+				setFilteredRiders(
+					riders.filter(rider => rider.zagraniczny == true)
+				);
+			}
+		}
+	};
+
 	const renderTableData = () => {
-		return riders.map((rider, index) => {
-			const {
-				id,
-				imię,
-				nazwisko,
-				przydomek,
-				data_urodzenia,
-				zagraniczny,
-				ksm,
-				klubId
-			} = rider;
-			return (
-				<TableRow
-					key={id}
-				>
-					<TableCell>{imię}</TableCell>
-					<TableCell>{nazwisko}</TableCell>
-					<TableCell>{przydomek}</TableCell>
-					<TableCell>
-						{new Intl.DateTimeFormat('en-GB', {
-							year: 'numeric',
-							month: '2-digit',
-							day: '2-digit'
-						}).format(new Date(data_urodzenia))}
-					</TableCell>
-					<TableCell>{ksm}</TableCell>
-					<TableCell>{ifForeigner({ zagraniczny })}</TableCell>
-					<TableCell>{ifJunior({ data_urodzenia })}</TableCell>
-					<TableCell>{getClubName(klubId)}</TableCell>
-					<TableCell className="table-X">
-						<IconButton
-							onClick={(event: React.MouseEvent<HTMLElement>) => {
-								deleteRiders(id);
-							}}
-							className="delete-button"
+		if (
+			phrase.length == 0 &&
+			selects.age == 'All' &&
+			selects.nationality == 'All'
+		) {
+			return riders.map((rider, index) => {
+				const {
+					id,
+					imię,
+					nazwisko,
+					przydomek,
+					data_urodzenia,
+					zagraniczny,
+					ksm,
+					klubId
+				} = rider;
+				return (
+					<TableRow
+						key={id}
+					>
+						<TableCell>{imię}</TableCell>
+						<TableCell>{nazwisko}</TableCell>
+						<TableCell>{przydomek}</TableCell>
+						<TableCell>
+							{new Intl.DateTimeFormat('en-GB', {
+								year: 'numeric',
+								month: '2-digit',
+								day: '2-digit'
+							}).format(new Date(data_urodzenia))}
+						</TableCell>
+						<TableCell>{ksm}</TableCell>
+						<TableCell>{ifForeigner(zagraniczny)}</TableCell>
+						<TableCell>{ifJunior(data_urodzenia)}</TableCell>
+						<TableCell>{findClubName(klubId)}</TableCell>
+						<TableCell>
+							{isAdmin ? <IconButton onClick={(event: React.MouseEvent<HTMLElement>) => {
+								deleteRiders(id)
+							}}>
+								<FiXCircle />
+							</IconButton> : null}
+						</TableCell>
+					</TableRow>
+				);
+			});
+		} else if (phrase.length == 0) {
+			return filteredRiders.map((rider, index) => {
+				const {
+					id,
+					imię,
+					nazwisko,
+					przydomek,
+					data_urodzenia,
+					zagraniczny,
+					ksm,
+					klubId
+				} = rider;
+				return (
+					<TableRow
+						key={id}
+					>
+						<TableCell>{imię}</TableCell>
+						<TableCell>{nazwisko}</TableCell>
+						<TableCell>{przydomek}</TableCell>
+						<TableCell>
+							{new Intl.DateTimeFormat('en-GB', {
+								year: 'numeric',
+								month: '2-digit',
+								day: '2-digit'
+							}).format(new Date(data_urodzenia))}
+						</TableCell>
+						<TableCell>{ksm}</TableCell>
+						<TableCell>{ifForeigner(zagraniczny)}</TableCell>
+						<TableCell>{ifJunior(data_urodzenia)}</TableCell>
+						<TableCell>{findClubName(klubId)}</TableCell>
+						<TableCell>
+							{isAdmin ? <IconButton onClick={(event: React.MouseEvent<HTMLElement>) => {
+								deleteRiders(id)
+							}}>
+								<FiXCircle />
+							</IconButton> : null}
+						</TableCell>
+					</TableRow>
+				);
+			});
+		} else {
+			console.log(filteredRiders)
+			return filteredRiders
+				.filter(rider =>
+					(
+						rider.imię.toUpperCase() +
+						' ' +
+						rider.nazwisko.toUpperCase()
+					).includes(phrase.toUpperCase())
+				)
+				.map((rider, index) => {
+					const {
+						id,
+					imię,
+					nazwisko,
+					przydomek,
+					data_urodzenia,
+					zagraniczny,
+					ksm,
+					klubId
+					} = rider;
+					return (
+						<TableRow
+							key={id}
 						>
-							<FiXCircle />
-						</IconButton>
-					</TableCell>
-				</TableRow>
-			);
-		});
-	}
+							<TableCell>{imię}</TableCell>
+						<TableCell>{nazwisko}</TableCell>
+						<TableCell>{przydomek}</TableCell>
+						<TableCell>
+							{new Intl.DateTimeFormat('en-GB', {
+								year: 'numeric',
+								month: '2-digit',
+								day: '2-digit'
+							}).format(new Date(data_urodzenia))}
+						</TableCell>
+						<TableCell>{ksm}</TableCell>
+						<TableCell>{ifForeigner(zagraniczny)}</TableCell>
+						<TableCell>{ifJunior(data_urodzenia)}</TableCell>
+						<TableCell>{findClubName(klubId)}</TableCell>
+						<TableCell>
+							{isAdmin ? <IconButton onClick={(event: React.MouseEvent<HTMLElement>) => {
+								deleteRiders(id)
+							}}>
+								<FiXCircle />
+							</IconButton> : null}
+						</TableCell>
+						</TableRow>
+					);
+				});
+		}
+	};
 
 	const renderTableHeader = () => {
 		let header = [
@@ -245,12 +450,81 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 		});
 	}
 
+	const [phrase, setPhrase] = useState<string>('');
+	const [selects, setSelects] = useState<ISelect>({
+		nationality: 'All',
+		age: 'All'
+	});
+
+	const handleOnChangePhrase = () => (
+		event: React.ChangeEvent<HTMLInputElement>
+	) => {
+		event.persist();
+		if (event.target) {
+			setPhrase(event.target.value);
+		}
+	};
+
+	const handleOnChangeSelect = (name: string) => event => {
+		event.persist();
+		if (event.target) {
+			setSelects((prevState: ISelect) => ({
+				...prevState,
+				[name]: event.target.value
+			}));
+		}
+	};
+
 	useEffect(() => {
 		getRiders();
 		getClubs();
 	}, [])
+	
+	useEffect(() => {
+		filtr();
+	}, [phrase, selects.age, selects.nationality]);
 
 	return(
+		<>
+		<div className="find-rider__search">
+						<div className="find-rider__search-phrase">
+							<TextField
+								label="Szukaj"
+								value={phrase}
+								onChange={handleOnChangePhrase()}
+								className="find-rider__phrase"
+							/>
+						</div>
+						<div className="find-rider__search-select1">
+							<InputLabel id="label1">Narodowość:</InputLabel>
+							<Select
+								labelId="label1"
+								className="find-rider__select1"
+								value={selects.nationality}
+								onChange={handleOnChangeSelect('nationality')}
+							>
+								<MenuItem value="All">Wszyscy</MenuItem>
+								<MenuItem value="Polish">Polacy</MenuItem>
+								<MenuItem value="Foreigner">
+									Obcokrajowcy
+								</MenuItem>
+							</Select>
+						</div>
+						<div className="find-rider__search-select2">
+							<InputLabel id="label2">Wiek:</InputLabel>
+							<Select
+								labelId="label2"
+								className="find-rider__select2"
+								value={selects.age}
+								onChange={handleOnChangeSelect('age')}
+							>
+								<MenuItem value="All">Wszyscy</MenuItem>
+								<MenuItem value="U23">U23</MenuItem>
+								<MenuItem value="U21">U21</MenuItem>
+								<MenuItem value="22+">Seniorzy</MenuItem>
+							</Select>
+						</div>
+					</div>
 		<div className='riders-list-div'>
 			<TableContainer>
 				<Table id='riders-list'>
@@ -266,6 +540,7 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 				</Table>
 			</TableContainer>
 		</div>
+		</>
 	)
 }
 
