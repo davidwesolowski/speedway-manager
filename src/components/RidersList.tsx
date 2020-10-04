@@ -1,25 +1,31 @@
-import React, { Component } from 'react';
+import React, { Component, FunctionComponent, useEffect, useState } from 'react';
 import { FiX, FiXCircle, FiPlus } from 'react-icons/fi';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
-import { IconButton } from '@material-ui/core';
+import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import addNotification from '../utils/addNotification';
 import getToken from '../utils/getToken';
+import checkAdminRole from '../utils/checkAdminRole';
+import { RouteComponentProps, RouteProps, useHistory } from 'react-router-dom';
+import { useStateValue } from './AppProvider';
+import { checkBadAuthorization } from '../utils/checkCookies';
 
-class RidersList extends Component<{}, { riders, clubs }> {
-	constructor(props) {
-		super(props);
-		this.state = {
-			riders: [],
-			clubs: []
-		};
-	}
+const RidersList : FunctionComponent<RouteProps> = () => {
 
-	refreshPage() {
-		window.location.reload(false);
-	}
+	const {
+        setLoggedIn,
+		dispatchUserData,
+		userData,
+	} = useStateValue();
+	const { push } = useHistory();
 
-	async deleteRiders(id) {
+
+	const [clubs, setClubs] = useState([]);
+	const [riders, setRiders] = useState([]);
+	const isAdmin = checkAdminRole(userData.role);
+
+
+	const deleteRiders = async (id) => {
 		try {
 			const accessToken = getToken();
 			const options = {
@@ -28,7 +34,7 @@ class RidersList extends Component<{}, { riders, clubs }> {
 				}
 			};
 			const { data } = await axios.delete(
-				`https://fantasy-league-eti.herokuapp.com/riders/${id.id}`,
+				`https://fantasy-league-eti.herokuapp.com/riders/${id}`,
 				options
 			);
 			////Sukces
@@ -39,22 +45,28 @@ class RidersList extends Component<{}, { riders, clubs }> {
 				1000
 			);
 			setTimeout(() => {
-				//setAddRiderSuccess(false);
-				this.refreshPage();
+				window.location.reload(false);
 			}, 1000);
 		} catch (e) {
-			addNotification(
-				'Błąd!',
-				'Nie udało się usunąć zawodnika!',
-				'danger',
-				1000
-			);
+			const {
+                response: { data }
+            } = e;
+			if (data.statusCode == 401) {
+                checkBadAuthorization(setLoggedIn, push);
+            } else {
+				addNotification(
+					'Błąd!',
+					'Nie udało się usunąć zawodnika!',
+					'danger',
+					1000
+				);
+			}
 			console.log(e.response);
 			throw new Error('Error in deleting riders!');
 		}
 	}
 
-	async getClubs() {
+	const getClubs = async () => {
 		try {
 			const accessToken = getToken();
 			const options = {
@@ -66,24 +78,35 @@ class RidersList extends Component<{}, { riders, clubs }> {
 				'https://fantasy-league-eti.herokuapp.com/clubs',
 				options
 			);
-			this.setState(() => ({
-				clubs: []
-			}));
+			setClubs([])
 			data.map(club => {
-				this.setState({
-					clubs: this.state.clubs.concat({
+				setClubs(clubs =>
+					clubs.concat({
 						id: club._id,
 						nazwa: club.name
 					})
-				});
+				)
 			});
 		} catch (e) {
+			const {
+                response: { data }
+            } = e;
+			if (data.statusCode == 401) {
+                checkBadAuthorization(setLoggedIn, push);
+            } else {
+				addNotification(
+					'Błąd!',
+					'Nie udało się usunąć zawodnika!',
+					'danger',
+					1000
+				);
+			}
 			console.log(e.response);
-			throw new Error('Error in getting clubs!');
+			throw new Error('Error in deleting riders!');
 		}
 	}
 
-	async getRiders() {
+	const getRiders = async () => {
 		try {
 			const accessToken = getToken();
 			const options = {
@@ -96,12 +119,10 @@ class RidersList extends Component<{}, { riders, clubs }> {
 				options
 			);
 			console.log(data)
-			this.setState(() => ({
-				riders: []
-			}));
+			setRiders([]);
 			data.map(rider => {
-				this.setState({
-					riders: this.state.riders.concat({
+				setRiders(riders =>
+					riders.concat({
 						id: rider._id,
 						imię: rider.firstName,
 						nazwisko: rider.lastName,
@@ -111,20 +132,28 @@ class RidersList extends Component<{}, { riders, clubs }> {
 						ksm: rider.KSM,
 						klubId: rider.clubId
 					})
-				});
+				);
 			});
 		} catch (e) {
+			const {
+                response: { data }
+            } = e;
+			if (data.statusCode == 401) {
+                checkBadAuthorization(setLoggedIn, push);
+            } else {
+				addNotification(
+					'Błąd!',
+					'Nie udało się usunąć zawodnika!',
+					'danger',
+					1000
+				);
+			}
 			console.log(e.response);
-			throw new Error('Error in getting riders!');
+			throw new Error('Error in deleting riders!');
 		}
 	}
 
-	componentDidMount() {
-		this.getRiders();
-		this.getClubs();
-	}
-
-	ifForeigner(foreigner) {
+	const ifForeigner = (foreigner) => {
 		if (foreigner.zagraniczny == true) {
 			return <FiX className="NoX"></FiX>;
 		} else {
@@ -132,7 +161,7 @@ class RidersList extends Component<{}, { riders, clubs }> {
 		}
 	}
 
-	ifJunior(date) {
+	const ifJunior = (date) => {
 		if (
 			new Date().getFullYear() -
 				new Date(date.data_urodzenia).getFullYear() <
@@ -144,10 +173,10 @@ class RidersList extends Component<{}, { riders, clubs }> {
 		}
 	}
 
-	getClubName(klubId) {
-		if(this.state.clubs.find(club => club.id == klubId))
+	const getClubName = (klubId) => {
+		if(clubs.find(club => club.id == klubId))
 		{
-			return(this.state.clubs.find(club => club.id == klubId).nazwa)
+			return(clubs.find(club => club.id == klubId).nazwa)
 		}
 		else
 		{
@@ -155,8 +184,8 @@ class RidersList extends Component<{}, { riders, clubs }> {
 		}
 	}
 
-	renderTableData() {
-		return this.state.riders.map((rider, index) => {
+	const renderTableData = () => {
+		return riders.map((rider, index) => {
 			const {
 				id,
 				imię,
@@ -168,44 +197,39 @@ class RidersList extends Component<{}, { riders, clubs }> {
 				klubId
 			} = rider;
 			return (
-				<tr
+				<TableRow
 					key={id}
-					style={
-						index % 2
-							? { background: 'white' }
-							: { background: '#dddddd' }
-					}
 				>
-					<td className="first-column">{imię}</td>
-					<td>{nazwisko}</td>
-					<td>{przydomek}</td>
-					<td>
+					<TableCell>{imię}</TableCell>
+					<TableCell>{nazwisko}</TableCell>
+					<TableCell>{przydomek}</TableCell>
+					<TableCell>
 						{new Intl.DateTimeFormat('en-GB', {
 							year: 'numeric',
 							month: '2-digit',
 							day: '2-digit'
 						}).format(new Date(data_urodzenia))}
-					</td>
-					<td>{ksm}</td>
-					<td>{this.ifForeigner({ zagraniczny })}</td>
-					<td>{this.ifJunior({ data_urodzenia })}</td>
-					<td>{this.getClubName(klubId)}</td>
-					<td className="table-X">
+					</TableCell>
+					<TableCell>{ksm}</TableCell>
+					<TableCell>{ifForeigner({ zagraniczny })}</TableCell>
+					<TableCell>{ifJunior({ data_urodzenia })}</TableCell>
+					<TableCell>{getClubName(klubId)}</TableCell>
+					<TableCell className="table-X">
 						<IconButton
 							onClick={(event: React.MouseEvent<HTMLElement>) => {
-								this.deleteRiders({ id });
+								deleteRiders(id);
 							}}
 							className="delete-button"
 						>
 							<FiXCircle />
 						</IconButton>
-					</td>
-				</tr>
+					</TableCell>
+				</TableRow>
 			);
 		});
 	}
 
-	renderTableHeader() {
+	const renderTableHeader = () => {
 		let header = [
 			'Imię',
 			'Nazwisko',
@@ -217,25 +241,32 @@ class RidersList extends Component<{}, { riders, clubs }> {
 			'Klub'
 		];
 		return header.map((key, index) => {
-			return <th key={index}>{key.toUpperCase()}</th>;
+			return <TableCell key={index}>{key.toUpperCase()}</TableCell>;
 		});
 	}
 
-	render() {
-		return (
-			<div>
-				<table id="riders-list">
-					<tbody>
-						<tr>
-							{this.renderTableHeader()}
-							<th className="table-X__header">USUŃ</th>
-						</tr>
-						{this.renderTableData()}
-					</tbody>
-				</table>
-			</div>
-		);
-	}
+	useEffect(() => {
+		getRiders();
+		getClubs();
+	}, [])
+
+	return(
+		<div className='riders-list-div'>
+			<TableContainer>
+				<Table id='riders-list'>
+					<TableHead>
+						<TableRow>
+							{renderTableHeader()}
+							{isAdmin ? <TableCell>USUŃ</TableCell> : null}
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{renderTableData()}
+					</TableBody>
+				</Table>
+			</TableContainer>
+		</div>
+	)
 }
 
 export default RidersList;
