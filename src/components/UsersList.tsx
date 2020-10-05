@@ -127,6 +127,7 @@ const UsersList: FunctionComponent<IProps> = ({
 		if (handleFetchTeamRiders) {
 			fetchMyFriendsAndInvitations();
 		}
+		getUsersLeagues();
 	}, []);
 
 	const usersIcons = user =>
@@ -251,19 +252,79 @@ const UsersList: FunctionComponent<IProps> = ({
 		setOpenAddLeagueDialog(false);
 	}
 
-	const handleOnSubmit = () => {
+	const handleOnSubmit = async () => {
 		//submit dodania znajomego do ligi
+		if(leagueToAddFriend !== ''){
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			try {
+				const {
+					data
+				} = await axios.post(
+					`https://fantasy-league-eti.herokuapp.com/rankings/${leagueToAddFriend}`,
+					{userId: friendToLeague},
+					options
+				);
+				addNotification(
+					'Sukces!',
+					'Udało się dodać znajomego do ligi!',
+					'success',
+					1000
+				);
+			} catch (e) {
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
+				} else if(data.statusCode == 503){
+					addNotification('Błąd', 'Znajomy już jest przypisany do tego rankingu', 'danger', 1000);
+				}
+			}
+		}
 	}
 
 	const generateUsersLeagues = () => {
 		//tworzenie MenuItems z lig uzytkownika
-		return(
-			<MenuItem key="lolol" value="lolol">MLeko</MenuItem>
-		)
+		if(userLeagues){
+            return userLeagues.map((ranking, index) => {
+                return (
+                    <MenuItem key={ranking._id} value={ranking._id}>
+                        {ranking.name}
+                    </MenuItem>
+                );
+            });
+        }
 	}
 
 	const getUsersLeagues = async () => {
 		//pobranie lig użytkownika
+		const accessToken = getToken();
+        const options = {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        };
+        try {
+            const {
+                data
+            } = await axios.get(
+                `https://fantasy-league-eti.herokuapp.com/rankings`,
+                options
+            );
+            setUserLeagues(data.owns);
+        } catch (e) {
+            const {
+                response: { data }
+            } = e;
+            if (data.statusCode == 401) {
+                checkBadAuthorization(setLoggedIn, push);
+            }
+        }
 	}
 
 	return (
