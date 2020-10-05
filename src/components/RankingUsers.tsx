@@ -52,7 +52,8 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
     };
 
     const [selectedRanking, setSelectedRanking] = useState<string>('');
-    const [userRankings, setUserRankings] = useState([]);
+    const [owns, setOwns] = useState([]);
+    const [participates, setParticipates] = useState([]);
     const [rankingUsers, setRankingUsers] = useState<IRankingUser[]>([]);
 
     const handleOnChangeSelect = () => event => {
@@ -65,56 +66,94 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
 
     const getUserRankings = async () => {
         //Do pobrania listy rankingów użytkownika + globalnego
-        //setUserRankings()
-
-        generateRankingsSelect();
+        const accessToken = getToken();
+        const options = {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        };
+        try {
+            const {
+                data
+            } = await axios.get(
+                `https://fantasy-league-eti.herokuapp.com/rankings`,
+                options
+            );
+            setOwns(data.owns);
+            setParticipates(data.participates);
+        } catch (e) {
+            const {
+                response: { data }
+            } = e;
+            if (data.statusCode == 401) {
+                checkBadAuthorization(setLoggedIn, push);
+            }
+        }
     }
 
-    const generateRankingsSelect = () => {
+    const generateOwnedRankingsSelect = () => {
         //Do wygenerowania MenuItems z pobranej listy rankingów użytkownika + globalnego
-        //userRankings.map()
+        if(owns){
+            return owns.map((ranking, index) => {
+                return (
+                    <MenuItem key={ranking._id} value={ranking._id}>
+                        {ranking.name}
+                    </MenuItem>
+                );
+            });
+        }
+       
+    }
+
+    const generateParticipatedRankingsSelect = () => {
+        if(participates){
+            return participates.map((ranking, index) => {
+                return (
+                    <MenuItem key={ranking._id} value={ranking._id}>
+                        {ranking.name}
+                    </MenuItem>
+                );
+            });
+        }
+        
     }
 
     const getRankingUsersList = async (rankingId) => {
         //Do pobierania uzytkownikow umiejscowionych w rankingu
         //setRankingUsers()
-        if(rankingId === 'global'){
-            const accessToken = getToken();
-            const options = {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            };
-            try {
-                const {
-                    data
-                } = await axios.get(
-                    'https://fantasy-league-eti.herokuapp.com/rankings/global',
-                    options
-                );
-                setRankingUsers([]);
-                data.scoreboard.map(user => {
-                    setRankingUsers(rankingUsers => 
-                        rankingUsers.concat({
-                            _id: user.userId,
-                            avatarUrl: user.avatarUrl,
-                            name: user.username,
-                            teamLogo: user.teamLogoUrl,
-                            teamName: user.teamName,
-                            points: user.score
-                        })
-                    );
-                });
-            } catch (e) {
-                const {
-                    response: { data }
-                } = e;
-                if (data.statusCode == 401) {
-                    checkBadAuthorization(setLoggedIn, push);
-                }
+        const accessToken = getToken();
+        const options = {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
             }
-        } else {
-
+        };
+        try {
+            const {
+                data
+            } = await axios.get(
+                `https://fantasy-league-eti.herokuapp.com/rankings/${rankingId}`,
+                options
+            );
+            setRankingUsers([]);
+            data.scoreboard.map(user => {
+                setRankingUsers(rankingUsers => 
+                    rankingUsers.concat({
+                        _id: user.userId,
+                        avatarUrl: user.avatarUrl,
+                        name: user.username,
+                        teamLogo: user.teamLogoUrl,
+                        teamName: user.teamName,
+                        points: user.score
+                    })
+                );
+            });
+        } catch (e) {
+            const {
+                response: { data }
+            } = e;
+            if (data.statusCode == 401) {
+                checkBadAuthorization(setLoggedIn, push);
+            }
         }
     }
 
@@ -151,10 +190,9 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
                     <br/>
                     <Select value={selectedRanking || 'global'} onChange={handleOnChangeSelect()}>
                         <MenuItem key='global' value='global'>Ranking globalny</MenuItem>
-                        {generateRankingsSelect()}
+                        {generateOwnedRankingsSelect()}
+                        {generateParticipatedRankingsSelect()}
                     </Select>
-                    {/* <br/> */}
-                    {/* <br/> */}
                     {generateRankingTable()}
                 </Paper>
             </div>
