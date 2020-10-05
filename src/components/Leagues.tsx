@@ -100,7 +100,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
     ])
 
     const getLeagues = async () => {
-        /*try {
+        try {
             const accessToken = getToken();
             const options = {
                 headers: {
@@ -111,15 +111,13 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
                 'https://fantasy-league-eti.herokuapp.com/leagues',
                 options
             );
-
             setLeagues(data);
         } catch (e) {
-            console.log(e.response);
-            if (e.response.statusText == 'Unauthorized') {
-                addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-                setTimeout(() => {
-                    push('/login');
-                }, 3000);
+            const {
+                response: { data }
+            } = e;
+            if (data.statusCode == 401) {
+                checkBadAuthorization(setLoggedIn, push);
             } else {
                 addNotification(
                     'Błąd',
@@ -128,12 +126,11 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
                     3000
                 );
             }
-            throw new Error('Error in getting leagues');
-        }*/
+        }
     }
 
     const addLeague = async () => {
-        /*try {
+        try {
             const accessToken = getToken();
             const options = {
                 headers: {
@@ -145,30 +142,34 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
                 {
                     name: addLeagueName,
                     country: addLeagueCountry
-                }
+                },
                 options
             );
+            addNotification(
+				'Sukces!',
+				'Udało się usunąć ligę!',
+				'success',
+				1000
+			);
         } catch (e) {
-            console.log(e.response);
-            if (e.response.statusText == 'Unauthorized') {
-                addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-                setTimeout(() => {
-                    push('/login');
-                }, 3000);
+            const {
+                response: { data }
+            } = e;
+            if (data.statusCode == 401) {
+                checkBadAuthorization(setLoggedIn, push);
             } else {
                 addNotification(
                     'Błąd',
-                    'Nie udało się pobrać dodać ligi do bazy',
+                    'Nie udało się dodać ligi do bazy',
                     'danger',
                     3000
                 );
             }
-            throw new Error('Error in adding league');
-        }*/
+        }
     }
 
     const deleteLeague = async (id) => {
-        /*try {
+        try {
 			const accessToken = getToken();
 			const options = {
 				headers: {
@@ -189,22 +190,27 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
 				window.location.reload(false);
 			}, 1000);
 		} catch (e) {
-			addNotification(
-				'Błąd!',
-				'Nie udało się usunąć ligi!',
-				'danger',
-				1000
-			);
-			console.log(e.response);
-			throw new Error('Error in deleting league!');
-		}*/
+			const {
+                response: { data }
+            } = e;
+            if (data.statusCode == 401) {
+                checkBadAuthorization(setLoggedIn, push);
+            } else {
+                addNotification(
+                    'Błąd',
+                    'Nie udało się usunąć ligi z bazy',
+                    'danger',
+                    3000
+                );
+            }
+		}
     }
 
     const renderTableData = () => {
-        return tempLeagues.map((league, index) => {
+        return leagues.map((league, index) => {
             return(
                 <TableRow
-					key={index}
+					key={league._id}
 
 				>
                     <TableCell>{league.name}</TableCell>
@@ -212,7 +218,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
                     <TableCell className="table-X">
 						<IconButton
 							onClick={(event: React.MouseEvent<HTMLElement>) => {
-								//deleteLeague(league._id);
+								deleteLeague(league._id);
 							}}
 							className="delete-button"
 						>
@@ -261,7 +267,6 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
 
     const handleOnSubmit = (event: React.FormEvent) => {
         event.persist();
-        console.log("SUBMIT");
         const validationResponse = validateLeagueData({name: addLeagueName, country: addLeagueCountry});
         if (validationResponse.error){
             setValidatedData(() => defaultValidatedData);
@@ -283,6 +288,10 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
             addLeague();
         }
     }
+
+    useEffect(() => {
+        getLeagues();
+    }, [])
 
     const generateDialog = () => {
         return(
