@@ -5,6 +5,7 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { FiPlus, FiX, FiXCircle } from 'react-icons/fi';
 import { RouteComponentProps } from 'react-router-dom';
 import { setUser } from '../actions/userActions';
+import addNotification from '../utils/addNotification';
 import { checkBadAuthorization } from '../utils/checkCookies';
 import getToken from '../utils/getToken';
 import validateUserLeagueData from '../validation/validateUserLeagueData';
@@ -68,7 +69,8 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
 
     const [openDialog, setOpenDialog] = useState<boolean>(false);
     const [addUserLeagueName, setAddUserLeagueName] = useState<string>('');
-    const [leagues, setLeagues] = useState([]);
+    const [owns, setOwns] = useState([]);
+    const [participates, setParticipates] = useState([]);
     const [addUserLeagueMainLeague, setAddUserLeagueMainLeague] = useState<string>('');
 
     const [validatedData, setValidatedData] = useState<IValidatedData>(defaultValidatedData);
@@ -91,7 +93,7 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
 
     //Jedna lub dwie funkcje w zaleznosci od backendu
     const getUserLeagues = async () => {
-        /*try {
+        try {
             const accessToken = getToken();
             const options = {
                 headers: {
@@ -99,32 +101,31 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
                 }
             };
             const { data } = await axios.get(
-                'https://fantasy-league-eti.herokuapp.com/user-leagues',
+                'https://fantasy-league-eti.herokuapp.com/rankings',
                 options
             );
-
-            setLeagues(data);
+            console.log(data);
+            setOwns(data.owns);
+            setParticipates(data.participates);
         } catch (e) {
-            console.log(e.response);
-            if (e.response.statusText == 'Unauthorized') {
-                addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-                setTimeout(() => {
-                    push('/login');
-                }, 3000);
+            const {
+                response: { data }
+            } = e;
+            if (data.statusCode == 401) {
+                checkBadAuthorization(setLoggedIn, push);
             } else {
                 addNotification(
                     'Błąd',
-                    'Nie udało się pobrać lig z bazy',
+                    'Nie udało się usunąć ligi z bazy',
                     'danger',
                     3000
                 );
             }
-            throw new Error('Error in getting leagues');
-        }*/
+        }
     }
 
     const addUserLeague = async () => {
-        /*try {
+        try {
             const accessToken = getToken();
             const options = {
                 headers: {
@@ -132,12 +133,19 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
                 }
             };
             const { data } = await axios.post(
-                'https://fantasy-league-eti.herokuapp.com/user-leagues',
-                {DANE},
+                'https://fantasy-league-eti.herokuapp.com/rankings',
+                {name: addUserLeagueName},
                 options
             );
-
-            setLeagues(data);
+            addNotification(
+				'Sukces!',
+				'Udało się dodać ranking!',
+				'success',
+				1000
+			);
+			setTimeout(() => {
+				window.location.reload(false);
+			}, 1000);
         } catch (e) {
             console.log(e.response);
             if (e.response.statusText == 'Unauthorized') {
@@ -154,27 +162,77 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
                 );
             }
             throw new Error('Error in getting leagues');
-        }*/
+        }
     }
 
-    const renderTableData = () => {
-        return tempLeagues.map((league, index) => {
+    const deleteUserLeague = async (id) => {
+        try {
+            const accessToken = getToken();
+            const options = {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            };
+            const { data } = await axios.delete(
+                `https://fantasy-league-eti.herokuapp.com/rankings/${id}`,
+                options
+            );
+            addNotification(
+				'Sukces!',
+				'Udało się usunąć ranking!',
+				'success',
+				1000
+			);
+			setTimeout(() => {
+				window.location.reload(false);
+			}, 1000);
+        } catch (e) {
+            const {
+                response: { data }
+            } = e;
+            if (data.statusCode == 401) {
+                checkBadAuthorization(setLoggedIn, push);
+            } else {
+                addNotification(
+                    'Błąd',
+                    'Nie udało się usunąć ligi z bazy',
+                    'danger',
+                    3000
+                );
+            }
+        }
+    }
+
+    const renderOwnedTableData = () => {
+        return owns.map((league, index) => {
             return(
                 <TableRow
 					key={index}
 				>
                     <TableCell>{league.name}</TableCell>
-                    <TableCell>{league.mainLeague}</TableCell>
                     <TableCell className="table-X">
 						<IconButton
 							onClick={(event: React.MouseEvent<HTMLElement>) => {
-								//usun dzialajacy jesli moja liga
+								deleteUserLeague(league._id);
 							}}
 							className="delete-button"
 						>
 							<FiXCircle />
 						</IconButton>
 					</TableCell>
+                </TableRow>
+            )
+        })
+    }
+
+    const renderParticipatedTableData = () => {
+        return participates.map((league, index) => {
+            return(
+                <TableRow
+					key={index}
+				>
+                    <TableCell>{league.name}</TableCell>
+                    <TableCell className="table-X"></TableCell>
                 </TableRow>
             )
         })
@@ -188,12 +246,12 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
                         <TableHead>
                             <TableRow>
                                 <TableCell>NAZWA</TableCell>
-                                <TableCell>GŁÓWNA LIGA</TableCell>
                                 <TableCell>USUŃ</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {renderTableData()}
+                            {renderOwnedTableData()}
+                            {renderParticipatedTableData()}
                         </TableBody>
                     </Table>
                 </TableContainer>
@@ -240,6 +298,10 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
         }
     }
 
+    useEffect(() => {
+        getUserLeagues()
+    }, [])
+
     const generateDialog = () => {
         return(
             <>
@@ -273,8 +335,8 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
                                                 onChange={handleOnChangeName()}
                                             />
                                         </FormControl>
-                                        <FormControl className="user-leagues-dialog__select-field">
-                                            Kraj:
+                                        {/* <FormControl className="user-leagues-dialog__select-field">
+                                            Główna liga:
                                             <Select
                                                 value={addUserLeagueMainLeague || ''}
                                                 onChange={handleOnChangeMainLeague()}
@@ -284,7 +346,7 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
                                                 <MenuItem value="Szwecja">Szwecja</MenuItem>
                                                 <MenuItem value="Dania">Dania</MenuItem>
                                             </Select>
-                                        </FormControl>
+                                        </FormControl> */}
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Button
