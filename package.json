@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prebuild": "rimraf dist",
     "webpack-dev-server": "webpack-dev-server",
     "webpack": "webpack",
     "build:dev": "npm run webpack -- --env.mode development",
