@@ -187,12 +187,16 @@ const Header: FunctionComponent = () => {
 					</Hidden>
 					<Hidden mdDown={loggedIn} smDown={!loggedIn}>
 						<div className="header__logo">
-							<img src='img/logo41.png' className="header__logo-img"/>
+							<Link to="/">
+								<img src='img/logo41.png' className="header__logo-img"/>
+							</Link>
 						</div>
 					</Hidden>
 					<Hidden lgUp={loggedIn} smDown={loggedIn} xsUp={!loggedIn}>
 						<div className="header__logo-bike">
-							<img src='img/motologo.png' className="header__logo-bike-img"/>
+							<Link to="/">
+								<img src='img/motologo.png' className="header__logo-bike-img"/>
+							</Link>
 						</div>
 					</Hidden>
 					{loggedIn ? (
