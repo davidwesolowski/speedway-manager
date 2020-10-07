@@ -16,7 +16,6 @@ import Register from '../components/Register';
 import { checkCookies } from '../utils/checkCookies';
 import Team from '../components/Team';
 import Riders from '../components/Riders';
-import FindRider from '../components/FindRider';
 import AddRiderToTeam from '../components/AddRiderToTeam';
 import Users from '../components/Users';
 import AddMatch from '../components/AddMatch';
@@ -89,14 +88,6 @@ const RoutesAnimation = () => {
 						render={(props: RouteComponentProps) => {
 							const cookiesExist = checkCookies();
 							if (cookiesExist) return <Riders {...props} />;
-							else return <Redirect to="/login" />;
-						}}
-					/>
-					<Route
-						path="/szukaj"
-						render={(props: RouteComponentProps) => {
-							const cookiesExist = checkCookies();
-							if (cookiesExist) return <FindRider {...props} />;
 							else return <Redirect to="/login" />;
 						}}
 					/>

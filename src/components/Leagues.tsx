@@ -11,6 +11,12 @@ import {
 	MenuItem,
 	Paper,
 	Select,
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TableRow,
 	TextField,
 	Typography
 } from '@material-ui/core';
@@ -216,17 +222,10 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({
 	const renderTableData = () => {
 		return tempLeagues.map((league, index) => {
 			return (
-				<tr
-					key={index}
-					style={
-						index % 2
-							? { background: 'white' }
-							: { background: '#dddddd' }
-					}
-				>
-					<td>{league.name}</td>
-					<td>{league.country}</td>
-					<td className="table-X">
+				<TableRow key={index}>
+					<TableCell>{league.name}</TableCell>
+					<TableCell>{league.country}</TableCell>
+					<TableCell className="table-X">
 						<IconButton
 							onClick={(event: React.MouseEvent<HTMLElement>) => {
 								//deleteLeague(league._id);
@@ -235,25 +234,27 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({
 						>
 							<FiXCircle />
 						</IconButton>
-					</td>
-				</tr>
+					</TableCell>
+				</TableRow>
 			);
 		});
 	};
 
 	const generateTable = () => {
 		return (
-			<div>
-				<table id="riders-list">
-					<tbody>
-						<tr>
-							<th>NAZWA</th>
-							<th>KRAJ</th>
-							<th>USUŃ</th>
-						</tr>
-						{renderTableData()}
-					</tbody>
-				</table>
+			<div className="leagues-table">
+				<TableContainer>
+					<Table>
+						<TableHead>
+							<TableRow>
+								<TableCell>NAZWA</TableCell>
+								<TableCell>KRAJ</TableCell>
+								<TableCell>USUŃ</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>{renderTableData()}</TableBody>
+					</Table>
+				</TableContainer>
 			</div>
 		);
 	};
@@ -275,7 +276,8 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	const handleOnSubmit = (event: React.FormEvent) => {
-		event.preventDefault();
+		event.persist();
+		console.log('SUBMIT');
 		const validationResponse = validateLeagueData({
 			name: addLeagueName,
 			country: addLeagueCountry
@@ -284,6 +286,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({
 			setValidatedData(() => defaultValidatedData);
 			validationResponse.error.details.forEach(
 				(errorItem: ValidationErrorItem): any => {
+					console.log(errorItem.message);
 					setValidatedData((prevState: IValidatedData) => {
 						return {
 							...prevState,
