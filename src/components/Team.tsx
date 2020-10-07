@@ -26,6 +26,7 @@ import TeamMatch from './TeamMatch';
 import getToken from '../utils/getToken';
 import { setTeamRiders } from '../actions/teamRidersActions';
 import fetchUserData from '../utils/fetchUserData';
+import { IRider } from './TeamRiders';
 
 interface ITabPanelProps {
 	children?: ReactNode;
@@ -102,13 +103,13 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 			}
 		};
 		const fetchTeamRiders = async (_id: string) => {
-			try {
-				const { data: riders } = await axios.get(
-					`https://fantasy-league-eti.herokuapp.com/teams/${_id}/riders`,
-					options
-				);
-				if (riders.length) {
-					const newRiders = riders.map(({ rider, isActive }) => {
+			const { data: riders } = await axios.get(
+				`https://fantasy-league-eti.herokuapp.com/teams/${_id}/riders`,
+				options
+			);
+			if (riders.length) {
+				const newRiders: IRider[] = await Promise.all(
+					riders.map(async ({ rider, isActive }) => {
 						const riderAgeYear = new Date(
 							rider.dateOfBirth
 						).getFullYear();
@@ -123,6 +124,14 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 						const nationality = rider.isForeigner
 							? 'Zagraniczny'
 							: 'Krajowy';
+						let club = '';
+						if (rider.clubId) {
+							const { data } = await axios.get(
+								`https://fantasy-league-eti.herokuapp.com/clubs/${rider.clubId}`,
+								options
+							);
+							club = data.name;
+						}
 						return {
 							_id: rider._id,
 							firstName: rider.firstName,
@@ -133,54 +142,48 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 							isActive,
 							nationality,
 							age,
-							club: ''
+							club
 						};
-					});
-					dispatchTeamRiders(setTeamRiders(newRiders));
-				}
-			} catch (e) {
-				const {
-					response: { data }
-				} = e;
-				if (data.statusCode == 401) {
-					checkBadAuthorization(setLoggedIn, push);
-				}
+					})
+				);
+				dispatchTeamRiders(setTeamRiders(newRiders));
 			}
 		};
 		const fetchTeam = async () => {
-			try {
-				const { data } = await axios.get(
-					'https://fantasy-league-eti.herokuapp.com/teams',
-					options
-				);
-				if (data.length && data[0]) {
-					const { name, logoUrl, _id } = data[0];
-					fetchTeamRiders(_id);
-					setTeam({ name, logoUrl, _id });
-				} else {
-					setTeam(defaultTeamState);
-				}
-			} catch (e) {
-				/*const {
-					response: { data }
-				} = e;
-				if (data.statusCode == 401) {
-					checkBadAuthorization(setLoggedIn, push);
-				}*/
+			const { data } = await axios.get(
+				'https://fantasy-league-eti.herokuapp.com/teams',
+				options
+			);
+			if (data.length && data[0]) {
+				const { name, logoUrl, _id } = data[0];
+				fetchTeamRiders(_id);
+				setTeam({ name, logoUrl, _id });
+			} else {
+				setTeam(defaultTeamState);
 			}
 		};
 		const fetchLeagues = async () => {
+			const { data } = await axios.get(
+				'https://fantasy-league-eti.herokuapp.com/leagues',
+				options
+			);
+			const leagues = data.map(({ _id, name }) => ({
+				_id,
+				name
+			}));
+			setLeagues(leagues);
+			return leagues;
+		};
+		(async function () {
 			try {
-				const { data } = await axios.get(
-					'https://fantasy-league-eti.herokuapp.com/leagues',
-					options
-				);
-				const leagues = data.map(({ _id, name }) => ({
-					_id,
-					name
-				}));
-				setLeagues(leagues);
-				return leagues;
+				await fetchTeam();
+				await fetchLeagues();
+				if (!userData.username)
+					await fetchUserData(dispatchUserData, setLoggedIn, push);
+				setLoading(false);
+				setTimeout(() => {
+					document.body.style.overflow = 'auto';
+				}, 500);
 			} catch (e) {
 				const {
 					response: { data }
@@ -189,14 +192,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 					checkBadAuthorization(setLoggedIn, push);
 				}
 			}
-		};
-		if (!userData.username)
-			fetchUserData(dispatchUserData, setLoggedIn, push);
-		fetchLeagues();
-		fetchTeam().then(() => setLoading(false));
-		setTimeout(() => {
-			document.body.style.overflow = 'auto';
-		}, 500);
+		})();
 	}, [updatedTeam]);
 
 	return (
