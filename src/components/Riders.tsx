@@ -13,7 +13,7 @@ import {
 	Grid,
 	Checkbox,
 	Select,
-	MenuItem
+	MenuItem, InputLabel
 } from '@material-ui/core';
 import { FiPlus, FiX } from 'react-icons/fi';
 import axios from 'axios';
@@ -91,12 +91,15 @@ interface IValidatedData {
 	};
 }
 
+
 const Riders: FunctionComponent<RouteComponentProps> = ({
 	history: { push }
 }) => {
 	const { setLoggedIn, dispatchUserData, userData } = useStateValue();
 
 	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
+
+	
 
 	const defaultValidatedData = {
 		firstName: {
@@ -134,6 +137,8 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	const [clubs, setClubs] = useState([]);
+
+
 
 	const getClubs = async () => {
 		try {
@@ -182,113 +187,6 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 	const [showDialog, setShowDialog] = useState<boolean>(false);
 
 	const [tempKSM, setTempKSM] = useState<string>('');
-
-	const [exampleRiders, setExampleRiders] = useState<IRider1[]>([
-		{
-			firstName: 'Chris',
-			lastName: 'Holder',
-			nickname: 'Crispy',
-			dateOfBirth: new Date(1980, 1, 1),
-			isForeigner: true,
-			isJunior: false
-		},
-		{
-			firstName: 'Jack',
-			lastName: 'Holder',
-			nickname: 'Jackie',
-			dateOfBirth: new Date(1980, 1, 1),
-			isForeigner: true,
-			isJunior: false
-		},
-		{
-			firstName: 'Victor',
-			lastName: 'Kulakov',
-			nickname: '',
-			dateOfBirth: new Date(1980, 1, 1),
-			isForeigner: true,
-			isJunior: false
-		},
-		{
-			firstName: 'Tai',
-			lastName: 'Woffinden',
-			nickname: 'Woffy',
-			dateOfBirth: new Date(1980, 1, 1),
-			isForeigner: true,
-			isJunior: false
-		},
-		{
-			firstName: 'Tobiasz',
-			lastName: 'Musielak',
-			nickname: 'Tofik',
-			dateOfBirth: new Date(1980, 1, 1),
-			isForeigner: false,
-			isJunior: false
-		},
-		{
-			firstName: 'Adrian',
-			lastName: 'Miedziński',
-			nickname: 'Miedziak',
-			dateOfBirth: new Date(1980, 1, 1),
-			isForeigner: false,
-			isJunior: false
-		},
-		{
-			firstName: 'Maciej',
-			lastName: 'Janowski',
-			nickname: 'Magic',
-			dateOfBirth: new Date(1980, 1, 1),
-			isForeigner: false,
-			isJunior: false
-		},
-		{
-			firstName: 'Maksym',
-			lastName: 'Drabik',
-			nickname: '',
-			dateOfBirth: new Date(1980, 1, 1),
-			isForeigner: false,
-			isJunior: false
-		},
-		{
-			firstName: 'Piotr',
-			lastName: 'Protasiewicz',
-			nickname: 'Protas',
-			dateOfBirth: new Date(1980, 1, 1),
-			isForeigner: false,
-			isJunior: false
-		},
-		{
-			firstName: 'Gleb',
-			lastName: 'Chugunov',
-			nickname: '',
-			dateOfBirth: new Date(2000, 1, 1),
-			isForeigner: false,
-			isJunior: true
-		},
-		{
-			firstName: 'Igor',
-			lastName: 'Sobczyński',
-			nickname: '',
-			dateOfBirth: new Date(2000, 1, 1),
-			isForeigner: false,
-			isJunior: true
-		},
-		{
-			firstName: 'Kamil',
-			lastName: 'Marciniec',
-			nickname: '',
-			dateOfBirth: new Date(2000, 1, 1),
-			isForeigner: false,
-			isJunior: true
-		},
-		{
-			firstName: 'Aleks',
-			lastName: 'Rydlewski',
-			nickname: '',
-			dateOfBirth: new Date(2000, 1, 1),
-			isForeigner: false,
-			isJunior: true
-		}
-	]);
 
 	const handleOpen = () => setShowDialog(true);
 	const handleClose = () => {

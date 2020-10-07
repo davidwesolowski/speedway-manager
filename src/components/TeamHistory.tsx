@@ -49,33 +49,6 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
     const [team, setTeam] = useState([]);
     const [historyResults, setHistoryResults] = useState([]);
 
-    const [tempHistoryRiders, setTempHistoryRiders] = useState([
-        {
-            _id: 1,
-            firstName: "Bartosz",
-            lastName: "Zmarzlik",
-            club: "Stal Gorzów",
-            KSM: 10,
-            score: 15
-        },
-        {
-            _id: 2,
-            firstName: "Bartosz",
-            lastName: "Zmarzlik",
-            club: "Stal Gorzów",
-            KSM: 10,
-            score: 14
-        },
-        {
-            _id: 3,
-            firstName: "Bartosz",
-            lastName: "Zmarzlik",
-            club: "Stal Gorzów",
-            KSM: 10,
-            score: 13
-        }
-    ])
-
     const getRounds = async () => {
         try{
             const accessToken = getToken();
