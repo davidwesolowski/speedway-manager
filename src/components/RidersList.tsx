@@ -8,7 +8,7 @@ import getToken from '../utils/getToken';
 import checkAdminRole from '../utils/checkAdminRole';
 import { RouteComponentProps, RouteProps, useHistory } from 'react-router-dom';
 import { useStateValue } from './AppProvider';
-import { checkBadAuthorization } from '../utils/checkCookies';
+import { checkBadAuthorization, checkCookies } from '../utils/checkCookies';
 
 interface ISelect {
 	nationality: string;
@@ -27,7 +27,7 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 
 	const [clubs, setClubs] = useState([]);
 	const [riders, setRiders] = useState([]);
-	const isAdmin = checkAdminRole(userData.role);
+	const isAdmin = checkAdminRole(userData.role) && checkCookies();
 	const [filteredRiders, setFilteredRiders] = useState([]);
 
 	const deleteRiders = async (id) => {

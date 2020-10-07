@@ -371,9 +371,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					}
 				};
 				const { data } = await axios.get(
-					`https://fantasy-league-eti.herokuapp.com/match/${matchId}/riders`,
+					`https://fantasy-league-eti.herokuapp.com/matches/${matchId}/riders`,
 					options
 				);
+				console.log(matchId)
+				console.log(data)
 				data.map((rider, index) => {
 					switch (rider.riderNumber) {
 						case 1:
