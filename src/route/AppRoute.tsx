@@ -52,7 +52,6 @@ const RoutesAnimation = () => {
 				unmountOnExit
 			>
 				<Switch location={location}>
-					<Route path="/" exact component={WelcomePage} />
 					<Route
 						path="/login"
 						render={(props: RouteComponentProps) => {
@@ -185,6 +184,14 @@ const RoutesAnimation = () => {
 							if (cookiesExist)
 								return <RankingUsers {...props} />;
 							else return <Redirect to="/login" />;
+						}}
+					/>
+					<Route
+						path="/"
+						render={(props: RouteComponentProps) => {
+							if (props.location.pathname === '/')
+								return <WelcomePage />;
+							return <Redirect to="/" />;
 						}}
 					/>
 				</Switch>
