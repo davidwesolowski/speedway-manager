@@ -185,7 +185,16 @@ const Header: FunctionComponent = () => {
 							<FiMenu className="header__mobileIcon" />
 						</IconButton>
 					</Hidden>
-					<div className="header__logo">LOGO</div>
+					<Hidden mdDown={loggedIn} smDown={!loggedIn}>
+						<div className="header__logo">
+							<img src='img/logo41.png' className="header__logo-img"/>
+						</div>
+					</Hidden>
+					<Hidden lgUp={loggedIn} smDown={loggedIn} xsUp={!loggedIn}>
+						<div className="header__logo-bike">
+							<img src='img/motologo.png' className="header__logo-bike-img"/>
+						</div>
+					</Hidden>
 					{loggedIn ? (
 						<>
 							{authorized}
