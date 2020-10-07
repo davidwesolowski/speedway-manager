@@ -21,12 +21,12 @@ import TeamCreate from './TeamCreate';
 import TeamGeneral from './TeamGeneral';
 import { useStateValue } from './AppProvider';
 import { checkBadAuthorization } from '../utils/checkCookies';
-import { setUser } from '../actions/userActions';
 import TeamMatch from './TeamMatch';
 import getToken from '../utils/getToken';
 import { setTeamRiders } from '../actions/teamRidersActions';
 import fetchUserData from '../utils/fetchUserData';
 import { IRider } from './TeamRiders';
+import addNotification from '../utils/addNotification';
 
 interface ITabPanelProps {
 	children?: ReactNode;
@@ -190,6 +190,13 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 				} = e;
 				if (data.statusCode == 401) {
 					checkBadAuthorization(setLoggedIn, push);
+				} else {
+					const title = 'Błąd!';
+					const message =
+						'Nie udało się pobrać informacji o drużynie!';
+					const type = 'danger';
+					const duration = 1500;
+					addNotification(title, message, type, duration);
 				}
 			}
 		})();
