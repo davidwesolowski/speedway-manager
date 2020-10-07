@@ -9,6 +9,7 @@ import { RouteProps, useHistory } from 'react-router-dom';
 import {
 	Avatar,
 	Button,
+	CircularProgress,
 	Dialog,
 	DialogActions,
 	DialogTitle,
@@ -67,6 +68,7 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 	const [leagues, setLeagues] = useState<ILeague[]>([]);
 	const [club, setClub] = useState<IClub>(defaultClub);
 	const [clubs, setClubs] = useState<IClub[]>([]);
+	const [loading, setLoading] = useState(true);
 	const [removeDialog, setRemoveDialog] = useState(false);
 	const [updateClub, setUpdateClub] = useState(false);
 	const { dispatchUserData, setLoggedIn, userData } = useStateValue();
@@ -185,7 +187,7 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 		}
 	};
 
-	const clubsRender = () => (
+	const clubsRender = (
 		<CSSTransition
 			in={clubs.length > 0}
 			timeout={300}
@@ -242,7 +244,9 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 			</Table>
 		</CSSTransition>
 	);
+
 	useEffect(() => {
+		setLoading(true);
 		const accessToken = getToken();
 		const options = {
 			headers: {
@@ -250,60 +254,54 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 			}
 		};
 		const fetchLeagues = async () => {
-			try {
-				const { data } = await axios.get(
-					'https://fantasy-league-eti.herokuapp.com/leagues',
-					options
-				);
-				const leagues = data.map(({ _id, name, country }) => ({
-					_id,
-					name,
-					country
-				}));
-				setLeagues(leagues);
-				return leagues;
-			} catch (e) {
-				const {
-					response: { data }
-				} = e;
-				if (data.statusCode == 401) {
-					checkBadAuthorization(setLoggedIn, push);
-				} else {
-					const title = 'Błąd!';
-					const message = 'Nie udało się pobrać lig!';
-					const type = 'danger';
-					const duration = 1500;
-					addNotification(title, message, type, duration);
-				}
-			}
+			const { data } = await axios.get(
+				'https://fantasy-league-eti.herokuapp.com/leagues',
+				options
+			);
+			const leagues = data.map(({ _id, name, country }) => ({
+				_id,
+				name,
+				country
+			}));
+			setLeagues(leagues);
+			return leagues;
 		};
 
 		const fetchClubs = async () => {
-			try {
-				const { data } = await axios.get(
-					'https://fantasy-league-eti.herokuapp.com/clubs',
-					options
+			const { data } = await axios.get(
+				'https://fantasy-league-eti.herokuapp.com/clubs',
+				options
+			);
+			const leagues = await fetchLeagues();
+			const clubs = data.map(club => {
+				const league = leagues.find(
+					league => league._id === club.leagueId
 				);
-				const leagues = await fetchLeagues();
-				const clubs = data.map(club => {
-					const league = leagues.find(
-						league => league._id === club.leagueId
-					);
-					if (league)
-						return {
-							_id: club._id,
-							name: club.name,
-							imageUrl: club.imageUrl,
-							leagueName: league.name
-						};
+				if (league)
 					return {
 						_id: club._id,
 						name: club.name,
 						imageUrl: club.imageUrl,
-						leagueName: ''
+						leagueName: league.name
 					};
-				});
-				setClubs(clubs);
+				return {
+					_id: club._id,
+					name: club.name,
+					imageUrl: club.imageUrl,
+					leagueName: ''
+				};
+			});
+			setClubs(clubs);
+		};
+		(async function () {
+			try {
+				await fetchClubs();
+				if (!userData.username)
+					await fetchUserData(dispatchUserData, setLoggedIn, push);
+				setLoading(false);
+				setTimeout(() => {
+					document.body.style.overflow = 'auto';
+				}, 1000);
 			} catch (e) {
 				const {
 					response: { data }
@@ -312,21 +310,13 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 					checkBadAuthorization(setLoggedIn, push);
 				} else {
 					const title = 'Błąd!';
-					const message = 'Nie udało się pobrać klubów!';
+					const message = 'Nie udało się pobrać danych!';
 					const type = 'danger';
 					const duration = 1500;
 					addNotification(title, message, type, duration);
 				}
 			}
-		};
-
-		if (!userData.username)
-			fetchUserData(dispatchUserData, setLoggedIn, push);
-
-		fetchClubs();
-		setTimeout(() => {
-			document.body.style.overflow = 'auto';
-		}, 1000);
+		})();
 	}, [updateClub]);
 
 	return (
@@ -340,7 +330,16 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 								Kluby
 							</Typography>
 							<Divider />
-							{clubsRender()}
+							{loading && (
+								<Grid
+									container
+									justify="center"
+									alignItems="center"
+								>
+									<CircularProgress />
+								</Grid>
+							)}
+							{clubsRender}
 						</Grid>
 						{isAdmin && (
 							<Grid item xs={12} md={6}>
