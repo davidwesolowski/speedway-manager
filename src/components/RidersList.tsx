@@ -472,7 +472,6 @@ const RidersList: FunctionComponent<RouteProps> = () => {
 			try {
 				await getRiders();
 				await getClubs();
-				setLoading(false);
 			} catch (e) {
 				const {
 					response: { data }
@@ -487,6 +486,7 @@ const RidersList: FunctionComponent<RouteProps> = () => {
 					addNotification(title, message, type, duration);
 				}
 			}
+			setLoading(false);
 		})();
 	}, []);
 
@@ -538,6 +538,29 @@ const RidersList: FunctionComponent<RouteProps> = () => {
 					<Grid container justify="center" alignItems="center">
 						<CircularProgress />
 					</Grid>
+				)}
+				{!loading && (
+					<CSSTransition
+						in={riders.length == 0}
+						timeout={300}
+						classNames="animationScaleUp"
+						unmountOnExit
+					>
+						<TableContainer>
+							<Table>
+								<TableHead>
+									<TableRow>{renderTableHeader()}</TableRow>
+								</TableHead>
+								<TableBody>
+									<TableRow>
+										<TableCell colSpan={9}>
+											Nie znaleziono zawodników w bazie!
+										</TableCell>
+									</TableRow>
+								</TableBody>
+							</Table>
+						</TableContainer>
+					</CSSTransition>
 				)}
 				<CSSTransition
 					in={riders.length > 0}
