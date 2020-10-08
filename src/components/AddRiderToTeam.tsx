@@ -643,7 +643,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 					)}
 					<CSSTransition
 						in={leftForeign.length > 0 || leftPolish.length > 0 || leftU21.length > 0 || rightForeign.length > 0 || rightPolish.length > 0 || rightU21.length > 0}
-						timeout={300}
+						timeout={600}
 						classNames="animationScaleUp"
 						unmountOnExit
 					>
