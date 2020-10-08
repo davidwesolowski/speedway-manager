@@ -1,7 +1,8 @@
-import { Divider, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@material-ui/core';
+import { CircularProgress, Divider, Grid, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@material-ui/core';
 import axios from 'axios';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { CSSTransition } from 'react-transition-group';
 import { setUser } from '../actions/userActions';
 import addNotification from '../utils/addNotification';
 import { checkBadAuthorization } from '../utils/checkCookies';
@@ -43,14 +44,14 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
     };
 
     const [rounds, setRounds] = useState([]);
-    const [selectedRound, setSelectedRound] = useState<string>('all');
+    const [selectedRound, setSelectedRound] = useState<string>('');
     const [historyRiders, setHistoryRiders] = useState([]);
     const [updatedRiders, setUpdatedRiders] = useState<boolean>(true);
     const [team, setTeam] = useState([]);
     const [historyResults, setHistoryResults] = useState([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const getRounds = async () => {
-        try{
             const accessToken = getToken();
             const options = {
                 headers: {
@@ -63,26 +64,10 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
             );
 
             setRounds(data);
-        } catch (e) {
-            const {
-                response: { data }
-            } = e;
-            if (data.statusCode == 401) {
-                checkBadAuthorization(setLoggedIn, push);
-            } else {
-                addNotification(
-                    'Błąd',
-                    'Nie udało się pobrać rund z bazy',
-                    'danger',
-                    3000
-                );
-            }
-            throw new Error('Error in getting rounds');
-        }
+        
     }
 
     const getHistoryResults = async (teamId) => {
-        try{
             const accessToken = getToken();
             const options = {
                 headers: {
@@ -96,22 +81,7 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
 
             setHistoryResults(data);
             getHistoryRiders(data, selectedRound);
-        } catch (e) {
-            const {
-                response: { data }
-            } = e;
-            if (data.statusCode == 401) {
-                checkBadAuthorization(setLoggedIn, push);
-            } else {
-                addNotification(
-                    'Błąd',
-                    'Nie udało się pobrać rund z bazy',
-                    'danger',
-                    3000
-                );
-            }
-            throw new Error('Error in getting rounds');
-        }
+        
     }
 
     const getHistoryRiders = (results, round) => {
@@ -123,7 +93,6 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
     }
 
     const getTeam = async () => {
-        try{
             const accessToken = getToken();
             const options = {
                 headers: {
@@ -137,22 +106,7 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
 
             setTeam(data);
             getHistoryResults(data[0]._id);
-        } catch (e) {
-            const {
-                response: { data }
-            } = e;
-            if (data.statusCode == 401) {
-                checkBadAuthorization(setLoggedIn, push);
-            } else {
-                addNotification(
-                    'Błąd',
-                    'Nie udało się pobrać drużyn z bazy',
-                    'danger',
-                    3000
-                );
-            }
-            throw new Error('Error in getting rounds');
-        }
+        
     }
 
     const generateRounds = () => {
@@ -202,7 +156,7 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
         )
     }
 
-    const postToUpdateAssigns = async () => {
+    /*const postToUpdateAssigns = async () => {
         try{
             const accessToken = getToken();
             const options = {
@@ -230,7 +184,7 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
             }
             throw new Error('Error in getting rounds');
         }
-    }
+    }*/
 
     const getTotalScore = () => {
         if(historyResults.find((result) => result.round._id === selectedRound)){
@@ -246,9 +200,24 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
     }
 
     useEffect(() => {
-        if (!userData.username) fetchUserData();
-        getRounds();
-        getTeam();
+        setLoading(true);
+        (async function () {
+            try {
+                await getRounds();
+                await getTeam();
+                if (!userData.username) await fetchUserData();
+                setLoading(false);
+            } catch (e) {
+                const {
+                    response: { data }
+                } = e;
+                if (data.statusCode == 401) {
+                    checkBadAuthorization(setLoggedIn, push);
+                } else {
+                    addNotification('Błąd!', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
+                }
+            }
+        })();
         //postToUpdateAssigns();
         setTimeout(() => {
 			document.body.style.overflow = 'auto';
@@ -272,13 +241,27 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
                         <MenuItem key='all' value='all'>Wszystkie kolejki</MenuItem>
                         {generateRounds()}
                     </Select>
-                    <br/>
-                    <div className='history__full-score'>
-                        {getTotalScore()}
-                    </div>
-                    <div className='history__riders-list'>
-                        {generateTable()}
-                    </div>
+                    {loading && (
+                        <Grid container justify="center" alignItems="center">
+                            <CircularProgress />
+                        </Grid>
+                    )}
+                    <CSSTransition
+                        in={historyRiders.length > 0}
+                        timeout={300}
+                        classNames="animationScaleUp"
+                        unmountOnExit
+                    >
+                        <div>
+                            <br/>
+                            <div className='history__full-score'>
+                                {getTotalScore()}
+                            </div>
+                            <div className='history__riders-list'>
+                                {generateTable()}
+                            </div>
+                        </div>
+                    </CSSTransition>
                 </Paper>
             </div>
         </>
