@@ -5,6 +5,7 @@ import getToken from '../utils/getToken';
 import axios from 'axios';
 import addNotification from '../utils/addNotification';
 import { useHistory } from 'react-router-dom';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 interface IProps {
 	round: number;
@@ -42,9 +43,9 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
 }) => {
 	const [matches, setMatches] = useState([]);
 	const { push } = useHistory();
+	const [loading, setLoading] = useState<boolean>(true);
 
 	const getMatchesOfRound = async roundId => {
-		try {
 			const accessToken = getToken();
 			const options = {
 				headers: {
@@ -57,48 +58,46 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
 			);
 			setMatches([]);
 			setMatches(data);
-		} catch (e) {
-			console.log(e.response);
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
-			} else {
-				addNotification(
-					'Błąd',
-					'Nie udało się pobrać meczów z bazy',
-					'danger',
-					3000
-				);
-			}
-			throw new Error('Error in getting matches');
-		}
 	};
 
 	const generateMatches = () => {
+		console.log(round)
+		console.log(matches.length)
 		if (matches.length === 0 && round !== 0) {
 			return (
-				<>
+				<CSSTransition
+					in={matches.length >= 0}
+					timeout={300}
+					classNames="animationScaleUp"
+					unmountOnExit
+				>
 					<div>Brak danych o meczach w tej kolejce</div>
-				</>
+				</CSSTransition>
 			);
 		} else if (round !== 0) {
-			return matches.map((match, index) => {
-				return (
-					<ListMatchesMatch
+			return(
+				<TransitionGroup component={null}>
+					{matches.map(match => (
+						<CSSTransition
 						key={match._id}
-						matchId={match._id}
-						homeId={match.homeId}
-						awayId={match.awayId}
-						homeScore={match.homeScore}
-						awayScore={match.awayScore}
-						riders={riders}
-						date={match.date}
-						wasRidden={match.wasRidden}
-					/>
-				);
-			});
+						timeout={500}
+						classNames="animationScaleUp"
+						>
+							<ListMatchesMatch
+							key={match._id}
+							matchId={match._id}
+							homeId={match.homeId}
+							awayId={match.awayId}
+							homeScore={match.homeScore}
+							awayScore={match.awayScore}
+							riders={riders}
+							date={match.date}
+							wasRidden={match.wasRidden}
+							/>
+						</CSSTransition>
+					))}
+				</TransitionGroup>
+			)
 		}
 	};
 
@@ -113,7 +112,18 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
 	};
 
 	useEffect(() => {
-		getMatchesOfRound(roundId);
+		setLoading(true);
+		(async function () {
+			try {
+				await getMatchesOfRound(roundId)
+			} catch (e) {
+				const {
+					response: { data }
+				} = e;
+				addNotification('Błąd!', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
+			}
+			setLoading(false)
+		})();
 	}, []);
 
 	return (
@@ -123,7 +133,9 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
 					{generateRoundTitle()}
 				</Typography>
 				<Divider />
-				{generateMatches()}
+				{
+					generateMatches()
+				}
 			</div>
 		</>
 	);

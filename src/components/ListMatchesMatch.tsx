@@ -176,10 +176,10 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 	);
 	const [matchDateEdit, setMatchDateEdit] = useState<Date>(new Date(date));
 	const { userData } = useStateValue();
+	const [loading, setLoading] = useState<boolean>(true);
 
 	const getClub = async (clubId: string, homeAway: string) => {
 		if (homeAway === 'home') {
-			try {
 				const accessToken = getToken();
 				const options = {
 					headers: {
@@ -195,25 +195,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					name: data.name,
 					logoUrl: data.logoUrl
 				});
-			} catch (e) {
-				console.log(e.response);
-				if (e.response.statusText == 'Unauthorized') {
-					addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-					setTimeout(() => {
-						push('/login');
-					}, 3000);
-				} else {
-					addNotification(
-						'Błąd',
-						'Nie udało się pobrać gospodarza z bazy',
-						'danger',
-						3000
-					);
-				}
-				throw new Error('Error in getting home');
-			}
 		} else {
-			try {
 				const accessToken = getToken();
 				const options = {
 					headers: {
@@ -229,23 +211,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					name: data.name,
 					logoUrl: data.logoUrl
 				});
-			} catch (e) {
-				console.log(e.response);
-				if (e.response.statusText == 'Unauthorized') {
-					addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-					setTimeout(() => {
-						push('/login');
-					}, 3000);
-				} else {
-					addNotification(
-						'Błąd',
-						'Nie udało się pobrać gościa z bazy',
-						'danger',
-						3000
-					);
-				}
-				throw new Error('Error in getting away');
-			}
 		}
 	};
 
@@ -2248,8 +2213,19 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 	};
 
 	useEffect(() => {
-		getClub(homeId, 'home');
-		getClub(awayId, 'away');
+		setLoading(true);
+		(async function () {
+			try {
+				await getClub(homeId, 'home');
+				await getClub(awayId, 'away');
+			} catch (e) {
+				const {
+					response: { data }
+				} = e;
+				addNotification('Błąd!', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
+			}
+			setLoading(false)
+		})();
 	}, []);
 
 	return (
