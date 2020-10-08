@@ -476,15 +476,7 @@ const RidersList: FunctionComponent<RouteProps> = () => {
 				const {
 					response: { data }
 				} = e;
-				if (data.statusCode == 401) {
-					checkBadAuthorization(setLoggedIn, push);
-				} else {
-					const title = 'Błąd!';
-					const message = 'Nie udało się pobrać danych!';
-					const type = 'danger';
-					const duration = 1500;
-					addNotification(title, message, type, duration);
-				}
+				//upper component catching errors
 			}
 			setLoading(false);
 		})();
