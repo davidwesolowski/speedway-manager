@@ -433,7 +433,11 @@ const RidersList: FunctionComponent<RouteProps> = () => {
 			'Klub'
 		];
 		return header.map(name => {
-			return <TableCell key={name}>{name.toUpperCase()}</TableCell>;
+			return (
+				<TableCell key={name} align="center">
+					{name.toUpperCase()}
+				</TableCell>
+			);
 		});
 	};
 
@@ -492,20 +496,20 @@ const RidersList: FunctionComponent<RouteProps> = () => {
 
 	return (
 		<>
-			<div className="find-rider__search">
-				<div className="find-rider__search-phrase">
+			<div className="riders__search">
+				<div className="riders__searchPhrase">
 					<TextField
 						label="Szukaj"
 						value={phrase}
 						onChange={handleOnChangePhrase()}
-						className="find-rider__phrase"
+						className="ridersPhrase"
 					/>
 				</div>
-				<div className="find-rider__search-select1">
+				<div className="riders__searchSelect1">
 					<InputLabel id="label1">Narodowość:</InputLabel>
 					<Select
 						labelId="label1"
-						className="find-rider__select1"
+						className="riders__select1"
 						value={selects.nationality}
 						onChange={handleOnChangeSelect('nationality')}
 					>
@@ -514,11 +518,11 @@ const RidersList: FunctionComponent<RouteProps> = () => {
 						<MenuItem value="Foreigner">Obcokrajowcy</MenuItem>
 					</Select>
 				</div>
-				<div className="find-rider__search-select2">
+				<div className="riders__searchSelect2">
 					<InputLabel id="label2">Wiek:</InputLabel>
 					<Select
 						labelId="label2"
-						className="find-rider__select2"
+						className="riders__select2"
 						value={selects.age}
 						onChange={handleOnChangeSelect('age')}
 					>
