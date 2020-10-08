@@ -21,12 +21,12 @@ import TeamCreate from './TeamCreate';
 import TeamGeneral from './TeamGeneral';
 import { useStateValue } from './AppProvider';
 import { checkBadAuthorization } from '../utils/checkCookies';
-import { setUser } from '../actions/userActions';
 import TeamMatch from './TeamMatch';
 import getToken from '../utils/getToken';
 import { setTeamRiders } from '../actions/teamRidersActions';
 import fetchUserData from '../utils/fetchUserData';
 import { IRider } from './TeamRiders';
+import addNotification from '../utils/addNotification';
 
 interface ITabPanelProps {
 	children?: ReactNode;
@@ -180,18 +180,25 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 				await fetchLeagues();
 				if (!userData.username)
 					await fetchUserData(dispatchUserData, setLoggedIn, push);
-				setLoading(false);
-				setTimeout(() => {
-					document.body.style.overflow = 'auto';
-				}, 500);
 			} catch (e) {
 				const {
 					response: { data }
 				} = e;
 				if (data.statusCode == 401) {
 					checkBadAuthorization(setLoggedIn, push);
+				} else {
+					const title = 'Błąd!';
+					const message =
+						'Nie udało się pobrać informacji o drużynie!';
+					const type = 'danger';
+					const duration = 1500;
+					addNotification(title, message, type, duration);
 				}
 			}
+			setLoading(false);
+			setTimeout(() => {
+				document.body.style.overflow = 'auto';
+			}, 500);
 		})();
 	}, [updatedTeam]);
 

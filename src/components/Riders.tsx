@@ -13,7 +13,8 @@ import {
 	Grid,
 	Checkbox,
 	Select,
-	MenuItem, InputLabel
+	MenuItem,
+	InputLabel
 } from '@material-ui/core';
 import { FiPlus, FiX } from 'react-icons/fi';
 import axios from 'axios';
@@ -91,15 +92,12 @@ interface IValidatedData {
 	};
 }
 
-
 const Riders: FunctionComponent<RouteComponentProps> = ({
 	history: { push }
 }) => {
 	const { setLoggedIn, dispatchUserData, userData } = useStateValue();
 
 	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
-
-	
 
 	const defaultValidatedData = {
 		firstName: {
@@ -138,36 +136,18 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 
 	const [clubs, setClubs] = useState([]);
 
-
-
 	const getClubs = async () => {
-		try {
-			const accessToken = getToken();
-			const options = {
-				headers: {
-					Authorization: `Bearer ${accessToken}`
-				}
-			};
-			const { data } = await axios.get(
-				'https://fantasy-league-eti.herokuapp.com/clubs',
-				options
-			);
-			setClubs(data);
-		} catch (e) {
-			const {
-				response: { data }
-			} = e;
-			if (data.statusCode == 401) {
-				checkBadAuthorization(setLoggedIn, push);
-			} else {
-				addNotification(
-					'Błąd',
-					'Nie udało się pobrać klubów z bazy',
-					'danger',
-					3000
-				);
+		const accessToken = getToken();
+		const options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
 			}
-		}
+		};
+		const { data } = await axios.get(
+			'https://fantasy-league-eti.herokuapp.com/clubs',
+			options
+		);
+		setClubs(data);
 	};
 
 	const defaultRiderData = {
@@ -355,12 +335,30 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	useEffect(() => {
-		getClubs();
-		if (!userData.username)
-			fetchUserData(dispatchUserData, setLoggedIn, push);
-		setTimeout(() => {
-			document.body.style.overflow = 'auto';
-		}, 500);
+		(async function () {
+			try {
+				await getClubs();
+				if (!userData.username)
+					await fetchUserData(dispatchUserData, setLoggedIn, push);
+			} catch (e) {
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
+				} else {
+					addNotification(
+						'Błąd',
+						'Nie udało się pobrać klubów z bazy',
+						'danger',
+						3000
+					);
+				}
+			}
+			setTimeout(() => {
+				document.body.style.overflow = 'auto';
+			}, 500);
+		})();
 	}, []);
 
 	return (

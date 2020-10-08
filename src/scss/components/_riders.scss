@@ -6,7 +6,9 @@
 	align-items: center;
 	font-family: $bebas !important;
 
-	@media screen and (max-width: $bp-sm) {         grid-column: full-start / full-end;}
+	@media screen and (max-width: $bp-sm) {
+		grid-column: full-start / full-end;
+	}
 
 	&__background {
 		background-image: url('/img/warsaw_venue.jpg');
@@ -22,12 +24,13 @@
 		position: relative;
 		z-index: 1000;
 		min-width: 45vw;
-        padding: 3rem 2rem;
-        width: 90%;
-        display: block;
-        overflow: auto;
+		min-height: 85%;
+		padding: 3rem 2rem;
+		width: 90%;
+		display: block;
+		overflow: auto;
 
-        @media only screen and (max-width: $bp-md) {
+		@media only screen and (max-width: $bp-md) {
 			min-width: 85%;
 			min-height: 100%;
 			padding: 2rem 1rem;
@@ -37,7 +40,7 @@
 			min-width: 95%;
 			padding: 1rem 0.5rem;
 		}
-    }
+	}
 
 	&__header {
 		text-align: center;
@@ -58,6 +61,64 @@
 	&__fix {
 		float: right !important;
 		size: x-large !important;
+	}
+
+	&__search {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: $s-margin;
+	}
+
+	&__select2 {
+		@media only screen and (max-width: $bp-md) {
+			width: 100%;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			width: 100%;
+		}
+	}
+
+	&__searchPhrase {
+		width: 40%;
+		float: left;
+
+		@media only screen and (max-width: $bp-md) {
+			width: 100%;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			width: 100%;
+		}
+	}
+
+	&__searchSelect1 {
+		width: 30%;
+		float: right;
+		margin-top: 1%;
+
+		@media only screen and (max-width: $bp-md) {
+			width: 40%;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			width: 40%;
+		}
+	}
+
+	&__searchSelect2 {
+		width: 20%;
+		float: left !important;
+		margin-top: 1%;
+
+		@media only screen and (max-width: $bp-md) {
+			width: 40%;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			width: 40%;
+		}
 	}
 
 	.MuiDivider-root {
@@ -97,22 +158,21 @@
 	float: right !important;
 }
 
-table{
-    width: 100%;
-    font-size: x-large;
-    border: 2px solid black;
-    text-align: center;
-    
+table {
+	width: 100%;
+	font-size: x-large;
+	border: 2px solid black;
+	text-align: center;
 
-    @media only screen and (max-width: $bp-md) {
-        font-size: medium !important;
-        padding-right: 1.25rem;
-    }
+	@media only screen and (max-width: $bp-md) {
+		font-size: medium !important;
+		padding-right: 1.25rem;
+	}
 
-    @media only screen and (max-width: $bp-sm) {
-        font-size: medium !important;
-        padding-right: 1.25rem;
-    }
+	@media only screen and (max-width: $bp-sm) {
+		font-size: medium !important;
+		padding-right: 1.25rem;
+	}
 }
 
 td {

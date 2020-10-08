@@ -80,6 +80,10 @@
 			font-size: 1.8rem !important;
 		}
 	}
+
+	&__loading {
+		min-height: 30rem;
+	}
 }
 
 .MuiInputBase-inputMultiline {

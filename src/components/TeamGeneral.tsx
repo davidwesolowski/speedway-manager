@@ -31,6 +31,7 @@ import { useStateValue } from './AppProvider';
 import { checkBadAuthorization } from '../utils/checkCookies';
 import getToken from '../utils/getToken';
 import TeamRiders from './TeamRiders';
+import { CSSTransition } from 'react-transition-group';
 
 interface IProps {
 	team: { name: string; logoUrl: string; _id: string };
@@ -198,7 +199,14 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 						<Typography className="heading-2 team-container__name">
 							Kadra:
 						</Typography>
-						<TeamRiders riders={teamRiders} />
+						<CSSTransition
+							in={teamRiders.length > 0}
+							timeout={300}
+							classNames="animationScaleUp"
+							unmountOnExit
+						>
+							<TeamRiders riders={teamRiders} />
+						</CSSTransition>
 					</div>
 				</Grid>
 			</Grid>

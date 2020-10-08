@@ -24,7 +24,8 @@ import {
 	Button,
 	Accordion,
 	AccordionSummary,
-	AccordionDetails
+	AccordionDetails,
+	CircularProgress
 } from '@material-ui/core';
 import { FaPlusCircle } from 'react-icons/fa';
 import { FiX, FiChevronDown } from 'react-icons/fi';
@@ -45,6 +46,7 @@ const defaultInput = {
 };
 
 const SelfTeaching: FunctionComponent = () => {
+	const [loading, setLoading] = useState(true);
 	const [input, setInput] = useState(defaultInput);
 	const [answersAndQuestions, setAnswersAndQuestions] = useState<
 		IAnswerAndQuestion[]
@@ -100,6 +102,7 @@ const SelfTeaching: FunctionComponent = () => {
 	};
 
 	useEffect(() => {
+		setLoading(true);
 		const checkIfUserLoggedIn = async () => {
 			const cookiesExist = checkCookies();
 			if (cookiesExist && !userData.username) {
@@ -118,31 +121,33 @@ const SelfTeaching: FunctionComponent = () => {
 			setAnswersAndQuestions(fetchedData);
 		};
 
-		try {
-			checkIfUserLoggedIn();
-			fetchFAQs();
-		} catch (e) {
-			const {
-				response: { data }
-			} = e;
-			const title = 'Błąd!';
-			const type = 'danger';
-			const duration = 1000;
-			if (data.statusCode == 401) {
-				const message = 'Sesja wygasła!';
-				const cookies = new Cookies();
-				cookies.remove('accessToken');
-				addNotification(title, message, type, duration);
-				setLoggedIn(false);
-			} else {
-				const message = 'Nie można wczytać FAQs!';
-				addNotification(title, message, type, duration);
+		(async function () {
+			try {
+				await checkIfUserLoggedIn();
+				await fetchFAQs();
+			} catch (e) {
+				const {
+					response: { data }
+				} = e;
+				const title = 'Błąd!';
+				const type = 'danger';
+				const duration = 1000;
+				if (data.statusCode == 401) {
+					const message = 'Sesja wygasła!';
+					const cookies = new Cookies();
+					cookies.remove('accessToken');
+					addNotification(title, message, type, duration);
+					setLoggedIn(false);
+				} else {
+					const message = 'Nie można wczytać FAQs!';
+					addNotification(title, message, type, duration);
+				}
 			}
-		}
-
-		setTimeout(() => {
-			document.body.style.overflow = 'auto';
-		}, 2000);
+			setLoading(false);
+			setTimeout(() => {
+				document.body.style.overflow = 'auto';
+			}, 2000);
+		})();
 	}, []);
 
 	return (
@@ -157,6 +162,16 @@ const SelfTeaching: FunctionComponent = () => {
 									<FaPlusCircle className="selfTeaching__icon" />
 								</IconButton>
 							</Grid>
+						</Grid>
+					)}
+					{loading && (
+						<Grid
+							container
+							justify="center"
+							alignItems="center"
+							className="selfTeaching__loading"
+						>
+							<CircularProgress />
 						</Grid>
 					)}
 					<Grid container className="selfTeaching__fields">

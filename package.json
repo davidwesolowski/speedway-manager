@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"start": "node server.js",
+		"start": "npm run server.js",
 		"webpack-dev-server": "webpack-dev-server",
 		"webpack": "webpack",
 		"build:dev": "npm run webpack -- --env.mode development",
@@ -12,7 +12,8 @@
 		"build:devserver": "npm run webpack-dev-server -- --env.mode development",
 		"debug": "node --inspect --inspect-brk ./node_modules/webpack/bin/webpack.js",
 		"debug:dev": "npm run debug -- --env.mode development",
-		"prod:analyze": "npm run build:prod -- --env.presets analyze"
+		"prod:analyze": "npm run build:prod -- --env.presets analyze",
+		"heroku-postbuild": "npm run build:prod"
 	},
 	"keywords": [],
 	"author": "",
