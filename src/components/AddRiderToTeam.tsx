@@ -611,7 +611,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				await getRiders();
 				await getClubs();
 				if (!userData.username)
-					fetchUserData(dispatchUserData, setLoggedIn, push);
+					await fetchUserData(dispatchUserData, setLoggedIn, push);
 				setLoading(false);
 			} catch (e) {
 				const {

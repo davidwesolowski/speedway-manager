@@ -1,9 +1,10 @@
 import { ValidationErrorItem } from '@hapi/joi';
-import { Button, Dialog, DialogContent, DialogTitle, Divider, FormControl, Grid, IconButton, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@material-ui/core';
+import { Button, CircularProgress, Dialog, DialogContent, DialogTitle, Divider, FormControl, Grid, IconButton, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@material-ui/core';
 import axios from 'axios';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { FiPlus, FiX, FiXCircle } from 'react-icons/fi';
 import { RouteComponentProps } from 'react-router-dom';
+import { CSSTransition } from 'react-transition-group';
 import { setUser } from '../actions/userActions';
 import addNotification from '../utils/addNotification';
 import { checkBadAuthorization } from '../utils/checkCookies';
@@ -60,6 +61,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
     const [addLeagueName, setAddLeagueName] = useState<string>('');
     const [addLeagueCountry, setAddLeagueCountry] = useState<string>('Polska');
     const [openDialog, setOpenDialog] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const defaultValidatedData = {
         name: {
@@ -84,7 +86,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
         setAddLeagueName('');
     }
 
-    const [tempLeagues, setTempLeagues] = useState([
+    /*const [tempLeagues, setTempLeagues] = useState([
         {
             name: 'PGE Ekstraliga',
             country: "Polska"
@@ -97,36 +99,20 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
             name: '2 liga żużlowa',
             country: 'Polska'
         }
-    ])
+    ])*/
 
     const getLeagues = async () => {
-        try {
-            const accessToken = getToken();
-            const options = {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            };
-            const { data } = await axios.get(
-                'https://fantasy-league-eti.herokuapp.com/leagues',
-                options
-            );
-            setLeagues(data);
-        } catch (e) {
-            const {
-                response: { data }
-            } = e;
-            if (data.statusCode == 401) {
-                checkBadAuthorization(setLoggedIn, push);
-            } else {
-                addNotification(
-                    'Błąd',
-                    'Nie udało się pobrać lig z bazy',
-                    'danger',
-                    3000
-                );
+        const accessToken = getToken();
+        const options = {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
             }
-        }
+        };
+        const { data } = await axios.get(
+            'https://fantasy-league-eti.herokuapp.com/leagues',
+            options
+        );
+        setLeagues(data);
     }
 
     const addLeague = async () => {
@@ -290,7 +276,23 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
     }
 
     useEffect(() => {
-        getLeagues();
+        setLoading(true);
+        (async function () {
+            try {
+                await getLeagues();
+                if (!userData.username) await fetchUserData();
+                setLoading(false);
+            } catch (e) {
+                const {
+                    response: { data }
+                } = e;
+                if (data.statusCode == 401) {
+                    checkBadAuthorization(setLoggedIn, push);
+                } else {
+                    addNotification('Błąd!', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
+                }
+            }
+        })();
     }, [])
 
     const generateDialog = () => {
@@ -356,10 +358,6 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
         )
     }
 
-    useEffect(() => {
-        if (!userData.username) fetchUserData();
-    }, [])
-
     return(
         <>
             <div className="leagues">
@@ -379,8 +377,22 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
                     </IconButton>
                     <Divider />
                     <br/>
-                    {generateTable()}
-                    {generateDialog()}
+                    {loading && (
+                        <Grid container justify="center" alignItems="center">
+                            <CircularProgress />
+                        </Grid>
+                    )}
+                    <CSSTransition
+                        in={leagues.length > 0}
+                        timeout={300}
+                        classNames="animationScaleUp"
+                        unmountOnExit
+                    >
+                        <div className="leagues-table">
+                            {generateTable()}
+                            {generateDialog()}
+                        </div>
+                    </CSSTransition>
                 </Paper>
             </div>
         </>
