@@ -11,12 +11,14 @@ import {
 	Checkbox,
 	ListItemText,
 	Grid,
-	Button
+	Button, CircularProgress
 } from '@material-ui/core';
 import addNotification from '../utils/addNotification';
 import getToken from '../utils/getToken';
 import { useStateValue } from './AppProvider';
 import fetchUserData from '../utils/fetchUserData';
+import { checkBadAuthorization } from '../utils/checkCookies';
+import { CSSTransition } from 'react-transition-group';
 
 interface IRider {
 	id: string;
@@ -36,135 +38,85 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 	const [riders, setRiders] = useState([]);
 	const [teamId, setTeamId] = useState<string>('');
 	const [teamRiders, setTeamRiders] = useState([]);
+	const [loading, setLoading] = useState<boolean>(true);
 
 	document.body.style.overflow = 'auto';
 
 	const getRiders = async () => {
-		try {
-			const accessToken = getToken();
-			const options = {
-				headers: {
-					Authorization: `Bearer ${accessToken}`
-				}
-			};
-			const { data } = await axios.get(
-				'https://fantasy-league-eti.herokuapp.com/riders',
-				options
-			);
-			setRiders([]);
-			console.log(data)
-			data.map(rider => {
-				setRiders(riders =>
-					riders.concat({
-						id: rider._id,
-						firstName: rider.firstName,
-						lastName: rider.lastName,
-						nickname: rider.nickname,
-						dateOfBirth: rider.dateOfBirth,
-						isForeigner: rider.isForeigner,
-						ksm: rider.KSM,
-						clubId: rider.clubId
-					})
-				);
-			});
-			getTeams(data);
-		} catch (e) {
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
-			} else {
-				addNotification(
-					'Błąd',
-					'Nie udało się pobrać zawodników z bazy',
-					'danger',
-					3000
-				);
+		const accessToken = getToken();
+		const options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
 			}
-			throw new Error('Error in getting riders');
-		}
+		};
+		const { data } = await axios.get(
+			'https://fantasy-league-eti.herokuapp.com/riders',
+			options
+		);
+		setRiders([]);
+		console.log(data)
+		data.map(rider => {
+			setRiders(riders =>
+				riders.concat({
+					id: rider._id,
+					firstName: rider.firstName,
+					lastName: rider.lastName,
+					nickname: rider.nickname,
+					dateOfBirth: rider.dateOfBirth,
+					isForeigner: rider.isForeigner,
+					ksm: rider.KSM,
+					clubId: rider.clubId
+				})
+			);
+		});
+		getTeams(data);
 	};
 
 	const getTeams = async riders => {
-		try {
-			const accessToken = getToken();
-			const options = {
-				headers: {
-					Authorization: `Bearer ${accessToken}`
-				}
-			};
-			const { data } = await axios.get(
-				'https://fantasy-league-eti.herokuapp.com/teams',
-				options
-			);
-			setTeamId(data[0]._id);
-			getTeamRiders(riders, data);
-		} catch (e) {
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
-			} else {
-				addNotification(
-					'Błąd',
-					'Nie udało się pobrać zawodników z bazy',
-					'danger',
-					3000
-				);
+		const accessToken = getToken();
+		const options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
 			}
-			throw new Error('Error in getting riders');
-		}
+		};
+		const { data } = await axios.get(
+			'https://fantasy-league-eti.herokuapp.com/teams',
+			options
+		);
+		setTeamId(data[0]._id);
+		getTeamRiders(riders, data);
 	};
 
 	const getTeamRiders = async (riders, team) => {
-		try {
-			const accessToken = getToken();
-			const options = {
-				headers: {
-					Authorization: `Bearer ${accessToken}`
-				}
-			};
-			const { data } = await axios.get(
-				`https://fantasy-league-eti.herokuapp.com/teams/${team[0]._id}/riders`,
-				options
-			);
-			setTeamRiders([]);
-			if (data !== undefined) {
-				data.map(tuple => {
-					setTeamRiders(teamRiders =>
-						teamRiders.concat({
-							id: tuple.rider._id,
-							firstName: tuple.rider.firstName,
-							lastName: tuple.rider.lastName,
-							nickname: tuple.rider.nickname,
-							dateOfBirth: tuple.rider.dateOfBirth,
-							isForeigner: tuple.rider.isForeigner,
-							ksm: tuple.rider.KSM,
-							clubId: tuple.rider.clubId
-						})
-					);
-				});
-				setLists(riders, data);
-			} else {
-				setLists(riders, []);
+		const accessToken = getToken();
+		const options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
 			}
-		} catch (e) {
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
-			} else {
-				addNotification(
-					'Błąd',
-					'Nie udało się pobrać zawodników z bazy',
-					'danger',
-					3000
+		};
+		const { data } = await axios.get(
+			`https://fantasy-league-eti.herokuapp.com/teams/${team[0]._id}/riders`,
+			options
+		);
+		setTeamRiders([]);
+		if (data !== undefined) {
+			data.map(tuple => {
+				setTeamRiders(teamRiders =>
+					teamRiders.concat({
+						id: tuple.rider._id,
+						firstName: tuple.rider.firstName,
+						lastName: tuple.rider.lastName,
+						nickname: tuple.rider.nickname,
+						dateOfBirth: tuple.rider.dateOfBirth,
+						isForeigner: tuple.rider.isForeigner,
+						ksm: tuple.rider.KSM,
+						clubId: tuple.rider.clubId
+					})
 				);
-			}
-			throw new Error('Error in getting riders');
+			});
+			setLists(riders, data);
+		} else {
+			setLists(riders, []);
 		}
 	};
 
@@ -653,10 +605,25 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	useEffect(() => {
-		getRiders();
-		getClubs();
-		if (!userData.username)
-			fetchUserData(dispatchUserData, setLoggedIn, push);
+		setLoading(true);
+		(async function () {
+			try {
+				await getRiders();
+				await getClubs();
+				if (!userData.username)
+					fetchUserData(dispatchUserData, setLoggedIn, push);
+				setLoading(false);
+			} catch (e) {
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
+				} else {
+					addNotification('Błąd!', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
+				}
+			}
+		})();
 	}, []);
 
 	return (
@@ -669,7 +636,19 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 					</Typography>
 					<Divider />
 					<br />
-					<Typography
+					{loading && (
+						<Grid container justify="center" alignItems="center">
+							<CircularProgress />
+						</Grid>
+					)}
+					<CSSTransition
+						in={leftForeign.length > 0 || leftPolish.length > 0 || leftU21.length > 0 || rightForeign.length > 0 || rightPolish.length > 0 || rightU21.length > 0}
+						timeout={300}
+						classNames="animationScaleUp"
+						unmountOnExit
+					>
+						<>
+						<Typography
 						variant="h3"
 						className="add-rider-to-team__type-header"
 					>
@@ -874,6 +853,8 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 					>
 						Zapisz zmiany
 					</Button>
+					</>
+					</CSSTransition>
 				</Paper>
 			</div>
 		</>
