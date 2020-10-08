@@ -180,10 +180,6 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 				await fetchLeagues();
 				if (!userData.username)
 					await fetchUserData(dispatchUserData, setLoggedIn, push);
-				setLoading(false);
-				setTimeout(() => {
-					document.body.style.overflow = 'auto';
-				}, 500);
 			} catch (e) {
 				const {
 					response: { data }
@@ -199,6 +195,10 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 					addNotification(title, message, type, duration);
 				}
 			}
+			setLoading(false);
+			setTimeout(() => {
+				document.body.style.overflow = 'auto';
+			}, 500);
 		})();
 	}, [updatedTeam]);
 

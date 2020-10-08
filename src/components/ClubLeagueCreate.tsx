@@ -298,10 +298,6 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 				await fetchClubs();
 				if (!userData.username)
 					await fetchUserData(dispatchUserData, setLoggedIn, push);
-				setLoading(false);
-				setTimeout(() => {
-					document.body.style.overflow = 'auto';
-				}, 1000);
 			} catch (e) {
 				const {
 					response: { data }
@@ -316,6 +312,10 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 					addNotification(title, message, type, duration);
 				}
 			}
+			setLoading(false);
+			setTimeout(() => {
+				document.body.style.overflow = 'auto';
+			}, 1000);
 		})();
 	}, [updateClub]);
 
