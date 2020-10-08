@@ -1,8 +1,10 @@
-import { Divider, MenuItem, Paper, Select, Typography } from '@material-ui/core';
+import { CircularProgress, Divider, Grid, MenuItem, Paper, Select, Typography } from '@material-ui/core';
 import axios from 'axios';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { CSSTransition } from 'react-transition-group';
 import { setUser } from '../actions/userActions';
+import addNotification from '../utils/addNotification';
 import { checkBadAuthorization } from '../utils/checkCookies';
 import getToken from '../utils/getToken';
 import { useStateValue } from './AppProvider';
@@ -55,12 +57,15 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
     const [owns, setOwns] = useState([]);
     const [participates, setParticipates] = useState([]);
     const [rankingUsers, setRankingUsers] = useState<IRankingUser[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const handleOnChangeSelect = () => event => {
         event.persist();
         if(event.target){
+            setLoading(true);
             setSelectedRanking(event.target.value);
             getRankingUsersList(event.target.value);
+            setLoading(false);
         }
     }
 
@@ -72,7 +77,6 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
                 Authorization: `Bearer ${accessToken}`
             }
         };
-        try {
             const {
                 data
             } = await axios.get(
@@ -81,14 +85,6 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
             );
             setOwns(data.owns);
             setParticipates(data.participates);
-        } catch (e) {
-            const {
-                response: { data }
-            } = e;
-            if (data.statusCode == 401) {
-                checkBadAuthorization(setLoggedIn, push);
-            }
-        }
     }
 
     const generateOwnedRankingsSelect = () => {
@@ -127,7 +123,6 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
                 Authorization: `Bearer ${accessToken}`
             }
         };
-        try {
             const {
                 data
             } = await axios.get(
@@ -147,14 +142,6 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
                     })
                 );
             });
-        } catch (e) {
-            const {
-                response: { data }
-            } = e;
-            if (data.statusCode == 401) {
-                checkBadAuthorization(setLoggedIn, push);
-            }
-        }
     }
 
     const generateRankingTable = () => {
@@ -170,9 +157,24 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
     }
 
     useEffect(() => {
-        if (!userData.username) fetchUserData();
-        getUserRankings();
-        getRankingUsersList('global');
+        setLoading(true);
+        (async function () {
+            try {
+                await getUserRankings();
+                await getRankingUsersList('global');
+                if (!userData.username) await fetchUserData();
+                setLoading(false);
+            } catch (e) {
+                const {
+                    response: { data }
+                } = e;
+                if (data.statusCode == 401) {
+                    checkBadAuthorization(setLoggedIn, push);
+                } else {
+                    addNotification('Błąd!', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
+                }
+            }
+        })();
     }, [])
 
     return(
@@ -189,11 +191,23 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
                     <Divider />
                     <br/>
                     <Select value={selectedRanking || 'global'} onChange={handleOnChangeSelect()}>
-                        <MenuItem key='global' value='global'>Ranking globalny</MenuItem>
-                        {generateOwnedRankingsSelect()}
-                        {generateParticipatedRankingsSelect()}
-                    </Select>
-                    {generateRankingTable()}
+                            <MenuItem key='global' value='global'>Ranking globalny</MenuItem>
+                            {generateOwnedRankingsSelect()}
+                            {generateParticipatedRankingsSelect()}
+                        </Select>
+                    {loading && (
+                        <Grid container justify="center" alignItems="center">
+                            <CircularProgress />
+                        </Grid>
+                    )}
+                    <CSSTransition
+                        in={rankingUsers.length > 0}
+                        timeout={300}
+                        classNames="animationScaleUp"
+                        unmountOnExit
+                    >
+                        {generateRankingTable()}
+                    </CSSTransition>
                 </Paper>
             </div>
         </>
