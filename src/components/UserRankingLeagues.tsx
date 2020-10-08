@@ -1,9 +1,10 @@
 import { ValidationErrorItem } from '@hapi/joi';
-import { Button, Dialog, DialogContent, DialogTitle, Divider, FormControl, Grid, IconButton, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@material-ui/core';
+import { Button, CircularProgress, Dialog, DialogContent, DialogTitle, Divider, FormControl, Grid, IconButton, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@material-ui/core';
 import axios from 'axios';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { FiPlus, FiX, FiXCircle } from 'react-icons/fi';
 import { RouteComponentProps } from 'react-router-dom';
+import { CSSTransition } from 'react-transition-group';
 import { setUser } from '../actions/userActions';
 import addNotification from '../utils/addNotification';
 import { checkBadAuthorization } from '../utils/checkCookies';
@@ -72,6 +73,7 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
     const [owns, setOwns] = useState([]);
     const [participates, setParticipates] = useState([]);
     const [addUserLeagueMainLeague, setAddUserLeagueMainLeague] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(true);
 
     const [validatedData, setValidatedData] = useState<IValidatedData>(defaultValidatedData);
 
@@ -93,35 +95,19 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
 
     //Jedna lub dwie funkcje w zaleznosci od backendu
     const getUserLeagues = async () => {
-        try {
-            const accessToken = getToken();
-            const options = {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            };
-            const { data } = await axios.get(
-                'https://fantasy-league-eti.herokuapp.com/rankings',
-                options
-            );
-            console.log(data);
-            setOwns(data.owns);
-            setParticipates(data.participates);
-        } catch (e) {
-            const {
-                response: { data }
-            } = e;
-            if (data.statusCode == 401) {
-                checkBadAuthorization(setLoggedIn, push);
-            } else {
-                addNotification(
-                    'Błąd',
-                    'Nie udało się usunąć ligi z bazy',
-                    'danger',
-                    3000
-                );
+        const accessToken = getToken();
+        const options = {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
             }
-        }
+        };
+        const { data } = await axios.get(
+            'https://fantasy-league-eti.herokuapp.com/rankings',
+            options
+        );
+        console.log(data);
+        setOwns(data.owns);
+        setParticipates(data.participates);
     }
 
     const addUserLeague = async () => {
@@ -299,7 +285,22 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
     }
 
     useEffect(() => {
-        getUserLeagues()
+        setLoading(true);
+        (async function () {
+            try {
+                await getUserLeagues();
+                setLoading(false);
+            } catch (e) {
+                const {
+                    response: { data }
+                } = e;
+                if (data.statusCode == 401) {
+                    checkBadAuthorization(setLoggedIn, push);
+                } else {
+                    addNotification('Błąd', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
+                }
+            }
+        })();
     }, [])
 
     const generateDialog = () => {
@@ -388,8 +389,22 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
                     </IconButton>
                     <Divider />
                     <br/>
-                    {generateTable()}
-                    {generateDialog()}
+                    {loading && (
+                        <Grid container justify="center" alignItems="center">
+                            <CircularProgress />
+                        </Grid>
+                    )}
+                    <CSSTransition
+                        in={owns.length > 0 || participates.length > 0}
+                        timeout={300}
+                        classNames="animationScaleUp"
+                        unmountOnExit
+                    >
+                        <div>
+                            {generateTable()}
+                            {generateDialog()}
+                        </div>
+                    </CSSTransition>
                 </Paper>
             </div>
         </>
