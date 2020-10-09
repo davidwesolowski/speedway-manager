@@ -11,7 +11,8 @@ import {
 	Checkbox,
 	ListItemText,
 	Grid,
-	Button
+	Button,
+	Avatar
 } from '@material-ui/core';
 import addNotification from '../utils/addNotification';
 import getToken from '../utils/getToken';
@@ -20,12 +21,15 @@ import fetchUserData from '../utils/fetchUserData';
 import { checkBadAuthorization } from '../utils/checkCookies';
 
 interface IRider {
-	id: string;
+	_id: string;
 	firstName: string;
 	lastName: string;
 	nickname: string;
 	dateOfBirth: string;
 	isForeigner: boolean;
+	age: string;
+	nationality: string;
+	image: string;
 	ksm: number;
 	club: string;
 }
@@ -53,21 +57,31 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				options
 			);
 			setRiders([]);
-			data.map(rider => {
-				setRiders(riders =>
-					riders.concat({
-						id: rider._id,
-						firstName: rider.firstName,
-						lastName: rider.lastName,
-						nickname: rider.nickname,
-						dateOfBirth: rider.dateOfBirth,
-						isForeigner: rider.isForeigner,
-						ksm: rider.KSM,
-						clubId: rider.clubId
-					})
-				);
+			const newRiders = data.map(rider => {
+				const riderAgeYear = new Date(rider.dateOfBirth).getFullYear();
+				const currentYear = new Date().getFullYear();
+				const diffYear = currentYear - riderAgeYear;
+				const age =
+					diffYear <= 21 ? 'U21' : diffYear <= 23 ? 'U23' : 'Senior';
+				const nationality = rider.isForeigner
+					? 'Zagraniczny'
+					: 'Krajowy';
+				return {
+					_id: rider._id,
+					firstName: rider.firstName,
+					lastName: rider.lastName,
+					nickname: rider.nickname,
+					dateOfBirth: rider.dateOfBirth,
+					isForeigner: rider.isForeigner,
+					ksm: rider.KSM,
+					image: rider.image,
+					clubId: rider.clubId,
+					age,
+					nationality
+				};
 			});
-			getTeams(data);
+			setRiders(newRiders);
+			getTeams(newRiders);
 		} catch (e) {
 			const {
 				response: { data }
@@ -131,18 +145,35 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 			setTeamRiders([]);
 			if (data !== undefined) {
 				data.map(tuple => {
-					setTeamRiders(teamRiders =>
-						teamRiders.concat({
-							id: tuple.rider._id,
+					setTeamRiders(teamRiders => {
+						const riderAgeYear = new Date(
+							tuple.rider.dateOfBirth
+						).getFullYear();
+						const currentYear = new Date().getFullYear();
+						const diffYear = currentYear - riderAgeYear;
+						const age =
+							diffYear <= 21
+								? 'U21'
+								: diffYear <= 23
+								? 'U23'
+								: 'Senior';
+						const nationality = tuple.rider.isForeigner
+							? 'Zagraniczny'
+							: 'Krajowy';
+						return teamRiders.concat({
+							_id: tuple.rider._id,
 							firstName: tuple.rider.firstName,
 							lastName: tuple.rider.lastName,
 							nickname: tuple.rider.nickname,
 							dateOfBirth: tuple.rider.dateOfBirth,
 							isForeigner: tuple.rider.isForeigner,
 							ksm: tuple.rider.KSM,
-							clubId: tuple.rider.clubId
-						})
-					);
+							image: tuple.rider.image,
+							clubId: tuple.rider.clubId,
+							age,
+							nationality
+						});
+					});
 				});
 				setLists(riders, data);
 			} else {
@@ -587,7 +618,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				}
 			};
 			const { data } = await axios.delete(
-				`https://fantasy-league-eti.herokuapp.com/teams/${teamId}/riders/${rider.id}`,
+				`https://fantasy-league-eti.herokuapp.com/teams/${teamId}/riders/${rider._id}`,
 				options
 			);
 		} catch (e) {
@@ -619,7 +650,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				return val.id;
 			});
 			const deleteRiders = teamRiders.filter(
-				rider => !chosenRidersIDs.includes(rider.id)
+				rider => !chosenRidersIDs.includes(rider._id)
 			);
 			const newRiders = chosenRiders.filter(
 				rider => !teamRidersIDs.includes(rider._id)
