@@ -677,10 +677,15 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 						alignItems="center"
 						className="list-container"
 					>
-						<Grid item>
+						<Grid
+							item
+							xs={12}
+							lg={5}
+							style={{ alignSelf: 'flex-start' }}
+						>
 							{customList(leftPolish, 'Polish', 'Left')}
 						</Grid>
-						<Grid item>
+						<Grid item xs={2}>
 							<Grid
 								container
 								direction="column"
@@ -722,7 +727,12 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 								</Button>
 							</Grid>
 						</Grid>
-						<Grid item>
+						<Grid
+							item
+							xs={12}
+							lg={5}
+							style={{ alignSelf: 'flex-start' }}
+						>
 							{customList(rightPolish, 'Polish', 'Right')}
 						</Grid>
 					</Grid>
@@ -742,8 +752,15 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 						alignItems="center"
 						className="list-container"
 					>
-						<Grid item>{customList(leftU21, 'U21', 'Left')}</Grid>
-						<Grid item>
+						<Grid
+							item
+							xs={12}
+							lg={5}
+							style={{ alignSelf: 'flex-start' }}
+						>
+							{customList(leftU21, 'U21', 'Left')}
+						</Grid>
+						<Grid item xs={2}>
 							<Grid
 								container
 								direction="column"
@@ -785,7 +802,14 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 								</Button>
 							</Grid>
 						</Grid>
-						<Grid item>{customList(rightU21, 'U21', 'Right')}</Grid>
+						<Grid
+							item
+							xs={12}
+							lg={5}
+							style={{ alignSelf: 'flex-start' }}
+						>
+							{customList(rightU21, 'U21', 'Right')}
+						</Grid>
 					</Grid>
 					<br />
 					<br />
@@ -803,10 +827,15 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 						alignItems="center"
 						className="list-container"
 					>
-						<Grid item>
+						<Grid
+							item
+							xs={12}
+							lg={5}
+							style={{ alignSelf: 'flex-start' }}
+						>
 							{customList(leftForeign, 'Foreign', 'Left')}
 						</Grid>
-						<Grid item>
+						<Grid item xs={2}>
 							<Grid
 								container
 								direction="column"
@@ -850,7 +879,12 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 								</Button>
 							</Grid>
 						</Grid>
-						<Grid item>
+						<Grid
+							item
+							xs={12}
+							lg={5}
+							style={{ alignSelf: 'flex-start' }}
+						>
 							{customList(rightForeign, 'Foreign', 'Right')}
 						</Grid>
 					</Grid>
