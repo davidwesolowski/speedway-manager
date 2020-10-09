@@ -441,6 +441,49 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
+	const customRider = (rider: IRider, checked, type) => {
+		return (
+			<Fragment key={rider._id}>
+				<ListItem
+					role="listitem"
+					button
+					onClick={handleToggle(rider, type)}
+				>
+					<Grid
+						container
+						justify="space-evenly"
+						alignItems="center"
+						className="team-match-container__rider"
+					>
+						<Grid item xs={1}>
+							<Checkbox
+								checked={checked.indexOf(rider) !== -1}
+								tabIndex={-1}
+								disableRipple
+							/>
+						</Grid>
+						<Grid item xs={1}>
+							<Avatar src={rider.image} alt="rider-avatar" />
+						</Grid>
+						<Grid item xs={2}>
+							{`${rider.firstName} ${rider.lastName}`}
+						</Grid>
+						<Grid item xs={2}>
+							{rider.nationality}
+						</Grid>
+						<Grid item xs={1}>
+							{rider.age}
+						</Grid>
+						<Grid item xs={1}>
+							{rider.ksm}
+						</Grid>
+					</Grid>
+				</ListItem>
+				<Divider />
+			</Fragment>
+		);
+	};
+
 	const customList = (items, type, side) => {
 		return (
 			<Paper className="list-paper">
