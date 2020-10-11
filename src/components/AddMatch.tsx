@@ -1338,8 +1338,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 						filtered.clubId === clubId &&
 						isU23(
 							filtered.dateOfBirth
-						) /* &&
-            !isChosen(filtered.id, 8, homeAway)*/
+						)
 				)
 				.map((rider, index) => {
 					return (
@@ -1354,7 +1353,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 					filtered =>
 						filtered.clubId === clubId &&
 						isU21(filtered.dateOfBirth) &&
-						!filtered.isForeigner /* && (!isChosen(filtered.id, 7, homeAway) || !isChosen(filtered.id, 6, homeAway))*/
+						!filtered.isForeigner
 				)
 				.map((rider, index) => {
 					return (
@@ -1368,8 +1367,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 				.filter(
 					filtered =>
 						filtered.clubId ==
-						clubId /* &&
-                (!isChosen(filtered.id, 1, homeAway) || !isChosen(filtered.id, 2, homeAway) || !isChosen(filtered.id, 3, homeAway) || !isChosen(filtered.id, 4, homeAway) || !isChosen(filtered.id, 5, homeAway))*/
+						clubId
 				)
 				.map((rider, index) => {
 					return (
@@ -2030,7 +2028,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	const handleOnSubmit = () => {
-		//setDataToValidationFunc();
 		const validationResponse = validateMatchPointsData(dataToValidation);
 		if (validationResponse.error) {
 			setValidatedPoints(() => defaultValidatedPoints);
@@ -2201,7 +2198,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									</Grid>
 									<Grid item xs={12}>
 										<Button
-											className="number-dialog__button"
+											className="btn dialog__form_button"
 											onClick={handleOnSubmitRound}
 										>
 											Dodaj

@@ -127,3 +127,25 @@
 #roundLabel{
     font-size: large;
 }
+
+.number-dialog{
+    &__fix{
+        float: right;
+    }
+
+    &__header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__title{
+        font-family: "Bebas Neue", cursive !important;
+    }
+
+    &__form-field-date{
+        margin-top: 10px !important;
+		font-size: large !important;
+		width: 100%;
+    }
+}
