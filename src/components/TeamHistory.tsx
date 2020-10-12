@@ -6,6 +6,7 @@ import { CSSTransition } from 'react-transition-group';
 import { setUser } from '../actions/userActions';
 import addNotification from '../utils/addNotification';
 import { checkBadAuthorization } from '../utils/checkCookies';
+import fetchUserData from '../utils/fetchUserData';
 import getToken from '../utils/getToken';
 import { useStateValue } from './AppProvider';
 
@@ -17,36 +18,9 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
 		userData,
     } = useStateValue();
 
-    const fetchUserData = async () => {
-        const accessToken = getToken();
-		const options = {
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		};
-        try {
-            const {
-                data: { username, email, avatarUrl }
-            } = await axios.get(
-                'https://fantasy-league-eti.herokuapp.com/users/self',
-                options
-            );
-            dispatchUserData(setUser({ username, email, avatarUrl }));
-            setLoggedIn(true);
-        } catch (e) {
-            const {
-                response: { data }
-            } = e;
-            if (data.statusCode == 401) {
-                checkBadAuthorization(setLoggedIn, push);
-            }
-        }
-    };
-
     const [rounds, setRounds] = useState([]);
     const [selectedRound, setSelectedRound] = useState<string>('');
     const [historyRiders, setHistoryRiders] = useState([]);
-    const [updatedRiders, setUpdatedRiders] = useState<boolean>(true);
     const [team, setTeam] = useState([]);
     const [historyResults, setHistoryResults] = useState([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -89,6 +63,7 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
             setHistoryRiders((results.find((result) => result.round._id === round)).riders);
         } else {
             setHistoryRiders([])
+            //Tutaj pobranie wszystkich wyników
         }
     }
 
@@ -135,7 +110,6 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
                             <TableCell>Imię</TableCell>
                             <TableCell>Nazwisko</TableCell>
                             <TableCell>KSM</TableCell>
-                            {/* <TableCell>Klub</TableCell> */}
                             <TableCell>Wynik</TableCell>
                         </TableRow>
                     </TableHead>
@@ -146,7 +120,6 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
                                 <TableCell>{rider.firstName}</TableCell>
                                 <TableCell>{rider.lastName}</TableCell>
                                 <TableCell>{rider.KSM}</TableCell>
-                                {/*<TableCell>{rider.club}</TableCell>*/}
                                 <TableCell>{rider.score}</TableCell>
                             </TableRow>
                         ))}
@@ -205,8 +178,7 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
             try {
                 await getRounds();
                 await getTeam();
-                if (!userData.username) await fetchUserData();
-                setLoading(false);
+                if (!userData.username) await fetchUserData(dispatchUserData, setLoggedIn, push);
             } catch (e) {
                 const {
                     response: { data }
@@ -217,6 +189,7 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
                     addNotification('Błąd!', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
                 }
             }
+            setLoading(false);
         })();
         //postToUpdateAssigns();
         setTimeout(() => {
