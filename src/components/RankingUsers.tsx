@@ -3,9 +3,9 @@ import axios from 'axios';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
-import { setUser } from '../actions/userActions';
 import addNotification from '../utils/addNotification';
 import { checkBadAuthorization } from '../utils/checkCookies';
+import fetchUserData from '../utils/fetchUserData';
 import getToken from '../utils/getToken';
 import { useStateValue } from './AppProvider';
 import RankingUsersList from './RankingUsersList';
@@ -27,32 +27,6 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
 		userData,
     } = useStateValue();
 
-    const fetchUserData = async () => {
-        const accessToken = getToken();
-		const options = {
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		};
-        try {
-            const {
-                data: { username, email, avatarUrl }
-            } = await axios.get(
-                'https://fantasy-league-eti.herokuapp.com/users/self',
-                options
-            );
-            dispatchUserData(setUser({ username, email, avatarUrl }));
-            setLoggedIn(true);
-        } catch (e) {
-            const {
-                response: { data }
-            } = e;
-            if (data.statusCode == 401) {
-                checkBadAuthorization(setLoggedIn, push);
-            }
-        }
-    };
-
     const [selectedRanking, setSelectedRanking] = useState<string>('');
     const [owns, setOwns] = useState([]);
     const [participates, setParticipates] = useState([]);
@@ -70,7 +44,6 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
     }
 
     const getUserRankings = async () => {
-        //Do pobrania listy rankingów użytkownika + globalnego
         const accessToken = getToken();
         const options = {
             headers: {
@@ -88,7 +61,6 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
     }
 
     const generateOwnedRankingsSelect = () => {
-        //Do wygenerowania MenuItems z pobranej listy rankingów użytkownika + globalnego
         if(owns){
             return owns.map((ranking, index) => {
                 return (
@@ -115,8 +87,6 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
     }
 
     const getRankingUsersList = async (rankingId) => {
-        //Do pobierania uzytkownikow umiejscowionych w rankingu
-        //setRankingUsers()
         const accessToken = getToken();
         const options = {
             headers: {
@@ -145,8 +115,6 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
     }
 
     const generateRankingTable = () => {
-        //Do wygenerowania komponentu RankingUsersList na podstawie odpowiedniej listy userów
-        //RankingUserList
         if(rankingUsers){
             return(
                 <RankingUsersList
@@ -162,8 +130,7 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
             try {
                 await getUserRankings();
                 await getRankingUsersList('global');
-                if (!userData.username) await fetchUserData();
-                setLoading(false);
+                if (!userData.username) await fetchUserData(dispatchUserData, setLoggedIn, push);
             } catch (e) {
                 const {
                     response: { data }
@@ -174,6 +141,7 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
                     addNotification('Błąd!', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
                 }
             }
+            setLoading(false);
         })();
     }, [])
 
