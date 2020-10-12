@@ -2,13 +2,15 @@ import React, { Component, FunctionComponent, useEffect, useState } from 'react'
 import { FiX, FiXCircle, FiPlus } from 'react-icons/fi';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
-import { IconButton, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@material-ui/core';
+import { CircularProgress, Grid, IconButton, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@material-ui/core';
 import addNotification from '../utils/addNotification';
 import getToken from '../utils/getToken';
 import checkAdminRole from '../utils/checkAdminRole';
 import { RouteComponentProps, RouteProps, useHistory } from 'react-router-dom';
 import { useStateValue } from './AppProvider';
 import { checkBadAuthorization, checkCookies } from '../utils/checkCookies';
+import { CSSTransition } from 'react-transition-group';
+import fetchUserData from '../utils/fetchUserData';
 
 interface ISelect {
 	nationality: string;
@@ -29,6 +31,7 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 	const [riders, setRiders] = useState([]);
 	const isAdmin = checkAdminRole(userData.role) && checkCookies();
 	const [filteredRiders, setFilteredRiders] = useState([]);
+	const [loading, setLoading] = useState<boolean>(true);
 
 	const deleteRiders = async (id) => {
 		try {
@@ -333,7 +336,7 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 						<TableCell>{ifJunior(data_urodzenia)}</TableCell>
 						<TableCell>{findClubName(klubId)}</TableCell>
 						<TableCell>
-							{isAdmin && <IconButton onClick={(event: React.MouseEvent<HTMLElement>) => {
+							{isAdmin && <IconButton className="riders-list__delete-rider-button" onClick={(event: React.MouseEvent<HTMLElement>) => {
 								deleteRiders(id)
 							}}>
 								<FiXCircle />
@@ -373,7 +376,7 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 						<TableCell>{ifJunior(data_urodzenia)}</TableCell>
 						<TableCell>{findClubName(klubId)}</TableCell>
 						<TableCell>
-							{isAdmin ? <IconButton onClick={(event: React.MouseEvent<HTMLElement>) => {
+							{isAdmin ? <IconButton className="riders-list__delete-rider-button" onClick={(event: React.MouseEvent<HTMLElement>) => {
 								deleteRiders(id)
 							}}>
 								<FiXCircle />
@@ -383,7 +386,6 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 				);
 			});
 		} else {
-			console.log(filteredRiders)
 			return filteredRiders
 				.filter(rider =>
 					(
@@ -422,7 +424,7 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 						<TableCell>{ifJunior(data_urodzenia)}</TableCell>
 						<TableCell>{findClubName(klubId)}</TableCell>
 						<TableCell>
-							{isAdmin ? <IconButton onClick={(event: React.MouseEvent<HTMLElement>) => {
+							{isAdmin ? <IconButton className="riders-list__delete-rider-button" onClick={(event: React.MouseEvent<HTMLElement>) => {
 								deleteRiders(id)
 							}}>
 								<FiXCircle />
@@ -460,6 +462,7 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 		event: React.ChangeEvent<HTMLInputElement>
 	) => {
 		event.persist();
+		console.log(filteredRiders);
 		if (event.target) {
 			setPhrase(event.target.value);
 		}
@@ -476,8 +479,24 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 	};
 
 	useEffect(() => {
-		getRiders();
-		getClubs();
+		setLoading(true);
+        (async function () {
+            try {
+                await getRiders();
+                await getClubs();
+                if (!userData.username) await fetchUserData(dispatchUserData, setLoggedIn, push);
+            } catch (e) {
+                const {
+                    response: { data }
+                } = e;
+                if (data.statusCode == 401) {
+                    checkBadAuthorization(setLoggedIn, push);
+                } else {
+                    addNotification('Błąd!', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
+                }
+			}
+			setLoading(false);
+        })();
 	}, [])
 	
 	useEffect(() => {
@@ -526,19 +545,31 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 						</div>
 					</div>
 		<div className='riders-list-div'>
-			<TableContainer>
-				<Table id='riders-list'>
-					<TableHead>
-						<TableRow>
-							{renderTableHeader()}
-							{isAdmin ? <TableCell>USUŃ</TableCell> : null}
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{renderTableData()}
-					</TableBody>
-				</Table>
-			</TableContainer>
+			{loading && (
+				<Grid container justify="center" alignItems="center">
+					<CircularProgress />
+				</Grid>
+			)}
+			<CSSTransition
+				in={riders.length > 0}
+				timeout={300}
+				classNames="animationScaleUp"
+				unmountOnExit
+			>
+				<TableContainer>
+					<Table id='riders-list'>
+						<TableHead>
+							<TableRow>
+								{renderTableHeader()}
+								{isAdmin ? <TableCell>USUŃ</TableCell> : null}
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{renderTableData()}
+						</TableBody>
+					</Table>
+				</TableContainer>
+			</CSSTransition>
 		</div>
 		</>
 	)
