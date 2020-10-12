@@ -40,7 +40,18 @@
 		font-family: $bebas !important;
 		margin-bottom: $xs-margin !important;
 		letter-spacing: 1px !important;
-    }
+	}
+	
+	&__fiplus{
+		float: right;
+		font-size: x-large !important;
+		color: green !important;
+	}
+
+	&__delete-button{
+		font-size: x-large !important;
+		color: red !important;
+	}
 }
 
 .user-leagues-table{
@@ -68,4 +79,20 @@
 	.MuiTable-root {
 		border: 1px solid $color-primary;
 	}
+}
+
+.user-leagues-dialog{
+	&__fix{
+        float: right;
+    }
+
+    &__header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__title{
+        font-family: "Bebas Neue", cursive !important;
+    }
 }

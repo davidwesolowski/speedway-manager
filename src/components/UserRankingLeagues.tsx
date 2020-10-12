@@ -5,9 +5,9 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { FiPlus, FiX, FiXCircle } from 'react-icons/fi';
 import { RouteComponentProps } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
-import { setUser } from '../actions/userActions';
 import addNotification from '../utils/addNotification';
 import { checkBadAuthorization } from '../utils/checkCookies';
+import fetchUserData from '../utils/fetchUserData';
 import getToken from '../utils/getToken';
 import validateUserLeagueData from '../validation/validateUserLeagueData';
 import { useStateValue } from './AppProvider';
@@ -31,32 +31,6 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
 		userData,
     } = useStateValue();
 
-    const fetchUserData = async () => {
-        const accessToken = getToken();
-		const options = {
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		};
-        try {
-            const {
-                data: { username, email, avatarUrl }
-            } = await axios.get(
-                'https://fantasy-league-eti.herokuapp.com/users/self',
-                options
-            );
-            dispatchUserData(setUser({ username, email, avatarUrl }));
-            setLoggedIn(true);
-        } catch (e) {
-            const {
-                response: { data }
-            } = e;
-            if (data.statusCode == 401) {
-                checkBadAuthorization(setLoggedIn, push);
-            }
-        }
-    };
-
     const defaultValidatedData = {
         name: {
             message: '',
@@ -77,12 +51,6 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
 
     const [validatedData, setValidatedData] = useState<IValidatedData>(defaultValidatedData);
 
-    const [tempLeagues, setTempLeagues] = useState([
-        {name: "Liga 1", mainLeague: "Glowna 1", owner: "Wlasciciel 1"},
-        {name: "Liga 2", mainLeague: "Glowna 2", owner: "Wlasciciel 2"},
-        {name: "Liga 3", mainLeague: "Glowna 3", owner: "Wlasciciel 3"}
-    ])
-
     const handleOpenDialog = () => {
         setOpenDialog(true);
     }
@@ -93,7 +61,6 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
         setAddUserLeagueMainLeague('');
     }
 
-    //Jedna lub dwie funkcje w zaleznosci od backendu
     const getUserLeagues = async () => {
         const accessToken = getToken();
         const options = {
@@ -105,7 +72,6 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
             'https://fantasy-league-eti.herokuapp.com/rankings',
             options
         );
-        console.log(data);
         setOwns(data.owns);
         setParticipates(data.participates);
     }
@@ -201,7 +167,7 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
 							onClick={(event: React.MouseEvent<HTMLElement>) => {
 								deleteUserLeague(league._id);
 							}}
-							className="delete-button"
+							className="user-leagues__delete-button"
 						>
 							<FiXCircle />
 						</IconButton>
@@ -254,8 +220,7 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
 
     const handleOnSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        console.log("SUBMIT");
-        const validationResponse = validateUserLeagueData({name: addUserLeagueName, mainLeague: addUserLeagueMainLeague});
+        const validationResponse = validateUserLeagueData({name: addUserLeagueName});
         if (validationResponse.error){
             setValidatedData(() => defaultValidatedData);
             validationResponse.error.details.forEach(
@@ -277,19 +242,12 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
         }
     }
 
-    const handleOnChangeMainLeague = () => event => {
-        event.persist();
-        if(event.target){
-            setAddUserLeagueMainLeague(event.target.value);
-        }
-    }
-
     useEffect(() => {
         setLoading(true);
         (async function () {
             try {
                 await getUserLeagues();
-                setLoading(false);
+                if(!userData.username) fetchUserData(dispatchUserData, setLoggedIn, push);
             } catch (e) {
                 const {
                     response: { data }
@@ -300,6 +258,7 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
                     addNotification('Błąd', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
                 }
             }
+            setLoading(false);
         })();
     }, [])
 
@@ -336,22 +295,10 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
                                                 onChange={handleOnChangeName()}
                                             />
                                         </FormControl>
-                                        {/* <FormControl className="user-leagues-dialog__select-field">
-                                            Główna liga:
-                                            <Select
-                                                value={addUserLeagueMainLeague || ''}
-                                                onChange={handleOnChangeMainLeague()}
-                                            >
-                                                <MenuItem value="Polska">Polska</MenuItem>
-                                                <MenuItem value="Wielka Brytania">Wielka Brytania</MenuItem>
-                                                <MenuItem value="Szwecja">Szwecja</MenuItem>
-                                                <MenuItem value="Dania">Dania</MenuItem>
-                                            </Select>
-                                        </FormControl> */}
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Button
-                                            className="btn user-leagues-dialog__form_button"
+                                            className="btn dialog__form_button"
                                             type="submit"
                                         >
                                             Dodaj
@@ -366,10 +313,6 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
         )
     }
 
-    useEffect(() => {
-        if (!userData.username) fetchUserData();
-    }, [])
-
     return(
         <>
             <div className="user-leagues">
@@ -381,14 +324,14 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
                     >
                         Moje Ligi
                     </Typography>
+                    <Divider />
+                    <br/>
                     <IconButton
                         onClick={handleOpenDialog}
                         className="user-leagues__fiplus"
                     >
                         <FiPlus />
                     </IconButton>
-                    <Divider />
-                    <br/>
                     {loading && (
                         <Grid container justify="center" alignItems="center">
                             <CircularProgress />
