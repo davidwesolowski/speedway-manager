@@ -54,7 +54,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 			options
 		);
 		setRiders([]);
-		console.log(data)
 		data.map(rider => {
 			setRiders(riders =>
 				riders.concat({

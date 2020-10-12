@@ -5,9 +5,10 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { FiPlus, FiX, FiXCircle } from 'react-icons/fi';
 import { RouteComponentProps } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
-import { setUser } from '../actions/userActions';
 import addNotification from '../utils/addNotification';
-import { checkBadAuthorization } from '../utils/checkCookies';
+import checkAdminRole from '../utils/checkAdminRole';
+import { checkBadAuthorization, checkCookies } from '../utils/checkCookies';
+import fetchUserData from '../utils/fetchUserData';
 import getToken from '../utils/getToken';
 import validateLeagueData from '../validation/validateLeagueData';
 import { useStateValue } from './AppProvider';
@@ -31,37 +32,12 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
 		userData,
     } = useStateValue();
 
-    const fetchUserData = async () => {
-        const accessToken = getToken();
-		const options = {
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		};
-        try {
-            const {
-                data: { username, email, avatarUrl }
-            } = await axios.get(
-                'https://fantasy-league-eti.herokuapp.com/users/self',
-                options
-            );
-            dispatchUserData(setUser({ username, email, avatarUrl }));
-            setLoggedIn(true);
-        } catch (e) {
-            const {
-                response: { data }
-            } = e;
-            if (data.statusCode == 401) {
-                checkBadAuthorization(setLoggedIn, push);
-            }
-        }
-    };
-
     const [leagues, setLeagues] = useState([]);
     const [addLeagueName, setAddLeagueName] = useState<string>('');
     const [addLeagueCountry, setAddLeagueCountry] = useState<string>('Polska');
     const [openDialog, setOpenDialog] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
+    const isAdmin = checkAdminRole(userData.role) && checkCookies();
 
     const defaultValidatedData = {
         name: {
@@ -85,21 +61,6 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
         setAddLeagueCountry('Polska');
         setAddLeagueName('');
     }
-
-    /*const [tempLeagues, setTempLeagues] = useState([
-        {
-            name: 'PGE Ekstraliga',
-            country: "Polska"
-        },
-        {
-            name: 'eWinner 1 liga żużlowa',
-            country: 'Polska'
-        },
-        {
-            name: '2 liga żużlowa',
-            country: 'Polska'
-        }
-    ])*/
 
     const getLeagues = async () => {
         const accessToken = getToken();
@@ -202,15 +163,17 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
                     <TableCell>{league.name}</TableCell>
                     <TableCell>{league.country}</TableCell>
                     <TableCell className="table-X">
-						<IconButton
-							onClick={(event: React.MouseEvent<HTMLElement>) => {
-								deleteLeague(league._id);
-							}}
-							className="delete-button"
-						>
-							<FiXCircle />
-						</IconButton>
-					</TableCell>
+                        {isAdmin &&
+                            <IconButton
+                                onClick={(event: React.MouseEvent<HTMLElement>) => {
+                                    deleteLeague(league._id);
+                                }}
+                                className="leagues__delete-button"
+                            >
+                                <FiXCircle />
+                            </IconButton>
+                        }
+                    </TableCell>
                 </TableRow>
             )
         })
@@ -280,8 +243,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
         (async function () {
             try {
                 await getLeagues();
-                if (!userData.username) await fetchUserData();
-                setLoading(false);
+                if (!userData.username) await fetchUserData(dispatchUserData, setLoggedIn, push);
             } catch (e) {
                 const {
                     response: { data }
@@ -292,6 +254,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
                     addNotification('Błąd!', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
                 }
             }
+            setLoading(false);
         })();
     }, [])
 
@@ -343,7 +306,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Button
-                                            className="btn leagues-dialog__form_button"
+                                            className="btn dialog__form_button"
                                             type="submit"
                                         >
                                             Dodaj
@@ -369,14 +332,14 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
                     >
                         Ligi
                     </Typography>
+                    <Divider />
+                    <br/>
                     <IconButton
                         onClick={handleOpenDialog}
                         className="leagues__fiplus"
                     >
                         <FiPlus />
                     </IconButton>
-                    <Divider />
-                    <br/>
                     {loading && (
                         <Grid container justify="center" alignItems="center">
                             <CircularProgress />

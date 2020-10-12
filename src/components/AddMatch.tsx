@@ -29,7 +29,6 @@ import axios from 'axios';
 import addNotification from '../utils/addNotification';
 import validateRoundData from '../validation/validateRoundData';
 import { ValidationErrorItem, string } from '@hapi/joi';
-import { setUser } from '../actions/userActions';
 import { useStateValue } from './AppProvider';
 import validateMatchPointsData from '../validation/validateMatchPointsData';
 import { checkBadAuthorization } from '../utils/checkCookies';
@@ -1122,214 +1121,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
-	const isChosen = (id, number, homeAway) => {
-		if (homeAway == 'home') {
-			switch (number) {
-				case 1:
-					if (
-						id === home.rider_2._id ||
-						id === home.rider_3._id ||
-						id === home.rider_4._id ||
-						id === home.rider_5._id ||
-						id === home.rider_6._id ||
-						id === home.rider_7._id ||
-						id === home.rider_8._id
-					) {
-						return true;
-					}
-				case 2:
-					if (
-						id === home.rider_1._id ||
-						id === home.rider_3._id ||
-						id === home.rider_4._id ||
-						id === home.rider_5._id ||
-						id === home.rider_6._id ||
-						id === home.rider_7._id ||
-						id === home.rider_8._id
-					) {
-						return true;
-					}
-				case 3:
-					if (
-						id === home.rider_2._id ||
-						id === home.rider_1._id ||
-						id === home.rider_4._id ||
-						id === home.rider_5._id ||
-						id === home.rider_6._id ||
-						id === home.rider_7._id ||
-						id === home.rider_8._id
-					) {
-						return true;
-					}
-				case 4:
-					if (
-						id === home.rider_2._id ||
-						id === home.rider_3._id ||
-						id === home.rider_1._id ||
-						id === home.rider_5._id ||
-						id === home.rider_6._id ||
-						id === home.rider_7._id ||
-						id === home.rider_8._id
-					) {
-						return true;
-					}
-				case 5:
-					if (
-						id === home.rider_2._id ||
-						id === home.rider_3._id ||
-						id === home.rider_4._id ||
-						id === home.rider_1._id ||
-						id === home.rider_6._id ||
-						id === home.rider_7._id ||
-						id === home.rider_8._id
-					) {
-						return true;
-					}
-				case 6:
-					if (
-						id === home.rider_2._id ||
-						id === home.rider_3._id ||
-						id === home.rider_4._id ||
-						id === home.rider_5._id ||
-						id === home.rider_1._id ||
-						id === home.rider_7._id ||
-						id === home.rider_8._id
-					) {
-						return true;
-					}
-				case 7:
-					if (
-						id === home.rider_2._id ||
-						id === home.rider_3._id ||
-						id === home.rider_4._id ||
-						id === home.rider_5._id ||
-						id === home.rider_6._id ||
-						id === home.rider_1._id ||
-						id === home.rider_8._id
-					) {
-						return true;
-					}
-				case 8:
-					if (
-						id === home.rider_2._id ||
-						id === home.rider_3._id ||
-						id === home.rider_4._id ||
-						id === home.rider_5._id ||
-						id === home.rider_6._id ||
-						id === home.rider_7._id ||
-						id === home.rider_1._id
-					) {
-						return true;
-					}
-				default:
-					break;
-			}
-			return false;
-		} else {
-			switch (number) {
-				case 1:
-					if (
-						id === away.rider_2._id ||
-						id === away.rider_3._id ||
-						id === away.rider_4._id ||
-						id === away.rider_5._id ||
-						id === away.rider_6._id ||
-						id === away.rider_7._id ||
-						id === away.rider_8._id
-					) {
-						return true;
-					}
-				case 2:
-					if (
-						id === away.rider_1._id ||
-						id === away.rider_3._id ||
-						id === away.rider_4._id ||
-						id === away.rider_5._id ||
-						id === away.rider_6._id ||
-						id === away.rider_7._id ||
-						id === away.rider_8._id
-					) {
-						return true;
-					}
-				case 3:
-					if (
-						id === away.rider_2._id ||
-						id === away.rider_1._id ||
-						id === away.rider_4._id ||
-						id === away.rider_5._id ||
-						id === away.rider_6._id ||
-						id === away.rider_7._id ||
-						id === away.rider_8._id
-					) {
-						return true;
-					}
-				case 4:
-					if (
-						id === away.rider_2._id ||
-						id === away.rider_3._id ||
-						id === away.rider_1._id ||
-						id === away.rider_5._id ||
-						id === away.rider_6._id ||
-						id === away.rider_7._id ||
-						id === away.rider_8._id
-					) {
-						return true;
-					}
-				case 5:
-					if (
-						id === away.rider_2._id ||
-						id === away.rider_3._id ||
-						id === away.rider_4._id ||
-						id === away.rider_1._id ||
-						id === away.rider_6._id ||
-						id === away.rider_7._id ||
-						id === away.rider_8._id
-					) {
-						return true;
-					}
-				case 6:
-					if (
-						id === away.rider_2._id ||
-						id === away.rider_3._id ||
-						id === away.rider_4._id ||
-						id === away.rider_5._id ||
-						id === away.rider_1._id ||
-						id === away.rider_7._id ||
-						id === away.rider_8._id
-					) {
-						return true;
-					}
-				case 7:
-					if (
-						id === away.rider_2._id ||
-						id === away.rider_3._id ||
-						id === away.rider_4._id ||
-						id === away.rider_5._id ||
-						id === away.rider_6._id ||
-						id === away.rider_1._id ||
-						id === away.rider_8._id
-					) {
-						return true;
-					}
-				case 8:
-					if (
-						id === away.rider_2._id ||
-						id === away.rider_3._id ||
-						id === away.rider_4._id ||
-						id === away.rider_5._id ||
-						id === away.rider_6._id ||
-						id === away.rider_7._id ||
-						id === away.rider_1._id
-					) {
-						return true;
-					}
-				default:
-					break;
-			}
-			return false;
-		}
-	};
-
 	const selectRiders = (clubId, number, homeAway) => {
 		if (number === 8) {
 			return riders
@@ -2051,11 +1842,25 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	useEffect(() => {
-		getRounds();
-		getClubs();
-		getRiders();
-		if (!userData.username)
-			fetchUserData(dispatchUserData, setLoggedIn, push);
+
+		(async function () {
+			try {
+				await getRiders();
+				await getClubs();
+				await getRounds();
+				if (!userData.username)
+					await fetchUserData(dispatchUserData, setLoggedIn, push);
+			} catch (e) {
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
+				} else {
+					addNotification('Błąd!', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
+				}
+			}
+		})();
 		setTimeout(() => {
 			document.body.style.overflow = 'auto';
 		}, 3000);

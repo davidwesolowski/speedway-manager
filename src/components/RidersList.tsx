@@ -333,11 +333,11 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 						<TableCell>{ifJunior(data_urodzenia)}</TableCell>
 						<TableCell>{findClubName(klubId)}</TableCell>
 						<TableCell>
-							{isAdmin ? <IconButton onClick={(event: React.MouseEvent<HTMLElement>) => {
+							{isAdmin && <IconButton onClick={(event: React.MouseEvent<HTMLElement>) => {
 								deleteRiders(id)
 							}}>
 								<FiXCircle />
-							</IconButton> : null}
+							</IconButton>}
 						</TableCell>
 					</TableRow>
 				);
