@@ -103,11 +103,11 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
             data.scoreboard.map(user => {
                 setRankingUsers(rankingUsers => 
                     rankingUsers.concat({
-                        _id: user.userId,
+                        _id: user.userid,
                         avatarUrl: user.avatarUrl,
                         name: user.username,
-                        teamLogo: user.teamLogoUrl,
-                        teamName: user.teamName,
+                        teamLogo: user.teamlogourl,
+                        teamName: user.teamname,
                         points: user.score
                     })
                 );
