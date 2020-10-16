@@ -671,7 +671,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 						<div className="scores-dialog__home">
 							<Typography
 								variant="h3"
-								className="scores-dialog__club-name"
+								className="scores-dialog__clubName"
 							>
 								{home ? home.name : ''}
 							</Typography>
@@ -846,9 +846,9 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 			return (
 				<>
 					<div className="add-match__away-div">
-						AWAY
+						<span className="list-matches-match__clubName">AWAY</span>
 						<br />
-						{away.name}
+						<span className="list-matches-match__clubName">{away.name}</span>
 						<br />
 						{sumEditPoints('away')}
 						<br />
@@ -1046,9 +1046,9 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 						</div>
 					</div>
 					<div className="add-match__home-div">
-						HOME
+					<span className="list-matches-match__clubName">HOME</span>
 						<br />
-						{home.name}
+						<span className="list-matches-match__clubName">{home.name}</span>
 						<br />
 						{sumEditPoints('home')}
 						<br />
@@ -1252,15 +1252,17 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 			return (
 				<>
 					<div className="add-match__away-div">
-						AWAY
+					<span className="list-matches-match__clubName">AWAY</span>
 						<br />
-						{away ? away.name : ''}
+						{away ? <span className="list-matches-match__clubName">
+							{away.name}
+						</span>: ''}
 						<br />
 					</div>
 					<div className="add-match__home-div">
-						HOME
+					<span className="list-matches-match__clubName">HOME</span>
 						<br />
-						{home ? home.name : ''}
+						{home ? <span className="list-matches-match__clubName">{home.name}</span> : ''}
 						<br />
 					</div>
 				</>
@@ -1652,7 +1654,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					<div className="edit-dialog__riders">
 						{selectRidersFields()}
 					</div>
-					<Button onClick={onClickEditButton}>Edytuj</Button>
+					<Button onClick={onClickEditButton} className="btn">Edytuj</Button>
 				</div>
 			</Dialog>
 		);

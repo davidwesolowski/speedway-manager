@@ -67,6 +67,10 @@
 	font-family: $bebas;
 	float: center;
 
+	&__clubName {
+		font-family: $bebas !important;
+	}
+
 	&__div {
 		display: flex;
 		flex-direction: row;
@@ -125,4 +129,8 @@
 
 .edit-dialog {
 	text-align: center;
+
+	&__div {
+		padding: 1rem;
+	}
 }

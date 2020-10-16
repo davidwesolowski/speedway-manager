@@ -1,14 +1,15 @@
-.list-matches-round{
-    display: block;
-    overflow: auto;
+.list-matches-round {
+	display: block;
 
-    &__title{
-        @media only screen and (max-width: $bp-md) {
-            font-size: medium !important;
-		}
+	&__title {
+		margin: $xs-margin 0 !important;
+		font-family: $bebas !important;
+		font-size: 2.3rem !important;
+	}
+}
 
-		@media only screen and (max-width: $bp-sm) {
-			font-size: medium !important;
-		}
-    }
+.list-matches__label {
+	font-family: $bebas !important;
+	font-size: 2rem !important;
+	margin-bottom: $xs-margin;
 }
