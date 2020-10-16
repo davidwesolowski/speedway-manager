@@ -11,7 +11,8 @@ import {
 	MenuItem,
 	Select,
 	TextField,
-	Checkbox
+	Checkbox,
+	Grid
 } from '@material-ui/core';
 import {
 	MuiPickersUtilsProvider,
@@ -370,7 +371,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					`https://fantasy-league-eti.herokuapp.com/match/${matchId}/riders`,
 					options
 				);
-				data.map((rider, index) => {
+				data.map((rider) => {
 					switch (rider.riderNumber) {
 						case 1:
 							setMatchRider('rider_1', rider);
@@ -445,13 +446,13 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 	const generateScore = () => {
 		if (wasRidden) {
 			return (
-				<Typography variant="h3">
+				<Typography variant="h3" className="list-matches-match__score">
 					{homeScore}:{awayScore}
 				</Typography>
 			);
 		} else {
 			return (
-				<Typography variant="h5">
+				<Typography variant="h3" className="list-matches-match__score">
 					{new Date(date).toLocaleDateString()}
 				</Typography>
 			);
@@ -503,7 +504,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 			return (
 				<>
 					<div className="list-matches-match">
-						<div className="list-matches-match__home">
+						<Grid container justify="center" alignItems="center">
+							<Grid item xs={12} md={4} className="list-matches-match__club">
 							<img
 								src={
 									home.logoUrl
@@ -513,48 +515,53 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								alt="club-logo"
 								className="list-matches-match__club-image"
 							/>
-							<Typography variant="h4">{home.name}</Typography>
-						</div>
-						<div className="list-matches-match__score">
-							{generateScore()}
-						</div>
-						<div className="list-matches-match__away">
-							<img
-								src={
-									away.logoUrl
-										? (away.logoUrl as string)
-										: '/img/warsaw_venue.jpg'
-								}
-								alt="club-logo"
-								className="list-matches-match__club-image"
-							/>
-							<Typography variant="h4">{away.name}</Typography>
-						</div>
-						<div className="list-matches-match__options">
-							<Button
-								className="list-matches-match__scores-button"
-								onClick={handleOpenScores}
-								disabled={!wasRidden}
-							>
-								Wyniki
-							</Button>
-							{checkAdminRole(userData.role) && (
-								<>
-									<Button
-										className="list-matches-match__edit-button"
-										onClick={handleOpenEdit}
-									>
-										Edytuj
-									</Button>
-									<Button
-										className="list-matches-match__edit-button"
-										onClick={handleDeleteMatch}
-									>
-										Usuń
-									</Button>
-								</>
-							)}
-						</div>
+							<Typography variant="h3" className="list-matches-match__clubName">{home.name}</Typography>
+							</Grid>
+							<Grid item xs={12} md={4}>
+								<Grid container direction="column" justify="center" alignItems="center">
+									<Grid item className="list-matches-match__options">
+										<Button
+											className="list-matches-match__btn-space btn"
+											onClick={handleOpenScores}
+											disabled={!wasRidden}
+										>
+											Wyniki
+										</Button>
+										{checkAdminRole(userData.role) && (
+											<>
+												<Button
+													className="list-matches-match__btn-space btn"
+													onClick={handleOpenEdit}
+												>
+													Edytuj
+												</Button>
+												<Button
+													className="btn"
+													onClick={handleDeleteMatch}
+												>
+													Usuń
+												</Button>
+											</>
+										)}
+									</Grid>
+									<Grid item>
+										{generateScore()}
+									</Grid>
+								</Grid>
+							</Grid>
+							<Grid item xs={12} md={4} className="list-matches-match__club">
+								<img
+									src={
+										away.logoUrl
+											? (away.logoUrl as string)
+											: '/img/warsaw_venue.jpg'
+									}
+									alt="club-logo"
+									className="list-matches-match__club-image"
+								/>
+								<Typography variant="h3" className="list-matches-match__clubName">{away.name}</Typography>
+							</Grid>
+						</Grid>
 					</div>
 					<Divider />
 					<br />

@@ -1,163 +1,128 @@
-.list-matches-match{
-
-    display: block;
-    overflow: auto;
-    grid-column: center-start / center-end;
+.list-matches-match {
+	display: flex;
+	grid-column: center-start / center-end;
 	position: relative;
 	justify-content: center;
 	align-items: center;
-    font-family: $bebas;
+	font-family: $bebas;
 
-    &__home{
-        width:35%;
-        //align-items: center;
-        float: left;
-        margin-bottom: 0.5% !important;
-        text-align: center;
-        margin-top: 0.5% !important;
+	&__club {
+		margin-bottom: 0.5% !important;
+		text-align: center;
+		margin-top: 0.5% !important;
 
-        @media only screen and (max-width: $bp-md) {
-            width: 35%;
-            font-size: medium;
+		@media only screen and (max-width: $bp-md) {
+			font-size: medium;
 		}
+	}
 
-		@media only screen and (max-width: $bp-sm) {
+	&__away {
+		margin-bottom: 0.5% !important;
+		text-align: center;
+		margin-top: 0.5% !important;
+
+		@media only screen and (max-width: $bp-md) {
 			width: 35%;
-            font-size: medium;
+			font-size: medium;
 		}
-    }
+	}
 
-    &__away{
-        width:35%;
-        //align-items: center;
-        float: left;
-        margin-bottom: 0.5% !important;
-        text-align: center;
-        margin-top: 0.5% !important;
+	&__score {
+		font-family: $bebas !important;
+		margin-bottom: $s-margin !important;
+	}
 
-        @media only screen and (max-width: $bp-md) {
-            width: 35%;
-            font-size: medium;
-		}
+	&__clubName {
+		font-family: $bebas !important;
+	}
 
-		@media only screen and (max-width: $bp-sm) {
-			width: 35%;
-            font-size: medium;
-		}
-    }
+	&__options {
+		margin: $s-margin 0 !important;
 
-    &__score{
-        width: 10%;
-        float: left;
-        margin-bottom: 2% !important;
-        text-align: center;
-        margin-top: 2% !important;
-
-        @media only screen and (max-width: $bp-md) {
-            width: 30%;
-            font-size: medium;
+		& .Mui-disabled {
+			background-color: #9b9292 !important;
 		}
 
-		@media only screen and (max-width: $bp-sm) {
-			width: 30%;
-            font-size: medium;
+		@media only screen and (max-width: $bp-md) {
+			font-size: medium;
 		}
-    }
+	}
 
-    &__options{
-        width:20%;
-        float:right;
-        margin-bottom: 0.5% !important;
-        margin-top: 0.5% !important;
-        display: block;
-        overflow: auto;
+	&__btn-space {
+		margin-right: $xs-margin !important;
+	}
 
-        @media only screen and (max-width: $bp-md) {
-            width: 100%;
-            font-size: medium;
-            float: none;
-            align-items: center;
-		}
-
-		@media only screen and (max-width: $bp-sm) {
-			width: 100%;
-            font-size: medium;
-            float: none;
-            align-items: center;
-		}
-    }
-
-    &__club-image{
-        width: 20%;
-    }
+	&__club-image {
+		width: 20%;
+	}
 }
 
-.scores-dialog{
-    display: flex;
-    flex-direction: row;
-    grid-column: center-start / center-end;
+.scores-dialog {
+	display: flex;
+	flex-direction: row;
+	grid-column: center-start / center-end;
 	position: relative;
 	justify-content: center;
 	align-items: center;
-    font-family: $bebas;
-    float: center;
+	font-family: $bebas;
+	float: center;
 
-    &__div{
-        display: flex;
-        flex-direction: row;
-        width: 100%;
-    }
+	&__div {
+		display: flex;
+		flex-direction: row;
+		width: 100%;
+	}
 
-    &__away{
-        width: 40%;
-        display: block;
-        float:left;
-        justify-content: center;
-        align-items: center;
-        font-size: medium;
-        margin-left: 1.25%;
-        margin-right: 1.25%;
-        text-align: center;
-    }
+	&__away {
+		width: 40%;
+		display: block;
+		float: left;
+		justify-content: center;
+		align-items: center;
+		font-size: medium;
+		margin-left: 1.25%;
+		margin-right: 1.25%;
+		text-align: center;
+	}
 
-    &__divider{
-        width:15%;
-    }
+	&__divider {
+		width: 15%;
+	}
 
-    &__club-score{
-        font-size: x-large;
-    }
+	&__club-score {
+		font-size: x-large;
+	}
 
-    &__home{
-        width: 40%;
-        display: block;
-        float:right !important;
-        justify-content: center;
-        align-items: center;
-        font-size: medium;
-        margin-left: 1.25%;
-        margin-right: 1.25%;
-        text-align: center;
-    }
+	&__home {
+		width: 40%;
+		display: block;
+		float: right !important;
+		justify-content: center;
+		align-items: center;
+		font-size: medium;
+		margin-left: 1.25%;
+		margin-right: 1.25%;
+		text-align: center;
+	}
 
-    &__rider-score-div{
-        display: block;
-        overflow: auto;
-    }
+	&__rider-score-div {
+		display: block;
+		overflow: auto;
+	}
 
-    &__rider{
-        float:left;
-    }
+	&__rider {
+		float: left;
+	}
 
-    &__score{
-        float:right;
-    }
+	&__score {
+		float: right;
+	}
 
-    &__club-image{
-        width: 100%;
-    }
+	&__club-image {
+		width: 100%;
+	}
 }
 
-.edit-dialog{
-    text-align: center;
+.edit-dialog {
+	text-align: center;
 }
