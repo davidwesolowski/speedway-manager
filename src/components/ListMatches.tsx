@@ -187,7 +187,7 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({
 					<Divider />
 					<br />
 					<div className="list-matches__round-div">
-						<InputLabel id="roundLabel">Kolejka:</InputLabel>
+						<InputLabel id="roundLabel" className="list-matches__label">Kolejka:</InputLabel>
 						<Select
 							labelId="roundLabel"
 							className="add-match__round-select"

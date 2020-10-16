@@ -120,7 +120,7 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
 	return (
 		<>
 			<div className="list-matches-round">
-				<Typography variant="h4" className="list-matches-round__title">
+				<Typography className="list-matches-round__title">
 					{generateRoundTitle()}
 				</Typography>
 				<Divider />
