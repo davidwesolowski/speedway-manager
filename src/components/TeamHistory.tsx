@@ -1,4 +1,4 @@
-import { CircularProgress, Divider, Grid, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@material-ui/core';
+import { Avatar, CircularProgress, Divider, Grid, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@material-ui/core';
 import axios from 'axios';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -19,11 +19,12 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
     } = useStateValue();
 
     const [rounds, setRounds] = useState([]);
-    const [selectedRound, setSelectedRound] = useState<string>('');
+    const [selectedRound, setSelectedRound] = useState<string>('all');
     const [historyRiders, setHistoryRiders] = useState([]);
     const [team, setTeam] = useState([]);
     const [historyResults, setHistoryResults] = useState([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [fullScore, setFullScore] = useState(0);
 
     const getRounds = async () => {
             const accessToken = getToken();
@@ -61,9 +62,60 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
     const getHistoryRiders = (results, round) => {
         if(results.find((result) => result.round._id === round)){
             setHistoryRiders((results.find((result) => result.round._id === round)).riders);
+        } else if(round === 'all') {
+            console.log(results);
+            const resultsAll = results.reduce((prev, curr) => {
+                const ridersScore = curr.riders.reduce((prev, curr) => ({
+                    ...prev,
+                    [curr.riderId]: {
+                        id: curr.riderId,
+                        score: curr.score,
+                        firstName: curr.firstName,
+                        lastName: curr.lastName,
+                        image: curr.image
+                    }
+                }), {});
+                const keys = Object.keys(ridersScore);
+                keys.forEach(key => {
+                    if (prev[key]) {
+                        prev[key] = {
+                            ...prev[key],
+                            score: prev[key].score + ridersScore[key].score
+                        } 
+                    }
+                    else {
+                        prev[key] = new Object();
+                        prev[key] = {
+                            id: ridersScore[key].id,
+                            firstName: ridersScore[key].firstName,
+                            lastName: ridersScore[key].lastName,
+                            score: ridersScore[key].score,
+                            image: ridersScore[key].image
+                        } 
+                    }
+                })
+                if (prev.score) {
+                    prev.score += curr.score;
+                } else {
+                    prev.score = 0;
+                    prev.score += curr.score;
+                }
+                return prev;
+            }, {});
+            const historyRiders = Object.keys(resultsAll)
+                                        .filter(key => key !== 'score')
+                                        .map(key => ({
+                                            riderId: resultsAll[key].id,
+                                            firstName: resultsAll[key].firstName,
+                                            lastName: resultsAll[key].lastName,
+                                            score: resultsAll[key].score,
+                                            image: resultsAll[key].image
+                                        })
+            );
+            setHistoryRiders(historyRiders);
+            setFullScore(resultsAll.score);
         } else {
-            setHistoryRiders([])
-            //Tutaj pobranie wszystkich wyników
+            setHistoryRiders([]);
         }
     }
 
@@ -109,17 +161,23 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
                             <TableCell></TableCell>
                             <TableCell>Imię</TableCell>
                             <TableCell>Nazwisko</TableCell>
-                            <TableCell>KSM</TableCell>
+                            {selectedRound !== 'all' && (
+                                <TableCell>KSM</TableCell>
+                            )}
                             <TableCell>Wynik</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {historyRiders.map(rider => (
                             <TableRow key={rider.riderId} hover={true}>
-                                <TableCell></TableCell>
+                                <TableCell>
+                                    <Avatar src={rider.image} alt="rider-avatar"/>
+                                </TableCell>
                                 <TableCell>{rider.firstName}</TableCell>
                                 <TableCell>{rider.lastName}</TableCell>
-                                <TableCell>{rider.KSM}</TableCell>
+                                {selectedRound !== 'all' && (
+                                    <TableCell>{rider.KSM}</TableCell>
+                                )}
                                 <TableCell>{rider.score}</TableCell>
                             </TableRow>
                         ))}
@@ -162,13 +220,19 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
     const getTotalScore = () => {
         if(historyResults.find((result) => result.round._id === selectedRound)){
             return(
-                <Typography variant='h1' className='history__full-score-text'>
-                    Łączny wynik:
-                    <br/>
-                    {historyResults.find((result) => result.round._id === selectedRound).score}
+                <Typography variant='h1' className='history__fullScoreText'>
+                    {`Łączny wynik: ${historyResults.find((result) => result.round._id === selectedRound).score}`}
                 </Typography>)
+        } else if(selectedRound === 'all'){
+            return(
+                <Typography variant='h1' className='history__fullScoreText'>
+                    {`Łączny wynik: ${fullScore}`}
+                </Typography>
+            )
         } else {
-            return('')
+            return(<Typography variant='h1' className='history__fullScoreText'>
+            Brak danych
+            </Typography>);
         }
     }
 
