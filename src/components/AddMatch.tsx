@@ -38,6 +38,7 @@ import fetchUserData from '../utils/fetchUserData';
 interface IRiderPoints {
 	_id: string;
 	points: number;
+	heats: number;
 }
 
 interface IRoundCreate {
@@ -77,6 +78,22 @@ interface ITeamPointsToValidate {
 	points_14: number;
 	points_15: number;
 	points_16: number;
+	heats_1: number;
+	heats_2: number;
+	heats_3: number;
+	heats_4: number;
+	heats_5: number;
+	heats_6: number;
+	heats_7: number;
+	heats_8: number;
+	heats_9: number;
+	heats_10: number;
+	heats_11: number;
+	heats_12: number;
+	heats_13: number;
+	heats_14: number;
+	heats_15: number;
+	heats_16: number;
 }
 
 interface IValidatedPoints {
@@ -152,6 +169,70 @@ interface IValidatedPoints {
 		message: string;
 		error: boolean;
 	};
+	heats_1: {
+		message: string;
+		error: boolean;
+	};
+	heats_2: {
+		message: string;
+		error: boolean;
+	};
+	heats_3: {
+		message: string;
+		error: boolean;
+	};
+	heats_4: {
+		message: string;
+		error: boolean;
+	};
+	heats_5: {
+		message: string;
+		error: boolean;
+	};
+	heats_6: {
+		message: string;
+		error: boolean;
+	};
+	heats_7: {
+		message: string;
+		error: boolean;
+	};
+	heats_8: {
+		message: string;
+		error: boolean;
+	};
+	heats_9: {
+		message: string;
+		error: boolean;
+	};
+	heats_10: {
+		message: string;
+		error: boolean;
+	};
+	heats_11: {
+		message: string;
+		error: boolean;
+	};
+	heats_12: {
+		message: string;
+		error: boolean;
+	};
+	heats_13: {
+		message: string;
+		error: boolean;
+	};
+	heats_14: {
+		message: string;
+		error: boolean;
+	};
+	heats_15: {
+		message: string;
+		error: boolean;
+	};
+	heats_16: {
+		message: string;
+		error: boolean;
+	};
 }
 
 interface IValidatedRound {
@@ -176,7 +257,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 
 	const defaultRiderPoints = {
 		_id: '',
-		points: 0
+		points: 0,
+		heats: 0
 	};
 
 	const defaultRoundCreate = {
@@ -203,7 +285,23 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 		points_13: 0,
 		points_14: 0,
 		points_15: 0,
-		points_16: 0
+		points_16: 0,
+		heats_1: 0,
+		heats_2: 0,
+		heats_3: 0,
+		heats_4: 0,
+		heats_5: 0,
+		heats_6: 0,
+		heats_7: 0,
+		heats_8: 0,
+		heats_9: 0,
+		heats_10: 0,
+		heats_11: 0,
+		heats_12: 0,
+		heats_13: 0,
+		heats_14: 0,
+		heats_15: 0,
+		heats_16: 0
 	};
 
 	const [roundCreate, setRoundCreate] = useState<IRoundCreate>(
@@ -311,29 +409,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
-	const setDataToValidationFunc = () => {
-		setDataToValidation({
-			home_id: home.team_id,
-			away_id: away.team_id,
-			points_1: away.rider_1.points,
-			points_2: away.rider_2.points,
-			points_3: away.rider_3.points,
-			points_4: away.rider_4.points,
-			points_5: away.rider_5.points,
-			points_6: away.rider_6.points,
-			points_7: away.rider_7.points,
-			points_8: away.rider_8.points,
-			points_9: home.rider_1.points,
-			points_10: home.rider_2.points,
-			points_11: home.rider_3.points,
-			points_12: home.rider_4.points,
-			points_13: home.rider_5.points,
-			points_14: home.rider_6.points,
-			points_15: home.rider_7.points,
-			points_16: home.rider_8.points
-		});
-	};
-
 	const defaultValidatedPoints = {
 		home_id: {
 			message: '',
@@ -404,6 +479,70 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 			error: false
 		},
 		points_16: {
+			message: '',
+			error: false
+		},
+		heats_1: {
+			message: '',
+			error: false
+		},
+		heats_2: {
+			message: '',
+			error: false
+		},
+		heats_3: {
+			message: '',
+			error: false
+		},
+		heats_4: {
+			message: '',
+			error: false
+		},
+		heats_5: {
+			message: '',
+			error: false
+		},
+		heats_6: {
+			message: '',
+			error: false
+		},
+		heats_7: {
+			message: '',
+			error: false
+		},
+		heats_8: {
+			message: '',
+			error: false
+		},
+		heats_9: {
+			message: '',
+			error: false
+		},
+		heats_10: {
+			message: '',
+			error: false
+		},
+		heats_11: {
+			message: '',
+			error: false
+		},
+		heats_12: {
+			message: '',
+			error: false
+		},
+		heats_13: {
+			message: '',
+			error: false
+		},
+		heats_14: {
+			message: '',
+			error: false
+		},
+		heats_15: {
+			message: '',
+			error: false
+		},
+		heats_16: {
 			message: '',
 			error: false
 		}
@@ -510,7 +649,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: home.rider_1.points
+								points: home.rider_1.points,
+								heats: home.rider_1.heats
 							}
 						}));
 						break;
@@ -519,7 +659,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: home.rider_2.points
+								points: home.rider_2.points,
+								heats: home.rider_2.heats
 							}
 						}));
 						break;
@@ -528,7 +669,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: home.rider_3.points
+								points: home.rider_3.points,
+								heats: home.rider_3.heats
 							}
 						}));
 						break;
@@ -537,7 +679,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: home.rider_4.points
+								points: home.rider_4.points,
+								heats: home.rider_4.heats
 							}
 						}));
 						break;
@@ -546,7 +689,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: home.rider_5.points
+								points: home.rider_5.points,
+								heats: home.rider_5.heats
 							}
 						}));
 						break;
@@ -555,7 +699,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: home.rider_6.points
+								points: home.rider_6.points,
+								heats: home.rider_6.heats
 							}
 						}));
 						break;
@@ -564,7 +709,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: home.rider_7.points
+								points: home.rider_7.points,
+								heats: home.rider_7.heats
 							}
 						}));
 						break;
@@ -573,7 +719,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: home.rider_8.points
+								points: home.rider_8.points,
+								heats: home.rider_8.heats
 							}
 						}));
 						break;
@@ -587,7 +734,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: away.rider_1.points
+								points: away.rider_1.points,
+								heats: away.rider_1.heats
 							}
 						}));
 						break;
@@ -596,7 +744,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: away.rider_2.points
+								points: away.rider_2.points,
+								heats: away.rider_2.heats
 							}
 						}));
 						break;
@@ -605,7 +754,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: away.rider_3.points
+								points: away.rider_3.points,
+								heats: away.rider_3.heats
 							}
 						}));
 						break;
@@ -614,7 +764,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: away.rider_4.points
+								points: away.rider_4.points,
+								heats: away.rider_4.heats
 							}
 						}));
 						break;
@@ -623,7 +774,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: away.rider_5.points
+								points: away.rider_5.points,
+								heats: away.rider_5.heats
 							}
 						}));
 						break;
@@ -632,7 +784,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: away.rider_6.points
+								points: away.rider_6.points,
+								heats: away.rider_6.heats
 							}
 						}));
 						break;
@@ -641,7 +794,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: away.rider_7.points
+								points: away.rider_7.points,
+								heats: away.rider_7.heats
 							}
 						}));
 						break;
@@ -650,7 +804,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: away.rider_8.points
+								points: away.rider_8.points,
+								heats: away.rider_8.heats
 							}
 						}));
 						break;
@@ -673,6 +828,298 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	const handleOnChangePoints = (rider: string, homeAway: string) => (
+		event: React.ChangeEvent<HTMLInputElement>
+	) => {
+		event.persist();
+		const number = parseInt(rider.slice(-1));
+		if (event.target) {
+			if (homeAway === 'home') {
+				switch (number) {
+					case 1:
+						setHome((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: home.rider_1._id,
+								points: parseInt(event.target.value),
+								heats: home.rider_1.heats
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_9: parseInt(event.target.value),
+								heats_9: dataToValidation.heats_9
+							})
+						);
+						break;
+					case 2:
+						setHome((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: home.rider_2._id,
+								points: parseInt(event.target.value),
+								heats: home.rider_2.heats
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_10: parseInt(event.target.value),
+								heats_10: dataToValidation.heats_10
+							})
+						);
+						break;
+					case 3:
+						setHome((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: home.rider_3._id,
+								points: parseInt(event.target.value),
+								heats: home.rider_3.heats
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_11: parseInt(event.target.value),
+								heats_11: dataToValidation.heats_11
+							})
+						);
+						break;
+					case 4:
+						setHome((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: home.rider_4._id,
+								points: parseInt(event.target.value),
+								heats: home.rider_4.heats
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_12: parseInt(event.target.value),
+								heats_12: dataToValidation.heats_12
+							})
+						);
+						break;
+					case 5:
+						setHome((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: home.rider_5._id,
+								points: parseInt(event.target.value),
+								heats: home.rider_5.heats
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_13: parseInt(event.target.value),
+								heats_13: dataToValidation.heats_13
+							})
+						);
+						break;
+					case 6:
+						setHome((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: home.rider_6._id,
+								points: parseInt(event.target.value),
+								heats: home.rider_6.heats
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_14: parseInt(event.target.value),
+								heats_14: dataToValidation.heats_14
+							})
+						);
+						break;
+					case 7:
+						setHome((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: home.rider_7._id,
+								points: parseInt(event.target.value),
+								heats: home.rider_7.heats
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_15: parseInt(event.target.value),
+								heats_15: dataToValidation.heats_15
+							})
+						);
+						break;
+					case 8:
+						setHome((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: home.rider_8._id,
+								points: parseInt(event.target.value),
+								heats: home.rider_8.heats
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_16: parseInt(event.target.value),
+								heats_16: dataToValidation.heats_16
+							})
+						);
+						break;
+					default:
+						break;
+				}
+			} else {
+				switch (number) {
+					case 1:
+						setAway((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: away.rider_1._id,
+								points: parseInt(event.target.value),
+								heats: away.rider_1.heats
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_1: parseInt(event.target.value),
+								heats_1: dataToValidation.heats_1
+							})
+						);
+						break;
+					case 2:
+						setAway((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: away.rider_2._id,
+								points: parseInt(event.target.value),
+								heats: away.rider_2.heats
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_2: parseInt(event.target.value),
+								heats_2: dataToValidation.heats_2
+							})
+						);
+						break;
+					case 3:
+						setAway((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: away.rider_3._id,
+								points: parseInt(event.target.value),
+								heats: away.rider_3.heats
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_3: parseInt(event.target.value),
+								heats_3: dataToValidation.heats_3
+							})
+						);
+						break;
+					case 4:
+						setAway((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: away.rider_4._id,
+								points: parseInt(event.target.value),
+								heats: away.rider_4.heats
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_4: parseInt(event.target.value),
+								heats_4: dataToValidation.heats_4
+							})
+						);
+						break;
+					case 5:
+						setAway((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: away.rider_5._id,
+								points: parseInt(event.target.value),
+								heats: away.rider_5.heats
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_5: parseInt(event.target.value),
+								heats_5: dataToValidation.heats_5
+							})
+						);
+						break;
+					case 6:
+						setAway((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: away.rider_6._id,
+								points: parseInt(event.target.value),
+								heats: away.rider_6.heats
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_6: parseInt(event.target.value),
+								heats_6: dataToValidation.heats_6
+							})
+						);
+						break;
+					case 7:
+						setAway((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: away.rider_7._id,
+								points: parseInt(event.target.value),
+								heats: away.rider_7.heats
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_7: parseInt(event.target.value),
+								heats_7: dataToValidation.heats_7
+							})
+						);
+						break;
+					case 8:
+						setAway((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: away.rider_8._id,
+								points: parseInt(event.target.value),
+								heats: away.rider_8.heats
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_8: parseInt(event.target.value),
+								heats_8: dataToValidation.heats_8
+							})
+						);
+						break;
+					default:
+						break;
+				}
+			}
+		}
+	};
+
+	const handleOnChangeHeats = (rider: string, homeAway: string) => (
 		event: React.ChangeEvent<HTMLInputElement>
 	) => {
 		event.persist();
