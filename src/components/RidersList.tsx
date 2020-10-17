@@ -6,7 +6,7 @@ import { Avatar, CircularProgress, Grid, IconButton, InputLabel, MenuItem, Selec
 import addNotification from '../utils/addNotification';
 import getToken from '../utils/getToken';
 import checkAdminRole from '../utils/checkAdminRole';
-import { RouteComponentProps, RouteProps, useHistory } from 'react-router-dom';
+import { RouteProps, useHistory } from 'react-router-dom';
 import { useStateValue } from './AppProvider';
 import { checkBadAuthorization, checkCookies } from '../utils/checkCookies';
 import { CSSTransition } from 'react-transition-group';
@@ -17,7 +17,27 @@ interface ISelect {
 	age: string;
 }
 
-const RidersList : FunctionComponent<RouteProps> = () => {
+interface IProps {
+	riders: IRiderPass[],
+	deleteRider: (id) => void
+}
+
+interface IRiderPass {
+	id: string;
+	imię: string;
+	nazwisko: string;
+	przydomek: string;
+	data_urodzenia: Date;
+	zagraniczny: boolean;
+	ksm: number;
+	klubId: string;
+	image: string;
+}
+
+const RidersList : FunctionComponent<IProps> = ({
+	riders,
+	deleteRider
+}) => {
 
 	const {
         setLoggedIn,
@@ -28,51 +48,9 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 
 
 	const [clubs, setClubs] = useState([]);
-	const [riders, setRiders] = useState([]);
 	const isAdmin = checkAdminRole(userData.role) && checkCookies();
 	const [filteredRiders, setFilteredRiders] = useState([]);
 	const [loading, setLoading] = useState<boolean>(true);
-
-	const deleteRiders = async (id) => {
-		try {
-			const accessToken = getToken();
-			const options = {
-				headers: {
-					Authorization: `Bearer ${accessToken}`
-				}
-			};
-			const { data } = await axios.delete(
-				`https://fantasy-league-eti.herokuapp.com/riders/${id}`,
-				options
-			);
-			////Sukces
-			addNotification(
-				'Sukces!',
-				'Udało się usunąć zawodnika!',
-				'success',
-				1000
-			);
-			setTimeout(() => {
-				window.location.reload(false);
-			}, 1000);
-		} catch (e) {
-			const {
-                response: { data }
-            } = e;
-			if (data.statusCode == 401) {
-                checkBadAuthorization(setLoggedIn, push);
-            } else {
-				addNotification(
-					'Błąd!',
-					'Nie udało się usunąć zawodnika!',
-					'danger',
-					1000
-				);
-			}
-			console.log(e.response);
-			throw new Error('Error in deleting riders!');
-		}
-	}
 
 	const getClubs = async () => {
 		try {
@@ -94,53 +72,6 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 						nazwa: club.name
 					})
 				)
-			});
-		} catch (e) {
-			const {
-                response: { data }
-            } = e;
-			if (data.statusCode == 401) {
-                checkBadAuthorization(setLoggedIn, push);
-            } else {
-				addNotification(
-					'Błąd!',
-					'Nie udało się usunąć zawodnika!',
-					'danger',
-					1000
-				);
-			}
-			console.log(e.response);
-			throw new Error('Error in deleting riders!');
-		}
-	}
-
-	const getRiders = async () => {
-		try {
-			const accessToken = getToken();
-			const options = {
-				headers: {
-					Authorization: `Bearer ${accessToken}`
-				}
-			};
-			const { data } = await axios.get(
-				'https://fantasy-league-eti.herokuapp.com/riders',
-				options
-			);
-			setRiders([]);
-			data.map(rider => {
-				setRiders(riders =>
-					riders.concat({
-						id: rider._id,
-						imię: rider.firstName,
-						nazwisko: rider.lastName,
-						przydomek: rider.nickname,
-						data_urodzenia: rider.dateOfBirth,
-						zagraniczny: rider.isForeigner,
-						ksm: rider.KSM,
-						klubId: rider.clubId,
-						image: rider.image
-					})
-				);
 			});
 		} catch (e) {
 			const {
@@ -340,7 +271,7 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 						<TableCell>{findClubName(klubId)}</TableCell>
 						<TableCell>
 							{isAdmin && <IconButton className="riders-list__delete-rider-button" onClick={(event: React.MouseEvent<HTMLElement>) => {
-								deleteRiders(id)
+								deleteRider(id)
 							}}>
 								<FiXCircle />
 							</IconButton>}
@@ -382,7 +313,7 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 						<TableCell>{findClubName(klubId)}</TableCell>
 						<TableCell>
 							{isAdmin ? <IconButton className="riders-list__delete-rider-button" onClick={(event: React.MouseEvent<HTMLElement>) => {
-								deleteRiders(id)
+								deleteRider(id)
 							}}>
 								<FiXCircle />
 							</IconButton> : null}
@@ -432,7 +363,7 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 							<TableCell>{findClubName(klubId)}</TableCell>
 							<TableCell>
 								{isAdmin ? <IconButton className="riders-list__delete-rider-button" onClick={(event: React.MouseEvent<HTMLElement>) => {
-									deleteRiders(id)
+									deleteRider(id)
 								}}>
 									<FiXCircle />
 								</IconButton> : null}
@@ -490,7 +421,6 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 		setLoading(true);
         (async function () {
             try {
-                await getRiders();
                 await getClubs();
                 if (!userData.username) await fetchUserData(dispatchUserData, setLoggedIn, push);
             } catch (e) {
