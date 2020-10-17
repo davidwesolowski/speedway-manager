@@ -46,7 +46,6 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
     const [addUserLeagueName, setAddUserLeagueName] = useState<string>('');
     const [owns, setOwns] = useState([]);
     const [participates, setParticipates] = useState([]);
-    const [addUserLeagueMainLeague, setAddUserLeagueMainLeague] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
 
     const [validatedData, setValidatedData] = useState<IValidatedData>(defaultValidatedData);
@@ -58,7 +57,6 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
     const handleCloseDialog = () => {
         setOpenDialog(false);
         setAddUserLeagueName('');
-        setAddUserLeagueMainLeague('');
     }
 
     const getUserLeagues = async () => {
@@ -94,12 +92,13 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
 				'Udało się dodać ranking!',
 				'success',
 				1000
-			);
-			setTimeout(() => {
-				window.location.reload(false);
-			}, 1000);
+            );
+            setOwns(owns =>
+                owns.concat({
+                    _id: data._id,
+                    name: addUserLeagueName
+                }));
         } catch (e) {
-            console.log(e.response);
             if (e.response.statusText == 'Unauthorized') {
                 addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
                 setTimeout(() => {
@@ -135,9 +134,7 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
 				'success',
 				1000
 			);
-			setTimeout(() => {
-				window.location.reload(false);
-			}, 1000);
+			setOwns(owns.filter(league => league._id !== id));
         } catch (e) {
             const {
                 response: { data }
@@ -238,6 +235,7 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = ({history: { 
                 }
             );
         } else {
+            handleCloseDialog();
             addUserLeague();
         }
     }
