@@ -28,7 +28,7 @@ import getToken from '../utils/getToken';
 import axios from 'axios';
 import addNotification from '../utils/addNotification';
 import validateRoundData from '../validation/validateRoundData';
-import { ValidationErrorItem, string } from '@hapi/joi';
+import { ValidationErrorItem } from '@hapi/joi';
 import { useStateValue } from './AppProvider';
 import validateMatchPointsData from '../validation/validateMatchPointsData';
 import { checkBadAuthorization } from '../utils/checkCookies';
@@ -1132,13 +1132,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: home.rider_1._id,
-								points: parseInt(event.target.value)
+								points: home.rider_1.points,
+								heats: parseInt(event.target.value)
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_9: parseInt(event.target.value)
+								points_9: dataToValidation.points_9,
+								heats_9: parseInt(event.target.value)
 							})
 						);
 						break;
@@ -1147,13 +1149,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: home.rider_2._id,
-								points: parseInt(event.target.value)
+								points: home.rider_2.points,
+								heats: parseInt(event.target.value)
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_10: parseInt(event.target.value)
+								points_10: dataToValidation.points_10,
+								heats_10: parseInt(event.target.value)
 							})
 						);
 						break;
@@ -1162,28 +1166,32 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: home.rider_3._id,
-								points: parseInt(event.target.value)
+								points: home.rider_3.points,
+								heats: parseInt(event.target.value)
 							}
 						}));
-						break;
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_11: parseInt(event.target.value)
+								points_11: dataToValidation.points_11,
+								heats_11: parseInt(event.target.value)
 							})
 						);
+						break;
 					case 4:
 						setHome((prevState: ITeamPoints) => ({
 							...prevState,
 							[rider]: {
 								_id: home.rider_4._id,
-								points: parseInt(event.target.value)
+								points: home.rider_4.points,
+								heats: parseInt(event.target.value)
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_12: parseInt(event.target.value)
+								points_12: dataToValidation.points_12,
+								heats_12: parseInt(event.target.value)
 							})
 						);
 						break;
@@ -1192,13 +1200,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: home.rider_5._id,
-								points: parseInt(event.target.value)
+								points: home.rider_5.points,
+								heats: parseInt(event.target.value)
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_13: parseInt(event.target.value)
+								points_13: dataToValidation.points_13,
+								heats_13: parseInt(event.target.value)
 							})
 						);
 						break;
@@ -1207,13 +1217,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: home.rider_6._id,
-								points: parseInt(event.target.value)
+								points: home.rider_6.points,
+								heats: parseInt(event.target.value)
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_14: parseInt(event.target.value)
+								points_14: dataToValidation.points_14,
+								heats_14: parseInt(event.target.value)
 							})
 						);
 						break;
@@ -1222,13 +1234,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: home.rider_7._id,
-								points: parseInt(event.target.value)
+								points: home.rider_7.points,
+								heats: parseInt(event.target.value)
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_15: parseInt(event.target.value)
+								points_15: dataToValidation.points_15,
+								heats_15: parseInt(event.target.value)
 							})
 						);
 						break;
@@ -1237,13 +1251,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: home.rider_8._id,
-								points: parseInt(event.target.value)
+								points: home.rider_8.points,
+								heats: parseInt(event.target.value)
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_16: parseInt(event.target.value)
+								points_16: dataToValidation.points_16,
+								heats_16: parseInt(event.target.value)
 							})
 						);
 						break;
@@ -1257,13 +1273,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: away.rider_1._id,
-								points: parseInt(event.target.value)
+								points: away.rider_1.points,
+								heats: parseInt(event.target.value)
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_1: parseInt(event.target.value)
+								points_1: dataToValidation.points_1,
+								heats_1: parseInt(event.target.value)
 							})
 						);
 						break;
@@ -1272,13 +1290,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: away.rider_2._id,
-								points: parseInt(event.target.value)
+								points: away.rider_2.points,
+								heats: parseInt(event.target.value)
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_2: parseInt(event.target.value)
+								points_2: dataToValidation.points_2,
+								heats_2: parseInt(event.target.value)
 							})
 						);
 						break;
@@ -1287,13 +1307,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: away.rider_3._id,
-								points: parseInt(event.target.value)
+								points: away.rider_3.points,
+								heats: parseInt(event.target.value)
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_3: parseInt(event.target.value)
+								points_3: dataToValidation.points_3,
+								heats_3: parseInt(event.target.value)
 							})
 						);
 						break;
@@ -1302,13 +1324,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: away.rider_4._id,
-								points: parseInt(event.target.value)
+								points: away.rider_4.points,
+								heats: parseInt(event.target.value)
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_4: parseInt(event.target.value)
+								points_4: dataToValidation.points_4,
+								heats_4: parseInt(event.target.value)
 							})
 						);
 						break;
@@ -1317,13 +1341,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: away.rider_5._id,
-								points: parseInt(event.target.value)
+								points: away.rider_5.points,
+								heats: parseInt(event.target.value)
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_5: parseInt(event.target.value)
+								points_5: dataToValidation.points_5,
+								heats_5: parseInt(event.target.value)
 							})
 						);
 						break;
@@ -1332,13 +1358,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: away.rider_6._id,
-								points: parseInt(event.target.value)
+								points: away.rider_6.points,
+								heats: parseInt(event.target.value)
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_6: parseInt(event.target.value)
+								points_6: dataToValidation.points_6,
+								heats_6: parseInt(event.target.value)
 							})
 						);
 						break;
@@ -1347,13 +1375,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: away.rider_7._id,
-								points: parseInt(event.target.value)
+								points: away.rider_7.points,
+								heats: parseInt(event.target.value)
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_7: parseInt(event.target.value)
+								points_7: dataToValidation.points_7,
+								heats_7: parseInt(event.target.value)
 							})
 						);
 						break;
@@ -1362,13 +1392,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: away.rider_8._id,
-								points: parseInt(event.target.value)
+								points: away.rider_8.points,
+								heats: parseInt(event.target.value)
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_8: parseInt(event.target.value)
+								points_8: dataToValidation.points_8,
+								heats_8: parseInt(event.target.value)
 							})
 						);
 						break;
@@ -1510,7 +1542,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 			setRounds([]);
 			setRounds(data);
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.statusText == 'Unauthorized') {
 				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
 				setTimeout(() => {
@@ -1568,7 +1599,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
-	const selectRiders = (clubId, number, homeAway) => {
+	const selectRiders = (clubId, number) => {
 		if (number === 8) {
 			return riders
 				.filter(
@@ -1633,6 +1664,17 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 						</Select>
 						<br />
 						<div className="add-match__rider-div">
+							<div className="add-match__rider-select-title">
+								ZAWODNIK
+							</div>
+							<div className="add-match__rider-points-title">
+								PUNKTY
+							</div>
+							<div className="add-match__rider-heats-title">
+								BIEGI
+							</div>
+						</div>
+						<div className="add-match__rider-div">
 							1.
 							<Select
 								className="add-match__rider-select"
@@ -1645,7 +1687,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.team_id, 1, 'away')}
+								{selectRiders(away.team_id, 1)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1654,6 +1696,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_1',
 									'away'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={away.rider_1.heats || ''}
+								onChange={handleOnChangeHeats('rider_1', 'away')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1669,7 +1716,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.team_id, 2, 'away')}
+								{selectRiders(away.team_id, 2)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1678,6 +1725,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_2',
 									'away'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={away.rider_2.heats || ''}
+								onChange={handleOnChangeHeats('rider_2', 'away')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1693,7 +1745,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.team_id, 3, 'away')}
+								{selectRiders(away.team_id, 3)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1702,6 +1754,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_3',
 									'away'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={away.rider_3.heats || ''}
+								onChange={handleOnChangeHeats('rider_3', 'away')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1717,7 +1774,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.team_id, 4, 'away')}
+								{selectRiders(away.team_id, 4)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1726,6 +1783,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_4',
 									'away'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={away.rider_4.heats || ''}
+								onChange={handleOnChangeHeats('rider_4', 'away')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1741,7 +1803,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.team_id, 5, 'away')}
+								{selectRiders(away.team_id, 5)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1750,6 +1812,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_5',
 									'away'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={away.rider_5.heats || ''}
+								onChange={handleOnChangeHeats('rider_5', 'away')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1765,7 +1832,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.team_id, 6, 'away')}
+								{selectRiders(away.team_id, 6)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1774,6 +1841,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_6',
 									'away'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={away.rider_6.heats || ''}
+								onChange={handleOnChangeHeats('rider_6', 'away')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1789,7 +1861,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.team_id, 7, 'away')}
+								{selectRiders(away.team_id, 7)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1798,6 +1870,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_7',
 									'away'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={away.rider_7.heats || ''}
+								onChange={handleOnChangeHeats('rider_7', 'away')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1813,7 +1890,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.team_id, 8, 'away')}
+								{selectRiders(away.team_id, 8)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1822,6 +1899,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_8',
 									'away'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={away.rider_8.heats || ''}
+								onChange={handleOnChangeHeats('rider_8', 'away')}
 							/>
 						</div>
 					</div>
@@ -1837,6 +1919,17 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 						</Select>
 						<br />
 						<div className="add-match__rider-div">
+							<div className="add-match__rider-select-title">
+								ZAWODNIK
+							</div>
+							<div className="add-match__rider-points-title">
+								PUNKTY
+							</div>
+							<div className="add-match__rider-heats-title">
+								BIEGI
+							</div>
+						</div>
+						<div className="add-match__rider-div">
 							9.
 							<Select
 								className="add-match__rider-select"
@@ -1849,7 +1942,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.team_id, 1, 'home')}
+								{selectRiders(home.team_id, 1)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1858,6 +1951,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_1',
 									'home'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={home.rider_1.heats || ''}
+								onChange={handleOnChangeHeats('rider_1', 'home')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1873,7 +1971,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.team_id, 2, 'home')}
+								{selectRiders(home.team_id, 2)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1882,6 +1980,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_2',
 									'home'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={home.rider_2.heats || ''}
+								onChange={handleOnChangeHeats('rider_2', 'home')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1897,7 +2000,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.team_id, 3, 'home')}
+								{selectRiders(home.team_id, 3)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1906,6 +2009,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_3',
 									'home'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={home.rider_3.heats || ''}
+								onChange={handleOnChangeHeats('rider_3', 'home')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1921,7 +2029,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.team_id, 4, 'home')}
+								{selectRiders(home.team_id, 4)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1930,6 +2038,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_4',
 									'home'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={home.rider_4.heats || ''}
+								onChange={handleOnChangeHeats('rider_4', 'home')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1945,7 +2058,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.team_id, 5, 'home')}
+								{selectRiders(home.team_id, 5)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1954,6 +2067,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_5',
 									'home'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={home.rider_5.heats || ''}
+								onChange={handleOnChangeHeats('rider_5', 'home')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1969,7 +2087,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.team_id, 6, 'home')}
+								{selectRiders(home.team_id, 6)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1978,6 +2096,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_6',
 									'home'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={home.rider_6.heats || ''}
+								onChange={handleOnChangeHeats('rider_6', 'home')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1993,7 +2116,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.team_id, 7, 'home')}
+								{selectRiders(home.team_id, 7)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -2002,6 +2125,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_7',
 									'home'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={home.rider_7.heats || ''}
+								onChange={handleOnChangeHeats('rider_7', 'home')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -2017,7 +2145,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.team_id, 8, 'home')}
+								{selectRiders(home.team_id, 8)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -2026,6 +2154,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_8',
 									'home'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={home.rider_8.heats || ''}
+								onChange={handleOnChangeHeats('rider_8', 'home')}
 							/>
 						</div>
 					</div>
@@ -2188,7 +2321,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 				}
 			}, 1000);
 		} catch (e) {
-			console.log(e.response);
 			if (e.statusText == 'Bad Request') {
 				addNotification(
 					'Błąd!',
@@ -2196,7 +2328,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 					'danger',
 					1000
 				);
-				setTimeout(() => {}, 1000);
 			} else if (e.statusText == 'Unauthorized') {
 				addNotification('Błąd!', 'Twoja sesja wygasła', 'danger', 1000);
 				setTimeout(() => {
@@ -2233,7 +2364,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 					options
 				);
 			} catch (e) {
-				console.log(e.response);
 				if (e.statusText == 'Bad Request') {
 					addNotification(
 						'Błąd!',
@@ -2241,7 +2371,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 						'danger',
 						1000
 					);
-					setTimeout(() => {}, 1000);
 				} else if (e.statusText == 'Unauthorized') {
 					addNotification(
 						'Błąd!',
@@ -2271,7 +2400,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 			setValidatedPoints(() => defaultValidatedPoints);
 			validationResponse.error.details.forEach(
 				(errorItem: ValidationErrorItem): any => {
-					console.log(errorItem.message);
 					setValidatedPoints((prevState: IValidatedPoints) => {
 						return {
 							...prevState,
