@@ -94,10 +94,17 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
             );
             addNotification(
 				'Sukces!',
-				'Udało się usunąć ligę!',
+				'Udało się dodać ligę!',
 				'success',
 				1000
-			);
+            );
+            setLeagues(leagues =>
+                leagues.concat({
+                    _id: data._id,
+                    name: addLeagueName,
+                    country: addLeagueCountry
+                })
+            );
         } catch (e) {
             const {
                 response: { data }
@@ -133,9 +140,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
 				'success',
 				1000
 			);
-			setTimeout(() => {
-				window.location.reload(false);
-			}, 1000);
+			setLeagues(leagues.filter(league => league._id !== id));
 		} catch (e) {
 			const {
                 response: { data }
@@ -215,7 +220,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
     }
 
     const handleOnSubmit = (event: React.FormEvent) => {
-        event.persist();
+        event.preventDefault();
         const validationResponse = validateLeagueData({name: addLeagueName, country: addLeagueCountry});
         if (validationResponse.error){
             setValidatedData(() => defaultValidatedData);
@@ -234,6 +239,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
                 }
             );
         } else {
+            handleCloseDialog();
             addLeague();
         }
     }
@@ -256,6 +262,9 @@ const Leagues: FunctionComponent<RouteComponentProps> = ({history: { push }}) =>
             }
             setLoading(false);
         })();
+        setTimeout(() => {
+			document.body.style.overflow = 'auto';
+		}, 500);
     }, [])
 
     const generateDialog = () => {

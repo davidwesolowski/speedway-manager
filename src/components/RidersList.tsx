@@ -2,7 +2,7 @@ import React, { Component, FunctionComponent, useEffect, useState } from 'react'
 import { FiX, FiXCircle, FiPlus } from 'react-icons/fi';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
-import { CircularProgress, Grid, IconButton, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@material-ui/core';
+import { Avatar, CircularProgress, Grid, IconButton, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@material-ui/core';
 import addNotification from '../utils/addNotification';
 import getToken from '../utils/getToken';
 import checkAdminRole from '../utils/checkAdminRole';
@@ -137,7 +137,8 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 						data_urodzenia: rider.dateOfBirth,
 						zagraniczny: rider.isForeigner,
 						ksm: rider.KSM,
-						klubId: rider.clubId
+						klubId: rider.clubId,
+						image: rider.image
 					})
 				);
 			});
@@ -315,12 +316,14 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 					data_urodzenia,
 					zagraniczny,
 					ksm,
-					klubId
+					klubId,
+					image
 				} = rider;
 				return (
 					<TableRow
 						key={id}
 					>
+						<TableCell><Avatar src={image} alt="rider-avatar"/></TableCell>
 						<TableCell>{imię}</TableCell>
 						<TableCell>{nazwisko}</TableCell>
 						<TableCell>{przydomek}</TableCell>
@@ -355,12 +358,14 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 					data_urodzenia,
 					zagraniczny,
 					ksm,
-					klubId
+					klubId,
+					image
 				} = rider;
 				return (
 					<TableRow
 						key={id}
 					>
+						<TableCell><Avatar src={image} alt="rider-avatar"/></TableCell>
 						<TableCell>{imię}</TableCell>
 						<TableCell>{nazwisko}</TableCell>
 						<TableCell>{przydomek}</TableCell>
@@ -403,33 +408,35 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 					data_urodzenia,
 					zagraniczny,
 					ksm,
-					klubId
+					klubId,
+					image
 					} = rider;
 					return (
 						<TableRow
 							key={id}
 						>
+							<TableCell><Avatar src={image} alt="rider-avatar"/></TableCell>
 							<TableCell>{imię}</TableCell>
-						<TableCell>{nazwisko}</TableCell>
-						<TableCell>{przydomek}</TableCell>
-						<TableCell>
-							{new Intl.DateTimeFormat('en-GB', {
-								year: 'numeric',
-								month: '2-digit',
-								day: '2-digit'
-							}).format(new Date(data_urodzenia))}
-						</TableCell>
-						<TableCell>{ksm}</TableCell>
-						<TableCell>{ifForeigner(zagraniczny)}</TableCell>
-						<TableCell>{ifJunior(data_urodzenia)}</TableCell>
-						<TableCell>{findClubName(klubId)}</TableCell>
-						<TableCell>
-							{isAdmin ? <IconButton className="riders-list__delete-rider-button" onClick={(event: React.MouseEvent<HTMLElement>) => {
-								deleteRiders(id)
-							}}>
-								<FiXCircle />
-							</IconButton> : null}
-						</TableCell>
+							<TableCell>{nazwisko}</TableCell>
+							<TableCell>{przydomek}</TableCell>
+							<TableCell>
+								{new Intl.DateTimeFormat('en-GB', {
+									year: 'numeric',
+									month: '2-digit',
+									day: '2-digit'
+								}).format(new Date(data_urodzenia))}
+							</TableCell>
+							<TableCell>{ksm}</TableCell>
+							<TableCell>{ifForeigner(zagraniczny)}</TableCell>
+							<TableCell>{ifJunior(data_urodzenia)}</TableCell>
+							<TableCell>{findClubName(klubId)}</TableCell>
+							<TableCell>
+								{isAdmin ? <IconButton className="riders-list__delete-rider-button" onClick={(event: React.MouseEvent<HTMLElement>) => {
+									deleteRiders(id)
+								}}>
+									<FiXCircle />
+								</IconButton> : null}
+							</TableCell>
 						</TableRow>
 					);
 				});
@@ -438,6 +445,7 @@ const RidersList : FunctionComponent<RouteProps> = () => {
 
 	const renderTableHeader = () => {
 		let header = [
+			'',
 			'Imię',
 			'Nazwisko',
 			'Przydomek',
