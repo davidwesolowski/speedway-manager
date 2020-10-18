@@ -1504,9 +1504,13 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 				'success',
 				2000
 			);
-			setTimeout(() => {
-				window.location.reload(false);
-			}, 2000);
+			setRounds(rounds =>
+				rounds.concat({
+					_id: data._id,
+					startDate: roundCreate.startDate,
+					endDate: roundCreate.endDate,
+					number: roundCreate.number
+				}));
 			setRoundCreate(defaultRoundCreate);
 		} catch (e) {
 			console.log(e.response);
@@ -2221,106 +2225,143 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 					away.rider_1._id,
 					data._id,
 					away.rider_1.points,
-					1
+					1,
+					away.rider_1.heats
 				);
 				addRiderToMatch(
 					away.rider_2._id,
 					data._id,
 					away.rider_2.points,
-					2
+					2,
+					away.rider_2.heats
 				);
 				addRiderToMatch(
 					away.rider_3._id,
 					data._id,
 					away.rider_3.points,
-					3
+					3,
+					away.rider_3.heats
 				);
 				addRiderToMatch(
 					away.rider_4._id,
 					data._id,
 					away.rider_4.points,
-					4
+					4,
+					away.rider_4.heats
 				);
 				addRiderToMatch(
 					away.rider_5._id,
 					data._id,
 					away.rider_5.points,
-					5
+					5,
+					away.rider_5.heats
 				);
 				addRiderToMatch(
 					away.rider_6._id,
 					data._id,
 					away.rider_6.points,
-					6
+					6,
+					away.rider_6.heats
 				);
 				addRiderToMatch(
 					away.rider_7._id,
 					data._id,
 					away.rider_7.points,
-					7
+					7,
+					away.rider_7.heats
 				);
 				addRiderToMatch(
 					away.rider_8._id,
 					data._id,
 					away.rider_8.points,
-					8
+					8,
+					away.rider_8.heats
 				);
 				addRiderToMatch(
 					home.rider_1._id,
 					data._id,
 					home.rider_1.points,
-					9
+					9,
+					home.rider_1.heats
 				);
 				addRiderToMatch(
 					home.rider_2._id,
 					data._id,
 					home.rider_2.points,
-					10
+					10,
+					home.rider_2.heats
 				);
 				addRiderToMatch(
 					home.rider_3._id,
 					data._id,
 					home.rider_3.points,
-					11
+					11,
+					home.rider_3.heats
 				);
 				addRiderToMatch(
 					home.rider_4._id,
 					data._id,
 					home.rider_4.points,
-					12
+					12,
+					home.rider_4.heats
 				);
 				addRiderToMatch(
 					home.rider_5._id,
 					data._id,
 					home.rider_5.points,
-					13
+					13,
+					home.rider_5.heats
 				);
 				addRiderToMatch(
 					home.rider_6._id,
 					data._id,
 					home.rider_6.points,
-					14
+					14,
+					home.rider_6.heats
 				);
 				addRiderToMatch(
 					home.rider_7._id,
 					data._id,
 					home.rider_7.points,
-					15
+					15,
+					home.rider_7.heats
 				);
 				addRiderToMatch(
 					home.rider_8._id,
 					data._id,
 					home.rider_8.points,
-					16
+					16,
+					home.rider_8.heats
 				);
 			}
 			addNotification('Sukces', 'Poprawnie dodano mecz', 'success', 1000);
-			setTimeout(() => {
-				{
-					window.location.reload(false);
-				}
-			}, 1000);
+			setHome({
+				team_id: '',
+				rider_1: defaultRiderPoints,
+				rider_2: defaultRiderPoints,
+				rider_3: defaultRiderPoints,
+				rider_4: defaultRiderPoints,
+				rider_5: defaultRiderPoints,
+				rider_6: defaultRiderPoints,
+				rider_7: defaultRiderPoints,
+				rider_8: defaultRiderPoints
+			});
+			setAway({
+				team_id: '',
+				rider_1: defaultRiderPoints,
+				rider_2: defaultRiderPoints,
+				rider_3: defaultRiderPoints,
+				rider_4: defaultRiderPoints,
+				rider_5: defaultRiderPoints,
+				rider_6: defaultRiderPoints,
+				rider_7: defaultRiderPoints,
+				rider_8: defaultRiderPoints
+			})
+			setNumber('');
+			setMatchDate(new Date());
+			setWasRidden(false);
 		} catch (e) {
+			console.log(e.response);
 			if (e.statusText == 'Bad Request') {
 				addNotification(
 					'Błąd!',
@@ -2345,7 +2386,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
-	const addRiderToMatch = async (riderId, matchId, score, number) => {
+	const addRiderToMatch = async (riderId, matchId, score, number, heats) => {
 		if (riderId !== '') {
 			try {
 				const accessToken = getToken();
@@ -2355,15 +2396,17 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 					}
 				};
 				const { data } = await axios.post(
-					`https://fantasy-league-eti.herokuapp.com/match/${matchId}/riders`,
+					`https://fantasy-league-eti.herokuapp.com/matches/${matchId}/riders`,
 					{
 						riderId: riderId,
 						score: score,
-						riderNumber: number
+						riderNumber: number,
+						heats: heats
 					},
 					options
 				);
 			} catch (e) {
+				console.log(e.response);
 				if (e.statusText == 'Bad Request') {
 					addNotification(
 						'Błąd!',
@@ -2395,6 +2438,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	const handleOnSubmit = () => {
+		console.log("SUBMIT");
 		const validationResponse = validateMatchPointsData(dataToValidation);
 		if (validationResponse.error) {
 			setValidatedPoints(() => defaultValidatedPoints);

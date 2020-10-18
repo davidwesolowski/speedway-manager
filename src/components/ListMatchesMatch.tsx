@@ -1897,7 +1897,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				}
 			};
 			const { data } = await axios.post(
-				`https://fantasy-league-eti.herokuapp.com/match/${matchId}/riders`,
+				`https://fantasy-league-eti.herokuapp.com/matches/${matchId}/riders`,
 				{
 					riderId: riderId,
 					score: points,
@@ -1933,7 +1933,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				}
 			};
 			const { data } = await axios.patch(
-				`https://fantasy-league-eti.herokuapp.com/match/${matchId}/riders/${riderId}`,
+				`https://fantasy-league-eti.herokuapp.com/matches/${matchId}/riders/${riderId}`,
 				{
 					score: points,
 					riderNumber: number
@@ -1968,7 +1968,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				}
 			};
 			const { data } = await axios.delete(
-				`https://fantasy-league-eti.herokuapp.com/match/${matchId}/riders/${riderId}`,
+				`https://fantasy-league-eti.herokuapp.com/matches/${matchId}/riders/${riderId}`,
 				options
 			);
 		} catch (e) {
