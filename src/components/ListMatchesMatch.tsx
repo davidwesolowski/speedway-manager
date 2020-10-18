@@ -162,7 +162,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 	awayScore,
 	riders,
 	date,
-	wasRidden
+	wasRidden,
 }) => {
 	const [home, setHome] = useState<IClub>();
 	const [away, setAway] = useState<IClub>();
@@ -170,13 +170,16 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 	const { push } = useHistory();
 	const [openScores, setOpenScores] = useState<boolean>(false);
 	const [openEdit, setOpenEdit] = useState<boolean>(false);
-	const [wasRiddenEdit, setWasRiddenEdit] = useState<boolean>(false);
+	const [wasRiddenEdit, setWasRiddenEdit] = useState<boolean>(wasRidden);
 	const [matchRidersEdit, setMatchRidersEdit] = useState<IRidersEdit>(
 		defaultRidersEditData
 	);
 	const [matchDateEdit, setMatchDateEdit] = useState<Date>(new Date(date));
 	const { userData } = useStateValue();
 	const [loading, setLoading] = useState<boolean>(true);
+	const [isHidden, setIsHidden] = useState<boolean>(false);
+	const [homeScoreEdit, setHomeScoreEdit] = useState(homeScore);
+	const [awayScoreEdit, setAwayScoreEdit] = useState(awayScore);
 
 	const getClub = async (clubId: string, homeAway: string) => {
 		if (homeAway === 'home') {
@@ -215,7 +218,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 	};
 
 	const handleOpenScores = () => {
-		if (wasRidden) {
+		if (wasRiddenEdit) {
 			getMatchRiders();
 			setOpenScores(true);
 		}
@@ -296,7 +299,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 
 	const handleOpenEdit = () => {
 		getMatchRiders();
-		setWasRiddenEdit(wasRidden);
 		//setRidersEdit();
 		setOpenEdit(true);
 	};
@@ -416,16 +418,16 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 	};
 
 	const generateScore = () => {
-		if (wasRidden) {
+		if (wasRiddenEdit) {
 			return (
 				<Typography variant="h3">
-					{homeScore}:{awayScore}
+					{homeScoreEdit}:{awayScoreEdit}
 				</Typography>
 			);
 		} else {
 			return (
 				<Typography variant="h5">
-					{new Date(date).toLocaleDateString()}
+					{new Date(matchDateEdit).toLocaleDateString()}
 				</Typography>
 			);
 		}
@@ -444,9 +446,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				options
 			);
 			addNotification('Sukces', 'Udało się usunąć mecz', 'success', 1000);
-			setTimeout(() => {
-				window.location.reload(false);
-			}, 1500);
+			setIsHidden(true);
 		} catch (e) {
 			console.log(e.response);
 			if (e.statusText == 'Bad Request') {
@@ -510,7 +510,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							<Button
 								className="list-matches-match__scores-button"
 								onClick={handleOpenScores}
-								disabled={!wasRidden}
+								disabled={!wasRiddenEdit}
 							>
 								Wyniki
 							</Button>
@@ -585,7 +585,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								className="scores-dialog__club-image"
 							/>
 							<div className="scores-dialog__club-score">
-								{awayScore}
+								{awayScoreEdit}
 							</div>
 							{generateRiderScoreDiv(
 								matchRiders.rider_1.firstName,
@@ -656,7 +656,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								className="scores-dialog__club-image"
 							/>
 							<div className="scores-dialog__club-score">
-								{homeScore}
+								{homeScoreEdit}
 							</div>
 							{generateRiderScoreDiv(
 								matchRiders.rider_9.firstName,
@@ -737,8 +737,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 						filtered.clubId === clubId &&
 						isU23(
 							filtered.dateOfBirth
-						) /* &&
-            !isChosen(filtered.id, 8, homeAway)*/
+						)
 				)
 				.map((rider, index) => {
 					return (
@@ -753,7 +752,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					filtered =>
 						filtered.clubId === clubId &&
 						isU21(filtered.dateOfBirth) &&
-						!filtered.isForeigner /* && (!isChosen(filtered.id, 7, homeAway) || !isChosen(filtered.id, 6, homeAway))*/
+						!filtered.isForeigner
 				)
 				.map((rider, index) => {
 					return (
@@ -767,8 +766,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				.filter(
 					filtered =>
 						filtered.clubId ==
-						clubId /* &&
-                (!isChosen(filtered.id, 1, homeAway) || !isChosen(filtered.id, 2, homeAway) || !isChosen(filtered.id, 3, homeAway) || !isChosen(filtered.id, 4, homeAway) || !isChosen(filtered.id, 5, homeAway))*/
+						clubId
 				)
 				.map((rider, index) => {
 					return (
@@ -2172,10 +2170,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 		);
 
 		addNotification('Sukces', 'Udało się edytować mecz', 'success', 1000);
-		setTimeout(() => {
-			handleCloseEdit();
-			window.location.reload(false);
-		}, 1000);
 	};
 
 	const checkDate = async () => {
@@ -2230,9 +2224,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 
 	return (
 		<>
-			{generateMatchDiv()}
-			{generateScoresDialog()}
-			{generateEditDialog()}
+			<div className={isHidden ? 'hidden' : ''}>
+				{generateMatchDiv()}
+				{generateScoresDialog()}
+				{generateEditDialog()}
+			</div>
 		</>
 	);
 };
