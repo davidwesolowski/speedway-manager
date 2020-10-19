@@ -40,6 +40,7 @@ interface IRider {
 	lastName: string;
 	score: number;
 	riderNumber: number;
+	heats: number;
 }
 
 interface IRider1 {
@@ -100,6 +101,7 @@ interface IRidersEdit {
 interface IRiderEdit {
 	riderId: string;
 	points: number;
+	heats: number;
 }
 
 const defaultRiderData = {
@@ -108,7 +110,8 @@ const defaultRiderData = {
 	firstName: '',
 	lastName: '',
 	score: 0,
-	riderNumber: 0
+	riderNumber: 0,
+	heats: 0
 };
 
 const defaultRidersData = {
@@ -132,7 +135,8 @@ const defaultRidersData = {
 
 const defaultRiderEditData = {
 	riderId: '',
-	points: 0
+	points: 0,
+	heats: 0
 };
 
 const defaultRidersEditData = {
@@ -232,67 +236,83 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 		setMatchRidersEdit({
 			rider_1: {
 				points: matchRiders.rider_1.score,
-				riderId: matchRiders.rider_1.riderId
+				riderId: matchRiders.rider_1.riderId,
+				heats: matchRiders.rider_1.heats
 			},
 			rider_2: {
 				points: matchRiders.rider_2.score,
-				riderId: matchRiders.rider_2.riderId
+				riderId: matchRiders.rider_2.riderId,
+				heats: matchRiders.rider_2.heats
 			},
 			rider_3: {
 				points: matchRiders.rider_3.score,
-				riderId: matchRiders.rider_3.riderId
+				riderId: matchRiders.rider_3.riderId,
+				heats: matchRiders.rider_3.heats
 			},
 			rider_4: {
 				points: matchRiders.rider_4.score,
-				riderId: matchRiders.rider_4.riderId
+				riderId: matchRiders.rider_4.riderId,
+				heats: matchRiders.rider_4.heats
 			},
 			rider_5: {
 				points: matchRiders.rider_5.score,
-				riderId: matchRiders.rider_5.riderId
+				riderId: matchRiders.rider_5.riderId,
+				heats: matchRiders.rider_5.heats
 			},
 			rider_6: {
 				points: matchRiders.rider_6.score,
-				riderId: matchRiders.rider_6.riderId
+				riderId: matchRiders.rider_6.riderId,
+				heats: matchRiders.rider_6.heats
 			},
 			rider_7: {
 				points: matchRiders.rider_7.score,
-				riderId: matchRiders.rider_7.riderId
+				riderId: matchRiders.rider_7.riderId,
+				heats: matchRiders.rider_7.heats
 			},
 			rider_8: {
 				points: matchRiders.rider_8.score,
-				riderId: matchRiders.rider_8.riderId
+				riderId: matchRiders.rider_8.riderId,
+				heats: matchRiders.rider_8.heats
 			},
 			rider_9: {
 				points: matchRiders.rider_9.score,
-				riderId: matchRiders.rider_9.riderId
+				riderId: matchRiders.rider_9.riderId,
+				heats: matchRiders.rider_9.heats
 			},
 			rider_10: {
 				points: matchRiders.rider_10.score,
-				riderId: matchRiders.rider_10.riderId
+				riderId: matchRiders.rider_10.riderId,
+				heats: matchRiders.rider_10.heats
 			},
 			rider_11: {
 				points: matchRiders.rider_11.score,
-				riderId: matchRiders.rider_11.riderId
+				riderId: matchRiders.rider_11.riderId,
+				heats: matchRiders.rider_11.heats
 			},
 			rider_12: {
 				points: matchRiders.rider_12.score,
-				riderId: matchRiders.rider_12.riderId
+				riderId: matchRiders.rider_12.riderId,
+				heats: matchRiders.rider_12.heats
 			},
 			rider_13: {
 				points: matchRiders.rider_13.score,
-				riderId: matchRiders.rider_13.riderId
+				riderId: matchRiders.rider_13.riderId,
+				heats: matchRiders.rider_13.heats
 			},
 			rider_14: {
 				points: matchRiders.rider_14.score,
-				riderId: matchRiders.rider_14.riderId
+				riderId: matchRiders.rider_14.riderId,
+				heats: matchRiders.rider_14.heats
 			},
 			rider_15: {
 				points: matchRiders.rider_15.score,
-				riderId: matchRiders.rider_15.riderId
+				riderId: matchRiders.rider_15.riderId,
+				heats: matchRiders.rider_15.heats
 			},
 			rider_16: {
 				points: matchRiders.rider_16.score,
-				riderId: matchRiders.rider_16.riderId
+				riderId: matchRiders.rider_16.riderId,
+				heats: matchRiders.rider_16.heats
 			}
 		});
 	};
@@ -316,105 +336,102 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				firstName: rider.rider.firstName,
 				lastName: rider.rider.lastName,
 				score: rider.score,
-				riderNumber: rider.riderNumber
+				riderNumber: rider.riderNumber,
+				heats: rider.heats
 			}
 		}));
 		setMatchRidersEdit((prevState: IRidersEdit) => ({
 			...prevState,
 			[name]: {
 				riderId: rider.riderId,
-				points: rider.score
+				points: rider.score,
+				heats: rider.heats
 			}
 		}));
 	};
 
 	const getMatchRiders = async () => {
-		console.log("OUT")
-		//if (matchRiders === defaultRidersData) {
-			console.log("IN")
-			try {
-				const accessToken = getToken();
-				const options = {
-					headers: {
-						Authorization: `Bearer ${accessToken}`
-					}
-				};
-				const { data } = await axios.get(
-					`https://fantasy-league-eti.herokuapp.com/matches/${matchId}/riders`,
-					options
-				);
-				console.log(data);
-				data.map((rider, index) => {
-					switch (rider.riderNumber) {
-						case 1:
-							setMatchRider('rider_1', rider);
-							break;
-						case 2:
-							setMatchRider('rider_2', rider);
-							break;
-						case 3:
-							setMatchRider('rider_3', rider);
-							break;
-						case 4:
-							setMatchRider('rider_4', rider);
-							break;
-						case 5:
-							setMatchRider('rider_5', rider);
-							break;
-						case 6:
-							setMatchRider('rider_6', rider);
-							break;
-						case 7:
-							setMatchRider('rider_7', rider);
-							break;
-						case 8:
-							setMatchRider('rider_8', rider);
-							break;
-						case 9:
-							setMatchRider('rider_9', rider);
-							break;
-						case 10:
-							setMatchRider('rider_10', rider);
-							break;
-						case 11:
-							setMatchRider('rider_11', rider);
-							break;
-						case 12:
-							setMatchRider('rider_12', rider);
-							break;
-						case 13:
-							setMatchRider('rider_13', rider);
-							break;
-						case 14:
-							setMatchRider('rider_14', rider);
-							break;
-						case 15:
-							setMatchRider('rider_15', rider);
-							break;
-						case 16:
-							setMatchRider('rider_16', rider);
-							break;
-						default:
-							break;
-					}
-				});
-			} catch (e) {
-				if (e.response.statusText == 'Unauthorized') {
-					addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-					setTimeout(() => {
-						push('/login');
-					}, 3000);
-				} else {
-					addNotification(
-						'Błąd',
-						'Nie udało się pobrać zawodników z bazy',
-						'danger',
-						3000
-					);
+		try {
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
 				}
-				throw new Error('Error in getting rounds');
+			};
+			const { data } = await axios.get(
+				`https://fantasy-league-eti.herokuapp.com/matches/${matchId}/riders`,
+				options
+			);
+			data.map((rider, index) => {
+				switch (rider.riderNumber) {
+					case 1:
+						setMatchRider('rider_1', rider);
+						break;
+					case 2:
+						setMatchRider('rider_2', rider);
+						break;
+					case 3:
+						setMatchRider('rider_3', rider);
+						break;
+					case 4:
+						setMatchRider('rider_4', rider);
+						break;
+					case 5:
+						setMatchRider('rider_5', rider);
+						break;
+					case 6:
+						setMatchRider('rider_6', rider);
+						break;
+					case 7:
+						setMatchRider('rider_7', rider);
+						break;
+					case 8:
+						setMatchRider('rider_8', rider);
+						break;
+					case 9:
+						setMatchRider('rider_9', rider);
+						break;
+					case 10:
+						setMatchRider('rider_10', rider);
+						break;
+					case 11:
+						setMatchRider('rider_11', rider);
+						break;
+					case 12:
+						setMatchRider('rider_12', rider);
+						break;
+					case 13:
+						setMatchRider('rider_13', rider);
+						break;
+					case 14:
+						setMatchRider('rider_14', rider);
+						break;
+					case 15:
+						setMatchRider('rider_15', rider);
+						break;
+					case 16:
+						setMatchRider('rider_16', rider);
+						break;
+					default:
+						break;
+				}
+			});
+		} catch (e) {
+			if (e.response.statusText == 'Unauthorized') {
+				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
+				setTimeout(() => {
+					push('/login');
+				}, 3000);
+			} else {
+				addNotification(
+					'Błąd',
+					'Nie udało się pobrać zawodników z bazy',
+					'danger',
+					3000
+				);
 			}
-		//}
+			throw new Error('Error in getting rounds');
+		}
 	};
 
 	const generateScore = () => {
@@ -782,7 +799,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 	};
 
 	const sumEditPoints = homeAway => {
-		var sum = 0;
+		let sum = 0;
 		if (homeAway === 'home') {
 			sum =
 				matchRidersEdit.rider_9.points +
@@ -841,6 +858,14 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 									'away'
 								)}
 							/>
+							<TextField
+								className="add-match__rider-heats"
+								value={matchRidersEdit.rider_1.heats || ''}
+								onChange={handleOnChangeHeats(
+									'rider_1',
+									'away'
+								)}
+							/>
 						</div>
 						<div className="add-match__rider-div">
 							2.
@@ -861,6 +886,14 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								className="add-match__rider-points"
 								value={matchRidersEdit.rider_2.points || ''}
 								onChange={handleOnChangePoints(
+									'rider_2',
+									'away'
+								)}
+							/>
+							<TextField
+								className="add-match__rider-heats"
+								value={matchRidersEdit.rider_2.heats || ''}
+								onChange={handleOnChangeHeats(
 									'rider_2',
 									'away'
 								)}
@@ -889,6 +922,14 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 									'away'
 								)}
 							/>
+							<TextField
+								className="add-match__rider-heats"
+								value={matchRidersEdit.rider_3.heats || ''}
+								onChange={handleOnChangeHeats(
+									'rider_3',
+									'away'
+								)}
+							/>
 						</div>
 						<div className="add-match__rider-div">
 							4.
@@ -909,6 +950,14 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								className="add-match__rider-points"
 								value={matchRidersEdit.rider_4.points || ''}
 								onChange={handleOnChangePoints(
+									'rider_4',
+									'away'
+								)}
+							/>
+							<TextField
+								className="add-match__rider-heats"
+								value={matchRidersEdit.rider_4.heats || ''}
+								onChange={handleOnChangeHeats(
 									'rider_4',
 									'away'
 								)}
@@ -937,6 +986,14 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 									'away'
 								)}
 							/>
+							<TextField
+								className="add-match__rider-heats"
+								value={matchRidersEdit.rider_5.heats || ''}
+								onChange={handleOnChangeHeats(
+									'rider_5',
+									'away'
+								)}
+							/>
 						</div>
 						<div className="add-match__rider-div">
 							6.
@@ -957,6 +1014,14 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								className="add-match__rider-points"
 								value={matchRidersEdit.rider_6.points || ''}
 								onChange={handleOnChangePoints(
+									'rider_6',
+									'away'
+								)}
+							/>
+							<TextField
+								className="add-match__rider-heats"
+								value={matchRidersEdit.rider_6.heats || ''}
+								onChange={handleOnChangeHeats(
 									'rider_6',
 									'away'
 								)}
@@ -985,6 +1050,14 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 									'away'
 								)}
 							/>
+							<TextField
+								className="add-match__rider-heats"
+								value={matchRidersEdit.rider_7.heats || ''}
+								onChange={handleOnChangeHeats(
+									'rider_7',
+									'away'
+								)}
+							/>
 						</div>
 						<div className="add-match__rider-div">
 							8.
@@ -1005,6 +1078,14 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								className="add-match__rider-points"
 								value={matchRidersEdit.rider_8.points || ''}
 								onChange={handleOnChangePoints(
+									'rider_8',
+									'away'
+								)}
+							/>
+							<TextField
+								className="add-match__rider-heats"
+								value={matchRidersEdit.rider_8.heats || ''}
+								onChange={handleOnChangeHeats(
 									'rider_8',
 									'away'
 								)}
@@ -1041,6 +1122,14 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 									'home'
 								)}
 							/>
+							<TextField
+								className="add-match__rider-heats"
+								value={matchRidersEdit.rider_9.heats || ''}
+								onChange={handleOnChangeHeats(
+									'rider_1',
+									'home'
+								)}
+							/>
 						</div>
 						<div className="add-match__rider-div">
 							10.
@@ -1061,6 +1150,14 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								className="add-match__rider-points"
 								value={matchRidersEdit.rider_10.points || ''}
 								onChange={handleOnChangePoints(
+									'rider_2',
+									'home'
+								)}
+							/>
+							<TextField
+								className="add-match__rider-heats"
+								value={matchRidersEdit.rider_10.heats || ''}
+								onChange={handleOnChangeHeats(
 									'rider_2',
 									'home'
 								)}
@@ -1089,6 +1186,14 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 									'home'
 								)}
 							/>
+							<TextField
+								className="add-match__rider-heats"
+								value={matchRidersEdit.rider_11.heats || ''}
+								onChange={handleOnChangeHeats(
+									'rider_3',
+									'home'
+								)}
+							/>
 						</div>
 						<div className="add-match__rider-div">
 							12.
@@ -1109,6 +1214,14 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								className="add-match__rider-points"
 								value={matchRidersEdit.rider_12.points || ''}
 								onChange={handleOnChangePoints(
+									'rider_4',
+									'home'
+								)}
+							/>
+							<TextField
+								className="add-match__rider-heats"
+								value={matchRidersEdit.rider_12.heats || ''}
+								onChange={handleOnChangeHeats(
 									'rider_4',
 									'home'
 								)}
@@ -1137,6 +1250,14 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 									'home'
 								)}
 							/>
+							<TextField
+								className="add-match__rider-heats"
+								value={matchRidersEdit.rider_13.heats || ''}
+								onChange={handleOnChangeHeats(
+									'rider_5',
+									'home'
+								)}
+							/>
 						</div>
 						<div className="add-match__rider-div">
 							14.
@@ -1157,6 +1278,14 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								className="add-match__rider-points"
 								value={matchRidersEdit.rider_14.points || ''}
 								onChange={handleOnChangePoints(
+									'rider_6',
+									'home'
+								)}
+							/>
+							<TextField
+								className="add-match__rider-heats"
+								value={matchRidersEdit.rider_14.heats || ''}
+								onChange={handleOnChangeHeats(
 									'rider_6',
 									'home'
 								)}
@@ -1185,6 +1314,14 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 									'home'
 								)}
 							/>
+							<TextField
+								className="add-match__rider-heats"
+								value={matchRidersEdit.rider_15.heats || ''}
+								onChange={handleOnChangeHeats(
+									'rider_7',
+									'home'
+								)}
+							/>
 						</div>
 						<div className="add-match__rider-div">
 							16.
@@ -1205,6 +1342,14 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								className="add-match__rider-points"
 								value={matchRidersEdit.rider_16.points || ''}
 								onChange={handleOnChangePoints(
+									'rider_8',
+									'home'
+								)}
+							/>
+							<TextField
+								className="add-match__rider-heats"
+								value={matchRidersEdit.rider_16.heats || ''}
+								onChange={handleOnChangeHeats(
 									'rider_8',
 									'home'
 								)}
@@ -1239,7 +1384,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 		homeAway: string
 	) => event => {
 		event.persist();
-		var rider = parseInt(number.slice(-1));
+		let rider = parseInt(number.slice(-1));
 		if (event.target) {
 			if (homeAway === 'away') {
 				const name = `rider_${rider}`;
@@ -1249,7 +1394,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: event.target.value,
-								points: matchRidersEdit.rider_1.points
+								points: matchRidersEdit.rider_1.points,
+								heats: matchRidersEdit.rider_1.heats
 							}
 						}));
 						break;
@@ -1258,7 +1404,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: event.target.value,
-								points: matchRidersEdit.rider_2.points
+								points: matchRidersEdit.rider_2.points,
+								heats: matchRidersEdit.rider_2.heats
 							}
 						}));
 						break;
@@ -1267,7 +1414,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: event.target.value,
-								points: matchRidersEdit.rider_3.points
+								points: matchRidersEdit.rider_3.points,
+								heats: matchRidersEdit.rider_3.heats
 							}
 						}));
 						break;
@@ -1276,7 +1424,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: event.target.value,
-								points: matchRidersEdit.rider_4.points
+								points: matchRidersEdit.rider_4.points,
+								heats: matchRidersEdit.rider_4.heats
 							}
 						}));
 						break;
@@ -1285,7 +1434,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: event.target.value,
-								points: matchRidersEdit.rider_5.points
+								points: matchRidersEdit.rider_5.points,
+								heats: matchRidersEdit.rider_5.heats
 							}
 						}));
 						break;
@@ -1294,7 +1444,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: event.target.value,
-								points: matchRidersEdit.rider_6.points
+								points: matchRidersEdit.rider_6.points,
+								heats: matchRidersEdit.rider_6.heats
 							}
 						}));
 						break;
@@ -1303,7 +1454,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: event.target.value,
-								points: matchRidersEdit.rider_7.points
+								points: matchRidersEdit.rider_7.points,
+								heats: matchRidersEdit.rider_7.heats
 							}
 						}));
 						break;
@@ -1312,7 +1464,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: event.target.value,
-								points: matchRidersEdit.rider_8.points
+								points: matchRidersEdit.rider_8.points,
+								heats: matchRidersEdit.rider_8.heats
 							}
 						}));
 						break;
@@ -1328,7 +1481,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: event.target.value,
-								points: matchRidersEdit.rider_9.points
+								points: matchRidersEdit.rider_9.points,
+								heats: matchRidersEdit.rider_9.heats
 							}
 						}));
 						break;
@@ -1337,7 +1491,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: event.target.value,
-								points: matchRidersEdit.rider_10.points
+								points: matchRidersEdit.rider_10.points,
+								heats: matchRidersEdit.rider_10.heats
 							}
 						}));
 						break;
@@ -1346,7 +1501,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: event.target.value,
-								points: matchRidersEdit.rider_11.points
+								points: matchRidersEdit.rider_11.points,
+								heats: matchRidersEdit.rider_11.heats
 							}
 						}));
 						break;
@@ -1355,7 +1511,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: event.target.value,
-								points: matchRidersEdit.rider_12.points
+								points: matchRidersEdit.rider_12.points,
+								heats: matchRidersEdit.rider_12.heats
 							}
 						}));
 						break;
@@ -1364,7 +1521,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: event.target.value,
-								points: matchRidersEdit.rider_13.points
+								points: matchRidersEdit.rider_13.points,
+								heats: matchRidersEdit.rider_13.heats
 							}
 						}));
 						break;
@@ -1373,7 +1531,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: event.target.value,
-								points: matchRidersEdit.rider_14.points
+								points: matchRidersEdit.rider_14.points,
+								heats: matchRidersEdit.rider_14.heats
 							}
 						}));
 						break;
@@ -1382,7 +1541,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: event.target.value,
-								points: matchRidersEdit.rider_15.points
+								points: matchRidersEdit.rider_15.points,
+								heats: matchRidersEdit.rider_15.heats
 							}
 						}));
 						break;
@@ -1391,7 +1551,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: event.target.value,
-								points: matchRidersEdit.rider_16.points
+								points: matchRidersEdit.rider_16.points,
+								heats: matchRidersEdit.rider_16.heats
 							}
 						}));
 						break;
@@ -1406,7 +1567,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 		event: React.ChangeEvent<HTMLInputElement>
 	) => {
 		event.persist();
-		var number = parseInt(rider.slice(-1));
+		let number = parseInt(rider.slice(-1));
 		if (event.target) {
 			if (homeAway === 'away') {
 				const name = `rider_${number}`;
@@ -1416,7 +1577,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: matchRidersEdit.rider_1.riderId,
-								points: parseInt(event.target.value) || 0
+								points: parseInt(event.target.value) || 0,
+								heats: matchRidersEdit.rider_1.heats
 							}
 						}));
 						break;
@@ -1425,7 +1587,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: matchRidersEdit.rider_2.riderId,
-								points: parseInt(event.target.value) || 0
+								points: parseInt(event.target.value) || 0,
+								heats: matchRidersEdit.rider_2.heats
 							}
 						}));
 						break;
@@ -1434,7 +1597,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: matchRidersEdit.rider_3.riderId,
-								points: parseInt(event.target.value) || 0
+								points: parseInt(event.target.value) || 0,
+								heats: matchRidersEdit.rider_3.heats
 							}
 						}));
 						break;
@@ -1443,7 +1607,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: matchRidersEdit.rider_4.riderId,
-								points: parseInt(event.target.value) || 0
+								points: parseInt(event.target.value) || 0,
+								heats: matchRidersEdit.rider_4.heats
 							}
 						}));
 						break;
@@ -1452,7 +1617,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: matchRidersEdit.rider_5.riderId,
-								points: parseInt(event.target.value) || 0
+								points: parseInt(event.target.value) || 0,
+								heats: matchRidersEdit.rider_5.heats
 							}
 						}));
 						break;
@@ -1461,7 +1627,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: matchRidersEdit.rider_6.riderId,
-								points: parseInt(event.target.value) || 0
+								points: parseInt(event.target.value) || 0,
+								heats: matchRidersEdit.rider_6.heats
 							}
 						}));
 						break;
@@ -1470,7 +1637,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: matchRidersEdit.rider_7.riderId,
-								points: parseInt(event.target.value) || 0
+								points: parseInt(event.target.value) || 0,
+								heats: matchRidersEdit.rider_7.heats
 							}
 						}));
 						break;
@@ -1479,7 +1647,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: matchRidersEdit.rider_8.riderId,
-								points: parseInt(event.target.value) || 0
+								points: parseInt(event.target.value) || 0,
+								heats: matchRidersEdit.rider_8.heats
 							}
 						}));
 						break;
@@ -1495,7 +1664,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: matchRidersEdit.rider_9.riderId,
-								points: parseInt(event.target.value) || 0
+								points: parseInt(event.target.value) || 0,
+								heats: matchRidersEdit.rider_9.heats
 							}
 						}));
 						break;
@@ -1504,7 +1674,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: matchRidersEdit.rider_10.riderId,
-								points: parseInt(event.target.value) || 0
+								points: parseInt(event.target.value) || 0,
+								heats: matchRidersEdit.rider_10.heats
 							}
 						}));
 						break;
@@ -1513,7 +1684,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: matchRidersEdit.rider_11.riderId,
-								points: parseInt(event.target.value) || 0
+								points: parseInt(event.target.value) || 0,
+								heats: matchRidersEdit.rider_11.heats
 							}
 						}));
 						break;
@@ -1522,7 +1694,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: matchRidersEdit.rider_12.riderId,
-								points: parseInt(event.target.value) || 0
+								points: parseInt(event.target.value) || 0,
+								heats: matchRidersEdit.rider_12.heats
 							}
 						}));
 						break;
@@ -1531,7 +1704,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: matchRidersEdit.rider_13.riderId,
-								points: parseInt(event.target.value) || 0
+								points: parseInt(event.target.value) || 0,
+								heats: matchRidersEdit.rider_13.heats
 							}
 						}));
 						break;
@@ -1540,7 +1714,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: matchRidersEdit.rider_14.riderId,
-								points: parseInt(event.target.value) || 0
+								points: parseInt(event.target.value) || 0,
+								heats: matchRidersEdit.rider_14.heats
 							}
 						}));
 						break;
@@ -1549,7 +1724,8 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: matchRidersEdit.rider_15.riderId,
-								points: parseInt(event.target.value) || 0
+								points: parseInt(event.target.value) || 0,
+								heats: matchRidersEdit.rider_15.heats
 							}
 						}));
 						break;
@@ -1558,7 +1734,191 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							...prevState,
 							[name]: {
 								riderId: matchRidersEdit.rider_16.riderId,
-								points: parseInt(event.target.value) || 0
+								points: parseInt(event.target.value) || 0,
+								heats: matchRidersEdit.rider_16.heats
+							}
+						}));
+						break;
+					default:
+						break;
+				}
+			}
+		}
+	};
+
+	const handleOnChangeHeats = (rider: string, homeAway: string) => (
+		event: React.ChangeEvent<HTMLInputElement>
+	) => {
+		event.persist();
+		let number = parseInt(rider.slice(-1));
+		if (event.target) {
+			if (homeAway === 'away') {
+				const name = `rider_${number}`;
+				switch (number) {
+					case 1:
+						setMatchRidersEdit((prevState: IRidersEdit) => ({
+							...prevState,
+							[name]: {
+								riderId: matchRidersEdit.rider_1.riderId,
+								points: matchRidersEdit.rider_1.points,
+								heats: parseInt(event.target.value) || 0
+							}
+						}));
+						break;
+					case 2:
+						setMatchRidersEdit((prevState: IRidersEdit) => ({
+							...prevState,
+							[name]: {
+								riderId: matchRidersEdit.rider_2.riderId,
+								points: matchRidersEdit.rider_2.points,
+								heats: parseInt(event.target.value) || 0
+							}
+						}));
+						break;
+					case 3:
+						setMatchRidersEdit((prevState: IRidersEdit) => ({
+							...prevState,
+							[name]: {
+								riderId: matchRidersEdit.rider_3.riderId,
+								points: matchRidersEdit.rider_3.points,
+								heats: parseInt(event.target.value) || 0
+							}
+						}));
+						break;
+					case 4:
+						setMatchRidersEdit((prevState: IRidersEdit) => ({
+							...prevState,
+							[name]: {
+								riderId: matchRidersEdit.rider_4.riderId,
+								points: matchRidersEdit.rider_4.points,
+								heats: parseInt(event.target.value) || 0
+							}
+						}));
+						break;
+					case 5:
+						setMatchRidersEdit((prevState: IRidersEdit) => ({
+							...prevState,
+							[name]: {
+								riderId: matchRidersEdit.rider_5.riderId,
+								points: matchRidersEdit.rider_5.points,
+								heats: parseInt(event.target.value) || 0
+							}
+						}));
+						break;
+					case 6:
+						setMatchRidersEdit((prevState: IRidersEdit) => ({
+							...prevState,
+							[name]: {
+								riderId: matchRidersEdit.rider_6.riderId,
+								points: matchRidersEdit.rider_6.points,
+								heats: parseInt(event.target.value) || 0
+							}
+						}));
+						break;
+					case 7:
+						setMatchRidersEdit((prevState: IRidersEdit) => ({
+							...prevState,
+							[name]: {
+								riderId: matchRidersEdit.rider_7.riderId,
+								points: matchRidersEdit.rider_7.points,
+								heats: parseInt(event.target.value) || 0
+							}
+						}));
+						break;
+					case 8:
+						setMatchRidersEdit((prevState: IRidersEdit) => ({
+							...prevState,
+							[name]: {
+								riderId: matchRidersEdit.rider_8.riderId,
+								points: matchRidersEdit.rider_8.points,
+								heats: parseInt(event.target.value) || 0
+							}
+						}));
+						break;
+					default:
+						break;
+				}
+			} else {
+				number = number + 8;
+				const name = `rider_${number}`;
+				switch (number) {
+					case 9:
+						setMatchRidersEdit((prevState: IRidersEdit) => ({
+							...prevState,
+							[name]: {
+								riderId: matchRidersEdit.rider_9.riderId,
+								points: matchRidersEdit.rider_9.points,
+								heats: parseInt(event.target.value) || 0
+							}
+						}));
+						break;
+					case 10:
+						setMatchRidersEdit((prevState: IRidersEdit) => ({
+							...prevState,
+							[name]: {
+								riderId: matchRidersEdit.rider_10.riderId,
+								points: matchRidersEdit.rider_10.points,
+								heats: parseInt(event.target.value) || 0
+							}
+						}));
+						break;
+					case 11:
+						setMatchRidersEdit((prevState: IRidersEdit) => ({
+							...prevState,
+							[name]: {
+								riderId: matchRidersEdit.rider_11.riderId,
+								points: matchRidersEdit.rider_11.points,
+								heats: parseInt(event.target.value) || 0
+							}
+						}));
+						break;
+					case 12:
+						setMatchRidersEdit((prevState: IRidersEdit) => ({
+							...prevState,
+							[name]: {
+								riderId: matchRidersEdit.rider_12.riderId,
+								points: matchRidersEdit.rider_12.points,
+								heats: parseInt(event.target.value) || 0
+							}
+						}));
+						break;
+					case 13:
+						setMatchRidersEdit((prevState: IRidersEdit) => ({
+							...prevState,
+							[name]: {
+								riderId: matchRidersEdit.rider_13.riderId,
+								points: matchRidersEdit.rider_13.points,
+								heats: parseInt(event.target.value) || 0
+							}
+						}));
+						break;
+					case 14:
+						setMatchRidersEdit((prevState: IRidersEdit) => ({
+							...prevState,
+							[name]: {
+								riderId: matchRidersEdit.rider_14.riderId,
+								points: matchRidersEdit.rider_14.points,
+								heats: parseInt(event.target.value) || 0
+							}
+						}));
+						break;
+					case 15:
+						setMatchRidersEdit((prevState: IRidersEdit) => ({
+							...prevState,
+							[name]: {
+								riderId: matchRidersEdit.rider_15.riderId,
+								points: matchRidersEdit.rider_15.points,
+								heats: parseInt(event.target.value) || 0
+							}
+						}));
+						break;
+					case 16:
+						setMatchRidersEdit((prevState: IRidersEdit) => ({
+							...prevState,
+							[name]: {
+								riderId: matchRidersEdit.rider_16.riderId,
+								points: matchRidersEdit.rider_16.points,
+								heats: parseInt(event.target.value) || 0
 							}
 						}));
 						break;
@@ -1624,7 +1984,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 		);
 	};
 
-	const checkIfNew = (riderId, number, points) => {
+	const checkIfNew = (riderId, number, points, heats) => {
 		if (riderId !== '') {
 			if (number < 9) {
 				if (riderId === matchRiders.rider_1.riderId) {
@@ -1664,114 +2024,130 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				}
 			}
 
-			addNewRiderMatch(riderId, matchId, number, points);
+			addNewRiderMatch(riderId, matchId, number, points, heats);
 		}
 	};
 
-	const checkIfChanged = (riderId, matchId, number, points) => {
+	const checkIfChanged = (riderId, matchId, number, points, heats) => {
 		if (riderId !== '') {
 			if (number < 9) {
 				if (riderId === matchRidersEdit.rider_1.riderId) {
 					if (
 						points !== matchRidersEdit.rider_1.points ||
-						number !== 1
+						number !== 1 ||
+						heats !== matchRidersEdit.rider_1.heats
 					) {
 						patchRiderMatch(
 							matchId,
 							riderId,
 							1,
-							matchRidersEdit.rider_1.points
+							matchRidersEdit.rider_1.points,
+							matchRidersEdit.rider_1.heats
 						);
 					}
 					return true;
 				} else if (riderId === matchRidersEdit.rider_2.riderId) {
 					if (
 						points !== matchRidersEdit.rider_2.points ||
-						number !== 2
+						number !== 2||
+						heats !== matchRidersEdit.rider_2.heats
 					) {
 						patchRiderMatch(
 							matchId,
 							riderId,
 							2,
-							matchRidersEdit.rider_2.points
+							matchRidersEdit.rider_2.points,
+							matchRidersEdit.rider_2.heats
 						);
 					}
 					return true;
 				} else if (riderId === matchRidersEdit.rider_3.riderId) {
 					if (
 						points !== matchRidersEdit.rider_3.points ||
-						number !== 3
+						number !== 3||
+						heats !== matchRidersEdit.rider_3.heats
 					) {
 						patchRiderMatch(
 							matchId,
 							riderId,
 							3,
-							matchRidersEdit.rider_3.points
+							matchRidersEdit.rider_3.points,
+							matchRidersEdit.rider_3.heats
 						);
 					}
 					return true;
 				} else if (riderId === matchRidersEdit.rider_4.riderId) {
 					if (
 						points !== matchRidersEdit.rider_4.points ||
-						number !== 4
+						number !== 4||
+						heats !== matchRidersEdit.rider_4.heats
 					) {
 						patchRiderMatch(
 							matchId,
 							riderId,
 							4,
-							matchRidersEdit.rider_4.points
+							matchRidersEdit.rider_4.points,
+							matchRidersEdit.rider_4.heats
 						);
 					}
 					return true;
 				} else if (riderId === matchRidersEdit.rider_5.riderId) {
 					if (
 						points !== matchRidersEdit.rider_5.points ||
-						number !== 5
+						number !== 5||
+						heats !== matchRidersEdit.rider_5.heats
 					) {
 						patchRiderMatch(
 							matchId,
 							riderId,
 							5,
-							matchRidersEdit.rider_5.points
+							matchRidersEdit.rider_5.points,
+							matchRidersEdit.rider_5.heats
 						);
 					}
 					return true;
 				} else if (riderId === matchRidersEdit.rider_6.riderId) {
 					if (
 						points !== matchRidersEdit.rider_6.points ||
-						number !== 6
+						number !== 6||
+						heats !== matchRidersEdit.rider_6.heats
 					) {
 						patchRiderMatch(
 							matchId,
 							riderId,
 							6,
-							matchRidersEdit.rider_6.points
+							matchRidersEdit.rider_6.points,
+							matchRidersEdit.rider_6.heats
 						);
 					}
 					return true;
 				} else if (riderId === matchRidersEdit.rider_7.riderId) {
 					if (
 						points !== matchRidersEdit.rider_7.points ||
-						number !== 7
+						number !== 7||
+						heats !== matchRidersEdit.rider_7.heats
 					) {
 						patchRiderMatch(
 							matchId,
 							riderId,
 							7,
-							matchRidersEdit.rider_7.points
+							matchRidersEdit.rider_7.points,
+							matchRidersEdit.rider_7.heats
 						);
 					}
 					return true;
 				} else if (riderId === matchRidersEdit.rider_8.riderId) {
 					if (
 						points !== matchRidersEdit.rider_8.points ||
-						number !== 8
+						number !== 8||
+						heats !== matchRidersEdit.rider_8.heats
 					) {
 						patchRiderMatch(
 							matchId,
 							riderId,
 							8,
-							matchRidersEdit.rider_8.points
+							matchRidersEdit.rider_8.points,
+							matchRidersEdit.rider_8.heats
 						);
 					}
 					return true;
@@ -1780,104 +2156,120 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				if (riderId === matchRidersEdit.rider_9.riderId) {
 					if (
 						points !== matchRidersEdit.rider_9.points ||
-						number !== 9
+						number !== 9||
+						heats !== matchRidersEdit.rider_9.heats
 					) {
 						patchRiderMatch(
 							matchId,
 							riderId,
 							9,
-							matchRidersEdit.rider_9.points
+							matchRidersEdit.rider_9.points,
+							matchRidersEdit.rider_9.heats
 						);
 					}
 					return true;
 				} else if (riderId === matchRidersEdit.rider_10.riderId) {
 					if (
 						points !== matchRidersEdit.rider_10.points ||
-						number !== 10
+						number !== 10||
+						heats !== matchRidersEdit.rider_10.heats
 					) {
 						patchRiderMatch(
 							matchId,
 							riderId,
 							10,
-							matchRidersEdit.rider_10.points
+							matchRidersEdit.rider_10.points,
+							matchRidersEdit.rider_10.heats
 						);
 					}
 					return true;
 				} else if (riderId === matchRidersEdit.rider_11.riderId) {
 					if (
 						points !== matchRidersEdit.rider_11.points ||
-						number !== 11
+						number !== 11||
+						heats !== matchRidersEdit.rider_11.heats
 					) {
 						patchRiderMatch(
 							matchId,
 							riderId,
 							11,
-							matchRidersEdit.rider_11.points
+							matchRidersEdit.rider_11.points,
+							matchRidersEdit.rider_11.heats
 						);
 					}
 					return true;
 				} else if (riderId === matchRidersEdit.rider_12.riderId) {
 					if (
 						points !== matchRidersEdit.rider_12.points ||
-						number !== 12
+						number !== 12||
+						heats !== matchRidersEdit.rider_12.heats
 					) {
 						patchRiderMatch(
 							matchId,
 							riderId,
 							12,
-							matchRidersEdit.rider_12.points
+							matchRidersEdit.rider_12.points,
+							matchRidersEdit.rider_12.heats
 						);
 					}
 					return true;
 				} else if (riderId === matchRidersEdit.rider_13.riderId) {
 					if (
 						points !== matchRidersEdit.rider_13.points ||
-						number !== 13
+						number !== 13||
+						heats !== matchRidersEdit.rider_13.heats
 					) {
 						patchRiderMatch(
 							matchId,
 							riderId,
 							13,
-							matchRidersEdit.rider_13.points
+							matchRidersEdit.rider_13.points,
+							matchRidersEdit.rider_13.heats
 						);
 					}
 					return true;
 				} else if (riderId === matchRidersEdit.rider_14.riderId) {
 					if (
 						points !== matchRidersEdit.rider_14.points ||
-						number !== 14
+						number !== 14||
+						heats !== matchRidersEdit.rider_14.heats
 					) {
 						patchRiderMatch(
 							matchId,
 							riderId,
 							14,
-							matchRidersEdit.rider_14.points
+							matchRidersEdit.rider_14.points,
+							matchRidersEdit.rider_14.heats
 						);
 					}
 					return true;
 				} else if (riderId === matchRidersEdit.rider_15.riderId) {
 					if (
 						points !== matchRidersEdit.rider_15.points ||
-						number !== 15
+						number !== 15||
+						heats !== matchRidersEdit.rider_15.heats
 					) {
 						patchRiderMatch(
 							matchId,
 							riderId,
 							15,
-							matchRidersEdit.rider_15.points
+							matchRidersEdit.rider_15.points,
+							matchRidersEdit.rider_15.heats
 						);
 					}
 					return true;
 				} else if (riderId === matchRidersEdit.rider_16.riderId) {
 					if (
 						points !== matchRidersEdit.rider_16.points ||
-						number !== 16
+						number !== 16||
+						heats !== matchRidersEdit.rider_16.heats
 					) {
 						patchRiderMatch(
 							matchId,
 							riderId,
 							16,
-							matchRidersEdit.rider_16.points
+							matchRidersEdit.rider_16.points,
+							matchRidersEdit.rider_16.heats
 						);
 					}
 					return true;
@@ -1887,7 +2279,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 		}
 	};
 
-	const addNewRiderMatch = async (riderId, matchId, number, points) => {
+	const addNewRiderMatch = async (riderId, matchId, number, points, heats) => {
 		try {
 			const accessToken = getToken();
 			const options = {
@@ -1900,6 +2292,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				{
 					riderId: riderId,
 					score: points,
+					heats: heats,
 					riderNumber: number
 				},
 				options
@@ -1922,7 +2315,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 		}
 	};
 
-	const patchRiderMatch = async (matchId, riderId, number, points) => {
+	const patchRiderMatch = async (matchId, riderId, number, points, heats) => {
 		try {
 			const accessToken = getToken();
 			const options = {
@@ -1934,6 +2327,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				`https://fantasy-league-eti.herokuapp.com/matches/${matchId}/riders/${riderId}`,
 				{
 					score: points,
+					heats: heats,
 					riderNumber: number
 				},
 				options
@@ -1990,179 +2384,211 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 		checkIfNew(
 			matchRidersEdit.rider_1.riderId,
 			1,
-			matchRidersEdit.rider_1.points
+			matchRidersEdit.rider_1.points,
+			matchRidersEdit.rider_1.heats
 		);
 		checkIfNew(
 			matchRidersEdit.rider_2.riderId,
 			2,
-			matchRidersEdit.rider_2.points
+			matchRidersEdit.rider_2.points,
+			matchRidersEdit.rider_2.heats
 		);
 		checkIfNew(
 			matchRidersEdit.rider_3.riderId,
 			3,
-			matchRidersEdit.rider_3.points
+			matchRidersEdit.rider_3.points,
+			matchRidersEdit.rider_3.heats
 		);
 		checkIfNew(
 			matchRidersEdit.rider_4.riderId,
 			4,
-			matchRidersEdit.rider_4.points
+			matchRidersEdit.rider_4.points,
+			matchRidersEdit.rider_4.heats
 		);
 		checkIfNew(
 			matchRidersEdit.rider_5.riderId,
 			5,
-			matchRidersEdit.rider_5.points
+			matchRidersEdit.rider_5.points,
+			matchRidersEdit.rider_5.heats
 		);
 		checkIfNew(
 			matchRidersEdit.rider_6.riderId,
 			6,
-			matchRidersEdit.rider_6.points
+			matchRidersEdit.rider_6.points,
+			matchRidersEdit.rider_6.heats
 		);
 		checkIfNew(
 			matchRidersEdit.rider_7.riderId,
 			7,
-			matchRidersEdit.rider_7.points
+			matchRidersEdit.rider_7.points,
+			matchRidersEdit.rider_7.heats
 		);
 		checkIfNew(
 			matchRidersEdit.rider_8.riderId,
 			8,
-			matchRidersEdit.rider_8.points
+			matchRidersEdit.rider_8.points,
+			matchRidersEdit.rider_8.heats
 		);
 		checkIfNew(
 			matchRidersEdit.rider_9.riderId,
 			9,
-			matchRidersEdit.rider_9.points
+			matchRidersEdit.rider_9.points,
+			matchRidersEdit.rider_9.heats
 		);
 		checkIfNew(
 			matchRidersEdit.rider_10.riderId,
 			10,
-			matchRidersEdit.rider_10.points
+			matchRidersEdit.rider_10.points,
+			matchRidersEdit.rider_10.heats
 		);
 		checkIfNew(
 			matchRidersEdit.rider_11.riderId,
 			11,
-			matchRidersEdit.rider_11.points
+			matchRidersEdit.rider_11.points,
+			matchRidersEdit.rider_11.heats
 		);
 		checkIfNew(
 			matchRidersEdit.rider_12.riderId,
 			12,
-			matchRidersEdit.rider_12.points
+			matchRidersEdit.rider_12.points,
+			matchRidersEdit.rider_12.heats
 		);
 		checkIfNew(
 			matchRidersEdit.rider_13.riderId,
 			13,
-			matchRidersEdit.rider_13.points
+			matchRidersEdit.rider_13.points,
+			matchRidersEdit.rider_13.heats
 		);
 		checkIfNew(
 			matchRidersEdit.rider_14.riderId,
 			14,
-			matchRidersEdit.rider_14.points
+			matchRidersEdit.rider_14.points,
+			matchRidersEdit.rider_14.heats
 		);
 		checkIfNew(
 			matchRidersEdit.rider_15.riderId,
 			15,
-			matchRidersEdit.rider_15.points
+			matchRidersEdit.rider_15.points,
+			matchRidersEdit.rider_15.heats
 		);
 		checkIfNew(
 			matchRidersEdit.rider_16.riderId,
 			16,
-			matchRidersEdit.rider_16.points
+			matchRidersEdit.rider_16.points,
+			matchRidersEdit.rider_16.heats
 		);
 
 		checkIfChanged(
 			matchRiders.rider_1.riderId,
 			matchId,
 			matchRiders.rider_1.riderNumber,
-			matchRiders.rider_1.score
+			matchRiders.rider_1.score,
+			matchRiders.rider_1.heats
 		);
 		checkIfChanged(
 			matchRiders.rider_2.riderId,
 			matchId,
 			matchRiders.rider_2.riderNumber,
-			matchRiders.rider_2.score
+			matchRiders.rider_2.score,
+			matchRiders.rider_2.heats
 		);
 		checkIfChanged(
 			matchRiders.rider_3.riderId,
 			matchId,
 			matchRiders.rider_3.riderNumber,
-			matchRiders.rider_3.score
+			matchRiders.rider_3.score,
+			matchRiders.rider_3.heats
 		);
 		checkIfChanged(
 			matchRiders.rider_4.riderId,
 			matchId,
 			matchRiders.rider_4.riderNumber,
-			matchRiders.rider_4.score
+			matchRiders.rider_4.score,
+			matchRiders.rider_4.heats
 		);
 		checkIfChanged(
 			matchRiders.rider_5.riderId,
 			matchId,
 			matchRiders.rider_5.riderNumber,
-			matchRiders.rider_5.score
+			matchRiders.rider_5.score,
+			matchRiders.rider_5.heats
 		);
 		checkIfChanged(
 			matchRiders.rider_6.riderId,
 			matchId,
 			matchRiders.rider_6.riderNumber,
-			matchRiders.rider_6.score
+			matchRiders.rider_6.score,
+			matchRiders.rider_6.heats
 		);
 		checkIfChanged(
 			matchRiders.rider_7.riderId,
 			matchId,
 			matchRiders.rider_7.riderNumber,
-			matchRiders.rider_7.score
+			matchRiders.rider_7.score,
+			matchRiders.rider_7.heats
 		);
 		checkIfChanged(
 			matchRiders.rider_8.riderId,
 			matchId,
 			matchRiders.rider_8.riderNumber,
-			matchRiders.rider_8.score
+			matchRiders.rider_8.score,
+			matchRiders.rider_8.heats
 		);
 		checkIfChanged(
 			matchRiders.rider_9.riderId,
 			matchId,
 			matchRiders.rider_9.riderNumber,
-			matchRiders.rider_9.score
+			matchRiders.rider_9.score,
+			matchRiders.rider_9.heats
 		);
 		checkIfChanged(
 			matchRiders.rider_10.riderId,
 			matchId,
 			matchRiders.rider_10.riderNumber,
-			matchRiders.rider_10.score
+			matchRiders.rider_10.score,
+			matchRiders.rider_10.heats
 		);
 		checkIfChanged(
 			matchRiders.rider_11.riderId,
 			matchId,
 			matchRiders.rider_11.riderNumber,
-			matchRiders.rider_11.score
+			matchRiders.rider_11.score,
+			matchRiders.rider_11.heats
 		);
 		checkIfChanged(
 			matchRiders.rider_12.riderId,
 			matchId,
 			matchRiders.rider_12.riderNumber,
-			matchRiders.rider_12.score
+			matchRiders.rider_12.score,
+			matchRiders.rider_12.heats
 		);
 		checkIfChanged(
 			matchRiders.rider_13.riderId,
 			matchId,
 			matchRiders.rider_13.riderNumber,
-			matchRiders.rider_13.score
+			matchRiders.rider_13.score,
+			matchRiders.rider_13.heats
 		);
 		checkIfChanged(
 			matchRiders.rider_14.riderId,
 			matchId,
 			matchRiders.rider_14.riderNumber,
-			matchRiders.rider_14.score
+			matchRiders.rider_14.score,
+			matchRiders.rider_14.heats
 		);
 		checkIfChanged(
 			matchRiders.rider_15.riderId,
 			matchId,
 			matchRiders.rider_15.riderNumber,
-			matchRiders.rider_15.score
+			matchRiders.rider_15.score,
+			matchRiders.rider_15.heats
 		);
 		checkIfChanged(
 			matchRiders.rider_16.riderId,
 			matchId,
 			matchRiders.rider_16.riderNumber,
-			matchRiders.rider_16.score
+			matchRiders.rider_16.score,
+			matchRiders.rider_16.heats
 		);
 
 		addNotification('Sukces', 'Udało się edytować mecz', 'success', 1000);
