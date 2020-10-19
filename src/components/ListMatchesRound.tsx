@@ -61,8 +61,6 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
 	};
 
 	const generateMatches = () => {
-		console.log(round)
-		console.log(matches.length)
 		if (matches.length === 0 && round !== 0) {
 			return (
 				<CSSTransition

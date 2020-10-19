@@ -329,7 +329,9 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 	};
 
 	const getMatchRiders = async () => {
-		if (matchRiders === defaultRidersData) {
+		console.log("OUT")
+		//if (matchRiders === defaultRidersData) {
+			console.log("IN")
 			try {
 				const accessToken = getToken();
 				const options = {
@@ -341,8 +343,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					`https://fantasy-league-eti.herokuapp.com/matches/${matchId}/riders`,
 					options
 				);
-				console.log(matchId)
-				console.log(data)
+				console.log(data);
 				data.map((rider, index) => {
 					switch (rider.riderNumber) {
 						case 1:
@@ -398,7 +399,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					}
 				});
 			} catch (e) {
-				console.log(e.response);
 				if (e.response.statusText == 'Unauthorized') {
 					addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
 					setTimeout(() => {
@@ -414,7 +414,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				}
 				throw new Error('Error in getting rounds');
 			}
-		}
+		//}
 	};
 
 	const generateScore = () => {
@@ -448,7 +448,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 			addNotification('Sukces', 'Udało się usunąć mecz', 'success', 1000);
 			setIsHidden(true);
 		} catch (e) {
-			console.log(e.response);
 			if (e.statusText == 'Bad Request') {
 				addNotification(
 					'Błąd!',
@@ -1906,7 +1905,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				options
 			);
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.statusText == 'Unauthorized') {
 				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
 				setTimeout(() => {
@@ -1941,7 +1939,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				options
 			);
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.statusText == 'Unauthorized') {
 				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
 				setTimeout(() => {
@@ -1972,7 +1969,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				options
 			);
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.statusText == 'Unauthorized') {
 				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
 				setTimeout(() => {
@@ -2170,6 +2166,14 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 		);
 
 		addNotification('Sukces', 'Udało się edytować mecz', 'success', 1000);
+
+		setHomeScoreEdit(sumEditPoints('home'));
+		setAwayScoreEdit(sumEditPoints('away'));
+		getMatchRiders();
+
+		setTimeout(() => {
+			handleCloseEdit();
+		}, 1000);
 	};
 
 	const checkDate = async () => {
@@ -2187,7 +2191,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					options
 				);
 			} catch (e) {
-				console.log(e.response);
 				if (e.response.statusText == 'Unauthorized') {
 					addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
 					setTimeout(() => {
