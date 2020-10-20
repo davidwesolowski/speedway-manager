@@ -91,10 +91,12 @@
 
     &__rider-div{
         width: 100%;
+        display: flex;
+        justify-content: space-evenly;
     }
 
     &__rider-select{
-        width: 60%;
+        width: 50%;
         margin-left: 2%;
         height: 100% !important;
         
@@ -112,6 +114,38 @@
         margin-left: 20%;
     }
 
+    &__rider-heats{
+        width: 10%;
+        margin-left: 20%;
+    }
+
+    &__rider-select-title{
+        width: 50%;
+        margin-left: 2%;
+        height: 100% !important;
+        font-size: medium;
+        
+        @media only screen and (max-width: $bp-md) {
+            padding-right: 1rem;
+        }
+    
+        @media only screen and (max-width: $bp-sm) {
+            padding-right: 1rem;
+        }
+    }
+
+    &__rider-points-title{
+        width: 10%;
+        //margin-left: 20%;
+        font-size: medium;
+    }
+
+    &__rider-heats-title{
+        width: 10%;
+        //margin-left: 20%;
+        font-size: medium;
+    }
+
     &__submit-button{
         color:white !important;
         background-color: black !important;
@@ -126,4 +160,26 @@
 
 #roundLabel{
     font-size: large;
+}
+
+.number-dialog{
+    &__fix{
+        float: right;
+    }
+
+    &__header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__title{
+        font-family: "Bebas Neue", cursive !important;
+    }
+
+    &__form-field-date{
+        margin-top: 10px !important;
+		font-size: large !important;
+		width: 100%;
+    }
 }

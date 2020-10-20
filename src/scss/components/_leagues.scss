@@ -23,6 +23,7 @@
 		z-index: 1000;
 		min-width: 80%;
 		padding: 3rem 2rem;
+		min-height: 80%;
 
 		@media only screen and (max-width: $bp-md) {
 			min-width: 85%;
@@ -42,7 +43,40 @@
 		font-family: $bebas !important;
 		margin-bottom: $xs-margin !important;
 		letter-spacing: 1px !important;
+	}
+	
+	&__delete-button{
+		font-size: large !important;
+		color: red !important;
+	}
+
+	&__fiplus{
+		float: right;
+		font-size: x-large !important;
+		color: green !important;
+	}
+}
+
+.leagues-dialog{
+	&__fix{
+        float: right;
     }
+
+    &__header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__title{
+        font-family: "Bebas Neue", cursive !important;
+	}
+	
+	&__select-field{
+		margin-top: 14px !important;
+		font-size: large !important;
+		width: 100%;
+	}
 }
 
 .leagues-table{

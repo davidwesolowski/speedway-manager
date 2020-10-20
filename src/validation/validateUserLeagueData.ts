@@ -25,30 +25,11 @@ const schema = Joi.object({
 				}
 			}
 			return error;
-		}),
-	mainLeague: Joi.string()
-		.min(2)
-		.max(255)
-		.trim()
-		.required()
-		.error((error: ErrorReport[]): any => {
-			if (error[0].code) {
-				switch (error[0].code) {
-					case 'string.empty':
-						error[0].message =
-							'Liga nadrzędna musi być wybrana!';
-						break;
-					default:
-						break;
-				}
-			}
-			return error;
 		})
 });
 
 export default function validateUserLeagueData(data: {
     name: string;
-    mainLeague: string;
 }): ValidationResult {
 	return schema.validate(data, { abortEarly: false });
 }

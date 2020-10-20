@@ -32,20 +32,16 @@ const WelcomePage: FunctionComponent = () => {
 				<div className="welcome-box__card">
 					<FaCoins className="welcome-box__icon welcome-box__icon-1" />
 					<h2 className="heading-2 welcome-box__text">
-						Typuj i wygrywaj!
+						Kontraktuj ulubionych zawodników
 					</h2>
 					<p className="welcome-box__description">
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-						Sed placerat mauris egestas hendrerit maximus. Morbi
-						hendrerit tincidunt nisi ac placerat. Nam ac eleifend
-						justo, vitae luctus ante. Quisque id pretium metus. Duis
-						id magna interdum, condimentum erat non, fringilla quam.
-						Morbi lacus sapien, iaculis ac lacus at, malesuada
-						maximus orci. Phasellus vitae consectetur diam, sit amet
-						sollicitudin nibh. Sed vitae lorem mattis, tristique est
-						at, euismod purus. Nam suscipit tincidunt sapien, sit
-						amet aliquet diam congue nec. Phasellus ut tincidunt
-						neque.
+						Myślisz, że posiadzasz predyspozycje do pracy jako menedżer klubu żużlowego?
+						Uważasz, że potrafisz perfekcyjnie przewidywać rozstrzygnięcia w najlepszych ligach żużlowych?
+						Masz niepowtarzalną okazję sprawdzić swoje umiejętności.
+						Stwórz swój własny, wymarzony klub i umieść w nim najlepszych zawodników ligi,
+						takich jak Zmarzlik, Sayfutdinov czy Laguta. Zarządzaj kadrą, ustalaj skład meczowy,
+						zdobywaj punkty za wyniki swoich zawodników w rzeczywistości i osiągaj
+						sukcesy jako kapitan za sterami swojej drużyny!
 					</p>
 				</div>
 				<div className="welcome-box__card">
@@ -54,17 +50,10 @@ const WelcomePage: FunctionComponent = () => {
 						Rywalizuj z innymi!
 					</h2>
 					<p className="welcome-box__description">
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-						Sed placerat mauris egestas hendrerit maximus. Morbi
-						hendrerit tincidunt nisi ac placerat. Nam ac eleifend
-						justo, vitae luctus ante. Quisque id pretium metus. Duis
-						id magna interdum, condimentum erat non, fringilla quam.
-						Morbi lacus sapien, iaculis ac lacus at, malesuada
-						maximus orci. Phasellus vitae consectetur diam, sit amet
-						sollicitudin nibh. Sed vitae lorem mattis, tristique est
-						at, euismod purus. Nam suscipit tincidunt sapien, sit
-						amet aliquet diam congue nec. Phasellus ut tincidunt
-						neque.
+						Wydaje Ci się, że masz najlepszego "nosa" i potrafisz wybrać najlepszych zawodników?
+						Porównaj swoje zdolności przewidywania z innymi graczami. Sprawdź swoje miejsce w rankingu
+						z pozostałymi fanatykami czarnego sportu, twórz własne rankingi do rywalizacji ze znajomymi 
+						i walcz o miano najlepszego wirtualnego menedżera żużlowego!
 					</p>
 				</div>
 				<div className="welcome-box__card">
@@ -73,17 +62,10 @@ const WelcomePage: FunctionComponent = () => {
 						Śledź wyniki!
 					</h2>
 					<p className="welcome-box__description">
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-						Sed placerat mauris egestas hendrerit maximus. Morbi
-						hendrerit tincidunt nisi ac placerat. Nam ac eleifend
-						justo, vitae luctus ante. Quisque id pretium metus. Duis
-						id magna interdum, condimentum erat non, fringilla quam.
-						Morbi lacus sapien, iaculis ac lacus at, malesuada
-						maximus orci. Phasellus vitae consectetur diam, sit amet
-						sollicitudin nibh. Sed vitae lorem mattis, tristique est
-						at, euismod purus. Nam suscipit tincidunt sapien, sit
-						amet aliquet diam congue nec. Phasellus ut tincidunt
-						neque.
+						Interesują Cię dokładne wyniki każdego meczu Twojej ulubionej ligi?
+						Żaden problem! Skorzystaj z naszej aplikacji i przeglądaj wyniki meczów ligi żużlowej.
+						Sprawdzaj rezultaty swoich ulubionych zawodników i analizuj postępy potencjalnych przyszłych
+						zawodników swojego zespołu!
 					</p>
 				</div>
 			</section>
