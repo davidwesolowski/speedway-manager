@@ -12,13 +12,15 @@ import {
 	ListItemText,
 	Grid,
 	Button,
-	Avatar
+	Avatar,
+	CircularProgress
 } from '@material-ui/core';
 import addNotification from '../utils/addNotification';
 import getToken from '../utils/getToken';
 import { useStateValue } from './AppProvider';
 import fetchUserData from '../utils/fetchUserData';
 import { checkBadAuthorization } from '../utils/checkCookies';
+import { CSSTransition } from 'react-transition-group';
 
 interface IRider {
 	_id: string;
@@ -41,6 +43,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 	const [riders, setRiders] = useState([]);
 	const [teamId, setTeamId] = useState<string>('');
 	const [teamRiders, setTeamRiders] = useState([]);
+	const [loading, setLoading] = useState<boolean>(true);
 
 	document.body.style.overflow = 'auto';
 
@@ -603,10 +606,25 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	useEffect(() => {
-		getRiders();
-		getClubs();
-		if (!userData.username)
-			fetchUserData(dispatchUserData, setLoggedIn, push);
+		setLoading(true);
+		(async function () {
+			try {
+				await getRiders();
+				await getClubs();
+				if (!userData.username)
+					await fetchUserData(dispatchUserData, setLoggedIn, push);
+				setLoading(false);
+			} catch (e) {
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
+				} else {
+					addNotification('Błąd!', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
+				}
+			}
+		})();
 	}, []);
 
 	return (
@@ -619,7 +637,19 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 					</Typography>
 					<Divider />
 					<br />
-					<Typography
+					{loading && (
+						<Grid container justify="center" alignItems="center">
+							<CircularProgress />
+						</Grid>
+					)}
+					<CSSTransition
+						in={leftForeign.length > 0 || leftPolish.length > 0 || leftU21.length > 0 || rightForeign.length > 0 || rightPolish.length > 0 || rightU21.length > 0}
+						timeout={600}
+						classNames="animationScaleUp"
+						unmountOnExit
+					>
+						<>
+						<Typography
 						variant="h3"
 						className="add-rider-to-team__type-header"
 					>
@@ -858,6 +888,8 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 					>
 						Zapisz zmiany
 					</Button>
+					</>
+					</CSSTransition>
 				</Paper>
 			</div>
 		</>

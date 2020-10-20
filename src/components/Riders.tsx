@@ -92,12 +92,26 @@ interface IValidatedData {
 	};
 }
 
+interface IRiderPass {
+	id: string;
+	imię: string;
+	nazwisko: string;
+	przydomek: string;
+	data_urodzenia: Date;
+	zagraniczny: boolean;
+	ksm: number;
+	klubId: string;
+	image: string;
+}
+
 const Riders: FunctionComponent<RouteComponentProps> = ({
 	history: { push }
 }) => {
 	const { setLoggedIn, dispatchUserData, userData } = useStateValue();
 
 	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
+
+	const [riders, setRiders] = useState<IRiderPass[]>([]);
 
 	const defaultValidatedData = {
 		firstName: {
@@ -223,6 +237,91 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
+	const deleteRider = async (id) => {
+		try {
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			const { data } = await axios.delete(
+				`https://fantasy-league-eti.herokuapp.com/riders/${id}`,
+				options
+			);
+			addNotification(
+				'Sukces!',
+				'Udało się usunąć zawodnika!',
+				'success',
+				1000
+			);
+			setRiders(riders.filter(rider => rider.id !== id));
+		} catch (e) {
+			console.log(e.response);
+			const {
+                response: { data }
+            } = e;
+			if (data.statusCode == 401) {
+                checkBadAuthorization(setLoggedIn, push);
+            } else {
+				addNotification(
+					'Błąd!',
+					'Nie udało się usunąć zawodnika!',
+					'danger',
+					1000
+				);
+			}
+			throw new Error('Error in deleting riders!');
+		}
+	}
+
+	
+	const getRiders = async () => {
+		try {
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			const { data } = await axios.get(
+				'https://fantasy-league-eti.herokuapp.com/riders',
+				options
+			);
+			setRiders([]);
+			data.map(rider => {
+				setRiders(riders =>
+					riders.concat({
+						id: rider._id,
+						imię: rider.firstName,
+						nazwisko: rider.lastName,
+						przydomek: rider.nickname,
+						data_urodzenia: rider.dateOfBirth,
+						zagraniczny: rider.isForeigner,
+						ksm: rider.KSM,
+						klubId: rider.clubId,
+						image: rider.image
+					})
+				);
+			});
+		} catch (e) {
+			const {
+                response: { data }
+            } = e;
+			if (data.statusCode == 401) {
+                checkBadAuthorization(setLoggedIn, push);
+            } else {
+				addNotification(
+					'Błąd!',
+					'Nie udało się usunąć zawodnika!',
+					'danger',
+					1000
+				);
+			}
+			throw new Error('Error in deleting riders!');
+		}
+	}
+
 	const addRider = async (riderData: IRider) => {
 		try {
 			const accessToken = getToken();
@@ -236,6 +335,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 				riderData,
 				options
 			);
+			const id = data._id;
 			const { name: filename, imageBuffer } = imageData;
 			if (filename && imageBuffer) {
 				const {
@@ -265,11 +365,18 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 					handleClose();
 				}
 			}, 10);
-			setTimeout(() => {
-				{
-					refreshPage();
-				}
-			}, 1000);
+			setRiders(riders =>
+				riders.concat({
+					id: id,
+					imię: riderData.firstName,
+					nazwisko: riderData.lastName,
+					przydomek: riderData.nickname,
+					data_urodzenia: riderData.dateOfBirth,
+					zagraniczny: riderData.isForeigner,
+					ksm: riderData.KSM,
+					klubId: riderData.clubId,
+					image: '',
+				}));
 		} catch (e) {
 			const {
 				response: { data }
@@ -378,7 +485,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 							<FiPlus />
 						</IconButton>
 					)}
-					<RidersList />
+					<RidersList riders={riders} deleteRider={deleteRider}/>
 				</Paper>
 			</div>
 			<Dialog open={showDialog} onClose={handleClose} className="dialog">

@@ -34,6 +34,7 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({
 
 	const [rounds, setRounds] = useState([]);
 	const [riders, setRiders] = useState<IRider[]>([]);
+	const [loading, setLoading] = useState<boolean>(true);
 
 	const generateRounds = () => {
 		return rounds.map((round, index) => {
@@ -46,35 +47,21 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	const getRounds = async () => {
-		try {
-			const accessToken = getToken();
-			const options = {
-				headers: {
-					Authorization: `Bearer ${accessToken}`
-				}
-			};
-			const { data } = await axios.get(
-				'https://fantasy-league-eti.herokuapp.com/rounds',
-				options
-			);
-			setRounds([]);
-			setRounds(data);
-			data.length ? setRoundId(data[0]._id) : null;
-		} catch (e) {
-			const {
-				response: { data }
-			} = e;
-			if (data.statusCode == 401) {
-				checkBadAuthorization(setLoggedIn, push);
-			} else {
-				addNotification(
-					'Błąd',
-					'Nie udało się pobrać rund z bazy',
-					'danger',
-					3000
-				);
+		const accessToken = getToken();
+		const options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
 			}
-			throw new Error('Error in getting rounds');
+		};
+		const { data } = await axios.get(
+			'https://fantasy-league-eti.herokuapp.com/rounds',
+			options
+		);
+		setRounds([]);
+		setRounds(data);
+		if(data.length) {
+			setRoundId(data[0]._id);
+			setNumber(data[0].number);
 		}
 	};
 
@@ -167,10 +154,23 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	useEffect(() => {
-		getRounds();
-		if (!userData.username)
-			fetchUserData(dispatchUserData, setLoggedIn, push);
-		getRiders();
+		setLoading(true);
+		(async function () {
+			try {
+				await getRounds();
+				await getRiders();
+			} catch (e) {
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
+				} else {
+					addNotification('Błąd!', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
+				}
+			}
+			setLoading(false)
+		})();
 	}, []);
 
 	return (

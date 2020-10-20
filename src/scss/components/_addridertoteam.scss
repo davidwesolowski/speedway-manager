@@ -22,7 +22,8 @@
     &__box{
         position: relative;
 		z-index: 1000;
-		min-width: 45vw;
+        min-width: 45vw;
+        min-height: 95%;
         padding: 3rem 2rem;
         width: 90%;
     }

@@ -6,7 +6,9 @@
 	align-items: center;
 	font-family: $bebas;
 
-	@media screen and (max-width: $bp-sm) {         grid-column: full-start / full-end;}
+	@media screen and (max-width: $bp-sm) {
+		grid-column: full-start / full-end;
+	}
 
 	&__background {
 		height: 100%;
@@ -23,6 +25,7 @@
 		z-index: 1000;
 		min-width: 80%;
 		padding: 3rem 2rem;
+		min-height: 85%;
 
 		@media only screen and (max-width: $bp-md) {
 			min-width: 85%;
@@ -44,21 +47,18 @@
 		letter-spacing: 1px !important;
 	}
 	
-	&__full-score-text{
-		@media only screen and (max-width: $bp-md) {
-			font-size: x-large !important;
-		}
+	&__fullScoreText {
+		font-family: $bebas !important;
 
-		@media only screen and (max-width: $bp-sm) {
+		@media only screen and (max-width: $bp-md) {
 			font-size: x-large !important;
 		}
 	}
 
     &__full-score{
-        width: 50%;
+        width: 40%;
         float: right;
         display: block;
-        overflow: auto;
         justify-content: center;
 		text-align: center;
 		
@@ -74,7 +74,7 @@
     }
 
     &__riders-list{
-        width: 50%;
+        width: 60%;
         float: left;
         display: block;
         overflow: auto;
@@ -98,6 +98,16 @@
 		font-size: 1.7rem;
 		font-family: $bebas !important;
 		border: 1px solid $color-primary-light;
+		text-align: center;
+
+		&:first-child {
+			border: none !important;
+		}
+
+		&:nth-child(2) {
+			border-left: none !important;
+		}
+		
 	}
 
 	.MuiTableRow-root:nth-child(even) .MuiTableCell-body {
@@ -109,9 +119,14 @@
 		font-size: 1.6rem;
 		font-family: $bebas !important;
 		border: 1px solid $color-primary;
+		text-align: center;
+
+		& .MuiAvatar-root{
+			margin: 0 auto !important;
+		}
 	}
 
 	.MuiTable-root {
 		border: 1px solid $color-primary;
-	}
+	}	
 }

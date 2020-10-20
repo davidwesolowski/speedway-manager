@@ -30,3 +30,20 @@
         color: red;
     }
 }
+
+.riders-list{
+    &__delete-rider-button{
+        font-size: x-large !important;
+        color: red !important;
+    }
+}
+
+.NoX{
+    font-size: x-large !important;
+    color: red !important;
+}
+
+.YesPlus{
+    font-size: x-large !important;
+    color: green !important;
+}

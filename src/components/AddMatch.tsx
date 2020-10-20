@@ -38,6 +38,7 @@ import fetchUserData from '../utils/fetchUserData';
 interface IRiderPoints {
 	_id: string;
 	points: number;
+	heats: number;
 }
 
 interface IRoundCreate {
@@ -77,6 +78,22 @@ interface ITeamPointsToValidate {
 	points_14: number;
 	points_15: number;
 	points_16: number;
+	heats_1: number;
+	heats_2: number;
+	heats_3: number;
+	heats_4: number;
+	heats_5: number;
+	heats_6: number;
+	heats_7: number;
+	heats_8: number;
+	heats_9: number;
+	heats_10: number;
+	heats_11: number;
+	heats_12: number;
+	heats_13: number;
+	heats_14: number;
+	heats_15: number;
+	heats_16: number;
 }
 
 interface IValidatedPoints {
@@ -152,6 +169,70 @@ interface IValidatedPoints {
 		message: string;
 		error: boolean;
 	};
+	heats_1: {
+		message: string;
+		error: boolean;
+	};
+	heats_2: {
+		message: string;
+		error: boolean;
+	};
+	heats_3: {
+		message: string;
+		error: boolean;
+	};
+	heats_4: {
+		message: string;
+		error: boolean;
+	};
+	heats_5: {
+		message: string;
+		error: boolean;
+	};
+	heats_6: {
+		message: string;
+		error: boolean;
+	};
+	heats_7: {
+		message: string;
+		error: boolean;
+	};
+	heats_8: {
+		message: string;
+		error: boolean;
+	};
+	heats_9: {
+		message: string;
+		error: boolean;
+	};
+	heats_10: {
+		message: string;
+		error: boolean;
+	};
+	heats_11: {
+		message: string;
+		error: boolean;
+	};
+	heats_12: {
+		message: string;
+		error: boolean;
+	};
+	heats_13: {
+		message: string;
+		error: boolean;
+	};
+	heats_14: {
+		message: string;
+		error: boolean;
+	};
+	heats_15: {
+		message: string;
+		error: boolean;
+	};
+	heats_16: {
+		message: string;
+		error: boolean;
+	};
 }
 
 interface IValidatedRound {
@@ -176,7 +257,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 
 	const defaultRiderPoints = {
 		_id: '',
-		points: 0
+		points: 0,
+		heats: 0
 	};
 
 	const defaultRoundCreate = {
@@ -203,7 +285,23 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 		points_13: 0,
 		points_14: 0,
 		points_15: 0,
-		points_16: 0
+		points_16: 0,
+		heats_1: 0,
+		heats_2: 0,
+		heats_3: 0,
+		heats_4: 0,
+		heats_5: 0,
+		heats_6: 0,
+		heats_7: 0,
+		heats_8: 0,
+		heats_9: 0,
+		heats_10: 0,
+		heats_11: 0,
+		heats_12: 0,
+		heats_13: 0,
+		heats_14: 0,
+		heats_15: 0,
+		heats_16: 0
 	};
 
 	const [roundCreate, setRoundCreate] = useState<IRoundCreate>(
@@ -307,29 +405,6 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
-	const setDataToValidationFunc = () => {
-		setDataToValidation({
-			home_id: home.team_id,
-			away_id: away.team_id,
-			points_1: away.rider_1.points,
-			points_2: away.rider_2.points,
-			points_3: away.rider_3.points,
-			points_4: away.rider_4.points,
-			points_5: away.rider_5.points,
-			points_6: away.rider_6.points,
-			points_7: away.rider_7.points,
-			points_8: away.rider_8.points,
-			points_9: home.rider_1.points,
-			points_10: home.rider_2.points,
-			points_11: home.rider_3.points,
-			points_12: home.rider_4.points,
-			points_13: home.rider_5.points,
-			points_14: home.rider_6.points,
-			points_15: home.rider_7.points,
-			points_16: home.rider_8.points
-		});
-	};
-
 	const defaultValidatedPoints = {
 		home_id: {
 			message: '',
@@ -400,6 +475,70 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 			error: false
 		},
 		points_16: {
+			message: '',
+			error: false
+		},
+		heats_1: {
+			message: '',
+			error: false
+		},
+		heats_2: {
+			message: '',
+			error: false
+		},
+		heats_3: {
+			message: '',
+			error: false
+		},
+		heats_4: {
+			message: '',
+			error: false
+		},
+		heats_5: {
+			message: '',
+			error: false
+		},
+		heats_6: {
+			message: '',
+			error: false
+		},
+		heats_7: {
+			message: '',
+			error: false
+		},
+		heats_8: {
+			message: '',
+			error: false
+		},
+		heats_9: {
+			message: '',
+			error: false
+		},
+		heats_10: {
+			message: '',
+			error: false
+		},
+		heats_11: {
+			message: '',
+			error: false
+		},
+		heats_12: {
+			message: '',
+			error: false
+		},
+		heats_13: {
+			message: '',
+			error: false
+		},
+		heats_14: {
+			message: '',
+			error: false
+		},
+		heats_15: {
+			message: '',
+			error: false
+		},
+		heats_16: {
 			message: '',
 			error: false
 		}
@@ -506,7 +645,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: home.rider_1.points
+								points: home.rider_1.points,
+								heats: home.rider_1.heats
 							}
 						}));
 						break;
@@ -515,7 +655,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: home.rider_2.points
+								points: home.rider_2.points,
+								heats: home.rider_2.heats
 							}
 						}));
 						break;
@@ -524,7 +665,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: home.rider_3.points
+								points: home.rider_3.points,
+								heats: home.rider_3.heats
 							}
 						}));
 						break;
@@ -533,7 +675,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: home.rider_4.points
+								points: home.rider_4.points,
+								heats: home.rider_4.heats
 							}
 						}));
 						break;
@@ -542,7 +685,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: home.rider_5.points
+								points: home.rider_5.points,
+								heats: home.rider_5.heats
 							}
 						}));
 						break;
@@ -551,7 +695,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: home.rider_6.points
+								points: home.rider_6.points,
+								heats: home.rider_6.heats
 							}
 						}));
 						break;
@@ -560,7 +705,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: home.rider_7.points
+								points: home.rider_7.points,
+								heats: home.rider_7.heats
 							}
 						}));
 						break;
@@ -569,7 +715,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: home.rider_8.points
+								points: home.rider_8.points,
+								heats: home.rider_8.heats
 							}
 						}));
 						break;
@@ -583,7 +730,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: away.rider_1.points
+								points: away.rider_1.points,
+								heats: away.rider_1.heats
 							}
 						}));
 						break;
@@ -592,7 +740,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: away.rider_2.points
+								points: away.rider_2.points,
+								heats: away.rider_2.heats
 							}
 						}));
 						break;
@@ -601,7 +750,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: away.rider_3.points
+								points: away.rider_3.points,
+								heats: away.rider_3.heats
 							}
 						}));
 						break;
@@ -610,7 +760,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: away.rider_4.points
+								points: away.rider_4.points,
+								heats: away.rider_4.heats
 							}
 						}));
 						break;
@@ -619,7 +770,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: away.rider_5.points
+								points: away.rider_5.points,
+								heats: away.rider_5.heats
 							}
 						}));
 						break;
@@ -628,7 +780,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: away.rider_6.points
+								points: away.rider_6.points,
+								heats: away.rider_6.heats
 							}
 						}));
 						break;
@@ -637,7 +790,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: away.rider_7.points
+								points: away.rider_7.points,
+								heats: away.rider_7.heats
 							}
 						}));
 						break;
@@ -646,7 +800,8 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[number]: {
 								_id: event.target.value,
-								points: away.rider_8.points
+								points: away.rider_8.points,
+								heats: away.rider_8.heats
 							}
 						}));
 						break;
@@ -681,13 +836,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: home.rider_1._id,
-								points: parseInt(event.target.value)
+								points: parseInt(event.target.value),
+								heats: home.rider_1.heats
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_9: parseInt(event.target.value)
+								points_9: parseInt(event.target.value),
+								heats_9: dataToValidation.heats_9
 							})
 						);
 						break;
@@ -696,13 +853,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: home.rider_2._id,
-								points: parseInt(event.target.value)
+								points: parseInt(event.target.value),
+								heats: home.rider_2.heats
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_10: parseInt(event.target.value)
+								points_10: parseInt(event.target.value),
+								heats_10: dataToValidation.heats_10
 							})
 						);
 						break;
@@ -711,28 +870,32 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: home.rider_3._id,
-								points: parseInt(event.target.value)
+								points: parseInt(event.target.value),
+								heats: home.rider_3.heats
 							}
 						}));
-						break;
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_11: parseInt(event.target.value)
+								points_11: parseInt(event.target.value),
+								heats_11: dataToValidation.heats_11
 							})
 						);
+						break;
 					case 4:
 						setHome((prevState: ITeamPoints) => ({
 							...prevState,
 							[rider]: {
 								_id: home.rider_4._id,
-								points: parseInt(event.target.value)
+								points: parseInt(event.target.value),
+								heats: home.rider_4.heats
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_12: parseInt(event.target.value)
+								points_12: parseInt(event.target.value),
+								heats_12: dataToValidation.heats_12
 							})
 						);
 						break;
@@ -741,13 +904,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: home.rider_5._id,
-								points: parseInt(event.target.value)
+								points: parseInt(event.target.value),
+								heats: home.rider_5.heats
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_13: parseInt(event.target.value)
+								points_13: parseInt(event.target.value),
+								heats_13: dataToValidation.heats_13
 							})
 						);
 						break;
@@ -756,13 +921,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: home.rider_6._id,
-								points: parseInt(event.target.value)
+								points: parseInt(event.target.value),
+								heats: home.rider_6.heats
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_14: parseInt(event.target.value)
+								points_14: parseInt(event.target.value),
+								heats_14: dataToValidation.heats_14
 							})
 						);
 						break;
@@ -771,13 +938,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: home.rider_7._id,
-								points: parseInt(event.target.value)
+								points: parseInt(event.target.value),
+								heats: home.rider_7.heats
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_15: parseInt(event.target.value)
+								points_15: parseInt(event.target.value),
+								heats_15: dataToValidation.heats_15
 							})
 						);
 						break;
@@ -786,13 +955,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: home.rider_8._id,
-								points: parseInt(event.target.value)
+								points: parseInt(event.target.value),
+								heats: home.rider_8.heats
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_16: parseInt(event.target.value)
+								points_16: parseInt(event.target.value),
+								heats_16: dataToValidation.heats_16
 							})
 						);
 						break;
@@ -806,13 +977,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: away.rider_1._id,
-								points: parseInt(event.target.value)
+								points: parseInt(event.target.value),
+								heats: away.rider_1.heats
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_1: parseInt(event.target.value)
+								points_1: parseInt(event.target.value),
+								heats_1: dataToValidation.heats_1
 							})
 						);
 						break;
@@ -821,13 +994,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: away.rider_2._id,
-								points: parseInt(event.target.value)
+								points: parseInt(event.target.value),
+								heats: away.rider_2.heats
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_2: parseInt(event.target.value)
+								points_2: parseInt(event.target.value),
+								heats_2: dataToValidation.heats_2
 							})
 						);
 						break;
@@ -836,13 +1011,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: away.rider_3._id,
-								points: parseInt(event.target.value)
+								points: parseInt(event.target.value),
+								heats: away.rider_3.heats
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_3: parseInt(event.target.value)
+								points_3: parseInt(event.target.value),
+								heats_3: dataToValidation.heats_3
 							})
 						);
 						break;
@@ -851,13 +1028,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: away.rider_4._id,
-								points: parseInt(event.target.value)
+								points: parseInt(event.target.value),
+								heats: away.rider_4.heats
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_4: parseInt(event.target.value)
+								points_4: parseInt(event.target.value),
+								heats_4: dataToValidation.heats_4
 							})
 						);
 						break;
@@ -866,13 +1045,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: away.rider_5._id,
-								points: parseInt(event.target.value)
+								points: parseInt(event.target.value),
+								heats: away.rider_5.heats
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_5: parseInt(event.target.value)
+								points_5: parseInt(event.target.value),
+								heats_5: dataToValidation.heats_5
 							})
 						);
 						break;
@@ -881,13 +1062,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: away.rider_6._id,
-								points: parseInt(event.target.value)
+								points: parseInt(event.target.value),
+								heats: away.rider_6.heats
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_6: parseInt(event.target.value)
+								points_6: parseInt(event.target.value),
+								heats_6: dataToValidation.heats_6
 							})
 						);
 						break;
@@ -896,13 +1079,15 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: away.rider_7._id,
-								points: parseInt(event.target.value)
+								points: parseInt(event.target.value),
+								heats: away.rider_7.heats
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_7: parseInt(event.target.value)
+								points_7: parseInt(event.target.value),
+								heats_7: dataToValidation.heats_7
 							})
 						);
 						break;
@@ -911,13 +1096,307 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							...prevState,
 							[rider]: {
 								_id: away.rider_8._id,
-								points: parseInt(event.target.value)
+								points: parseInt(event.target.value),
+								heats: away.rider_8.heats
 							}
 						}));
 						setDataToValidation(
 							(prevState: ITeamPointsToValidate) => ({
 								...prevState,
-								points_8: parseInt(event.target.value)
+								points_8: parseInt(event.target.value),
+								heats_8: dataToValidation.heats_8
+							})
+						);
+						break;
+					default:
+						break;
+				}
+			}
+		}
+	};
+
+	const handleOnChangeHeats = (rider: string, homeAway: string) => (
+		event: React.ChangeEvent<HTMLInputElement>
+	) => {
+		event.persist();
+		const number = parseInt(rider.slice(-1));
+		if (event.target) {
+			if (homeAway === 'home') {
+				switch (number) {
+					case 1:
+						setHome((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: home.rider_1._id,
+								points: home.rider_1.points,
+								heats: parseInt(event.target.value)
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_9: dataToValidation.points_9,
+								heats_9: parseInt(event.target.value)
+							})
+						);
+						break;
+					case 2:
+						setHome((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: home.rider_2._id,
+								points: home.rider_2.points,
+								heats: parseInt(event.target.value)
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_10: dataToValidation.points_10,
+								heats_10: parseInt(event.target.value)
+							})
+						);
+						break;
+					case 3:
+						setHome((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: home.rider_3._id,
+								points: home.rider_3.points,
+								heats: parseInt(event.target.value)
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_11: dataToValidation.points_11,
+								heats_11: parseInt(event.target.value)
+							})
+						);
+						break;
+					case 4:
+						setHome((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: home.rider_4._id,
+								points: home.rider_4.points,
+								heats: parseInt(event.target.value)
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_12: dataToValidation.points_12,
+								heats_12: parseInt(event.target.value)
+							})
+						);
+						break;
+					case 5:
+						setHome((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: home.rider_5._id,
+								points: home.rider_5.points,
+								heats: parseInt(event.target.value)
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_13: dataToValidation.points_13,
+								heats_13: parseInt(event.target.value)
+							})
+						);
+						break;
+					case 6:
+						setHome((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: home.rider_6._id,
+								points: home.rider_6.points,
+								heats: parseInt(event.target.value)
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_14: dataToValidation.points_14,
+								heats_14: parseInt(event.target.value)
+							})
+						);
+						break;
+					case 7:
+						setHome((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: home.rider_7._id,
+								points: home.rider_7.points,
+								heats: parseInt(event.target.value)
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_15: dataToValidation.points_15,
+								heats_15: parseInt(event.target.value)
+							})
+						);
+						break;
+					case 8:
+						setHome((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: home.rider_8._id,
+								points: home.rider_8.points,
+								heats: parseInt(event.target.value)
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_16: dataToValidation.points_16,
+								heats_16: parseInt(event.target.value)
+							})
+						);
+						break;
+					default:
+						break;
+				}
+			} else {
+				switch (number) {
+					case 1:
+						setAway((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: away.rider_1._id,
+								points: away.rider_1.points,
+								heats: parseInt(event.target.value)
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_1: dataToValidation.points_1,
+								heats_1: parseInt(event.target.value)
+							})
+						);
+						break;
+					case 2:
+						setAway((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: away.rider_2._id,
+								points: away.rider_2.points,
+								heats: parseInt(event.target.value)
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_2: dataToValidation.points_2,
+								heats_2: parseInt(event.target.value)
+							})
+						);
+						break;
+					case 3:
+						setAway((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: away.rider_3._id,
+								points: away.rider_3.points,
+								heats: parseInt(event.target.value)
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_3: dataToValidation.points_3,
+								heats_3: parseInt(event.target.value)
+							})
+						);
+						break;
+					case 4:
+						setAway((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: away.rider_4._id,
+								points: away.rider_4.points,
+								heats: parseInt(event.target.value)
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_4: dataToValidation.points_4,
+								heats_4: parseInt(event.target.value)
+							})
+						);
+						break;
+					case 5:
+						setAway((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: away.rider_5._id,
+								points: away.rider_5.points,
+								heats: parseInt(event.target.value)
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_5: dataToValidation.points_5,
+								heats_5: parseInt(event.target.value)
+							})
+						);
+						break;
+					case 6:
+						setAway((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: away.rider_6._id,
+								points: away.rider_6.points,
+								heats: parseInt(event.target.value)
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_6: dataToValidation.points_6,
+								heats_6: parseInt(event.target.value)
+							})
+						);
+						break;
+					case 7:
+						setAway((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: away.rider_7._id,
+								points: away.rider_7.points,
+								heats: parseInt(event.target.value)
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_7: dataToValidation.points_7,
+								heats_7: parseInt(event.target.value)
+							})
+						);
+						break;
+					case 8:
+						setAway((prevState: ITeamPoints) => ({
+							...prevState,
+							[rider]: {
+								_id: away.rider_8._id,
+								points: away.rider_8.points,
+								heats: parseInt(event.target.value)
+							}
+						}));
+						setDataToValidation(
+							(prevState: ITeamPointsToValidate) => ({
+								...prevState,
+								points_8: dataToValidation.points_8,
+								heats_8: parseInt(event.target.value)
 							})
 						);
 						break;
@@ -1020,9 +1499,13 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 				'success',
 				2000
 			);
-			setTimeout(() => {
-				window.location.reload(false);
-			}, 2000);
+			setRounds(rounds =>
+				rounds.concat({
+					_id: data._id,
+					startDate: roundCreate.startDate,
+					endDate: roundCreate.endDate,
+					number: roundCreate.number
+				}));
 			setRoundCreate(defaultRoundCreate);
 		} catch (e) {
 			const {
@@ -1112,215 +1595,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
-	const isChosen = (id, number, homeAway) => {
-		if (homeAway == 'home') {
-			switch (number) {
-				case 1:
-					if (
-						id === home.rider_2._id ||
-						id === home.rider_3._id ||
-						id === home.rider_4._id ||
-						id === home.rider_5._id ||
-						id === home.rider_6._id ||
-						id === home.rider_7._id ||
-						id === home.rider_8._id
-					) {
-						return true;
-					}
-				case 2:
-					if (
-						id === home.rider_1._id ||
-						id === home.rider_3._id ||
-						id === home.rider_4._id ||
-						id === home.rider_5._id ||
-						id === home.rider_6._id ||
-						id === home.rider_7._id ||
-						id === home.rider_8._id
-					) {
-						return true;
-					}
-				case 3:
-					if (
-						id === home.rider_2._id ||
-						id === home.rider_1._id ||
-						id === home.rider_4._id ||
-						id === home.rider_5._id ||
-						id === home.rider_6._id ||
-						id === home.rider_7._id ||
-						id === home.rider_8._id
-					) {
-						return true;
-					}
-				case 4:
-					if (
-						id === home.rider_2._id ||
-						id === home.rider_3._id ||
-						id === home.rider_1._id ||
-						id === home.rider_5._id ||
-						id === home.rider_6._id ||
-						id === home.rider_7._id ||
-						id === home.rider_8._id
-					) {
-						return true;
-					}
-				case 5:
-					if (
-						id === home.rider_2._id ||
-						id === home.rider_3._id ||
-						id === home.rider_4._id ||
-						id === home.rider_1._id ||
-						id === home.rider_6._id ||
-						id === home.rider_7._id ||
-						id === home.rider_8._id
-					) {
-						return true;
-					}
-				case 6:
-					if (
-						id === home.rider_2._id ||
-						id === home.rider_3._id ||
-						id === home.rider_4._id ||
-						id === home.rider_5._id ||
-						id === home.rider_1._id ||
-						id === home.rider_7._id ||
-						id === home.rider_8._id
-					) {
-						return true;
-					}
-				case 7:
-					if (
-						id === home.rider_2._id ||
-						id === home.rider_3._id ||
-						id === home.rider_4._id ||
-						id === home.rider_5._id ||
-						id === home.rider_6._id ||
-						id === home.rider_1._id ||
-						id === home.rider_8._id
-					) {
-						return true;
-					}
-				case 8:
-					if (
-						id === home.rider_2._id ||
-						id === home.rider_3._id ||
-						id === home.rider_4._id ||
-						id === home.rider_5._id ||
-						id === home.rider_6._id ||
-						id === home.rider_7._id ||
-						id === home.rider_1._id
-					) {
-						return true;
-					}
-				default:
-					break;
-			}
-			return false;
-		} else {
-			switch (number) {
-				case 1:
-					if (
-						id === away.rider_2._id ||
-						id === away.rider_3._id ||
-						id === away.rider_4._id ||
-						id === away.rider_5._id ||
-						id === away.rider_6._id ||
-						id === away.rider_7._id ||
-						id === away.rider_8._id
-					) {
-						return true;
-					}
-				case 2:
-					if (
-						id === away.rider_1._id ||
-						id === away.rider_3._id ||
-						id === away.rider_4._id ||
-						id === away.rider_5._id ||
-						id === away.rider_6._id ||
-						id === away.rider_7._id ||
-						id === away.rider_8._id
-					) {
-						return true;
-					}
-				case 3:
-					if (
-						id === away.rider_2._id ||
-						id === away.rider_1._id ||
-						id === away.rider_4._id ||
-						id === away.rider_5._id ||
-						id === away.rider_6._id ||
-						id === away.rider_7._id ||
-						id === away.rider_8._id
-					) {
-						return true;
-					}
-				case 4:
-					if (
-						id === away.rider_2._id ||
-						id === away.rider_3._id ||
-						id === away.rider_1._id ||
-						id === away.rider_5._id ||
-						id === away.rider_6._id ||
-						id === away.rider_7._id ||
-						id === away.rider_8._id
-					) {
-						return true;
-					}
-				case 5:
-					if (
-						id === away.rider_2._id ||
-						id === away.rider_3._id ||
-						id === away.rider_4._id ||
-						id === away.rider_1._id ||
-						id === away.rider_6._id ||
-						id === away.rider_7._id ||
-						id === away.rider_8._id
-					) {
-						return true;
-					}
-				case 6:
-					if (
-						id === away.rider_2._id ||
-						id === away.rider_3._id ||
-						id === away.rider_4._id ||
-						id === away.rider_5._id ||
-						id === away.rider_1._id ||
-						id === away.rider_7._id ||
-						id === away.rider_8._id
-					) {
-						return true;
-					}
-				case 7:
-					if (
-						id === away.rider_2._id ||
-						id === away.rider_3._id ||
-						id === away.rider_4._id ||
-						id === away.rider_5._id ||
-						id === away.rider_6._id ||
-						id === away.rider_1._id ||
-						id === away.rider_8._id
-					) {
-						return true;
-					}
-				case 8:
-					if (
-						id === away.rider_2._id ||
-						id === away.rider_3._id ||
-						id === away.rider_4._id ||
-						id === away.rider_5._id ||
-						id === away.rider_6._id ||
-						id === away.rider_7._id ||
-						id === away.rider_1._id
-					) {
-						return true;
-					}
-				default:
-					break;
-			}
-			return false;
-		}
-	};
-
-	const selectRiders = (clubId, number, homeAway) => {
+	const selectRiders = (clubId, number) => {
 		if (number === 8) {
 			return riders
 				.filter(
@@ -1328,8 +1603,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 						filtered.clubId === clubId &&
 						isU23(
 							filtered.dateOfBirth
-						) /* &&
-            !isChosen(filtered.id, 8, homeAway)*/
+						)
 				)
 				.map((rider, index) => {
 					return (
@@ -1344,7 +1618,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 					filtered =>
 						filtered.clubId === clubId &&
 						isU21(filtered.dateOfBirth) &&
-						!filtered.isForeigner /* && (!isChosen(filtered.id, 7, homeAway) || !isChosen(filtered.id, 6, homeAway))*/
+						!filtered.isForeigner
 				)
 				.map((rider, index) => {
 					return (
@@ -1358,8 +1632,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 				.filter(
 					filtered =>
 						filtered.clubId ==
-						clubId /* &&
-                (!isChosen(filtered.id, 1, homeAway) || !isChosen(filtered.id, 2, homeAway) || !isChosen(filtered.id, 3, homeAway) || !isChosen(filtered.id, 4, homeAway) || !isChosen(filtered.id, 5, homeAway))*/
+						clubId
 				)
 				.map((rider, index) => {
 					return (
@@ -1387,6 +1660,17 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 						</Select>
 						<br />
 						<div className="add-match__rider-div">
+							<div className="add-match__rider-select-title">
+								ZAWODNIK
+							</div>
+							<div className="add-match__rider-points-title">
+								PUNKTY
+							</div>
+							<div className="add-match__rider-heats-title">
+								BIEGI
+							</div>
+						</div>
+						<div className="add-match__rider-div">
 							1.
 							<Select
 								className="add-match__rider-select"
@@ -1399,7 +1683,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.team_id, 1, 'away')}
+								{selectRiders(away.team_id, 1)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1408,6 +1692,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_1',
 									'away'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={away.rider_1.heats || ''}
+								onChange={handleOnChangeHeats('rider_1', 'away')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1423,7 +1712,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.team_id, 2, 'away')}
+								{selectRiders(away.team_id, 2)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1432,6 +1721,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_2',
 									'away'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={away.rider_2.heats || ''}
+								onChange={handleOnChangeHeats('rider_2', 'away')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1447,7 +1741,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.team_id, 3, 'away')}
+								{selectRiders(away.team_id, 3)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1456,6 +1750,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_3',
 									'away'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={away.rider_3.heats || ''}
+								onChange={handleOnChangeHeats('rider_3', 'away')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1471,7 +1770,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.team_id, 4, 'away')}
+								{selectRiders(away.team_id, 4)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1480,6 +1779,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_4',
 									'away'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={away.rider_4.heats || ''}
+								onChange={handleOnChangeHeats('rider_4', 'away')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1495,7 +1799,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.team_id, 5, 'away')}
+								{selectRiders(away.team_id, 5)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1504,6 +1808,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_5',
 									'away'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={away.rider_5.heats || ''}
+								onChange={handleOnChangeHeats('rider_5', 'away')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1519,7 +1828,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.team_id, 6, 'away')}
+								{selectRiders(away.team_id, 6)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1528,6 +1837,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_6',
 									'away'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={away.rider_6.heats || ''}
+								onChange={handleOnChangeHeats('rider_6', 'away')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1543,7 +1857,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.team_id, 7, 'away')}
+								{selectRiders(away.team_id, 7)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1552,6 +1866,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_7',
 									'away'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={away.rider_7.heats || ''}
+								onChange={handleOnChangeHeats('rider_7', 'away')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1567,7 +1886,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.team_id, 8, 'away')}
+								{selectRiders(away.team_id, 8)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1576,6 +1895,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_8',
 									'away'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={away.rider_8.heats || ''}
+								onChange={handleOnChangeHeats('rider_8', 'away')}
 							/>
 						</div>
 					</div>
@@ -1591,6 +1915,17 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 						</Select>
 						<br />
 						<div className="add-match__rider-div">
+							<div className="add-match__rider-select-title">
+								ZAWODNIK
+							</div>
+							<div className="add-match__rider-points-title">
+								PUNKTY
+							</div>
+							<div className="add-match__rider-heats-title">
+								BIEGI
+							</div>
+						</div>
+						<div className="add-match__rider-div">
 							9.
 							<Select
 								className="add-match__rider-select"
@@ -1603,7 +1938,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.team_id, 1, 'home')}
+								{selectRiders(home.team_id, 1)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1612,6 +1947,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_1',
 									'home'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={home.rider_1.heats || ''}
+								onChange={handleOnChangeHeats('rider_1', 'home')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1627,7 +1967,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.team_id, 2, 'home')}
+								{selectRiders(home.team_id, 2)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1636,6 +1976,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_2',
 									'home'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={home.rider_2.heats || ''}
+								onChange={handleOnChangeHeats('rider_2', 'home')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1651,7 +1996,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.team_id, 3, 'home')}
+								{selectRiders(home.team_id, 3)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1660,6 +2005,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_3',
 									'home'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={home.rider_3.heats || ''}
+								onChange={handleOnChangeHeats('rider_3', 'home')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1675,7 +2025,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.team_id, 4, 'home')}
+								{selectRiders(home.team_id, 4)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1684,6 +2034,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_4',
 									'home'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={home.rider_4.heats || ''}
+								onChange={handleOnChangeHeats('rider_4', 'home')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1699,7 +2054,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.team_id, 5, 'home')}
+								{selectRiders(home.team_id, 5)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1708,6 +2063,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_5',
 									'home'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={home.rider_5.heats || ''}
+								onChange={handleOnChangeHeats('rider_5', 'home')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1723,7 +2083,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.team_id, 6, 'home')}
+								{selectRiders(home.team_id, 6)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1732,6 +2092,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_6',
 									'home'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={home.rider_6.heats || ''}
+								onChange={handleOnChangeHeats('rider_6', 'home')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1747,7 +2112,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.team_id, 7, 'home')}
+								{selectRiders(home.team_id, 7)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1756,6 +2121,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_7',
 									'home'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={home.rider_7.heats || ''}
+								onChange={handleOnChangeHeats('rider_7', 'home')}
 							/>
 						</div>
 						<div className="add-match__rider-div">
@@ -1771,7 +2141,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.team_id, 8, 'home')}
+								{selectRiders(home.team_id, 8)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
@@ -1780,6 +2150,11 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									'rider_8',
 									'home'
 								)}
+							/>
+							<TextField 
+								className="add-match__rider-heats"
+								value={home.rider_8.heats || ''}
+								onChange={handleOnChangeHeats('rider_8', 'home')}
 							/>
 						</div>
 					</div>
@@ -1842,105 +2217,141 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 					away.rider_1._id,
 					data._id,
 					away.rider_1.points,
-					1
+					1,
+					away.rider_1.heats
 				);
 				addRiderToMatch(
 					away.rider_2._id,
 					data._id,
 					away.rider_2.points,
-					2
+					2,
+					away.rider_2.heats
 				);
 				addRiderToMatch(
 					away.rider_3._id,
 					data._id,
 					away.rider_3.points,
-					3
+					3,
+					away.rider_3.heats
 				);
 				addRiderToMatch(
 					away.rider_4._id,
 					data._id,
 					away.rider_4.points,
-					4
+					4,
+					away.rider_4.heats
 				);
 				addRiderToMatch(
 					away.rider_5._id,
 					data._id,
 					away.rider_5.points,
-					5
+					5,
+					away.rider_5.heats
 				);
 				addRiderToMatch(
 					away.rider_6._id,
 					data._id,
 					away.rider_6.points,
-					6
+					6,
+					away.rider_6.heats
 				);
 				addRiderToMatch(
 					away.rider_7._id,
 					data._id,
 					away.rider_7.points,
-					7
+					7,
+					away.rider_7.heats
 				);
 				addRiderToMatch(
 					away.rider_8._id,
 					data._id,
 					away.rider_8.points,
-					8
+					8,
+					away.rider_8.heats
 				);
 				addRiderToMatch(
 					home.rider_1._id,
 					data._id,
 					home.rider_1.points,
-					9
+					9,
+					home.rider_1.heats
 				);
 				addRiderToMatch(
 					home.rider_2._id,
 					data._id,
 					home.rider_2.points,
-					10
+					10,
+					home.rider_2.heats
 				);
 				addRiderToMatch(
 					home.rider_3._id,
 					data._id,
 					home.rider_3.points,
-					11
+					11,
+					home.rider_3.heats
 				);
 				addRiderToMatch(
 					home.rider_4._id,
 					data._id,
 					home.rider_4.points,
-					12
+					12,
+					home.rider_4.heats
 				);
 				addRiderToMatch(
 					home.rider_5._id,
 					data._id,
 					home.rider_5.points,
-					13
+					13,
+					home.rider_5.heats
 				);
 				addRiderToMatch(
 					home.rider_6._id,
 					data._id,
 					home.rider_6.points,
-					14
+					14,
+					home.rider_6.heats
 				);
 				addRiderToMatch(
 					home.rider_7._id,
 					data._id,
 					home.rider_7.points,
-					15
+					15,
+					home.rider_7.heats
 				);
 				addRiderToMatch(
 					home.rider_8._id,
 					data._id,
 					home.rider_8.points,
-					16
+					16,
+					home.rider_8.heats
 				);
 			}
 			addNotification('Sukces', 'Poprawnie dodano mecz', 'success', 1000);
-			setTimeout(() => {
-				{
-					window.location.reload(false);
-				}
-			}, 1000);
+			setHome({
+				team_id: '',
+				rider_1: defaultRiderPoints,
+				rider_2: defaultRiderPoints,
+				rider_3: defaultRiderPoints,
+				rider_4: defaultRiderPoints,
+				rider_5: defaultRiderPoints,
+				rider_6: defaultRiderPoints,
+				rider_7: defaultRiderPoints,
+				rider_8: defaultRiderPoints
+			});
+			setAway({
+				team_id: '',
+				rider_1: defaultRiderPoints,
+				rider_2: defaultRiderPoints,
+				rider_3: defaultRiderPoints,
+				rider_4: defaultRiderPoints,
+				rider_5: defaultRiderPoints,
+				rider_6: defaultRiderPoints,
+				rider_7: defaultRiderPoints,
+				rider_8: defaultRiderPoints
+			})
+			setNumber('');
+			setMatchDate(new Date());
+			setWasRidden(false);
 		} catch (e) {
 			const {
 				response: { data }
@@ -1965,7 +2376,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
-	const addRiderToMatch = async (riderId, matchId, score, number) => {
+	const addRiderToMatch = async (riderId, matchId, score, number, heats) => {
 		if (riderId !== '') {
 			try {
 				const accessToken = getToken();
@@ -1975,11 +2386,12 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 					}
 				};
 				const { data } = await axios.post(
-					`https://fantasy-league-eti.herokuapp.com/match/${matchId}/riders`,
+					`https://fantasy-league-eti.herokuapp.com/matches/${matchId}/riders`,
 					{
 						riderId: riderId,
 						score: score,
-						riderNumber: number
+						riderNumber: number,
+						heats: heats
 					},
 					options
 				);
@@ -2009,7 +2421,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	const handleOnSubmit = () => {
-		//setDataToValidationFunc();
+		console.log("SUBMIT");
 		const validationResponse = validateMatchPointsData(dataToValidation);
 		if (validationResponse.error) {
 			setValidatedPoints(() => defaultValidatedPoints);
@@ -2032,11 +2444,25 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	useEffect(() => {
-		getRounds();
-		getClubs();
-		getRiders();
-		if (!userData.username)
-			fetchUserData(dispatchUserData, setLoggedIn, push);
+
+		(async function () {
+			try {
+				await getRiders();
+				await getClubs();
+				await getRounds();
+				if (!userData.username)
+					await fetchUserData(dispatchUserData, setLoggedIn, push);
+			} catch (e) {
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
+				} else {
+					addNotification('Błąd!', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
+				}
+			}
+		})();
 		setTimeout(() => {
 			document.body.style.overflow = 'auto';
 		}, 3000);
@@ -2179,7 +2605,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 									</Grid>
 									<Grid item xs={12}>
 										<Button
-											className="number-dialog__button"
+											className="btn dialog__form_button"
 											onClick={handleOnSubmitRound}
 										>
 											Dodaj
