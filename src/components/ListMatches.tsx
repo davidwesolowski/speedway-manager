@@ -159,6 +159,7 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({
 			try {
 				await getRounds();
 				await getRiders();
+				if(!userData.username) fetchUserData(dispatchUserData, setLoggedIn, push);
 			} catch (e) {
 				const {
 					response: { data }

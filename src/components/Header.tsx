@@ -205,22 +205,25 @@ const Header: FunctionComponent = () => {
 		<>
 			<AppBar position="sticky" className="header">
 				<Toolbar className="header__toolbar">
-					<Hidden mdUp={loggedIn} smUp={!loggedIn}>
-						<IconButton onClick={handleDrawerToggle}>
-							<FiMenu className="header__mobileIcon" />
-						</IconButton>
-					</Hidden>
+					{!isAdmin && (
+						<Hidden mdUp={loggedIn} smUp={!loggedIn}>
+							<IconButton onClick={handleDrawerToggle}>
+								<FiMenu className="header__mobileIcon" />
+							</IconButton>
+						</Hidden>
+					)}
+					{isAdmin ? adminHeader : loggedIn && authorized}
 					<Hidden mdDown={loggedIn} smDown={!loggedIn}>
 						<div className="header__logo">
 							<Link to="/">
-								<img src='img/logo41.png' className="header__logo-img"/>
+								<img src='img/logo41.png' alt="logo-small-header" className="header__logo-img"/>
 							</Link>
 						</div>
 					</Hidden>
 					<Hidden lgUp={loggedIn} smDown={loggedIn} xsUp={!loggedIn}>
 						<div className="header__logo-bike">
 							<Link to="/">
-								<img src='img/motologo.png' className="header__logo-bike-img"/>
+								<img src='img/motologo.png' alt="logo-big-header" className="header__logo-bike-img"/>
 							</Link>
 						</div>
 					</Hidden>

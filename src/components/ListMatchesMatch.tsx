@@ -320,7 +320,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 
 	const handleOpenEdit = () => {
 		getMatchRiders();
-		//setRidersEdit();
 		setOpenEdit(true);
 	};
 

@@ -63,7 +63,6 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
         if(results.find((result) => result.round._id === round)){
             setHistoryRiders((results.find((result) => result.round._id === round)).riders);
         } else if(round === 'all') {
-            console.log(results);
             const resultsAll = results.reduce((prev, curr) => {
                 const ridersScore = curr.riders.reduce((prev, curr) => ({
                     ...prev,

@@ -87,7 +87,7 @@ const RidersList : FunctionComponent<IProps> = ({
 		});
 	};
 
-	const ifForeigner = (foreigner) => {
+	const ifForeigner = foreigner => {
 		if (foreigner == true) {
 			return <FiX className="NoX" />;
 		} else {
