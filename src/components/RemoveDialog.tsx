@@ -11,7 +11,7 @@ interface IRemoveDialog {
 	removeDialog: boolean;
 	title: string;
 	handleRemoveClose: () => void;
-	removeFunction?: () => void;
+	removeFunction: () => Promise<void>;
 }
 
 const RemoveDialog: FunctionComponent<IRemoveDialog> = props => {
@@ -21,7 +21,7 @@ const RemoveDialog: FunctionComponent<IRemoveDialog> = props => {
 			<DialogTitle>
 				<div>
 					<Typography variant="h4" className="dialog__title">
-						Czy na pewno chcesz wyczyścić bazę danych?
+						{title}
 					</Typography>
 				</div>
 			</DialogTitle>
