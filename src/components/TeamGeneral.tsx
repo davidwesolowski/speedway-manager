@@ -16,11 +16,11 @@ import {
 	FormGroup,
 	TextField,
 	Button,
-	DialogActions
+	DialogActions,
 } from '@material-ui/core';
 import { FaTrashAlt, FaPencilAlt } from 'react-icons/fa';
 import { FiX } from 'react-icons/fi';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import handleImgFile, {
 	IImageData,
 	defaultImageData
@@ -171,6 +171,18 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 
 	return (
 		<>
+			<Grid container spacing={2} alignItems="center" justify="center" className="team-links">
+				<Grid item md={6} className="team-link-grid">
+					<Link to="/dodaj-druzyna" className="team-link">
+						Zarządzaj swoją kadrą
+					</Link>
+				</Grid>
+				<Grid item md={6} className="team-link-grid">
+					<Link to="/historia" className="team-link">
+						Wyniki twojej drużyny
+					</Link>
+				</Grid>
+			</Grid>
 			<Grid container alignItems="flex-start" className="team-container">
 				<Grid item xs={1}>
 					<IconButton onClick={handleEditOpen}>

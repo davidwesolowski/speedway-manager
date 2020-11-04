@@ -305,16 +305,14 @@ const RidersList: FunctionComponent<IProps> = ({ riders, deleteRider }) => {
 						<TableCell>{ifForeigner(zagraniczny)}</TableCell>
 						<TableCell>{ifJunior(data_urodzenia)}</TableCell>
 						<TableCell>{findClubName(klubId)}</TableCell>
-						<TableCell>
-							{isAdmin && (
-								<IconButton
-									className="riders-list__delete-rider-button"
-									onClick={handleRemoveOpen(rider)}
-								>
-									<FiXCircle />
-								</IconButton>
-							)}
-						</TableCell>
+						{isAdmin && (
+							<TableCell><IconButton
+								className="riders-list__delete-rider-button"
+								onClick={handleRemoveOpen(rider)}
+							>
+								<FiXCircle />
+							</IconButton></TableCell>
+						)}
 					</TableRow>
 				);
 			});
@@ -350,16 +348,14 @@ const RidersList: FunctionComponent<IProps> = ({ riders, deleteRider }) => {
 						<TableCell>{ifForeigner(zagraniczny)}</TableCell>
 						<TableCell>{ifJunior(data_urodzenia)}</TableCell>
 						<TableCell>{findClubName(klubId)}</TableCell>
-						<TableCell>
-							{isAdmin ? (
-								<IconButton
-									className="riders-list__delete-rider-button"
-									onClick={handleRemoveOpen(rider)}
-								>
-									<FiXCircle />
-								</IconButton>
-							) : null}
-						</TableCell>
+						{isAdmin ? (
+							<TableCell><IconButton
+								className="riders-list__delete-rider-button"
+								onClick={handleRemoveOpen(rider)}
+							>
+								<FiXCircle />
+							</IconButton></TableCell>
+						) : null}
 					</TableRow>
 				);
 			});
@@ -403,16 +399,14 @@ const RidersList: FunctionComponent<IProps> = ({ riders, deleteRider }) => {
 							<TableCell>{ifForeigner(zagraniczny)}</TableCell>
 							<TableCell>{ifJunior(data_urodzenia)}</TableCell>
 							<TableCell>{findClubName(klubId)}</TableCell>
-							<TableCell>
-								{isAdmin ? (
-									<IconButton
-										className="riders-list__delete-rider-button"
-										onClick={handleRemoveOpen(rider)}
-									>
-										<FiXCircle />
-									</IconButton>
-								) : null}
-							</TableCell>
+							{isAdmin ? (
+								<TableCell><IconButton
+									className="riders-list__delete-rider-button"
+									onClick={handleRemoveOpen(rider)}
+								>
+									<FiXCircle />
+								</IconButton></TableCell>
+							) : null}
 						</TableRow>
 					);
 				});
