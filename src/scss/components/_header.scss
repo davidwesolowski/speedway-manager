@@ -7,6 +7,7 @@
 	color: #fff;
 
 	&__toolbar {
+		position: relative;
 		min-height: 100% !important;
 
 		@media only screen and (min-width: $bp-sm) {
@@ -15,11 +16,11 @@
 
 		:first-child{
 			margin-right: auto;
+			margin-left: auto;
 		}
 	}
 
 	&__logo {
-		margin-right: auto;
 		position: absolute;
 		width: 25rem;
 		height: 8rem;

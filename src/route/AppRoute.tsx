@@ -129,11 +129,7 @@ const RoutesAnimation = () => {
 					<Route path="/samouczek" component={SelfTeaching} />
 					<Route
 						path="/mecze"
-						render={(props: RouteComponentProps) => {
-							const cookiesExist = checkCookies();
-							if (cookiesExist) return <ListMatches {...props} />;
-							else return <Redirect to="/login" />;
-						}}
+						component={ListMatches}
 					/>
 					<Route
 						path="/kluby"
