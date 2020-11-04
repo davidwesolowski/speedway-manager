@@ -445,6 +445,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		(async function () {
 			try {
 				await getClubs();
+				await getRiders();
 				if (!userData.username)
 					await fetchUserData(dispatchUserData, setLoggedIn, push);
 			} catch (e) {
