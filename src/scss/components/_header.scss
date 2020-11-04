@@ -127,12 +127,21 @@
 		margin-left: 0.5rem;
 	}
 
-	&__menu-item {
+	&__menuItem {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+
+	&__menuLink {
 		text-decoration: none;
 		text-transform: uppercase;
 		font-family: $bebas;
 		font-size: 2rem;
 		text-align: center;
+		padding-left: 1.6rem;
+		padding-right: 1.6rem;
+		height: 100%;
+		width: 100%;
 
 		&:active,
 		&:visited {

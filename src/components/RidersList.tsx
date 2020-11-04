@@ -25,6 +25,7 @@ import { useStateValue } from './AppProvider';
 import { checkBadAuthorization, checkCookies } from '../utils/checkCookies';
 import { CSSTransition } from 'react-transition-group';
 import fetchUserData from '../utils/fetchUserData';
+import RemoveDialog from './RemoveDialog';
 
 interface ISelect {
 	nationality: string;
@@ -32,8 +33,8 @@ interface ISelect {
 }
 
 interface IProps {
-	riders: IRiderPass[],
-	deleteRider: (id) => void
+	riders: IRiderPass[];
+	deleteRider: (id: string) => Promise<void>;
 }
 
 interface IRiderPass {
@@ -48,16 +49,20 @@ interface IRiderPass {
 	image: string;
 }
 
-const RidersList : FunctionComponent<IProps> = ({
-	riders,
-	deleteRider
-}) => {
+const defaultRider: IRiderPass = {
+	id: '',
+	imię: '',
+	nazwisko: '',
+	przydomek: '',
+	data_urodzenia: new Date(),
+	zagraniczny: false,
+	ksm: -1,
+	klubId: '',
+	image: ''
+};
 
-	const {
-        setLoggedIn,
-		dispatchUserData,
-		userData,
-	} = useStateValue();
+const RidersList: FunctionComponent<IProps> = ({ riders, deleteRider }) => {
+	const { setLoggedIn, dispatchUserData, userData } = useStateValue();
 	const { push } = useHistory();
 
 	const [clubs, setClubs] = useState([]);
@@ -65,6 +70,17 @@ const RidersList : FunctionComponent<IProps> = ({
 	const [filteredRiders, setFilteredRiders] = useState([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [firstUsage, setFirstUsage] = useState<boolean>(true);
+	const [removeDialog, setRemoveDialog] = useState(false);
+	const [rider, setRider] = useState<IRiderPass>(defaultRider);
+
+	const handleRemoveOpen = (rider: IRiderPass) => () => {
+		setRemoveDialog(true);
+		setRider(rider);
+	};
+	const handleRemoveClose = () => {
+		setRemoveDialog(false);
+		setRider(defaultRider);
+	};
 
 	const getClubs = async () => {
 		const accessToken = getToken();
@@ -228,30 +244,29 @@ const RidersList : FunctionComponent<IProps> = ({
 			selects.age == 'All' &&
 			selects.nationality == 'All' &&
 			riders.length == 0
-		){
+		) {
 			return false;
-		} else if(
+		} else if (
 			!firstUsage &&
 			phrase.length == 0 &&
 			filteredRiders.length == 0
-		){
+		) {
 			return false;
-		} else if(
+		} else if (
 			!firstUsage &&
-			filteredRiders
-				.filter(rider =>
-					(
-						rider.imię.toUpperCase() +
-						' ' +
-						rider.nazwisko.toUpperCase()
-					).includes(phrase.toUpperCase())
-				).length == 0
-		){
+			filteredRiders.filter(rider =>
+				(
+					rider.imię.toUpperCase() +
+					' ' +
+					rider.nazwisko.toUpperCase()
+				).includes(phrase.toUpperCase())
+			).length == 0
+		) {
 			return false;
 		} else {
 			return true;
 		}
-	}
+	};
 
 	const renderTableData = () => {
 		if (
@@ -272,10 +287,10 @@ const RidersList : FunctionComponent<IProps> = ({
 					image
 				} = rider;
 				return (
-					<TableRow
-						key={id}
-					>
-						<TableCell><Avatar src={image} alt="rider-avatar"/></TableCell>
+					<TableRow key={id}>
+						<TableCell>
+							<Avatar src={image} alt="rider-avatar" />
+						</TableCell>
 						<TableCell>{imię}</TableCell>
 						<TableCell>{nazwisko}</TableCell>
 						<TableCell>{przydomek}</TableCell>
@@ -290,13 +305,14 @@ const RidersList : FunctionComponent<IProps> = ({
 						<TableCell>{ifForeigner(zagraniczny)}</TableCell>
 						<TableCell>{ifJunior(data_urodzenia)}</TableCell>
 						<TableCell>{findClubName(klubId)}</TableCell>
-						
-							{isAdmin && <TableCell> <IconButton className="riders-list__delete-rider-button" onClick={(event: React.MouseEvent<HTMLElement>) => {
-								deleteRider(id)
-							}}>
+						{isAdmin && (
+							<TableCell><IconButton
+								className="riders-list__delete-rider-button"
+								onClick={handleRemoveOpen(rider)}
+							>
 								<FiXCircle />
-							</IconButton></TableCell>}
-						
+							</IconButton></TableCell>
+						)}
 					</TableRow>
 				);
 			});
@@ -314,10 +330,10 @@ const RidersList : FunctionComponent<IProps> = ({
 					image
 				} = rider;
 				return (
-					<TableRow
-						key={id}
-					>
-						<TableCell><Avatar src={image} alt="rider-avatar"/></TableCell>
+					<TableRow key={id}>
+						<TableCell>
+							<Avatar src={image} alt="rider-avatar" />
+						</TableCell>
 						<TableCell>{imię}</TableCell>
 						<TableCell>{nazwisko}</TableCell>
 						<TableCell>{przydomek}</TableCell>
@@ -332,13 +348,14 @@ const RidersList : FunctionComponent<IProps> = ({
 						<TableCell>{ifForeigner(zagraniczny)}</TableCell>
 						<TableCell>{ifJunior(data_urodzenia)}</TableCell>
 						<TableCell>{findClubName(klubId)}</TableCell>
-						
-							{isAdmin ? <TableCell><IconButton className="riders-list__delete-rider-button" onClick={(event: React.MouseEvent<HTMLElement>) => {
-								deleteRider(id)
-							}}>
+						{isAdmin ? (
+							<TableCell><IconButton
+								className="riders-list__delete-rider-button"
+								onClick={handleRemoveOpen(rider)}
+							>
 								<FiXCircle />
-							</IconButton> </TableCell>: null}
-						
+							</IconButton></TableCell>
+						) : null}
 					</TableRow>
 				);
 			});
@@ -354,20 +371,20 @@ const RidersList : FunctionComponent<IProps> = ({
 				.map(rider => {
 					const {
 						id,
-					imię,
-					nazwisko,
-					przydomek,
-					data_urodzenia,
-					zagraniczny,
-					ksm,
-					klubId,
-					image
+						imię,
+						nazwisko,
+						przydomek,
+						data_urodzenia,
+						zagraniczny,
+						ksm,
+						klubId,
+						image
 					} = rider;
 					return (
-						<TableRow
-							key={id}
-						>
-							<TableCell><Avatar src={image} alt="rider-avatar"/></TableCell>
+						<TableRow key={id}>
+							<TableCell>
+								<Avatar src={image} alt="rider-avatar" />
+							</TableCell>
 							<TableCell>{imię}</TableCell>
 							<TableCell>{nazwisko}</TableCell>
 							<TableCell>{przydomek}</TableCell>
@@ -382,11 +399,14 @@ const RidersList : FunctionComponent<IProps> = ({
 							<TableCell>{ifForeigner(zagraniczny)}</TableCell>
 							<TableCell>{ifJunior(data_urodzenia)}</TableCell>
 							<TableCell>{findClubName(klubId)}</TableCell>
-							{isAdmin ? <TableCell> <IconButton className="riders-list__delete-rider-button" onClick={(event: React.MouseEvent<HTMLElement>) => {
-								deleteRider(id)
-							}}>
-								<FiXCircle />
-							</IconButton> </TableCell>: null}
+							{isAdmin ? (
+								<TableCell><IconButton
+									className="riders-list__delete-rider-button"
+									onClick={handleRemoveOpen(rider)}
+								>
+									<FiXCircle />
+								</IconButton></TableCell>
+							) : null}
 						</TableRow>
 					);
 				});
@@ -405,7 +425,7 @@ const RidersList : FunctionComponent<IProps> = ({
 			'Junior',
 			'Klub'
 		];
-		if(!loading && checkIfFilteredRidersExist()){
+		if (!loading && checkIfFilteredRidersExist()) {
 			return header.map(name => {
 				return (
 					<TableCell key={name} align="center">
@@ -445,96 +465,111 @@ const RidersList : FunctionComponent<IProps> = ({
 
 	useEffect(() => {
 		setLoading(true);
-        (async function () {
-            try {
-                await getClubs();
-                if (!userData.username) await fetchUserData(dispatchUserData, setLoggedIn, push);
-            } catch (e) {
-                const {
-                    response: { data }
-                } = e;
-                if (data.statusCode == 401) {
-                    checkBadAuthorization(setLoggedIn, push);
-                } else {
-                    addNotification('Błąd!', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
-                }
+		(async function () {
+			try {
+				await getClubs();
+				if (!userData.username)
+					await fetchUserData(dispatchUserData, setLoggedIn, push);
+			} catch (e) {
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
+				} else {
+					addNotification(
+						'Błąd!',
+						'Nie udało się pobrać danych z bazy',
+						'danger',
+						1500
+					);
+				}
 			}
 			setLoading(false);
-        })();
-	}, [])
-	
+		})();
+	}, []);
+
 	useEffect(() => {
 		filtr();
 	}, [phrase, selects.age, selects.nationality]);
 
 	return (
 		<>
-		<div className="find-rider__search">
-						<div className="find-rider__search-phrase">
-							<TextField
-								label="Szukaj"
-								value={phrase}
-								onChange={handleOnChangePhrase()}
-								className="find-rider__phrase"
-							/>
-						</div>
-						<div className="find-rider__search-select1">
-							<InputLabel id="label1">Narodowość:</InputLabel>
-							<Select
-								labelId="label1"
-								className="find-rider__select1"
-								value={selects.nationality}
-								onChange={handleOnChangeSelect('nationality')}
-							>
-								<MenuItem value="All">Wszyscy</MenuItem>
-								<MenuItem value="Polish">Polacy</MenuItem>
-								<MenuItem value="Foreigner">
-									Obcokrajowcy
-								</MenuItem>
-							</Select>
-						</div>
-						<div className="find-rider__search-select2">
-							<InputLabel id="label2">Wiek:</InputLabel>
-							<Select
-								labelId="label2"
-								className="find-rider__select2"
-								value={selects.age}
-								onChange={handleOnChangeSelect('age')}
-							>
-								<MenuItem value="All">Wszyscy</MenuItem>
-								<MenuItem value="U23">U23</MenuItem>
-								<MenuItem value="U21">U21</MenuItem>
-								<MenuItem value="22+">Seniorzy</MenuItem>
-							</Select>
-						</div>
-					</div>
-		<div className='riders-list-div'>
-			{loading && (
-				<Grid container justify="center" alignItems="center">
-					<CircularProgress />
-				</Grid>
-			)}
-			<CSSTransition
-				in={riders.length > 0}
-				timeout={300}
-				classNames="animationScaleUp"
-				unmountOnExit
-			>
-				<TableContainer>
-					<Table id='riders-list'>
-						<TableHead>
-							<TableRow>
-								{renderTableHeader()}
-								{checkIfFilteredRidersExist() ? (isAdmin ? <TableCell>USUŃ</TableCell> : null) : <TableCell>BRAK ZAWODNIKÓW SPEŁNIAJĄCYCH WYBRANE KRYTERIA</TableCell>}
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							{renderTableData()}
-						</TableBody>
-					</Table>
-				</TableContainer>
-			</CSSTransition>
-		</div>
+			<div className="find-rider__search">
+				<div className="find-rider__search-phrase">
+					<TextField
+						label="Szukaj"
+						value={phrase}
+						onChange={handleOnChangePhrase()}
+						className="find-rider__phrase"
+					/>
+				</div>
+				<div className="find-rider__search-select1">
+					<InputLabel id="label1">Narodowość:</InputLabel>
+					<Select
+						labelId="label1"
+						className="find-rider__select1"
+						value={selects.nationality}
+						onChange={handleOnChangeSelect('nationality')}
+					>
+						<MenuItem value="All">Wszyscy</MenuItem>
+						<MenuItem value="Polish">Polacy</MenuItem>
+						<MenuItem value="Foreigner">Obcokrajowcy</MenuItem>
+					</Select>
+				</div>
+				<div className="find-rider__search-select2">
+					<InputLabel id="label2">Wiek:</InputLabel>
+					<Select
+						labelId="label2"
+						className="find-rider__select2"
+						value={selects.age}
+						onChange={handleOnChangeSelect('age')}
+					>
+						<MenuItem value="All">Wszyscy</MenuItem>
+						<MenuItem value="U23">U23</MenuItem>
+						<MenuItem value="U21">U21</MenuItem>
+						<MenuItem value="22+">Seniorzy</MenuItem>
+					</Select>
+				</div>
+			</div>
+			<div className="riders-list-div">
+				{loading && (
+					<Grid container justify="center" alignItems="center">
+						<CircularProgress />
+					</Grid>
+				)}
+				<CSSTransition
+					in={riders.length > 0}
+					timeout={300}
+					classNames="animationScaleUp"
+					unmountOnExit
+				>
+					<TableContainer>
+						<Table id="riders-list">
+							<TableHead>
+								<TableRow>
+									{renderTableHeader()}
+									{isAdmin && checkIfFilteredRidersExist() ? (
+										<TableCell>USUŃ</TableCell>
+									) : (
+										<TableCell>
+											BRAK ZAWODNIKÓW SPEŁNIAJĄCYCH
+											WYBRANE KRYTERIA
+										</TableCell>
+									)}
+								</TableRow>
+							</TableHead>
+							<TableBody>{renderTableData()}</TableBody>
+						</Table>
+					</TableContainer>
+				</CSSTransition>
+			</div>
+			<RemoveDialog
+				removeDialog={removeDialog}
+				handleRemoveClose={handleRemoveClose}
+				removeFunction={async () => deleteRider(rider.id)}
+				title="Czy chcesz usunąć zawodnika?"
+			/>
 		</>
 	);
 };

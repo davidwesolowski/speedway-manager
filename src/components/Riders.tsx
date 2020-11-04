@@ -13,7 +13,7 @@ import {
 	Grid,
 	Checkbox,
 	Select,
-	MenuItem,
+	MenuItem
 } from '@material-ui/core';
 import { FiPlus, FiX } from 'react-icons/fi';
 import axios from 'axios';
@@ -232,7 +232,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
-	const deleteRider = async (id) => {
+	const deleteRider = async id => {
 		try {
 			const accessToken = getToken();
 			const options = {
@@ -253,12 +253,11 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 			setRiders(riders.filter(rider => rider.id !== id));
 		} catch (e) {
 			const {
-                response: { data }
+				response: { data }
 			} = e;
-			console.log(e.response);
 			if (data.statusCode == 401) {
-                checkBadAuthorization(setLoggedIn, push);
-            } else {
+				checkBadAuthorization(setLoggedIn, push);
+			} else {
 				addNotification(
 					'Błąd!',
 					'Nie udało się usunąć zawodnika!',
@@ -266,11 +265,9 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 					1000
 				);
 			}
-			throw new Error('Error in deleting riders!');
 		}
-	}
+	};
 
-	
 	const getRiders = async () => {
 		try {
 			const accessToken = getToken();
@@ -301,11 +298,11 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 			});
 		} catch (e) {
 			const {
-                response: { data }
-            } = e;
+				response: { data }
+			} = e;
 			if (data.statusCode == 401) {
-                checkBadAuthorization(setLoggedIn, push);
-            } else {
+				checkBadAuthorization(setLoggedIn, push);
+			} else {
 				addNotification(
 					'Błąd!',
 					'Nie udało się usunąć zawodnika!',
@@ -315,7 +312,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 			}
 			throw new Error('Error in deleting riders!');
 		}
-	}
+	};
 
 	const addRider = async (riderData: IRider) => {
 		try {
@@ -370,8 +367,9 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 					zagraniczny: riderData.isForeigner,
 					ksm: riderData.KSM,
 					klubId: riderData.clubId,
-					image: '',
-				}));
+					image: ''
+				})
+			);
 		} catch (e) {
 			const {
 				response: { data }
@@ -481,7 +479,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 							<FiPlus />
 						</IconButton>
 					)}
-					<RidersList riders={riders} deleteRider={deleteRider}/>
+					<RidersList riders={riders} deleteRider={deleteRider} />
 				</Paper>
 			</div>
 			<Dialog open={showDialog} onClose={handleClose} className="dialog">

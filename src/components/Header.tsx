@@ -282,28 +282,28 @@ const Header: FunctionComponent = () => {
 				open={isMenuOpen}
 				onClick={handleMenuClose}
 			>
-				<MenuItem>
-					<Link to="/konto" className="header__menu-item">
+				<MenuItem className="header__menuItem">
+					<Link to="/konto" className="header__menuLink">
 						Profil
 					</Link>
 				</MenuItem>
-				<MenuItem>
-					<Link to="/znajomi" className="header__menu-item">
+				<MenuItem className="header__menuItem">
+					<Link to="/znajomi" className="header__menuLink">
 						Znajomi
 					</Link>
 				</MenuItem>
-				<MenuItem>
-					<Link to="moje-ligi" className="header__menu-item">
+				<MenuItem className="header__menuItem">
+					<Link to="moje-ligi" className="header__menuLink">
 						Moje ligi
 					</Link>
 				</MenuItem>
-				<MenuItem>
-					<Link to="/samouczek" className="header__menu-item">
+				<MenuItem className="header__menuItem">
+					<Link to="/samouczek" className="header__menuLink">
 						Samouczek
 					</Link>
 				</MenuItem>
-				<MenuItem onClick={handleLogout}>
-					<span className="header__menu-item">Wyloguj</span>
+				<MenuItem className="header__menuItem" onClick={handleLogout}>
+					<span className="header__menuLink">Wyloguj</span>
 				</MenuItem>
 			</Menu>
 		</>
