@@ -102,7 +102,17 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 				Authorization: `Bearer ${accessToken}`
 			}
 		};
+
+		const findClubOfRider = (clubs: any, clubId: string) => {
+			const club = clubs.find(club => club._id === clubId);
+			return club ? club.name : 'BRAK';
+		};
+
 		const fetchTeamRiders = async (_id: string) => {
+			const { data: clubs } = await axios.get(
+				'https://fantasy-league-eti.herokuapp.com/clubs',
+				options
+			);
 			const { data: riders } = await axios.get(
 				`https://fantasy-league-eti.herokuapp.com/teams/${_id}/riders`,
 				options
@@ -124,14 +134,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 						const nationality = rider.isForeigner
 							? 'Zagraniczny'
 							: 'Krajowy';
-						let club = '';
-						if (rider.clubId) {
-							const { data } = await axios.get(
-								`https://fantasy-league-eti.herokuapp.com/clubs/${rider.clubId}`,
-								options
-							);
-							club = data.name;
-						}
+						const club = findClubOfRider(clubs, rider.clubId);
 						return {
 							_id: rider._id,
 							firstName: rider.firstName,
