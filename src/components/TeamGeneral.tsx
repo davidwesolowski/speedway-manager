@@ -171,14 +171,13 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 
 	return (
 		<>
-			<Grid container alignItems="center" justify="center" className="team-links">
-				<Grid item md={4} className="team-link-grid">
+			<Grid container spacing={2} alignItems="center" justify="center" className="team-links">
+				<Grid item md={6} className="team-link-grid">
 					<Link to="/dodaj-druzyna" className="team-link">
 						Zarządzaj swoją kadrą
 					</Link>
 				</Grid>
-				<Grid item md={1}></Grid>
-				<Grid item md={4} className="team-link-grid">
+				<Grid item md={6} className="team-link-grid">
 					<Link to="/historia" className="team-link">
 						Wyniki twojej drużyny
 					</Link>
