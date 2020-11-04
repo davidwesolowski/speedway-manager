@@ -63,64 +63,6 @@
 		size: x-large !important;
 	}
 
-	&__search {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		margin-bottom: $s-margin;
-	}
-
-	&__select2 {
-		@media only screen and (max-width: $bp-md) {
-			width: 100%;
-		}
-
-		@media only screen and (max-width: $bp-sm) {
-			width: 100%;
-		}
-	}
-
-	&__searchPhrase {
-		width: 40%;
-		float: left;
-
-		@media only screen and (max-width: $bp-md) {
-			width: 100%;
-		}
-
-		@media only screen and (max-width: $bp-sm) {
-			width: 100%;
-		}
-	}
-
-	&__searchSelect1 {
-		width: 30%;
-		float: right;
-		margin-top: 1%;
-
-		@media only screen and (max-width: $bp-md) {
-			width: 40%;
-		}
-
-		@media only screen and (max-width: $bp-sm) {
-			width: 40%;
-		}
-	}
-
-	&__searchSelect2 {
-		width: 20%;
-		float: left !important;
-		margin-top: 1%;
-
-		@media only screen and (max-width: $bp-md) {
-			width: 40%;
-		}
-
-		@media only screen and (max-width: $bp-sm) {
-			width: 40%;
-		}
-	}
-
 	.MuiDivider-root {
 		margin-bottom: $xs-margin;
 	}
