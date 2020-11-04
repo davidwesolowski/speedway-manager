@@ -133,12 +133,7 @@ const RoutesAnimation = () => {
 					/>
 					<Route
 						path="/kluby"
-						render={(props: RouteComponentProps) => {
-							const cookiesExist = checkCookies();
-							if (cookiesExist)
-								return <ClubLeagueCreate {...props} />;
-							else return <Redirect to="/login" />;
-						}}
+						component={ClubLeagueCreate}
 					/>
 					<Route
 						path="/ligi"
