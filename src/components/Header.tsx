@@ -207,21 +207,21 @@ const Header: FunctionComponent = () => {
 				<Toolbar className="header__toolbar">
 					{!isAdmin && (
 						<Hidden mdUp={loggedIn} smUp={!loggedIn}>
-							<IconButton onClick={handleDrawerToggle}>
+							<IconButton onClick={handleDrawerToggle} className="header__mobileIconButton">
 								<FiMenu className="header__mobileIcon" />
 							</IconButton>
 						</Hidden>
 					)}
 					<Hidden mdDown={loggedIn} smDown={!loggedIn}>
 						<div className="header__logo">
-							<Link to="/">
+							<Link to="/" className="header__logo-link">
 								<img src='img/logo41.png' alt="logo-small-header" className="header__logo-img"/>
 							</Link>
 						</div>
 					</Hidden>
 					<Hidden lgUp={loggedIn} smDown={loggedIn} xsUp={!loggedIn}>
 						<div className="header__logo-bike">
-							<Link to="/">
+							<Link to="/" className="header__logo-link">
 								<img src='img/motologo.png' alt="logo-big-header" className="header__logo-bike-img"/>
 							</Link>
 						</div>

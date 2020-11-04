@@ -254,7 +254,8 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		} catch (e) {
 			const {
                 response: { data }
-            } = e;
+			} = e;
+			console.log(e.response);
 			if (data.statusCode == 401) {
                 checkBadAuthorization(setLoggedIn, push);
             } else {
