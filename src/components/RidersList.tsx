@@ -20,7 +20,7 @@ import {
 import addNotification from '../utils/addNotification';
 import getToken from '../utils/getToken';
 import checkAdminRole from '../utils/checkAdminRole';
-import { RouteProps, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useStateValue } from './AppProvider';
 import { checkBadAuthorization, checkCookies } from '../utils/checkCookies';
 import { CSSTransition } from 'react-transition-group';
