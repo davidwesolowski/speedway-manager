@@ -42,6 +42,7 @@ import handleImgFile, {
 import { checkBadAuthorization } from '../utils/checkCookies';
 import getToken from '../utils/getToken';
 import fetchUserData from '../utils/fetchUserData';
+import RemoveDialog from './RemoveDialog';
 
 interface IState {
 	username: string;
@@ -586,26 +587,12 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 					</form>
 				</DialogContent>
 			</Dialog>
-			<Dialog open={removeDialogOpen} onClose={handleRemoveClose}>
-				<DialogTitle>
-					<div>
-						<Typography variant="h4" className="dialog__title">
-							Czy na pewno chcesz usunąć swoje konto?
-						</Typography>
-					</div>
-				</DialogTitle>
-				<DialogActions>
-					<Button className="btn" onClick={handleRemoveClose}>
-						Anuluj
-					</Button>
-					<Button
-						className="btn dialog__button-approve"
-						onClick={removeUser}
-					>
-						Usuń
-					</Button>
-				</DialogActions>
-			</Dialog>
+			<RemoveDialog
+				removeDialog={removeDialogOpen}
+				handleRemoveClose={handleRemoveClose}
+				title="Czy na pewno chcesz usunąć swoje konto?"
+				removeFunction={removeUser}
+			/>
 		</>
 	);
 };

@@ -46,11 +46,11 @@ const TeamRiders: FunctionComponent<IProps> = ({ riders }) => {
 					<TableHead>
 						<TableRow>
 							<TableCell></TableCell>
-							<TableCell>Imię</TableCell>
-							<TableCell>Nazwisko</TableCell>
-							<TableCell>Data urodzenia</TableCell>
-							<TableCell>Klub</TableCell>
-							<TableCell>KSM</TableCell>
+							<TableCell align="center">Imię</TableCell>
+							<TableCell align="center">Nazwisko</TableCell>
+							<TableCell align="center">Data urodzenia</TableCell>
+							<TableCell align="center">Klub</TableCell>
+							<TableCell align="center">KSM</TableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -62,13 +62,21 @@ const TeamRiders: FunctionComponent<IProps> = ({ riders }) => {
 										alt="rider-avatar"
 									/>
 								</TableCell>
-								<TableCell>{rider.firstName}</TableCell>
-								<TableCell>{rider.lastName}</TableCell>
-								<TableCell>
+								<TableCell align="center">
+									{rider.firstName}
+								</TableCell>
+								<TableCell align="center">
+									{rider.lastName}
+								</TableCell>
+								<TableCell align="center">
 									{displayDate(rider.dateOfBirth)}
 								</TableCell>
-								<TableCell>{rider.club}</TableCell>
-								<TableCell>{rider.ksm}</TableCell>
+								<TableCell align="center">
+									{rider.club}
+								</TableCell>
+								<TableCell align="center">
+									{rider.ksm}
+								</TableCell>
 							</TableRow>
 						))}
 					</TableBody>
