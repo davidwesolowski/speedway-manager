@@ -290,13 +290,13 @@ const RidersList : FunctionComponent<IProps> = ({
 						<TableCell>{ifForeigner(zagraniczny)}</TableCell>
 						<TableCell>{ifJunior(data_urodzenia)}</TableCell>
 						<TableCell>{findClubName(klubId)}</TableCell>
-						<TableCell>
-							{isAdmin && <IconButton className="riders-list__delete-rider-button" onClick={(event: React.MouseEvent<HTMLElement>) => {
+						
+							{isAdmin && <TableCell> <IconButton className="riders-list__delete-rider-button" onClick={(event: React.MouseEvent<HTMLElement>) => {
 								deleteRider(id)
 							}}>
 								<FiXCircle />
-							</IconButton>}
-						</TableCell>
+							</IconButton></TableCell>}
+						
 					</TableRow>
 				);
 			});
@@ -332,13 +332,13 @@ const RidersList : FunctionComponent<IProps> = ({
 						<TableCell>{ifForeigner(zagraniczny)}</TableCell>
 						<TableCell>{ifJunior(data_urodzenia)}</TableCell>
 						<TableCell>{findClubName(klubId)}</TableCell>
-						<TableCell>
-							{isAdmin ? <IconButton className="riders-list__delete-rider-button" onClick={(event: React.MouseEvent<HTMLElement>) => {
+						
+							{isAdmin ? <TableCell><IconButton className="riders-list__delete-rider-button" onClick={(event: React.MouseEvent<HTMLElement>) => {
 								deleteRider(id)
 							}}>
 								<FiXCircle />
-							</IconButton> : null}
-						</TableCell>
+							</IconButton> </TableCell>: null}
+						
 					</TableRow>
 				);
 			});
@@ -382,13 +382,11 @@ const RidersList : FunctionComponent<IProps> = ({
 							<TableCell>{ifForeigner(zagraniczny)}</TableCell>
 							<TableCell>{ifJunior(data_urodzenia)}</TableCell>
 							<TableCell>{findClubName(klubId)}</TableCell>
-							<TableCell>
-								{isAdmin ? <IconButton className="riders-list__delete-rider-button" onClick={(event: React.MouseEvent<HTMLElement>) => {
-									deleteRider(id)
-								}}>
-									<FiXCircle />
-								</IconButton> : null}
-							</TableCell>
+							{isAdmin ? <TableCell> <IconButton className="riders-list__delete-rider-button" onClick={(event: React.MouseEvent<HTMLElement>) => {
+								deleteRider(id)
+							}}>
+								<FiXCircle />
+							</IconButton> </TableCell>: null}
 						</TableRow>
 					);
 				});
@@ -527,7 +525,7 @@ const RidersList : FunctionComponent<IProps> = ({
 						<TableHead>
 							<TableRow>
 								{renderTableHeader()}
-								{(isAdmin && checkIfFilteredRidersExist()) ? <TableCell>USUŃ</TableCell> : <TableCell>BRAK ZAWODNIKÓW SPEŁNIAJĄCYCH WYBRANE KRYTERIA</TableCell>}
+								{checkIfFilteredRidersExist() ? (isAdmin ? <TableCell>USUŃ</TableCell> : null) : <TableCell>BRAK ZAWODNIKÓW SPEŁNIAJĄCYCH WYBRANE KRYTERIA</TableCell>}
 							</TableRow>
 						</TableHead>
 						<TableBody>
