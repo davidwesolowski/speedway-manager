@@ -16,6 +16,10 @@ interface IRemoveDialog {
 
 const RemoveDialog: FunctionComponent<IRemoveDialog> = props => {
 	const { removeDialog, handleRemoveClose, title, removeFunction } = props;
+	const remove = () => {
+		removeFunction();
+		handleRemoveClose();
+	};
 	return (
 		<Dialog open={removeDialog} onClose={handleRemoveClose}>
 			<DialogTitle>
@@ -29,10 +33,7 @@ const RemoveDialog: FunctionComponent<IRemoveDialog> = props => {
 				<Button className="btn" onClick={handleRemoveClose}>
 					Anuluj
 				</Button>
-				<Button
-					className="btn dialog__button-approve"
-					onClick={removeFunction}
-				>
+				<Button className="btn dialog__button-approve" onClick={remove}>
 					Usuń
 				</Button>
 			</DialogActions>
