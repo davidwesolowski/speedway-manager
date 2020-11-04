@@ -293,6 +293,11 @@ const Header: FunctionComponent = () => {
 					</Link>
 				</MenuItem>
 				<MenuItem>
+					<Link to="moje-ligi" className="header__menu-item">
+						Moje ligi
+					</Link>
+				</MenuItem>
+				<MenuItem>
 					<Link to="/samouczek" className="header__menu-item">
 						Samouczek
 					</Link>
