@@ -39,3 +39,23 @@
 		margin-left: $xs-margin;
 	}
 }
+
+.team-links{
+	margin: 2% auto;
+	width: 50% !important;
+}
+
+.team-link-grid{
+	text-align: center;
+}
+
+.team-link{
+	font-size: 2.5rem !important;
+	font-family: "Bebas Neue", cursive !important;
+	color: #777777;
+	text-decoration: none;
+}
+
+.team-link:hover{
+	color: black;
+}
