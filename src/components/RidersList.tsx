@@ -64,6 +64,7 @@ const RidersList : FunctionComponent<IProps> = ({
 	const isAdmin = checkAdminRole(userData.role) && checkCookies();
 	const [filteredRiders, setFilteredRiders] = useState([]);
 	const [loading, setLoading] = useState<boolean>(true);
+	const [firstUsage, setFirstUsage] = useState<boolean>(true);
 
 	const getClubs = async () => {
 		const accessToken = getToken();
@@ -220,6 +221,38 @@ const RidersList : FunctionComponent<IProps> = ({
 		}
 	};
 
+	const checkIfFilteredRidersExist = () => {
+		if (
+			!firstUsage &&
+			phrase.length == 0 &&
+			selects.age == 'All' &&
+			selects.nationality == 'All' &&
+			riders.length == 0
+		){
+			return false;
+		} else if(
+			!firstUsage &&
+			phrase.length == 0 &&
+			filteredRiders.length == 0
+		){
+			return false;
+		} else if(
+			!firstUsage &&
+			filteredRiders
+				.filter(rider =>
+					(
+						rider.imię.toUpperCase() +
+						' ' +
+						rider.nazwisko.toUpperCase()
+					).includes(phrase.toUpperCase())
+				).length == 0
+		){
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 	const renderTableData = () => {
 		if (
 			phrase.length == 0 &&
@@ -374,13 +407,15 @@ const RidersList : FunctionComponent<IProps> = ({
 			'Junior',
 			'Klub'
 		];
-		return header.map(name => {
-			return (
-				<TableCell key={name} align="center">
-					{name.toUpperCase()}
-				</TableCell>
-			);
-		});
+		if(!loading && checkIfFilteredRidersExist()){
+			return header.map(name => {
+				return (
+					<TableCell key={name} align="center">
+						{name.toUpperCase()}
+					</TableCell>
+				);
+			});
+		}
 	};
 
 	const [phrase, setPhrase] = useState<string>('');
@@ -393,8 +428,8 @@ const RidersList : FunctionComponent<IProps> = ({
 		event: React.ChangeEvent<HTMLInputElement>
 	) => {
 		event.persist();
-		console.log(filteredRiders);
 		if (event.target) {
+			setFirstUsage(false);
 			setPhrase(event.target.value);
 		}
 	};
@@ -402,6 +437,7 @@ const RidersList : FunctionComponent<IProps> = ({
 	const handleOnChangeSelect = (name: string) => event => {
 		event.persist();
 		if (event.target) {
+			setFirstUsage(false);
 			setSelects((prevState: ISelect) => ({
 				...prevState,
 				[name]: event.target.value
@@ -491,7 +527,7 @@ const RidersList : FunctionComponent<IProps> = ({
 						<TableHead>
 							<TableRow>
 								{renderTableHeader()}
-								{isAdmin ? <TableCell>USUŃ</TableCell> : null}
+								{(isAdmin && checkIfFilteredRidersExist()) ? <TableCell>USUŃ</TableCell> : <TableCell>BRAK ZAWODNIKÓW SPEŁNIAJĄCYCH WYBRANE KRYTERIA</TableCell>}
 							</TableRow>
 						</TableHead>
 						<TableBody>
