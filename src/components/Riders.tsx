@@ -14,7 +14,6 @@ import {
 	Checkbox,
 	Select,
 	MenuItem,
-	InputLabel
 } from '@material-ui/core';
 import { FiPlus, FiX } from 'react-icons/fi';
 import axios from 'axios';
@@ -144,10 +143,6 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
-	const refreshPage = () => {
-		window.location.reload(false);
-	};
-
 	const [clubs, setClubs] = useState([]);
 
 	const getClubs = async () => {
@@ -257,7 +252,6 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 			);
 			setRiders(riders.filter(rider => rider.id !== id));
 		} catch (e) {
-			console.log(e.response);
 			const {
                 response: { data }
             } = e;
@@ -445,6 +439,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		(async function () {
 			try {
 				await getClubs();
+				await getRiders();
 				if (!userData.username)
 					await fetchUserData(dispatchUserData, setLoggedIn, push);
 			} catch (e) {

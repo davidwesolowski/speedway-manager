@@ -212,7 +212,6 @@ const Header: FunctionComponent = () => {
 							</IconButton>
 						</Hidden>
 					)}
-					{isAdmin ? adminHeader : loggedIn && authorized}
 					<Hidden mdDown={loggedIn} smDown={!loggedIn}>
 						<div className="header__logo">
 							<Link to="/">
@@ -227,6 +226,7 @@ const Header: FunctionComponent = () => {
 							</Link>
 						</div>
 					</Hidden>
+					{isAdmin ? adminHeader : loggedIn && authorized}
 					{loggedIn ? (
 						<IconButton onClick={handleProfileMenuOpen}>
 							<Avatar

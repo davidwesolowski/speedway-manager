@@ -47,3 +47,63 @@
     font-size: x-large !important;
     color: green !important;
 }
+
+.find-rider{
+    &__search {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: $s-margin;
+	}
+
+	&__select2 {
+		@media only screen and (max-width: $bp-md) {
+			width: 100%;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			width: 100%;
+		}
+	}
+
+	&__search-phrase {
+		width: 40%;
+		float: left;
+
+		@media only screen and (max-width: $bp-md) {
+			width: 100%;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			width: 100%;
+		}
+	}
+
+	&__search-select1 {
+		width: 30%;
+		float: right;
+		margin-top: 1%;
+
+		@media only screen and (max-width: $bp-md) {
+			width: 40%;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			width: 40%;
+		}
+	}
+
+	&__search-select2 {
+		width: 20%;
+		float: left !important;
+		margin-top: 1%;
+
+		@media only screen and (max-width: $bp-md) {
+			width: 40%;
+		}
+
+		@media only screen and (max-width: $bp-sm) {
+			width: 40%;
+		}
+	}
+}

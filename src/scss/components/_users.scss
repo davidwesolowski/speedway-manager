@@ -80,6 +80,11 @@
 		font-size: 3rem !important;
 	}
 
+	&__addToLeague{
+		color: green;
+		font-size: x-large;
+	}
+
 	.MuiTableCell-head {
 		background-color: $color-primary !important;
 		color: #fff !important;
@@ -130,5 +135,34 @@
 		&__container {
 			margin-top: $s-margin !important;
 		}
+	}
+}
+
+.users-dialog{
+	&__fix{
+        float: right;
+    }
+
+    &__header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__title{
+        font-family: "Bebas Neue", cursive !important;
+	}
+	
+	&__select{
+		margin-top: 14px !important;
+		font-size: large !important;
+		width: 20rem;
+	}
+
+	.MuiButton-label{
+		width: 100%;
+		display: inherit;
+		align-items: inherit;
+		justify-content: inherit;
 	}
 }

@@ -353,8 +353,8 @@ const UsersList: FunctionComponent<IProps> = ({
 								</Select>
 							</FormControl>
 						</Grid>
-						<Grid>
-							<Button type="submit" className="users-dialog__submit">
+						<Grid item xs={12}>
+							<Button type="submit" className="btn dialog__form_button">
 								Dodaj
 							</Button>
 						</Grid>
