@@ -56,8 +56,6 @@ interface IRider1 {
 	dateOfBirth: Date;
 	isForeigner: boolean;
 	isJunior: boolean;
-	// ksm: number;
-	//   club: string;
 }
 
 interface IValidatedData {
@@ -183,6 +181,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		setShowDialog(false);
 		setRiderData(defaultRiderData);
 		setImageData(defaultImageData);
+		setTempKSM("");
 	};
 
 	const handleOnChange = (name: string) => (
@@ -322,6 +321,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 					Authorization: `Bearer ${accessToken}`
 				}
 			};
+			console.log(riderData);
 			const { data } = await axios.post(
 				'https://fantasy-league-eti.herokuapp.com/riders',
 				riderData,
