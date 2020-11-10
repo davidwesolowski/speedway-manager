@@ -392,9 +392,9 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = () => {
 					>
 						<div>
 							{generateTable()}
-							{generateDialog()}
 						</div>
 					</CSSTransition>
+					{generateDialog()}
 				</Paper>
 			</div>
 			<RemoveDialog
