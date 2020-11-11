@@ -24,7 +24,7 @@ const WelcomePage: FunctionComponent = () => {
 			<div className="welcome-box__img"></div>
 			<section className="welcome-box__head">
 				<div className="welcome-box__logo">Żużlowa liga fantasy</div>
-				<h2 className="heading-2">
+				<h2 className="heading-2 welcome-box__heading2">
 					Stwórz swoją wymarzoną drużynę i wygraj ligę!
 				</h2>
 			</section>

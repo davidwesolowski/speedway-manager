@@ -615,7 +615,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 						<div className="scores-dialog__away">
 							<Typography
 								variant="h3"
-								className="scores-dialog__club-name"
+								className="scores-dialog__clubName"
 							>
 								{away ? away.name : ''}
 							</Typography>
