@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 import {
 	Paper,
 	Typography,
@@ -14,7 +14,7 @@ import axios from 'axios';
 import addNotification from '../utils/addNotification';
 import ListMatchesRound from './ListMatchesRound';
 import fetchUserData from '../utils/fetchUserData';
-import { checkBadAuthorization } from '../utils/checkCookies';
+import { checkBadAuthorization, checkCookies } from '../utils/checkCookies';
 
 interface IRider {
 	_id: string;
@@ -27,14 +27,13 @@ interface IRider {
 	clubId: string;
 }
 
-const ListMatches: FunctionComponent<RouteComponentProps> = ({
-	history: { push }
-}) => {
+const ListMatches: FunctionComponent<RouteComponentProps> = () => {
 	const { setLoggedIn, dispatchUserData, userData } = useStateValue();
 
 	const [rounds, setRounds] = useState([]);
 	const [riders, setRiders] = useState<IRider[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
+	const { push } = useHistory();
 
 	const generateRounds = () => {
 		return rounds.map((round, index) => {
@@ -59,7 +58,7 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({
 		);
 		setRounds([]);
 		setRounds(data);
-		if(data.length) {
+		if (data.length) {
 			setRoundId(data[0]._id);
 			setNumber(data[0].number);
 		}
@@ -159,7 +158,8 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({
 			try {
 				await getRounds();
 				await getRiders();
-				if(!userData.username) fetchUserData(dispatchUserData, setLoggedIn, push);
+				if (checkCookies() && !userData.username)
+					fetchUserData(dispatchUserData, setLoggedIn, push);
 			} catch (e) {
 				const {
 					response: { data }
@@ -167,10 +167,15 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({
 				if (data.statusCode == 401) {
 					checkBadAuthorization(setLoggedIn, push);
 				} else {
-					addNotification('Błąd!', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
+					addNotification(
+						'Błąd!',
+						'Nie udało się pobrać danych z bazy',
+						'danger',
+						1500
+					);
 				}
 			}
-			setLoading(false)
+			setLoading(false);
 		})();
 	}, []);
 
@@ -188,7 +193,12 @@ const ListMatches: FunctionComponent<RouteComponentProps> = ({
 					<Divider />
 					<br />
 					<div className="list-matches__round-div">
-						<InputLabel id="roundLabel" className="list-matches__label">Kolejka:</InputLabel>
+						<InputLabel
+							id="roundLabel"
+							className="list-matches__label"
+						>
+							Kolejka:
+						</InputLabel>
 						<Select
 							labelId="roundLabel"
 							className="add-match__round-select"

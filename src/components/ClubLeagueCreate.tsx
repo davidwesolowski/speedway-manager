@@ -31,7 +31,7 @@ import TeamCreate from './TeamCreate';
 import { useStateValue } from './AppProvider';
 import fetchUserData from '../utils/fetchUserData';
 import getToken from '../utils/getToken';
-import { checkBadAuthorization } from '../utils/checkCookies';
+import { checkBadAuthorization, checkCookies } from '../utils/checkCookies';
 import addNotification from '../utils/addNotification';
 import { CSSTransition } from 'react-transition-group';
 import { FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
@@ -73,7 +73,7 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 	const [updateClub, setUpdateClub] = useState(false);
 	const { dispatchUserData, setLoggedIn, userData } = useStateValue();
 	const { push } = useHistory();
-	const isAdmin = checkAdminRole(userData.role);
+	const isAdmin = checkCookies() && checkAdminRole(userData.role);
 
 	const handleShowRemoveDialog = (id: string) => () => {
 		setRemoveDialog(true);
@@ -296,7 +296,7 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 		(async function () {
 			try {
 				await fetchClubs();
-				if (!userData.username)
+				if (checkCookies() && !userData.username)
 					await fetchUserData(dispatchUserData, setLoggedIn, push);
 			} catch (e) {
 				const {

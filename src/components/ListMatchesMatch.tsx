@@ -21,7 +21,7 @@ import {
 import DateFnsUtils from '@date-io/date-fns';
 import checkAdminRole from '../utils/checkAdminRole';
 import { useStateValue } from './AppProvider';
-import { checkBadAuthorization } from '../utils/checkCookies';
+import { checkBadAuthorization, checkCookies } from '../utils/checkCookies';
 
 interface IProps {
 	matchId: string;
@@ -167,7 +167,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 	awayScore,
 	riders,
 	date,
-	wasRidden,
+	wasRidden
 }) => {
 	const [home, setHome] = useState<IClub>();
 	const [away, setAway] = useState<IClub>();
@@ -185,42 +185,43 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 	const [isHidden, setIsHidden] = useState<boolean>(false);
 	const [homeScoreEdit, setHomeScoreEdit] = useState(homeScore);
 	const [awayScoreEdit, setAwayScoreEdit] = useState(awayScore);
+	const isAdmin = checkAdminRole(userData.role) && checkCookies();
 
 	const getClub = async (clubId: string, homeAway: string) => {
 		if (homeAway === 'home') {
-				const accessToken = getToken();
-				const options = {
-					headers: {
-						Authorization: `Bearer ${accessToken}`
-					}
-				};
-				const { data } = await axios.get(
-					`https://fantasy-league-eti.herokuapp.com/clubs/${clubId}`,
-					options
-				);
-				setHome({
-					clubId: data._id,
-					name: data.name,
-					logoUrl: data.logoUrl
-				});
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			const { data } = await axios.get(
+				`https://fantasy-league-eti.herokuapp.com/clubs/${clubId}`,
+				options
+			);
+			setHome({
+				clubId: data._id,
+				name: data.name,
+				logoUrl: data.logoUrl
+			});
 		} else {
-				const accessToken = getToken();
-				const options = {
-					headers: {
-						Authorization: `Bearer ${accessToken}`
-					}
-				};
-				const { data } = await axios.get(
-					`https://fantasy-league-eti.herokuapp.com/clubs/${clubId}`,
-					options
-				);
-				setAway({
-					clubId: data._id,
-					name: data.name,
-					logoUrl: data.logoUrl
-				});
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			const { data } = await axios.get(
+				`https://fantasy-league-eti.herokuapp.com/clubs/${clubId}`,
+				options
+			);
+			setAway({
+				clubId: data._id,
+				name: data.name,
+				logoUrl: data.logoUrl
+			});
 		}
-		}
+	};
 
 	const handleOpenScores = () => {
 		if (wasRiddenEdit) {
@@ -362,7 +363,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				`https://fantasy-league-eti.herokuapp.com/matches/${matchId}/riders`,
 				options
 			);
-			data.map((rider, index) => {
+			data.map(rider => {
 				switch (rider.riderNumber) {
 					case 1:
 						setMatchRider('rider_1', rider);
@@ -417,11 +418,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				}
 			});
 		} catch (e) {
-			if (e.response.statusText == 'Unauthorized') {
-				addNotification('Błąd', 'Sesja wygasła', 'danger', 3000);
-				setTimeout(() => {
-					push('/login');
-				}, 3000);
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
 			} else {
 				addNotification(
 					'Błąd',
@@ -430,7 +431,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					3000
 				);
 			}
-			throw new Error('Error in getting rounds');
 		}
 	};
 
@@ -458,7 +458,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					Authorization: `Bearer ${accessToken}`
 				}
 			};
-			const { data } = await axios.delete(
+			await axios.delete(
 				`https://fantasy-league-eti.herokuapp.com/matches/${matchId}`,
 				options
 			);
@@ -494,21 +494,39 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				<>
 					<div className="list-matches-match">
 						<Grid container justify="center" alignItems="center">
-							<Grid item xs={12} md={4} className="list-matches-match__club">
-							<img
-								src={
-									home.logoUrl
-										? (home.logoUrl as string)
-										: '/img/warsaw_venue.jpg'
-								}
-								alt="club-logo"
-								className="list-matches-match__club-image"
-							/>
-							<Typography variant="h3" className="list-matches-match__clubName">{home.name}</Typography>
+							<Grid
+								item
+								xs={12}
+								md={4}
+								className="list-matches-match__club"
+							>
+								<img
+									src={
+										home.logoUrl
+											? (home.logoUrl as string)
+											: '/img/warsaw_venue.jpg'
+									}
+									alt="club-logo"
+									className="list-matches-match__club-image"
+								/>
+								<Typography
+									variant="h3"
+									className="list-matches-match__clubName"
+								>
+									{home.name}
+								</Typography>
 							</Grid>
 							<Grid item xs={12} md={4}>
-								<Grid container direction="column" justify="center" alignItems="center">
-									<Grid item className="list-matches-match__options">
+								<Grid
+									container
+									direction="column"
+									justify="center"
+									alignItems="center"
+								>
+									<Grid
+										item
+										className="list-matches-match__options"
+									>
 										<Button
 											className="list-matches-match__btn-space btn"
 											onClick={handleOpenScores}
@@ -516,7 +534,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 										>
 											Wyniki
 										</Button>
-										{checkAdminRole(userData.role) && (
+										{isAdmin && (
 											<>
 												<Button
 													className="list-matches-match__btn-space btn"
@@ -533,12 +551,15 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 											</>
 										)}
 									</Grid>
-									<Grid item>
-										{generateScore()}
-									</Grid>
+									<Grid item>{generateScore()}</Grid>
 								</Grid>
 							</Grid>
-							<Grid item xs={12} md={4} className="list-matches-match__club">
+							<Grid
+								item
+								xs={12}
+								md={4}
+								className="list-matches-match__club"
+							>
 								<img
 									src={
 										away.logoUrl
@@ -548,7 +569,12 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 									alt="club-logo"
 									className="list-matches-match__club-image"
 								/>
-								<Typography variant="h3" className="list-matches-match__clubName">{away.name}</Typography>
+								<Typography
+									variant="h3"
+									className="list-matches-match__clubName"
+								>
+									{away.name}
+								</Typography>
 							</Grid>
 						</Grid>
 					</div>
@@ -755,9 +781,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				.filter(
 					filtered =>
 						filtered.clubId === clubId &&
-						isU23(
-							filtered.dateOfBirth
-						)
+						isU23(filtered.dateOfBirth)
 				)
 				.map((rider, index) => {
 					return (
@@ -783,11 +807,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				});
 		} else {
 			return riders
-				.filter(
-					filtered =>
-						filtered.clubId ==
-						clubId
-				)
+				.filter(filtered => filtered.clubId == clubId)
 				.map((rider, index) => {
 					return (
 						<MenuItem key={rider._id} value={rider._id}>
@@ -833,9 +853,13 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 			return (
 				<>
 					<div className="add-match__away-div">
-						<span className="list-matches-match__clubName">AWAY</span>
+						<span className="list-matches-match__clubName">
+							AWAY
+						</span>
 						<br />
-						<span className="list-matches-match__clubName">{away.name}</span>
+						<span className="list-matches-match__clubName">
+							{away.name}
+						</span>
 						<br />
 						{sumEditPoints('away')}
 						<br />
@@ -1097,9 +1121,13 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 						</div>
 					</div>
 					<div className="add-match__home-div">
-					<span className="list-matches-match__clubName">HOME</span>
+						<span className="list-matches-match__clubName">
+							HOME
+						</span>
 						<br />
-						<span className="list-matches-match__clubName">{home.name}</span>
+						<span className="list-matches-match__clubName">
+							{home.name}
+						</span>
 						<br />
 						{sumEditPoints('home')}
 						<br />
@@ -1367,17 +1395,31 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 			return (
 				<>
 					<div className="add-match__away-div">
-					<span className="list-matches-match__clubName">AWAY</span>
+						<span className="list-matches-match__clubName">
+							AWAY
+						</span>
 						<br />
-						{away ? <span className="list-matches-match__clubName">
-							{away.name}
-						</span>: ''}
+						{away ? (
+							<span className="list-matches-match__clubName">
+								{away.name}
+							</span>
+						) : (
+							''
+						)}
 						<br />
 					</div>
 					<div className="add-match__home-div">
-					<span className="list-matches-match__clubName">HOME</span>
+						<span className="list-matches-match__clubName">
+							HOME
+						</span>
 						<br />
-						{home ? <span className="list-matches-match__clubName">{home.name}</span> : ''}
+						{home ? (
+							<span className="list-matches-match__clubName">
+								{home.name}
+							</span>
+						) : (
+							''
+						)}
 						<br />
 					</div>
 				</>
@@ -1984,7 +2026,9 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					<div className="edit-dialog__riders">
 						{selectRidersFields()}
 					</div>
-					<Button onClick={onClickEditButton} className="btn">Edytuj</Button>
+					<Button onClick={onClickEditButton} className="btn">
+						Edytuj
+					</Button>
 				</div>
 			</Dialog>
 		);
@@ -2055,7 +2099,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				} else if (riderId === matchRidersEdit.rider_2.riderId) {
 					if (
 						points !== matchRidersEdit.rider_2.points ||
-						number !== 2||
+						number !== 2 ||
 						heats !== matchRidersEdit.rider_2.heats
 					) {
 						patchRiderMatch(
@@ -2070,7 +2114,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				} else if (riderId === matchRidersEdit.rider_3.riderId) {
 					if (
 						points !== matchRidersEdit.rider_3.points ||
-						number !== 3||
+						number !== 3 ||
 						heats !== matchRidersEdit.rider_3.heats
 					) {
 						patchRiderMatch(
@@ -2085,7 +2129,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				} else if (riderId === matchRidersEdit.rider_4.riderId) {
 					if (
 						points !== matchRidersEdit.rider_4.points ||
-						number !== 4||
+						number !== 4 ||
 						heats !== matchRidersEdit.rider_4.heats
 					) {
 						patchRiderMatch(
@@ -2100,7 +2144,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				} else if (riderId === matchRidersEdit.rider_5.riderId) {
 					if (
 						points !== matchRidersEdit.rider_5.points ||
-						number !== 5||
+						number !== 5 ||
 						heats !== matchRidersEdit.rider_5.heats
 					) {
 						patchRiderMatch(
@@ -2115,7 +2159,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				} else if (riderId === matchRidersEdit.rider_6.riderId) {
 					if (
 						points !== matchRidersEdit.rider_6.points ||
-						number !== 6||
+						number !== 6 ||
 						heats !== matchRidersEdit.rider_6.heats
 					) {
 						patchRiderMatch(
@@ -2130,7 +2174,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				} else if (riderId === matchRidersEdit.rider_7.riderId) {
 					if (
 						points !== matchRidersEdit.rider_7.points ||
-						number !== 7||
+						number !== 7 ||
 						heats !== matchRidersEdit.rider_7.heats
 					) {
 						patchRiderMatch(
@@ -2145,7 +2189,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				} else if (riderId === matchRidersEdit.rider_8.riderId) {
 					if (
 						points !== matchRidersEdit.rider_8.points ||
-						number !== 8||
+						number !== 8 ||
 						heats !== matchRidersEdit.rider_8.heats
 					) {
 						patchRiderMatch(
@@ -2162,7 +2206,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				if (riderId === matchRidersEdit.rider_9.riderId) {
 					if (
 						points !== matchRidersEdit.rider_9.points ||
-						number !== 9||
+						number !== 9 ||
 						heats !== matchRidersEdit.rider_9.heats
 					) {
 						patchRiderMatch(
@@ -2177,7 +2221,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				} else if (riderId === matchRidersEdit.rider_10.riderId) {
 					if (
 						points !== matchRidersEdit.rider_10.points ||
-						number !== 10||
+						number !== 10 ||
 						heats !== matchRidersEdit.rider_10.heats
 					) {
 						patchRiderMatch(
@@ -2192,7 +2236,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				} else if (riderId === matchRidersEdit.rider_11.riderId) {
 					if (
 						points !== matchRidersEdit.rider_11.points ||
-						number !== 11||
+						number !== 11 ||
 						heats !== matchRidersEdit.rider_11.heats
 					) {
 						patchRiderMatch(
@@ -2207,7 +2251,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				} else if (riderId === matchRidersEdit.rider_12.riderId) {
 					if (
 						points !== matchRidersEdit.rider_12.points ||
-						number !== 12||
+						number !== 12 ||
 						heats !== matchRidersEdit.rider_12.heats
 					) {
 						patchRiderMatch(
@@ -2222,7 +2266,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				} else if (riderId === matchRidersEdit.rider_13.riderId) {
 					if (
 						points !== matchRidersEdit.rider_13.points ||
-						number !== 13||
+						number !== 13 ||
 						heats !== matchRidersEdit.rider_13.heats
 					) {
 						patchRiderMatch(
@@ -2237,7 +2281,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				} else if (riderId === matchRidersEdit.rider_14.riderId) {
 					if (
 						points !== matchRidersEdit.rider_14.points ||
-						number !== 14||
+						number !== 14 ||
 						heats !== matchRidersEdit.rider_14.heats
 					) {
 						patchRiderMatch(
@@ -2252,7 +2296,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				} else if (riderId === matchRidersEdit.rider_15.riderId) {
 					if (
 						points !== matchRidersEdit.rider_15.points ||
-						number !== 15||
+						number !== 15 ||
 						heats !== matchRidersEdit.rider_15.heats
 					) {
 						patchRiderMatch(
@@ -2267,7 +2311,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				} else if (riderId === matchRidersEdit.rider_16.riderId) {
 					if (
 						points !== matchRidersEdit.rider_16.points ||
-						number !== 16||
+						number !== 16 ||
 						heats !== matchRidersEdit.rider_16.heats
 					) {
 						patchRiderMatch(
@@ -2285,7 +2329,13 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 		}
 	};
 
-	const addNewRiderMatch = async (riderId, matchId, number, points, heats) => {
+	const addNewRiderMatch = async (
+		riderId,
+		matchId,
+		number,
+		points,
+		heats
+	) => {
 		try {
 			const accessToken = getToken();
 			const options = {
@@ -2647,9 +2697,14 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				const {
 					response: { data }
 				} = e;
-				addNotification('Błąd!', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
+				addNotification(
+					'Błąd!',
+					'Nie udało się pobrać danych z bazy',
+					'danger',
+					1500
+				);
 			}
-			setLoading(false)
+			setLoading(false);
 		})();
 	}, []);
 
