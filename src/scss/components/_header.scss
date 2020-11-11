@@ -14,7 +14,7 @@
 			min-height: 100%;
 		}
 
-		:first-child{
+		:first-child {
 			margin-right: 0;
 			margin-left: 0;
 		}
@@ -35,7 +35,7 @@
 		margin-left: 0 !important;
 	}
 
-	&__logo-link{
+	&__logo-link {
 		margin-left: 0 !important;
 	}
 
@@ -94,7 +94,7 @@
 		font-size: 2.5rem;
 	}
 
-	&__mobileIconButton{
+	&__mobileIconButton {
 		margin-right: auto !important;
 	}
 
@@ -142,6 +142,7 @@
 		padding-right: 1.6rem;
 		height: 100%;
 		width: 100%;
+		color: #000 !important;
 
 		&:active,
 		&:visited {
