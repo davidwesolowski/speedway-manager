@@ -235,7 +235,6 @@ const TeamCreate: FunctionComponent<IProps> = ({
 			const {
 				response: { data }
 			} = e;
-			console.log(e.response);
 			if (data.statusCode == 401) {
 				checkBadAuthorization(setLoggedIn, push);
 			} else {
