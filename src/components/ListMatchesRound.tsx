@@ -5,7 +5,6 @@ import getToken from '../utils/getToken';
 import axios from 'axios';
 import addNotification from '../utils/addNotification';
 import { useHistory } from 'react-router-dom';
-import { checkBadAuthorization } from '../utils/checkCookies';
 import { useStateValue } from './AppProvider';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
@@ -44,23 +43,21 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
 	riders
 }) => {
 	const [matches, setMatches] = useState([]);
-	const { push } = useHistory();
-	const { setLoggedIn } = useStateValue();
 	const [loading, setLoading] = useState<boolean>(true);
 
 	const getMatchesOfRound = async roundId => {
-			const accessToken = getToken();
-			const options = {
-				headers: {
-					Authorization: `Bearer ${accessToken}`
-				}
-			};
-			const { data } = await axios.get(
-				`https://fantasy-league-eti.herokuapp.com/matches?roundId=${roundId}`,
-				options
-			);
-			setMatches([]);
-			setMatches(data);
+		const accessToken = getToken();
+		const options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
+			}
+		};
+		const { data } = await axios.get(
+			`https://fantasy-league-eti.herokuapp.com/matches?roundId=${roundId}`,
+			options
+		);
+		setMatches([]);
+		setMatches(data);
 	};
 
 	const generateMatches = () => {
@@ -76,29 +73,29 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
 				</CSSTransition>
 			);
 		} else if (round !== 0) {
-			return(
+			return (
 				<TransitionGroup component={null}>
 					{matches.map(match => (
 						<CSSTransition
-						key={match._id}
-						timeout={500}
-						classNames="animationScaleUp"
+							key={match._id}
+							timeout={500}
+							classNames="animationScaleUp"
 						>
 							<ListMatchesMatch
-							key={match._id}
-							matchId={match._id}
-							homeId={match.homeId}
-							awayId={match.awayId}
-							homeScore={match.homeScore}
-							awayScore={match.awayScore}
-							riders={riders}
-							date={match.date}
-							wasRidden={match.wasRidden}
+								key={match._id}
+								matchId={match._id}
+								homeId={match.homeId}
+								awayId={match.awayId}
+								homeScore={match.homeScore}
+								awayScore={match.awayScore}
+								riders={riders}
+								date={match.date}
+								wasRidden={match.wasRidden}
 							/>
 						</CSSTransition>
 					))}
 				</TransitionGroup>
-			)
+			);
 		}
 	};
 
@@ -116,14 +113,16 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
 		setLoading(true);
 		(async function () {
 			try {
-				await getMatchesOfRound(roundId)
+				await getMatchesOfRound(roundId);
 			} catch (e) {
-				const {
-					response: { data }
-				} = e;
-				addNotification('Błąd!', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
+				addNotification(
+					'Błąd!',
+					'Nie udało się pobrać danych z bazy',
+					'danger',
+					1500
+				);
 			}
-			setLoading(false)
+			setLoading(false);
 		})();
 	}, []);
 
@@ -134,9 +133,7 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
 					{generateRoundTitle()}
 				</Typography>
 				<Divider />
-				{
-					generateMatches()
-				}
+				{generateMatches()}
 			</div>
 		</>
 	);
