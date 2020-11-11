@@ -257,7 +257,7 @@ const TeamCreate: FunctionComponent<IProps> = ({
 
 	const handleOnSubmit = (event: FormEvent) => {
 		event.preventDefault();
-		if (editClubData) {
+		if (editClubData && editClubData._id !== '') {
 			editClub();
 		} else if (imageData.imageBuffer) {
 			createTeam(team, imageData);
