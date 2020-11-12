@@ -114,12 +114,12 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 				}
 			} = await axios.post(
 				'https://fantasy-league-eti.herokuapp.com/auth/register',
-				userData
+				{...userData, role: 'USER'}
 			);
 			const cookies = new Cookies();
 			cookies.set('accessToken', accessToken, { path: '/' });
 			const { username, email } = userData;
-			dispatchUserData(setUser({ _id, username, email }));
+			dispatchUserData(setUser({ _id, username, email, role: 'USER' }));
 			const title = 'Sukces!';
 			const message = 'Rejstracja zakończona powodzeniem!';
 			const type = 'success';
