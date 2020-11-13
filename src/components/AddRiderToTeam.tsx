@@ -575,7 +575,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				return val._id;
 			});
 			const teamRidersIDs = teamRiders.map(val => {
-				return val.id;
+				return val._id;
 			});
 			const deleteRiders = teamRiders.filter(
 				rider => !chosenRidersIDs.includes(rider._id)
@@ -583,7 +583,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 			const newRiders = chosenRiders.filter(
 				rider => !teamRidersIDs.includes(rider._id)
 			);
-
 			deleteRiders.map(rider => deleteRiderFromTeam(rider));
 			newRiders.map(rider => addNewRider(rider));
 			addNotification(
@@ -592,9 +591,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				'success',
 				1000
 			);
-			setTimeout(() => {
-				window.location.reload(false);
-			}, 1000);
 		} catch (e) {
 			addNotification(
 				'Błąd',
