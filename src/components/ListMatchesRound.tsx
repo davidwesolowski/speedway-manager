@@ -69,7 +69,9 @@ const ListMatchesRound: FunctionComponent<IProps> = ({
 					classNames="animationScaleUp"
 					unmountOnExit
 				>
-					<div>Brak danych o meczach w tej kolejce</div>
+					<div className="list-matches__noDataInfo">
+						Brak danych o meczach w tej kolejce
+					</div>
 				</CSSTransition>
 			);
 		} else if (round !== 0) {

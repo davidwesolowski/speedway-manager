@@ -8,8 +8,16 @@
 	}
 }
 
-.list-matches__label {
-	font-family: $bebas !important;
-	font-size: 2rem !important;
-	margin-bottom: $xs-margin;
+.list-matches {
+	&__label {
+		font-family: $bebas !important;
+		font-size: 2rem !important;
+		margin-bottom: $xs-margin;
+	}
+	&__noDataInfo {
+		font-family: $bebas !important;
+		font-size: 3.5rem !important;
+		margin-top: $xs-margin;
+		text-align: center;
+	}
 }
