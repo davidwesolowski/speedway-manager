@@ -609,7 +609,9 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				await getClubs();
 				if (!userData.username)
 					await fetchUserData(dispatchUserData, setLoggedIn, push);
-				setLoading(false);
+				setTimeout(() => {
+					setLoading(false);
+				}, 400);
 			} catch (e) {
 				const {
 					response: { data }
@@ -617,7 +619,12 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				if (data.statusCode == 401) {
 					checkBadAuthorization(setLoggedIn, push);
 				} else {
-					addNotification('Błąd!', 'Nie udało się pobrać danych z bazy', 'danger', 1500);
+					addNotification(
+						'Błąd!',
+						'Nie udało się pobrać danych z bazy',
+						'danger',
+						1500
+					);
 				}
 			}
 		})();
@@ -639,252 +646,279 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 						</Grid>
 					)}
 					<CSSTransition
-						in={leftForeign.length > 0 || leftPolish.length > 0 || leftU21.length > 0 || rightForeign.length > 0 || rightPolish.length > 0 || rightU21.length > 0}
+						in={
+							leftForeign.length > 0 ||
+							leftPolish.length > 0 ||
+							leftU21.length > 0 ||
+							rightForeign.length > 0 ||
+							rightPolish.length > 0 ||
+							rightU21.length > 0
+						}
 						timeout={600}
 						classNames="animationScaleUp"
 						unmountOnExit
 					>
 						<>
-						<Typography
-						variant="h3"
-						className="add-rider-to-team__type-header"
-					>
-						Polacy
-					</Typography>
-					<br />
-					<Grid
-						container
-						spacing={2}
-						justify="center"
-						alignItems="center"
-						className="list-container"
-					>
-						<Grid
-							item
-							xs={12}
-							lg={5}
-							style={{ alignSelf: 'flex-start' }}
-						>
-							{customList(leftPolish, 'Polish', 'Left')}
-						</Grid>
-						<Grid item xs={2}>
+							<Typography
+								variant="h3"
+								className="add-rider-to-team__type-header"
+							>
+								Polacy
+							</Typography>
+							<br />
 							<Grid
 								container
-								direction="column"
+								spacing={2}
+								justify="center"
 								alignItems="center"
+								className="list-container"
 							>
-								<Button
-									variant="outlined"
-									size="small"
-									className="list-button"
-									onClick={handleCheckedRight('Polish')}
-									disabled={
-										leftPolishChecked.length === 0 ||
-										leftPolishChecked.length >
-											10 -
-												rightForeign.length -
-												rightPolish.length -
-												rightU21.length
-									}
+								<Grid
+									item
+									xs={12}
+									lg={5}
+									style={{ alignSelf: 'flex-start' }}
 								>
-									&gt;
-								</Button>
-								<Button
-									variant="outlined"
-									size="small"
-									className="list-button"
-									onClick={handleAllLeft('Polish')}
-									disabled={rightPolish.length === 0}
+									{customList(leftPolish, 'Polish', 'Left')}
+								</Grid>
+								<Grid item xs={2}>
+									<Grid
+										container
+										direction="column"
+										alignItems="center"
+									>
+										<Button
+											variant="outlined"
+											size="small"
+											className="list-button"
+											onClick={handleCheckedRight(
+												'Polish'
+											)}
+											disabled={
+												leftPolishChecked.length ===
+													0 ||
+												leftPolishChecked.length >
+													10 -
+														rightForeign.length -
+														rightPolish.length -
+														rightU21.length
+											}
+										>
+											&gt;
+										</Button>
+										<Button
+											variant="outlined"
+											size="small"
+											className="list-button"
+											onClick={handleAllLeft('Polish')}
+											disabled={rightPolish.length === 0}
+										>
+											≪
+										</Button>
+										<Button
+											variant="outlined"
+											size="small"
+											className="list-button"
+											onClick={handleCheckedLeft(
+												'Polish'
+											)}
+											disabled={
+												rightPolishChecked.length === 0
+											}
+										>
+											&lt;
+										</Button>
+									</Grid>
+								</Grid>
+								<Grid
+									item
+									xs={12}
+									lg={5}
+									style={{ alignSelf: 'flex-start' }}
 								>
-									≪
-								</Button>
-								<Button
-									variant="outlined"
-									size="small"
-									className="list-button"
-									onClick={handleCheckedLeft('Polish')}
-									disabled={rightPolishChecked.length === 0}
-								>
-									&lt;
-								</Button>
+									{customList(rightPolish, 'Polish', 'Right')}
+								</Grid>
 							</Grid>
-						</Grid>
-						<Grid
-							item
-							xs={12}
-							lg={5}
-							style={{ alignSelf: 'flex-start' }}
-						>
-							{customList(rightPolish, 'Polish', 'Right')}
-						</Grid>
-					</Grid>
-					<br />
-					<br />
-					<Typography
-						variant="h3"
-						className="add-rider-to-team__type-header"
-					>
-						U21 (minimum 3 w kadrze)
-					</Typography>
-					<br />
-					<Grid
-						container
-						spacing={2}
-						justify="center"
-						alignItems="center"
-						className="list-container"
-					>
-						<Grid
-							item
-							xs={12}
-							lg={5}
-							style={{ alignSelf: 'flex-start' }}
-						>
-							{customList(leftU21, 'U21', 'Left')}
-						</Grid>
-						<Grid item xs={2}>
+							<br />
+							<br />
+							<Typography
+								variant="h3"
+								className="add-rider-to-team__type-header"
+							>
+								U21 (minimum 3 w kadrze)
+							</Typography>
+							<br />
 							<Grid
 								container
-								direction="column"
+								spacing={2}
+								justify="center"
 								alignItems="center"
+								className="list-container"
 							>
-								<Button
-									variant="outlined"
-									size="small"
-									className="list-button"
-									onClick={handleCheckedRight('U21')}
-									disabled={
-										leftU21Checked.length === 0 ||
-										leftU21Checked.length >
-											10 -
-												rightForeign.length -
-												rightPolish.length -
-												rightU21.length
-									}
+								<Grid
+									item
+									xs={12}
+									lg={5}
+									style={{ alignSelf: 'flex-start' }}
 								>
-									&gt;
-								</Button>
-								<Button
-									variant="outlined"
-									size="small"
-									className="list-button"
-									onClick={handleAllLeft('U21')}
-									disabled={rightU21.length === 0}
+									{customList(leftU21, 'U21', 'Left')}
+								</Grid>
+								<Grid item xs={2}>
+									<Grid
+										container
+										direction="column"
+										alignItems="center"
+									>
+										<Button
+											variant="outlined"
+											size="small"
+											className="list-button"
+											onClick={handleCheckedRight('U21')}
+											disabled={
+												leftU21Checked.length === 0 ||
+												leftU21Checked.length >
+													10 -
+														rightForeign.length -
+														rightPolish.length -
+														rightU21.length
+											}
+										>
+											&gt;
+										</Button>
+										<Button
+											variant="outlined"
+											size="small"
+											className="list-button"
+											onClick={handleAllLeft('U21')}
+											disabled={rightU21.length === 0}
+										>
+											≪
+										</Button>
+										<Button
+											variant="outlined"
+											size="small"
+											className="list-button"
+											onClick={handleCheckedLeft('U21')}
+											disabled={
+												rightU21Checked.length === 0
+											}
+										>
+											&lt;
+										</Button>
+									</Grid>
+								</Grid>
+								<Grid
+									item
+									xs={12}
+									lg={5}
+									style={{ alignSelf: 'flex-start' }}
 								>
-									≪
-								</Button>
-								<Button
-									variant="outlined"
-									size="small"
-									className="list-button"
-									onClick={handleCheckedLeft('U21')}
-									disabled={rightU21Checked.length === 0}
-								>
-									&lt;
-								</Button>
+									{customList(rightU21, 'U21', 'Right')}
+								</Grid>
 							</Grid>
-						</Grid>
-						<Grid
-							item
-							xs={12}
-							lg={5}
-							style={{ alignSelf: 'flex-start' }}
-						>
-							{customList(rightU21, 'U21', 'Right')}
-						</Grid>
-					</Grid>
-					<br />
-					<br />
-					<Typography
-						variant="h3"
-						className="add-rider-to-team__type-header"
-					>
-						Obcokrajowcy (maksymalnie 3 w kadrze)
-					</Typography>
-					<br />
-					<Grid
-						container
-						spacing={2}
-						justify="center"
-						alignItems="center"
-						className="list-container"
-					>
-						<Grid
-							item
-							xs={12}
-							lg={5}
-							style={{ alignSelf: 'flex-start' }}
-						>
-							{customList(leftForeign, 'Foreign', 'Left')}
-						</Grid>
-						<Grid item xs={2}>
+							<br />
+							<br />
+							<Typography
+								variant="h3"
+								className="add-rider-to-team__type-header"
+							>
+								Obcokrajowcy (maksymalnie 3 w kadrze)
+							</Typography>
+							<br />
 							<Grid
 								container
-								direction="column"
+								spacing={2}
+								justify="center"
 								alignItems="center"
+								className="list-container"
 							>
-								<Button
-									variant="outlined"
-									size="small"
-									className="list-button"
-									onClick={handleCheckedRight('Foreign')}
-									disabled={
-										leftForeignChecked.length === 0 ||
-										leftForeignChecked.length >
-											3 - rightForeign.length ||
-										leftForeignChecked.length >
-											10 -
-												rightForeign.length -
-												rightPolish.length -
-												rightU21.length
-									}
+								<Grid
+									item
+									xs={12}
+									lg={5}
+									style={{ alignSelf: 'flex-start' }}
 								>
-									&gt;
-								</Button>
-								<Button
-									variant="outlined"
-									size="small"
-									className="list-button"
-									onClick={handleAllLeft('Foreign')}
-									disabled={rightForeign.length === 0}
+									{customList(leftForeign, 'Foreign', 'Left')}
+								</Grid>
+								<Grid item xs={2}>
+									<Grid
+										container
+										direction="column"
+										alignItems="center"
+									>
+										<Button
+											variant="outlined"
+											size="small"
+											className="list-button"
+											onClick={handleCheckedRight(
+												'Foreign'
+											)}
+											disabled={
+												leftForeignChecked.length ===
+													0 ||
+												leftForeignChecked.length >
+													3 - rightForeign.length ||
+												leftForeignChecked.length >
+													10 -
+														rightForeign.length -
+														rightPolish.length -
+														rightU21.length
+											}
+										>
+											&gt;
+										</Button>
+										<Button
+											variant="outlined"
+											size="small"
+											className="list-button"
+											onClick={handleAllLeft('Foreign')}
+											disabled={rightForeign.length === 0}
+										>
+											≪
+										</Button>
+										<Button
+											variant="outlined"
+											size="small"
+											className="list-button"
+											onClick={handleCheckedLeft(
+												'Foreign'
+											)}
+											disabled={
+												rightForeignChecked.length === 0
+											}
+										>
+											&lt;
+										</Button>
+									</Grid>
+								</Grid>
+								<Grid
+									item
+									xs={12}
+									lg={5}
+									style={{ alignSelf: 'flex-start' }}
 								>
-									≪
-								</Button>
-								<Button
-									variant="outlined"
-									size="small"
-									className="list-button"
-									onClick={handleCheckedLeft('Foreign')}
-									disabled={rightForeignChecked.length === 0}
-								>
-									&lt;
-								</Button>
+									{customList(
+										rightForeign,
+										'Foreign',
+										'Right'
+									)}
+								</Grid>
 							</Grid>
-						</Grid>
-						<Grid
-							item
-							xs={12}
-							lg={5}
-							style={{ alignSelf: 'flex-start' }}
-						>
-							{customList(rightForeign, 'Foreign', 'Right')}
-						</Grid>
-					</Grid>
-					<br />
-					<Button
-						size="large"
-						disabled={
-							rightForeign.length +
-								rightPolish.length +
-								rightU21.length !==
-								10 || rightU21.length < 3
-						}
-						onClick={submitRiders}
-						className="submit-riders-button"
-					>
-						Zapisz zmiany
-					</Button>
-					</>
+							<br />
+							<Button
+								size="large"
+								disabled={
+									rightForeign.length +
+										rightPolish.length +
+										rightU21.length !==
+										10 || rightU21.length < 3
+								}
+								onClick={submitRiders}
+								className="submit-riders-button"
+							>
+								Zapisz zmiany
+							</Button>
+						</>
 					</CSSTransition>
 				</Paper>
 			</div>

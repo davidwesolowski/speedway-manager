@@ -15,7 +15,6 @@
 		}
 
 		:first-child {
-			margin-right: 0;
 			margin-left: 0;
 		}
 	}
@@ -64,8 +63,12 @@
 	}
 
 	&__item {
+		transition: all 0.2s ease-in;
 		&:not(:last-child) {
 			margin-right: 1.5rem;
+		}
+		&:hover {
+			transform: translateY(-0.2rem) scale(1.1);
 		}
 	}
 
@@ -75,6 +78,10 @@
 
 		&-admin {
 			cursor: pointer;
+		}
+
+		&:hover {
+			color: rgb(231, 228, 228);
 		}
 	}
 
@@ -113,7 +120,7 @@
 		display: flex;
 		align-items: center;
 		div {
-			margin-right: 0.25rem;
+			margin-right: 0.5rem;
 		}
 	}
 	&__avatar {
