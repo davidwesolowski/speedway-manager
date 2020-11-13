@@ -16,7 +16,7 @@ import {
 	FormGroup,
 	TextField,
 	Button,
-	DialogActions,
+	DialogActions
 } from '@material-ui/core';
 import { FaTrashAlt, FaPencilAlt } from 'react-icons/fa';
 import { FiX } from 'react-icons/fi';
@@ -171,7 +171,13 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 
 	return (
 		<>
-			<Grid container spacing={2} alignItems="center" justify="center" className="team-links">
+			<Grid
+				container
+				spacing={2}
+				alignItems="center"
+				justify="center"
+				className="team-links"
+			>
 				<Grid item md={6} className="team-link-grid">
 					<Link to="/dodaj-druzyna" className="team-link">
 						Zarządzaj swoją kadrą
@@ -209,7 +215,7 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 				<Grid item xs={12} md={8}>
 					<div className="team-container__right-pane">
 						<Typography className="heading-2 team-container__name">
-							Kadra:
+							Kadra
 						</Typography>
 						<CSSTransition
 							in={teamRiders.length > 0}

@@ -5,7 +5,7 @@
 		font-family: $bebas !important;
 		text-align: center !important;
 		word-wrap: break-word !important;
-		word-break: break-all !important;
+		word-break: break-word !important;
 
 		@media only screen and (max-width: $bp-sm) {
 			margin: $xs-margin 0 !important;
@@ -40,22 +40,22 @@
 	}
 }
 
-.team-links{
+.team-links {
 	margin: 2% auto !important;
 	width: 50% !important;
 }
 
-.team-link-grid{
+.team-link-grid {
 	text-align: center;
 }
 
-.team-link{
+.team-link {
 	font-size: 2.5rem !important;
-	font-family: "Bebas Neue", cursive !important;
+	font-family: 'Bebas Neue', cursive !important;
 	color: #777777;
 	text-decoration: none;
 }
 
-.team-link:hover{
+.team-link:hover {
 	color: black;
 }
