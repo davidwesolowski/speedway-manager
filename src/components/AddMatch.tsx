@@ -1649,7 +1649,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 			return (
 				<>
 					<div className="add-match__away-div">
-						AWAY
+						GOŚCIE
 						<br />
 						<Select
 							className="add-match__team-select"
@@ -1687,7 +1687,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={away.rider_1.points || ''}
+								value={away.rider_1.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_1',
 									'away'
@@ -1695,7 +1695,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							/>
 							<TextField 
 								className="add-match__rider-heats"
-								value={away.rider_1.heats || ''}
+								value={away.rider_1.heats || '0'}
 								onChange={handleOnChangeHeats('rider_1', 'away')}
 							/>
 						</div>
@@ -1716,7 +1716,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={away.rider_2.points || ''}
+								value={away.rider_2.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_2',
 									'away'
@@ -1724,7 +1724,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							/>
 							<TextField 
 								className="add-match__rider-heats"
-								value={away.rider_2.heats || ''}
+								value={away.rider_2.heats || '0'}
 								onChange={handleOnChangeHeats('rider_2', 'away')}
 							/>
 						</div>
@@ -1745,7 +1745,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={away.rider_3.points || ''}
+								value={away.rider_3.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_3',
 									'away'
@@ -1753,7 +1753,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							/>
 							<TextField 
 								className="add-match__rider-heats"
-								value={away.rider_3.heats || ''}
+								value={away.rider_3.heats || '0'}
 								onChange={handleOnChangeHeats('rider_3', 'away')}
 							/>
 						</div>
@@ -1774,7 +1774,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={away.rider_4.points || ''}
+								value={away.rider_4.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_4',
 									'away'
@@ -1782,7 +1782,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							/>
 							<TextField 
 								className="add-match__rider-heats"
-								value={away.rider_4.heats || ''}
+								value={away.rider_4.heats || '0'}
 								onChange={handleOnChangeHeats('rider_4', 'away')}
 							/>
 						</div>
@@ -1803,7 +1803,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={away.rider_5.points || ''}
+								value={away.rider_5.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_5',
 									'away'
@@ -1811,7 +1811,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							/>
 							<TextField 
 								className="add-match__rider-heats"
-								value={away.rider_5.heats || ''}
+								value={away.rider_5.heats || '0'}
 								onChange={handleOnChangeHeats('rider_5', 'away')}
 							/>
 						</div>
@@ -1832,7 +1832,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={away.rider_6.points || ''}
+								value={away.rider_6.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_6',
 									'away'
@@ -1840,7 +1840,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							/>
 							<TextField 
 								className="add-match__rider-heats"
-								value={away.rider_6.heats || ''}
+								value={away.rider_6.heats || '0'}
 								onChange={handleOnChangeHeats('rider_6', 'away')}
 							/>
 						</div>
@@ -1861,7 +1861,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={away.rider_7.points || ''}
+								value={away.rider_7.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_7',
 									'away'
@@ -1869,7 +1869,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							/>
 							<TextField 
 								className="add-match__rider-heats"
-								value={away.rider_7.heats || ''}
+								value={away.rider_7.heats || '0'}
 								onChange={handleOnChangeHeats('rider_7', 'away')}
 							/>
 						</div>
@@ -1890,7 +1890,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={away.rider_8.points || ''}
+								value={away.rider_8.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_8',
 									'away'
@@ -1898,13 +1898,13 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							/>
 							<TextField 
 								className="add-match__rider-heats"
-								value={away.rider_8.heats || ''}
+								value={away.rider_8.heats || '0'}
 								onChange={handleOnChangeHeats('rider_8', 'away')}
 							/>
 						</div>
 					</div>
 					<div className="add-match__home-div">
-						HOME
+						GOSPODARZE
 						<br />
 						<Select
 							className="add-match__team-select"
@@ -1942,7 +1942,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={home.rider_1.points || ''}
+								value={home.rider_1.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_1',
 									'home'
@@ -1950,7 +1950,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							/>
 							<TextField 
 								className="add-match__rider-heats"
-								value={home.rider_1.heats || ''}
+								value={home.rider_1.heats || '0'}
 								onChange={handleOnChangeHeats('rider_1', 'home')}
 							/>
 						</div>
@@ -1971,7 +1971,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={home.rider_2.points || ''}
+								value={home.rider_2.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_2',
 									'home'
@@ -1979,7 +1979,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							/>
 							<TextField 
 								className="add-match__rider-heats"
-								value={home.rider_2.heats || ''}
+								value={home.rider_2.heats || '0'}
 								onChange={handleOnChangeHeats('rider_2', 'home')}
 							/>
 						</div>
@@ -2000,7 +2000,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={home.rider_3.points || ''}
+								value={home.rider_3.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_3',
 									'home'
@@ -2008,7 +2008,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							/>
 							<TextField 
 								className="add-match__rider-heats"
-								value={home.rider_3.heats || ''}
+								value={home.rider_3.heats || '0'}
 								onChange={handleOnChangeHeats('rider_3', 'home')}
 							/>
 						</div>
@@ -2029,7 +2029,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={home.rider_4.points || ''}
+								value={home.rider_4.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_4',
 									'home'
@@ -2037,7 +2037,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							/>
 							<TextField 
 								className="add-match__rider-heats"
-								value={home.rider_4.heats || ''}
+								value={home.rider_4.heats || '0'}
 								onChange={handleOnChangeHeats('rider_4', 'home')}
 							/>
 						</div>
@@ -2058,7 +2058,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={home.rider_5.points || ''}
+								value={home.rider_5.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_5',
 									'home'
@@ -2066,7 +2066,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							/>
 							<TextField 
 								className="add-match__rider-heats"
-								value={home.rider_5.heats || ''}
+								value={home.rider_5.heats || '0'}
 								onChange={handleOnChangeHeats('rider_5', 'home')}
 							/>
 						</div>
@@ -2087,7 +2087,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={home.rider_6.points || ''}
+								value={home.rider_6.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_6',
 									'home'
@@ -2095,7 +2095,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							/>
 							<TextField 
 								className="add-match__rider-heats"
-								value={home.rider_6.heats || ''}
+								value={home.rider_6.heats || '0'}
 								onChange={handleOnChangeHeats('rider_6', 'home')}
 							/>
 						</div>
@@ -2116,7 +2116,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={home.rider_7.points || ''}
+								value={home.rider_7.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_7',
 									'home'
@@ -2124,7 +2124,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							/>
 							<TextField 
 								className="add-match__rider-heats"
-								value={home.rider_7.heats || ''}
+								value={home.rider_7.heats || '0'}
 								onChange={handleOnChangeHeats('rider_7', 'home')}
 							/>
 						</div>
@@ -2145,7 +2145,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={home.rider_8.points || ''}
+								value={home.rider_8.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_8',
 									'home'
@@ -2153,7 +2153,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 							/>
 							<TextField 
 								className="add-match__rider-heats"
-								value={home.rider_8.heats || ''}
+								value={home.rider_8.heats || '0'}
 								onChange={handleOnChangeHeats('rider_8', 'home')}
 							/>
 						</div>
@@ -2165,7 +2165,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 			return (
 				<>
 					<div className="add-match__away-div">
-						AWAY
+						GOŚCIE
 						<br />
 						<Select
 							className="add-match__team-select"
@@ -2177,7 +2177,7 @@ const AddMatch: FunctionComponent<RouteComponentProps> = ({
 						<br />
 					</div>
 					<div className="add-match__home-div">
-						HOME
+						GOSPODARZE
 						<br />
 						<Select
 							className="add-match__team-select"

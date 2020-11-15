@@ -13,7 +13,8 @@ import {
 	Grid,
 	Checkbox,
 	Select,
-	MenuItem
+	MenuItem,
+	CircularProgress
 } from '@material-ui/core';
 import { FiPlus, FiX } from 'react-icons/fi';
 import axios from 'axios';
@@ -174,6 +175,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 	const [showDialog, setShowDialog] = useState<boolean>(false);
 
 	const [tempKSM, setTempKSM] = useState<string>('');
+	const [ridersLength, setRidersLength] = useState<number>(1);
 
 	const handleOpen = () => setShowDialog(true);
 	const handleClose = () => {
@@ -279,8 +281,9 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 				'https://fantasy-league-eti.herokuapp.com/riders',
 				options
 			);
+			await setRidersLength(data.length);
 			setRiders([]);
-			data.map(rider => {
+			await data.map(rider => {
 				setRiders(riders =>
 					riders.concat({
 						id: rider._id,
@@ -321,7 +324,6 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 					Authorization: `Bearer ${accessToken}`
 				}
 			};
-			console.log(riderData);
 			const { data } = await axios.post(
 				'https://fantasy-league-eti.herokuapp.com/riders',
 				riderData,
@@ -479,7 +481,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 							<FiPlus />
 						</IconButton>
 					)}
-					<RidersList riders={riders} deleteRider={deleteRider} />
+					<RidersList riders={riders} deleteRider={deleteRider} numberOfRiders={ridersLength}/> 
 				</Paper>
 			</div>
 			<Dialog open={showDialog} onClose={handleClose} className="dialog">

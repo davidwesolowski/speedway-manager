@@ -181,7 +181,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 	);
 	const [matchDateEdit, setMatchDateEdit] = useState<Date>(new Date(date));
 	const { userData, setLoggedIn } = useStateValue();
-	const [loading, setLoading] = useState<boolean>(true);
 	const [isHidden, setIsHidden] = useState<boolean>(false);
 	const [homeScoreEdit, setHomeScoreEdit] = useState(homeScore);
 	const [awayScoreEdit, setAwayScoreEdit] = useState(awayScore);
@@ -202,7 +201,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 			setHome({
 				clubId: data._id,
 				name: data.name,
-				logoUrl: data.logoUrl
+				logoUrl: data.imageUrl
 			});
 		} else {
 			const accessToken = getToken();
@@ -218,7 +217,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 			setAway({
 				clubId: data._id,
 				name: data.name,
-				logoUrl: data.logoUrl
+				logoUrl: data.imageUrl
 			});
 		}
 	};
@@ -232,91 +231,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 
 	const handleCloseScores = () => {
 		setOpenScores(false);
-	};
-
-	const setRidersEdit = () => {
-		setMatchRidersEdit({
-			rider_1: {
-				points: matchRiders.rider_1.score,
-				riderId: matchRiders.rider_1.riderId,
-				heats: matchRiders.rider_1.heats
-			},
-			rider_2: {
-				points: matchRiders.rider_2.score,
-				riderId: matchRiders.rider_2.riderId,
-				heats: matchRiders.rider_2.heats
-			},
-			rider_3: {
-				points: matchRiders.rider_3.score,
-				riderId: matchRiders.rider_3.riderId,
-				heats: matchRiders.rider_3.heats
-			},
-			rider_4: {
-				points: matchRiders.rider_4.score,
-				riderId: matchRiders.rider_4.riderId,
-				heats: matchRiders.rider_4.heats
-			},
-			rider_5: {
-				points: matchRiders.rider_5.score,
-				riderId: matchRiders.rider_5.riderId,
-				heats: matchRiders.rider_5.heats
-			},
-			rider_6: {
-				points: matchRiders.rider_6.score,
-				riderId: matchRiders.rider_6.riderId,
-				heats: matchRiders.rider_6.heats
-			},
-			rider_7: {
-				points: matchRiders.rider_7.score,
-				riderId: matchRiders.rider_7.riderId,
-				heats: matchRiders.rider_7.heats
-			},
-			rider_8: {
-				points: matchRiders.rider_8.score,
-				riderId: matchRiders.rider_8.riderId,
-				heats: matchRiders.rider_8.heats
-			},
-			rider_9: {
-				points: matchRiders.rider_9.score,
-				riderId: matchRiders.rider_9.riderId,
-				heats: matchRiders.rider_9.heats
-			},
-			rider_10: {
-				points: matchRiders.rider_10.score,
-				riderId: matchRiders.rider_10.riderId,
-				heats: matchRiders.rider_10.heats
-			},
-			rider_11: {
-				points: matchRiders.rider_11.score,
-				riderId: matchRiders.rider_11.riderId,
-				heats: matchRiders.rider_11.heats
-			},
-			rider_12: {
-				points: matchRiders.rider_12.score,
-				riderId: matchRiders.rider_12.riderId,
-				heats: matchRiders.rider_12.heats
-			},
-			rider_13: {
-				points: matchRiders.rider_13.score,
-				riderId: matchRiders.rider_13.riderId,
-				heats: matchRiders.rider_13.heats
-			},
-			rider_14: {
-				points: matchRiders.rider_14.score,
-				riderId: matchRiders.rider_14.riderId,
-				heats: matchRiders.rider_14.heats
-			},
-			rider_15: {
-				points: matchRiders.rider_15.score,
-				riderId: matchRiders.rider_15.riderId,
-				heats: matchRiders.rider_15.heats
-			},
-			rider_16: {
-				points: matchRiders.rider_16.score,
-				riderId: matchRiders.rider_16.riderId,
-				heats: matchRiders.rider_16.heats
-			}
-		});
 	};
 
 	const handleOpenEdit = () => {
@@ -593,7 +507,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 						{number}. {firstName} {lastName}
 					</div>
 					<div className="scores-dialog__score">
-						{score === 0 ? '' : score}
+						{score === 0 ? '0' : score}
 					</div>
 				</div>
 				<Divider />
@@ -775,7 +689,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 		}
 	};
 
-	const selectRiders = (clubId, number, homeAway) => {
+	const selectRiders = (clubId, number) => {
 		if (number === 8) {
 			return riders
 				.filter(
@@ -783,7 +697,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 						filtered.clubId === clubId &&
 						isU23(filtered.dateOfBirth)
 				)
-				.map((rider, index) => {
+				.map((rider) => {
 					return (
 						<MenuItem key={rider._id} value={rider._id}>
 							{rider.firstName} {rider.lastName}
@@ -798,7 +712,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 						isU21(filtered.dateOfBirth) &&
 						!filtered.isForeigner
 				)
-				.map((rider, index) => {
+				.map((rider) => {
 					return (
 						<MenuItem key={rider._id} value={rider._id}>
 							{rider.firstName} {rider.lastName}
@@ -808,7 +722,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 		} else {
 			return riders
 				.filter(filtered => filtered.clubId == clubId)
-				.map((rider, index) => {
+				.map((rider) => {
 					return (
 						<MenuItem key={rider._id} value={rider._id}>
 							{rider.firstName} {rider.lastName}
@@ -854,7 +768,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				<>
 					<div className="add-match__away-div">
 						<span className="list-matches-match__clubName">
-							AWAY
+							GOŚCIE
 						</span>
 						<br />
 						<span className="list-matches-match__clubName">
@@ -876,11 +790,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.clubId, 1, 'away')}
+								{selectRiders(away.clubId, 1)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_1.points || ''}
+								value={matchRidersEdit.rider_1.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_1',
 									'away'
@@ -888,7 +802,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_1.heats || ''}
+								value={matchRidersEdit.rider_1.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_1',
 									'away'
@@ -908,11 +822,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.clubId, 2, 'away')}
+								{selectRiders(away.clubId, 2)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_2.points || ''}
+								value={matchRidersEdit.rider_2.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_2',
 									'away'
@@ -920,7 +834,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_2.heats || ''}
+								value={matchRidersEdit.rider_2.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_2',
 									'away'
@@ -940,11 +854,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.clubId, 3, 'away')}
+								{selectRiders(away.clubId, 3)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_3.points || ''}
+								value={matchRidersEdit.rider_3.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_3',
 									'away'
@@ -952,7 +866,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_3.heats || ''}
+								value={matchRidersEdit.rider_3.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_3',
 									'away'
@@ -972,11 +886,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.clubId, 4, 'away')}
+								{selectRiders(away.clubId, 4)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_4.points || ''}
+								value={matchRidersEdit.rider_4.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_4',
 									'away'
@@ -984,7 +898,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_4.heats || ''}
+								value={matchRidersEdit.rider_4.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_4',
 									'away'
@@ -1004,11 +918,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.clubId, 5, 'away')}
+								{selectRiders(away.clubId, 5)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_5.points || ''}
+								value={matchRidersEdit.rider_5.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_5',
 									'away'
@@ -1016,7 +930,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_5.heats || ''}
+								value={matchRidersEdit.rider_5.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_5',
 									'away'
@@ -1036,11 +950,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.clubId, 6, 'away')}
+								{selectRiders(away.clubId, 6)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_6.points || ''}
+								value={matchRidersEdit.rider_6.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_6',
 									'away'
@@ -1048,7 +962,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_6.heats || ''}
+								value={matchRidersEdit.rider_6.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_6',
 									'away'
@@ -1068,11 +982,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.clubId, 7, 'away')}
+								{selectRiders(away.clubId, 7)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_7.points || ''}
+								value={matchRidersEdit.rider_7.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_7',
 									'away'
@@ -1080,7 +994,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_7.heats || ''}
+								value={matchRidersEdit.rider_7.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_7',
 									'away'
@@ -1100,11 +1014,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(away.clubId, 8, 'away')}
+								{selectRiders(away.clubId, 8)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_8.points || ''}
+								value={matchRidersEdit.rider_8.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_8',
 									'away'
@@ -1112,7 +1026,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_8.heats || ''}
+								value={matchRidersEdit.rider_8.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_8',
 									'away'
@@ -1122,7 +1036,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					</div>
 					<div className="add-match__home-div">
 						<span className="list-matches-match__clubName">
-							HOME
+							GOSPODARZE
 						</span>
 						<br />
 						<span className="list-matches-match__clubName">
@@ -1144,11 +1058,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.clubId, 1, 'home')}
+								{selectRiders(home.clubId, 1)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_9.points || ''}
+								value={matchRidersEdit.rider_9.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_1',
 									'home'
@@ -1156,7 +1070,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_9.heats || ''}
+								value={matchRidersEdit.rider_9.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_1',
 									'home'
@@ -1176,11 +1090,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.clubId, 2, 'home')}
+								{selectRiders(home.clubId, 2)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_10.points || ''}
+								value={matchRidersEdit.rider_10.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_2',
 									'home'
@@ -1188,7 +1102,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_10.heats || ''}
+								value={matchRidersEdit.rider_10.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_2',
 									'home'
@@ -1208,11 +1122,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.clubId, 3, 'home')}
+								{selectRiders(home.clubId, 3)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_11.points || ''}
+								value={matchRidersEdit.rider_11.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_3',
 									'home'
@@ -1220,7 +1134,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_11.heats || ''}
+								value={matchRidersEdit.rider_11.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_3',
 									'home'
@@ -1240,11 +1154,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.clubId, 4, 'home')}
+								{selectRiders(home.clubId, 4)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_12.points || ''}
+								value={matchRidersEdit.rider_12.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_4',
 									'home'
@@ -1252,7 +1166,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_12.heats || ''}
+								value={matchRidersEdit.rider_12.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_4',
 									'home'
@@ -1272,11 +1186,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.clubId, 5, 'home')}
+								{selectRiders(home.clubId, 5)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_13.points || ''}
+								value={matchRidersEdit.rider_13.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_5',
 									'home'
@@ -1284,7 +1198,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_13.heats || ''}
+								value={matchRidersEdit.rider_13.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_5',
 									'home'
@@ -1304,11 +1218,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.clubId, 6, 'home')}
+								{selectRiders(home.clubId, 6)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_14.points || ''}
+								value={matchRidersEdit.rider_14.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_6',
 									'home'
@@ -1316,7 +1230,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_14.heats || ''}
+								value={matchRidersEdit.rider_14.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_6',
 									'home'
@@ -1336,11 +1250,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.clubId, 7, 'home')}
+								{selectRiders(home.clubId, 7)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_15.points || ''}
+								value={matchRidersEdit.rider_15.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_7',
 									'home'
@@ -1348,7 +1262,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_15.heats || ''}
+								value={matchRidersEdit.rider_15.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_7',
 									'home'
@@ -1368,11 +1282,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 								<MenuItem key="" value="">
 									Brak zawodnika
 								</MenuItem>
-								{selectRiders(home.clubId, 8, 'home')}
+								{selectRiders(home.clubId, 8)}
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_16.points || ''}
+								value={matchRidersEdit.rider_16.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_8',
 									'home'
@@ -1380,7 +1294,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_16.heats || ''}
+								value={matchRidersEdit.rider_16.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_8',
 									'home'
@@ -1396,7 +1310,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				<>
 					<div className="add-match__away-div">
 						<span className="list-matches-match__clubName">
-							AWAY
+							GOŚCIE
 						</span>
 						<br />
 						{away ? (
@@ -1410,7 +1324,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					</div>
 					<div className="add-match__home-div">
 						<span className="list-matches-match__clubName">
-							HOME
+							GOSPODARZE
 						</span>
 						<br />
 						{home ? (
@@ -2688,15 +2602,11 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 	};
 
 	useEffect(() => {
-		setLoading(true);
 		(async function () {
 			try {
 				await getClub(homeId, 'home');
 				await getClub(awayId, 'away');
 			} catch (e) {
-				const {
-					response: { data }
-				} = e;
 				addNotification(
 					'Błąd!',
 					'Nie udało się pobrać danych z bazy',
@@ -2704,7 +2614,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					1500
 				);
 			}
-			setLoading(false);
 		})();
 	}, []);
 

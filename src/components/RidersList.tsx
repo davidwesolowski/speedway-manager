@@ -35,6 +35,7 @@ interface ISelect {
 interface IProps {
 	riders: IRiderPass[];
 	deleteRider: (id: string) => Promise<void>;
+	numberOfRiders: number;
 }
 
 interface IRiderPass {
@@ -61,7 +62,7 @@ const defaultRider: IRiderPass = {
 	image: ''
 };
 
-const RidersList: FunctionComponent<IProps> = ({ riders, deleteRider }) => {
+const RidersList: FunctionComponent<IProps> = ({ riders, deleteRider, numberOfRiders}) => {
 	const { setLoggedIn, dispatchUserData, userData } = useStateValue();
 	const { push } = useHistory();
 
@@ -533,36 +534,36 @@ const RidersList: FunctionComponent<IProps> = ({ riders, deleteRider }) => {
 				</div>
 			</div>
 			<div className="riders-list-div">
-				{loading && (
+				{loading || riders.length < numberOfRiders ? (
 					<Grid container justify="center" alignItems="center">
 						<CircularProgress />
 					</Grid>
-				)}
+				) : null}
 				<CSSTransition
-					in={riders.length > 0}
-					timeout={300}
-					classNames="animationScaleUp"
-					unmountOnExit
-				>
-					<TableContainer>
-						<Table id="riders-list">
-							<TableHead>
-								<TableRow>
-									{renderTableHeader()}
-									{isAdmin && checkIfFilteredRidersExist() ? (
-										<TableCell>USUŃ</TableCell>
-									) : (
-										<TableCell>
-											BRAK ZAWODNIKÓW SPEŁNIAJĄCYCH
-											WYBRANE KRYTERIA
-										</TableCell>
-									)}
-								</TableRow>
-							</TableHead>
-							<TableBody>{renderTableData()}</TableBody>
-						</Table>
-					</TableContainer>
-				</CSSTransition>
+				in={riders.length == numberOfRiders}
+				timeout={300}
+				classNames="animationScaleUp"
+				unmountOnExit
+			>
+				<TableContainer>
+					<Table id="riders-list">
+						<TableHead>
+							<TableRow>
+								{renderTableHeader()}
+								{isAdmin && checkIfFilteredRidersExist() ? (
+									<TableCell>USUŃ</TableCell>
+								) : (
+									<TableCell>
+										BRAK ZAWODNIKÓW SPEŁNIAJĄCYCH
+										WYBRANE KRYTERIA
+									</TableCell>
+								)}
+							</TableRow>
+						</TableHead>
+						<TableBody>{renderTableData()}</TableBody>
+					</Table>
+				</TableContainer>
+			</CSSTransition>
 			</div>
 			<RemoveDialog
 				removeDialog={removeDialog}

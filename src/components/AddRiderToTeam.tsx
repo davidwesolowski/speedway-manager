@@ -601,6 +601,10 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
+	const countChosenRiders = () => {
+		return (rightForeign.length + rightPolish.length + rightU21.length);
+	}
+
 	useEffect(() => {
 		setLoading(true);
 		(async function () {
@@ -905,6 +909,10 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 								</Grid>
 							</Grid>
 							<br />
+							<div className="add-rider-to-team__summary">
+								Wybrano {countChosenRiders()}/10 zawodników
+							</div>
+							<br/>
 							<Button
 								size="large"
 								disabled={
