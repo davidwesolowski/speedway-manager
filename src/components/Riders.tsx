@@ -13,7 +13,8 @@ import {
 	Grid,
 	Checkbox,
 	Select,
-	MenuItem
+	MenuItem,
+	CircularProgress
 } from '@material-ui/core';
 import { FiPlus, FiX } from 'react-icons/fi';
 import axios from 'axios';
@@ -174,6 +175,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 	const [showDialog, setShowDialog] = useState<boolean>(false);
 
 	const [tempKSM, setTempKSM] = useState<string>('');
+	const [loading, setLoading] = useState<boolean>(true);
 
 	const handleOpen = () => setShowDialog(true);
 	const handleClose = () => {
@@ -321,7 +323,6 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 					Authorization: `Bearer ${accessToken}`
 				}
 			};
-			console.log(riderData);
 			const { data } = await axios.post(
 				'https://fantasy-league-eti.herokuapp.com/riders',
 				riderData,
@@ -435,6 +436,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	useEffect(() => {
+		setLoading(true);
 		(async function () {
 			try {
 				await getClubs();
@@ -459,6 +461,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 			setTimeout(() => {
 				document.body.style.overflow = 'auto';
 			}, 500);
+			setLoading(false);
 		})();
 	}, []);
 
@@ -479,7 +482,13 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 							<FiPlus />
 						</IconButton>
 					)}
-					<RidersList riders={riders} deleteRider={deleteRider} />
+					{!loading ? 
+						<RidersList riders={riders} deleteRider={deleteRider}/> 
+						:
+						<Grid container justify="center" alignItems="center">
+							<CircularProgress />
+						</Grid>
+					} 
 				</Paper>
 			</div>
 			<Dialog open={showDialog} onClose={handleClose} className="dialog">

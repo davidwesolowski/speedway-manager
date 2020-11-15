@@ -533,36 +533,36 @@ const RidersList: FunctionComponent<IProps> = ({ riders, deleteRider }) => {
 				</div>
 			</div>
 			<div className="riders-list-div">
-				{loading && (
+				{loading ? (
 					<Grid container justify="center" alignItems="center">
 						<CircularProgress />
 					</Grid>
-				)}
-				<CSSTransition
-					in={riders.length > 0}
-					timeout={300}
-					classNames="animationScaleUp"
-					unmountOnExit
-				>
-					<TableContainer>
-						<Table id="riders-list">
-							<TableHead>
-								<TableRow>
-									{renderTableHeader()}
-									{isAdmin && checkIfFilteredRidersExist() ? (
-										<TableCell>USUŃ</TableCell>
-									) : (
-										<TableCell>
-											BRAK ZAWODNIKÓW SPEŁNIAJĄCYCH
-											WYBRANE KRYTERIA
-										</TableCell>
-									)}
-								</TableRow>
-							</TableHead>
-							<TableBody>{renderTableData()}</TableBody>
-						</Table>
-					</TableContainer>
-				</CSSTransition>
+				) : <CSSTransition
+				in={riders.length > 0}
+				timeout={300}
+				classNames="animationScaleUp"
+				unmountOnExit
+			>
+				<TableContainer>
+					<Table id="riders-list">
+						<TableHead>
+							<TableRow>
+								{renderTableHeader()}
+								{isAdmin && checkIfFilteredRidersExist() ? (
+									<TableCell>USUŃ</TableCell>
+								) : (
+									<TableCell>
+										BRAK ZAWODNIKÓW SPEŁNIAJĄCYCH
+										WYBRANE KRYTERIA
+									</TableCell>
+								)}
+							</TableRow>
+						</TableHead>
+						<TableBody>{renderTableData()}</TableBody>
+					</Table>
+				</TableContainer>
+			</CSSTransition>}
+				
 			</div>
 			<RemoveDialog
 				removeDialog={removeDialog}
