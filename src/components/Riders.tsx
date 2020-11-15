@@ -175,7 +175,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 	const [showDialog, setShowDialog] = useState<boolean>(false);
 
 	const [tempKSM, setTempKSM] = useState<string>('');
-	const [loading, setLoading] = useState<boolean>(true);
+	const [ridersLength, setRidersLength] = useState<number>(1);
 
 	const handleOpen = () => setShowDialog(true);
 	const handleClose = () => {
@@ -281,8 +281,9 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 				'https://fantasy-league-eti.herokuapp.com/riders',
 				options
 			);
+			await setRidersLength(data.length);
 			setRiders([]);
-			data.map(rider => {
+			await data.map(rider => {
 				setRiders(riders =>
 					riders.concat({
 						id: rider._id,
@@ -436,7 +437,6 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	useEffect(() => {
-		setLoading(true);
 		(async function () {
 			try {
 				await getClubs();
@@ -461,7 +461,6 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 			setTimeout(() => {
 				document.body.style.overflow = 'auto';
 			}, 500);
-			setLoading(false);
 		})();
 	}, []);
 
@@ -482,13 +481,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 							<FiPlus />
 						</IconButton>
 					)}
-					{!loading ? 
-						<RidersList riders={riders} deleteRider={deleteRider}/> 
-						:
-						<Grid container justify="center" alignItems="center">
-							<CircularProgress />
-						</Grid>
-					} 
+					<RidersList riders={riders} deleteRider={deleteRider} numberOfRiders={ridersLength}/> 
 				</Paper>
 			</div>
 			<Dialog open={showDialog} onClose={handleClose} className="dialog">

@@ -35,6 +35,7 @@ interface ISelect {
 interface IProps {
 	riders: IRiderPass[];
 	deleteRider: (id: string) => Promise<void>;
+	numberOfRiders: number;
 }
 
 interface IRiderPass {
@@ -61,7 +62,7 @@ const defaultRider: IRiderPass = {
 	image: ''
 };
 
-const RidersList: FunctionComponent<IProps> = ({ riders, deleteRider }) => {
+const RidersList: FunctionComponent<IProps> = ({ riders, deleteRider, numberOfRiders}) => {
 	const { setLoggedIn, dispatchUserData, userData } = useStateValue();
 	const { push } = useHistory();
 
@@ -533,12 +534,13 @@ const RidersList: FunctionComponent<IProps> = ({ riders, deleteRider }) => {
 				</div>
 			</div>
 			<div className="riders-list-div">
-				{loading ? (
+				{loading || riders.length < numberOfRiders ? (
 					<Grid container justify="center" alignItems="center">
 						<CircularProgress />
 					</Grid>
-				) : <CSSTransition
-				in={riders.length > 0}
+				) : null}
+				<CSSTransition
+				in={riders.length == numberOfRiders}
 				timeout={300}
 				classNames="animationScaleUp"
 				unmountOnExit
@@ -561,8 +563,7 @@ const RidersList: FunctionComponent<IProps> = ({ riders, deleteRider }) => {
 						<TableBody>{renderTableData()}</TableBody>
 					</Table>
 				</TableContainer>
-			</CSSTransition>}
-				
+			</CSSTransition>
 			</div>
 			<RemoveDialog
 				removeDialog={removeDialog}
