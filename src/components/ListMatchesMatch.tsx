@@ -507,7 +507,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 						{number}. {firstName} {lastName}
 					</div>
 					<div className="scores-dialog__score">
-						{score === 0 ? '' : score}
+						{score === 0 ? '0' : score}
 					</div>
 				</div>
 				<Divider />
@@ -768,7 +768,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				<>
 					<div className="add-match__away-div">
 						<span className="list-matches-match__clubName">
-							AWAY
+							GOŚCIE
 						</span>
 						<br />
 						<span className="list-matches-match__clubName">
@@ -794,7 +794,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_1.points || ''}
+								value={matchRidersEdit.rider_1.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_1',
 									'away'
@@ -802,7 +802,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_1.heats || ''}
+								value={matchRidersEdit.rider_1.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_1',
 									'away'
@@ -826,7 +826,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_2.points || ''}
+								value={matchRidersEdit.rider_2.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_2',
 									'away'
@@ -834,7 +834,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_2.heats || ''}
+								value={matchRidersEdit.rider_2.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_2',
 									'away'
@@ -858,7 +858,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_3.points || ''}
+								value={matchRidersEdit.rider_3.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_3',
 									'away'
@@ -866,7 +866,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_3.heats || ''}
+								value={matchRidersEdit.rider_3.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_3',
 									'away'
@@ -890,7 +890,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_4.points || ''}
+								value={matchRidersEdit.rider_4.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_4',
 									'away'
@@ -898,7 +898,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_4.heats || ''}
+								value={matchRidersEdit.rider_4.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_4',
 									'away'
@@ -922,7 +922,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_5.points || ''}
+								value={matchRidersEdit.rider_5.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_5',
 									'away'
@@ -930,7 +930,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_5.heats || ''}
+								value={matchRidersEdit.rider_5.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_5',
 									'away'
@@ -954,7 +954,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_6.points || ''}
+								value={matchRidersEdit.rider_6.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_6',
 									'away'
@@ -962,7 +962,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_6.heats || ''}
+								value={matchRidersEdit.rider_6.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_6',
 									'away'
@@ -986,7 +986,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_7.points || ''}
+								value={matchRidersEdit.rider_7.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_7',
 									'away'
@@ -994,7 +994,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_7.heats || ''}
+								value={matchRidersEdit.rider_7.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_7',
 									'away'
@@ -1018,7 +1018,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_8.points || ''}
+								value={matchRidersEdit.rider_8.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_8',
 									'away'
@@ -1026,7 +1026,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_8.heats || ''}
+								value={matchRidersEdit.rider_8.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_8',
 									'away'
@@ -1036,7 +1036,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					</div>
 					<div className="add-match__home-div">
 						<span className="list-matches-match__clubName">
-							HOME
+							GOSPODARZE
 						</span>
 						<br />
 						<span className="list-matches-match__clubName">
@@ -1062,7 +1062,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_9.points || ''}
+								value={matchRidersEdit.rider_9.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_1',
 									'home'
@@ -1070,7 +1070,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_9.heats || ''}
+								value={matchRidersEdit.rider_9.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_1',
 									'home'
@@ -1094,7 +1094,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_10.points || ''}
+								value={matchRidersEdit.rider_10.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_2',
 									'home'
@@ -1102,7 +1102,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_10.heats || ''}
+								value={matchRidersEdit.rider_10.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_2',
 									'home'
@@ -1126,7 +1126,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_11.points || ''}
+								value={matchRidersEdit.rider_11.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_3',
 									'home'
@@ -1134,7 +1134,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_11.heats || ''}
+								value={matchRidersEdit.rider_11.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_3',
 									'home'
@@ -1158,7 +1158,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_12.points || ''}
+								value={matchRidersEdit.rider_12.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_4',
 									'home'
@@ -1166,7 +1166,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_12.heats || ''}
+								value={matchRidersEdit.rider_12.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_4',
 									'home'
@@ -1190,7 +1190,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_13.points || ''}
+								value={matchRidersEdit.rider_13.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_5',
 									'home'
@@ -1198,7 +1198,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_13.heats || ''}
+								value={matchRidersEdit.rider_13.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_5',
 									'home'
@@ -1222,7 +1222,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_14.points || ''}
+								value={matchRidersEdit.rider_14.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_6',
 									'home'
@@ -1230,7 +1230,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_14.heats || ''}
+								value={matchRidersEdit.rider_14.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_6',
 									'home'
@@ -1254,7 +1254,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_15.points || ''}
+								value={matchRidersEdit.rider_15.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_7',
 									'home'
@@ -1262,7 +1262,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_15.heats || ''}
+								value={matchRidersEdit.rider_15.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_7',
 									'home'
@@ -1286,7 +1286,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							</Select>
 							<TextField
 								className="add-match__rider-points"
-								value={matchRidersEdit.rider_16.points || ''}
+								value={matchRidersEdit.rider_16.points || '0'}
 								onChange={handleOnChangePoints(
 									'rider_8',
 									'home'
@@ -1294,7 +1294,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							/>
 							<TextField
 								className="add-match__rider-heats"
-								value={matchRidersEdit.rider_16.heats || ''}
+								value={matchRidersEdit.rider_16.heats || '0'}
 								onChange={handleOnChangeHeats(
 									'rider_8',
 									'home'
@@ -1310,7 +1310,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				<>
 					<div className="add-match__away-div">
 						<span className="list-matches-match__clubName">
-							AWAY
+							GOŚCIE
 						</span>
 						<br />
 						{away ? (
@@ -1324,7 +1324,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					</div>
 					<div className="add-match__home-div">
 						<span className="list-matches-match__clubName">
-							HOME
+							GOSPODARZE
 						</span>
 						<br />
 						{home ? (
