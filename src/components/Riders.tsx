@@ -292,7 +292,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 						przydomek: rider.nickname,
 						data_urodzenia: rider.dateOfBirth,
 						zagraniczny: rider.isForeigner,
-						ksm: rider.KSM,
+						ksm: Math.round(rider.KSM*100)/100,
 						klubId: rider.clubId,
 						image: rider.image
 					})
