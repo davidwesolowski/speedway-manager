@@ -175,7 +175,7 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
                                 <TableCell>{rider.firstName}</TableCell>
                                 <TableCell>{rider.lastName}</TableCell>
                                 {selectedRound !== 'all' && (
-                                    <TableCell>{rider.KSM}</TableCell>
+                                    <TableCell>{Math.round(rider.KSM*100)/100}</TableCell>
                                 )}
                                 <TableCell>{rider.score}</TableCell>
                             </TableRow>
