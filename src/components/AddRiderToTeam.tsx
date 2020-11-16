@@ -76,7 +76,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 					nickname: rider.nickname,
 					dateOfBirth: rider.dateOfBirth,
 					isForeigner: rider.isForeigner,
-					ksm: rider.KSM,
+					ksm: Math.round(rider.KSM * 100) / 100,
 					image: rider.image,
 					clubId: rider.clubId,
 					age,
