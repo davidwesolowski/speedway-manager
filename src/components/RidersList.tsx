@@ -550,14 +550,15 @@ const RidersList: FunctionComponent<IProps> = ({ riders, deleteRider, numberOfRi
 						<TableHead>
 							<TableRow>
 								{renderTableHeader()}
-								{isAdmin && checkIfFilteredRidersExist() ? (
-									<TableCell>USUŃ</TableCell>
-								) : (
-									<TableCell>
-										BRAK ZAWODNIKÓW SPEŁNIAJĄCYCH
-										WYBRANE KRYTERIA
-									</TableCell>
-								)}
+								{checkIfFilteredRidersExist() ? 
+								(isAdmin ?
+									(<TableCell>USUŃ</TableCell>) :
+									null) : (
+										<TableCell>
+											BRAK ZAWODNIKÓW SPEŁNIAJĄCYCH
+											WYBRANE KRYTERIA
+										</TableCell>
+									)}
 							</TableRow>
 						</TableHead>
 						<TableBody>{renderTableData()}</TableBody>
