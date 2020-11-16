@@ -144,6 +144,36 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				options
 			);
 			setTeamRiders([]);
+			const tr = data.map(tuple => {
+				const riderAgeYear = new Date(
+					tuple.rider.dateOfBirth
+				).getFullYear();
+				const currentYear = new Date().getFullYear();
+				const diffYear = currentYear - riderAgeYear;
+				const age =
+					diffYear <= 21
+						? 'U21'
+						: diffYear <= 23
+						? 'U23'
+						: 'Senior';
+				const nationality = tuple.rider.isForeigner
+					? 'Zagraniczny'
+					: 'Krajowy';
+				return ({
+					_id: tuple.rider._id,
+					firstName: tuple.rider.firstName,
+					lastName: tuple.rider.lastName,
+					nickname: tuple.rider.nickname,
+					dateOfBirth: tuple.rider.dateOfBirth,
+					isForeigner: tuple.rider.isForeigner,
+					ksm: tuple.assignedKSM,
+					image: tuple.rider.image,
+					clubId: tuple.rider.clubId,
+					age,
+					nationality
+				});
+			});
+			console.log(tr);
 			if (data !== undefined) {
 				data.map(tuple => {
 					setTeamRiders(teamRiders => {
@@ -168,7 +198,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 							nickname: tuple.rider.nickname,
 							dateOfBirth: tuple.rider.dateOfBirth,
 							isForeigner: tuple.rider.isForeigner,
-							ksm: tuple.rider.KSM,
+							ksm: tuple.assignedKSM,
 							image: tuple.rider.image,
 							clubId: tuple.rider.clubId,
 							age,
@@ -176,7 +206,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 						});
 					});
 				});
-				setLists(riders, data);
+				setLists(riders, tr);
 			} else {
 				setLists(riders, []);
 			}
@@ -217,8 +247,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 	const [rightForeign, setRightForeign] = React.useState([]);
 	const [rightU21, setRightU21] = React.useState([]);
 
-	const [clubs, setClubs] = React.useState([]);
-
 	const isJunior = date => {
 		if (new Date().getFullYear() - new Date(date).getFullYear() < 22) {
 			return true;
@@ -229,7 +257,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 
 	const setLists = (riders, teamRiders) => {
 		const teamRiderIDs = teamRiders.map(val => {
-			return val.riderId;
+			return val._id;
 		});
 		setLeftPolish(
 			riders.filter(
@@ -377,44 +405,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 					<Divider />
 				</>
 			);
-		}
-	};
-
-	const getClubs = async () => {
-		try {
-			const accessToken = getToken();
-			const options = {
-				headers: {
-					Authorization: `Bearer ${accessToken}`
-				}
-			};
-			const { data } = await axios.get(
-				'https://fantasy-league-eti.herokuapp.com/clubs',
-				options
-			);
-			setClubs([]);
-			data.map(club => {
-				setClubs(clubs =>
-					clubs.concat({
-						id: club._id,
-						name: club.name
-					})
-				);
-			});
-		} catch (e) {
-			const {
-				response: { data }
-			} = e;
-			if (data.statusCode == 401) {
-				checkBadAuthorization(setLoggedIn, push);
-			} else {
-				addNotification(
-					'Błąd',
-					'Nie udało się pobrać klubów z bazy',
-					'danger',
-					3000
-				);
-			}
 		}
 	};
 
@@ -584,12 +574,8 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 		(async function () {
 			try {
 				await getRiders();
-				await getClubs();
 				if (!userData.username)
 					await fetchUserData(dispatchUserData, setLoggedIn, push);
-				setTimeout(() => {
-					setLoading(false);
-				}, 400);
 			} catch (e) {
 				const {
 					response: { data }
@@ -605,6 +591,9 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 					);
 				}
 			}
+			setTimeout(() => {
+				setLoading(false);
+			}, 400);
 		})();
 	}, []);
 

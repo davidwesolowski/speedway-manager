@@ -119,7 +119,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 			);
 			if (riders.length) {
 				const newRiders: IRider[] = await Promise.all(
-					riders.map(async ({ rider, isActive }) => {
+					riders.map(async ({ rider, isActive, assignedKSM }) => {
 						const riderAgeYear = new Date(
 							rider.dateOfBirth
 						).getFullYear();
@@ -141,7 +141,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 							lastName: rider.lastName,
 							dateOfBirth: rider.dateOfBirth,
 							image: rider.image,
-							ksm: Math.round(rider.KSM*100)/100,
+							ksm: Math.round(assignedKSM*100)/100,
 							isActive,
 							nationality,
 							age,

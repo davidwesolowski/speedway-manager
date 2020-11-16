@@ -135,7 +135,7 @@ const Users: FunctionComponent<RouteProps> = () => {
 						firstName: rider.firstName,
 						lastName: rider.lastName,
 						dateOfBirth: rider.dateOfBirth,
-						ksm: rider.KSM,
+						ksm: Math.round(rider.KSM*100)/100,
 						image: rider.image,
 						nationality,
 						age,
