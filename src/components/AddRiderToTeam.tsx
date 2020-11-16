@@ -7,9 +7,7 @@ import {
 	Divider,
 	List,
 	ListItem,
-	ListItemIcon,
 	Checkbox,
-	ListItemText,
 	Grid,
 	Button,
 	Avatar,
@@ -242,9 +240,8 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 			)
 		);
 		setRightPolish(
-			riders.filter(
+			teamRiders.filter(
 				rider =>
-					teamRiderIDs.includes(rider._id) &&
 					!rider.isForeigner &&
 					!isJunior(rider.dateOfBirth)
 			)
@@ -255,8 +252,8 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 			)
 		);
 		setRightForeign(
-			riders.filter(
-				rider => teamRiderIDs.includes(rider._id) && rider.isForeigner
+			teamRiders.filter(
+				rider => rider.isForeigner
 			)
 		);
 		setLeftU21(
@@ -268,9 +265,8 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 			)
 		);
 		setRightU21(
-			riders.filter(
+			teamRiders.filter(
 				rider =>
-					teamRiderIDs.includes(rider._id) &&
 					!rider.isForeigner &&
 					isJunior(rider.dateOfBirth)
 			)
@@ -314,19 +310,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				newChecked.splice(currentIndex, 1);
 			}
 			setCheckedU21(newChecked);
-		}
-	};
-
-	const handleAllRight = type => () => {
-		if (type == 'Polish') {
-			setRightPolish(rightPolish.concat(leftPolish));
-			setLeftPolish([]);
-		} else if (type == 'Foreign') {
-			setRightForeign(rightForeign.concat(leftForeign));
-			setLeftForeign([]);
-		} else {
-			setRightU21(rightU21.concat(leftU21));
-			setLeftU21([]);
 		}
 	};
 
@@ -432,15 +415,6 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 					3000
 				);
 			}
-		}
-	};
-
-	const findClubName = clubId => {
-		const found = clubs.find(club => club.id == clubId);
-		if (found) {
-			return found.name;
-		} else {
-			return '';
 		}
 	};
 
