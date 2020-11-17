@@ -37,7 +37,7 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
                 'https://fantasy-league-eti.herokuapp.com/rounds',
                 options
             );
-
+            console.log(data)
             setRounds(data);
         
     }
@@ -186,7 +186,7 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
         )
     }
 
-    /*const postToUpdateAssigns = async () => {
+    const postToUpdateAssigns = async () => {
         try{
             const accessToken = getToken();
             const options = {
@@ -214,7 +214,7 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
             }
             throw new Error('Error in getting rounds');
         }
-    }*/
+    }
 
     const getTotalScore = () => {
         if(historyResults.find((result) => result.round._id === selectedRound)){

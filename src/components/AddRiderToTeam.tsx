@@ -166,14 +166,13 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 					nickname: tuple.rider.nickname,
 					dateOfBirth: tuple.rider.dateOfBirth,
 					isForeigner: tuple.rider.isForeigner,
-					ksm: tuple.assignedKSM,
+					ksm: Math.round(tuple.assignedKSM*100)/100,
 					image: tuple.rider.image,
 					clubId: tuple.rider.clubId,
 					age,
 					nationality
 				});
 			});
-			console.log(tr);
 			if (data !== undefined) {
 				data.map(tuple => {
 					setTeamRiders(teamRiders => {
@@ -198,7 +197,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 							nickname: tuple.rider.nickname,
 							dateOfBirth: tuple.rider.dateOfBirth,
 							isForeigner: tuple.rider.isForeigner,
-							ksm: tuple.assignedKSM,
+							ksm: Math.round(tuple.assignedKSM*100)/100,
 							image: tuple.rider.image,
 							clubId: tuple.rider.clubId,
 							age,
