@@ -311,11 +311,13 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 					rankingItem => rankingItem.userid === _id
 				);
 				const uniqueRanking = scoreboard
-					.map(rankingItem => rankingItem.score)
+					.map(rankingItem => rankingItem.score ? rankingItem.score : 0)
 					.filter(
 						(score, index, self) => self.indexOf(score) === index
 					)
 					.sort((scoreA, scoreB) => {
+						scoreA = parseInt(scoreA);
+						scoreB = parseInt(scoreB);
 						if (scoreA <= scoreB) return 1;
 						else return -1;
 					});
