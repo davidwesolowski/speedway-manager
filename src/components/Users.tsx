@@ -338,6 +338,7 @@ const Users: FunctionComponent<RouteProps> = () => {
 								users={filterUsers(users)}
 								handleFetchTeamRiders={handleFetchTeamRiders}
 								handleAcceptInvitation={handleAcceptInvitation}
+								columns={5}
 							/>
 						</Grid>
 					</CSSTransition>

@@ -30,13 +30,15 @@ interface IProps {
 	handleFetchTeamRiders?: (teamId: string) => Promise<void>;
 	handleAcceptInvitation?: (userId: string) => Promise<void>;
 	handleRemoveFriendOrInvitation?: (userId: string) => Promise<void>;
+	columns: number;
 }
 
 const UsersList: FunctionComponent<IProps> = ({
 	users,
 	handleFetchTeamRiders,
 	handleAcceptInvitation,
-	handleRemoveFriendOrInvitation
+	handleRemoveFriendOrInvitation,
+	columns
 }) => {
 	const [pendingSentInvitations, setPendingSentInvitations] = useState([]);
 	const [
@@ -222,7 +224,7 @@ const UsersList: FunctionComponent<IProps> = ({
 	);
 	const notFound = (
 		<TableRow>
-			<TableCell colSpan={5} align="center">
+			<TableCell colSpan={columns} align="center">
 				{handleFetchTeamRiders
 					? 'Nie znalezniono użytkownika.'
 					: 'Aktualnie nie masz znajomych.'}

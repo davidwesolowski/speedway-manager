@@ -219,6 +219,7 @@ const Friends: FunctionComponent<RouteProps> = () => {
 						handleRemoveFriendOrInvitation={
 							handleRemoveFriendOrInvitation
 						}
+						columns={6}
 					/>
 				</CSSTransition>
 			</Paper>
