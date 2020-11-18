@@ -17,6 +17,7 @@ import { useStateValue } from './AppProvider';
 import getToken from '../utils/getToken';
 import { checkBadAuthorization } from '../utils/checkCookies';
 import { useHistory } from 'react-router-dom';
+import { setTeamRiders } from '../actions/teamRidersActions';
 
 interface IProps {
 	teamId: string;
@@ -99,7 +100,7 @@ const checkTeamMatch = (riders: IRider[]): boolean => {
 };
 
 const TeamMatch: FunctionComponent<IProps> = ({ teamId }) => {
-	const { teamRiders, setLoggedIn } = useStateValue();
+	const { teamRiders, dispatchTeamRiders, setLoggedIn } = useStateValue();
 	const [checked, setChecked] = useState<IRider[]>([]);
 	const [left, setLeft] = useState<IRider[]>(
 		teamRiders.filter((rider: IRider) => rider.isActive === false)
@@ -154,7 +155,15 @@ const TeamMatch: FunctionComponent<IProps> = ({ teamId }) => {
 						);
 					}
 				});
-
+				const newRight = right.map((rider: IRider) => ({
+					...rider,
+					isActive: true
+				}));
+				const newLeft = left.map((rider: IRider) => ({
+					...rider,
+					isActive: false
+				}));
+				dispatchTeamRiders(setTeamRiders([...newRight, ...newLeft]));
 				const title = 'Sukces!';
 				const message = 'Zgłoszono kadrę meczową!';
 				const type = 'success';
