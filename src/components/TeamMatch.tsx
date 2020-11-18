@@ -46,7 +46,7 @@ const validateRiders = (riders: IRider[]): IValidateRider =>
 			if (curr.nationality === 'Zagraniczny') {
 				prev.foreigners += 1;
 			}
-			if (curr.age === 'U21') {
+			if (curr.age === 'U21' && curr.nationality !== 'Zagraniczny') {
 				prev.u21 += 1;
 			}
 			return prev;
@@ -92,7 +92,7 @@ const checkTeamMatch = (riders: IRider[]): boolean => {
 		alert = true;
 	}
 	if (riders.length >= 6 && result.u21 < 2) {
-		message = `Drużyna musi składać się przynajmniej z 2 juniorów!`;
+		message = `Drużyna musi składać się przynajmniej z 2 polskich juniorów!`;
 		addNotification(title, message, type, duration);
 		alert = true;
 	}
