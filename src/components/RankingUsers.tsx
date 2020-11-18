@@ -62,7 +62,7 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
 
     const generateOwnedRankingsSelect = () => {
         if(owns){
-            return owns.map((ranking, index) => {
+            return owns.map((ranking) => {
                 return (
                     <MenuItem key={ranking._id} value={ranking._id}>
                         {ranking.name}
@@ -75,7 +75,7 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
 
     const generateParticipatedRankingsSelect = () => {
         if(participates){
-            return participates.map((ranking, index) => {
+            return participates.map((ranking) => {
                 return (
                     <MenuItem key={ranking._id} value={ranking._id}>
                         {ranking.name}
@@ -108,7 +108,7 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
                         name: user.username,
                         teamLogo: user.teamlogourl,
                         teamName: user.teamname,
-                        points: user.score
+                        points: user.score ? parseInt(user.score) : 0
                     })
                 );
             });
@@ -143,6 +143,9 @@ const RankingUsers : FunctionComponent<RouteComponentProps> = ({history: {push}}
             }
             setLoading(false);
         })();
+        setTimeout(() => {
+            document.body.style.overflow = 'auto';
+        }, 200);
     }, [])
 
     return(
