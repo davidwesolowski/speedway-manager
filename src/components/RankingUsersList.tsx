@@ -52,7 +52,7 @@ const RankingUsersList: FunctionComponent<IProps> = ({ users }) => {
 			classNames="animationScaleUp"
 			unmountOnExit
 		>
-			<Grid container justify="center">
+			<Grid container justify="center" className="rankingUsers__table">
 				<Grid item xs={8}>
 					<TableContainer>
 						<Table>

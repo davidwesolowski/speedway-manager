@@ -22,6 +22,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import checkAdminRole from '../utils/checkAdminRole';
 import { useStateValue } from './AppProvider';
 import { checkBadAuthorization, checkCookies } from '../utils/checkCookies';
+import RemoveDialog from './RemoveDialog';
 
 interface IProps {
 	matchId: string;
@@ -175,6 +176,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 	const { push } = useHistory();
 	const [openScores, setOpenScores] = useState<boolean>(false);
 	const [openEdit, setOpenEdit] = useState<boolean>(false);
+	const [openRemove, setOpenRemove] = useState(false);
 	const [wasRiddenEdit, setWasRiddenEdit] = useState<boolean>(wasRidden);
 	const [matchRidersEdit, setMatchRidersEdit] = useState<IRidersEdit>(
 		defaultRidersEditData
@@ -237,6 +239,10 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 		getMatchRiders();
 		setOpenEdit(true);
 	};
+
+	const handleOpenRemove = () => setOpenRemove(true);
+
+	const handleCloseRemove = () => setOpenRemove(false);
 
 	const handleCloseEdit = () => {
 		setOpenEdit(false);
@@ -458,7 +464,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 												</Button>
 												<Button
 													className="btn"
-													onClick={handleDeleteMatch}
+													onClick={handleOpenRemove}
 												>
 													Usuń
 												</Button>
@@ -697,7 +703,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 						filtered.clubId === clubId &&
 						isU23(filtered.dateOfBirth)
 				)
-				.map((rider) => {
+				.map(rider => {
 					return (
 						<MenuItem key={rider._id} value={rider._id}>
 							{rider.firstName} {rider.lastName}
@@ -712,7 +718,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 						isU21(filtered.dateOfBirth) &&
 						!filtered.isForeigner
 				)
-				.map((rider) => {
+				.map(rider => {
 					return (
 						<MenuItem key={rider._id} value={rider._id}>
 							{rider.firstName} {rider.lastName}
@@ -722,7 +728,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 		} else {
 			return riders
 				.filter(filtered => filtered.clubId == clubId)
-				.map((rider) => {
+				.map(rider => {
 					return (
 						<MenuItem key={rider._id} value={rider._id}>
 							{rider.firstName} {rider.lastName}
@@ -2292,7 +2298,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					Authorization: `Bearer ${accessToken}`
 				}
 			};
-			const { data } = await axios.patch(
+			await axios.patch(
 				`https://fantasy-league-eti.herokuapp.com/matches/${matchId}/riders/${riderId}`,
 				{
 					score: points,
@@ -2326,7 +2332,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					Authorization: `Bearer ${accessToken}`
 				}
 			};
-			const { data } = await axios.delete(
+			await axios.delete(
 				`https://fantasy-league-eti.herokuapp.com/matches/${matchId}/riders/${riderId}`,
 				options
 			);
@@ -2578,7 +2584,7 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 						Authorization: `Bearer ${accessToken}`
 					}
 				};
-				const { data } = await axios.patch(
+				await axios.patch(
 					`https://fantasy-league-eti.herokuapp.com/matches/${matchId}`,
 					{ date: matchDateEdit, wasRidden: wasRiddenEdit },
 					options
@@ -2624,6 +2630,12 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 				{generateScoresDialog()}
 				{generateEditDialog()}
 			</div>
+			<RemoveDialog
+				removeDialog={openRemove}
+				removeFunction={handleDeleteMatch}
+				handleRemoveClose={handleCloseRemove}
+				title="Czy chcesz usunąć mecz?"
+			/>
 		</>
 	);
 };
