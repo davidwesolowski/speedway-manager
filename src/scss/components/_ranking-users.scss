@@ -1,5 +1,4 @@
 .rankingUsers {
-
 	grid-column: center-start / center-end;
 	position: relative;
 	display: flex;
@@ -7,7 +6,9 @@
 	align-items: center;
 	font-family: $bebas;
 
-	@media screen and (max-width: $bp-sm) {         grid-column: full-start / full-end;}
+	@media screen and (max-width: $bp-sm) {
+		grid-column: full-start / full-end;
+	}
 
 	&__background {
 		height: 100%;
@@ -17,12 +18,13 @@
 		background-image: url(/img/warsaw_venue.jpg);
 		background-size: cover;
 		filter: opacity(0.2);
-    }
+	}
 
-    &__box {
+	&__box {
 		position: relative;
 		z-index: 1000;
-		min-width: 80%;
+		min-width: 45vw;
+		min-height: 85%;
 		padding: 3rem 2rem;
 
 		@media only screen and (max-width: $bp-md) {
@@ -43,6 +45,10 @@
 		font-family: $bebas !important;
 		margin-bottom: $xs-margin !important;
 		letter-spacing: 1px !important;
+	}
+
+	&__table {
+		margin-top: $m-margin !important;
 	}
 
 	& .MuiTableCell-head {
