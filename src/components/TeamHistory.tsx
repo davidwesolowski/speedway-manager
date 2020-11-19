@@ -37,7 +37,6 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
                 'https://fantasy-league-eti.herokuapp.com/rounds',
                 options
             );
-            console.log(data)
             setRounds(data);
         
     }
@@ -207,7 +206,7 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
             } else {
                 addNotification(
                     'Błąd',
-                    'Nie udało się pobrać rund z bazy',
+                    'Nie udało się stworzyć przypisań z bazy',
                     'danger',
                     3000
                 );
@@ -283,7 +282,7 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
                         </Grid>
                     )}
                     <CSSTransition
-                        in={historyRiders.length > 0}
+                        in={historyRiders.length >= 0}
                         timeout={300}
                         classNames="animationScaleUp"
                         unmountOnExit
@@ -293,9 +292,11 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
                             <div className='history__full-score'>
                                 {getTotalScore()}
                             </div>
-                            <div className='history__riders-list'>
-                                {generateTable()}
-                            </div>
+                            {
+                                historyRiders.length ? <div className='history__riders-list'>
+                                    {generateTable()}
+                                </div> : null
+                            }
                         </div>
                     </CSSTransition>
                 </Paper>
