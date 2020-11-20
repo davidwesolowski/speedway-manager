@@ -57,8 +57,8 @@
 	}
 }
 
-.hidden{
-    display: none;
+.hidden {
+	display: none;
 }
 
 .scores-dialog {
@@ -70,6 +70,16 @@
 	align-items: center;
 	font-family: $bebas;
 	float: center;
+
+	& .MuiDialog-paperWidthSm {
+		padding: $m-margin !important;
+		width: 50vw !important;
+		max-width: none !important;
+	}
+
+	& .MuiDialog-paper {
+		overflow-y: hidden;
+	}
 
 	&__clubName {
 		font-family: $bebas !important;
@@ -129,6 +139,7 @@
 	&__club-image {
 		width: 40%;
 		height: 30%;
+		object-fit: contain;
 	}
 }
 

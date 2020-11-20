@@ -529,7 +529,6 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 					onClose={handleCloseScores}
 					className="scores-dialog"
 					fullWidth={true}
-					maxWidth={'md'}
 				>
 					<div className="scores-dialog__div">
 						<div className="scores-dialog__away">
