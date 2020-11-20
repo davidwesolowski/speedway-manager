@@ -24,6 +24,8 @@ import { AppContext } from './AppProvider';
 import Cookies from 'universal-cookie';
 import { FiChevronLeft, FiMenu } from 'react-icons/fi';
 import checkAdminRole from '../utils/checkAdminRole';
+import { setTeamRiders } from '../actions/teamRidersActions';
+import { setUser } from '../actions/userActions';
 
 const unauthorizedMenuItems = [
 	{
@@ -115,7 +117,13 @@ const Header: FunctionComponent = () => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [mobileOpen, setMobileOpen] = useState(false);
 	const { push } = useHistory();
-	const { userData, loggedIn, setLoggedIn } = useContext(AppContext);
+	const {
+		userData,
+		dispatchTeamRiders,
+		dispatchUserData,
+		loggedIn,
+		setLoggedIn
+	} = useContext(AppContext);
 	const isMenuOpen = Boolean(anchorEl);
 	const isAdmin = checkAdminRole(userData.role) && loggedIn;
 
@@ -127,6 +135,16 @@ const Header: FunctionComponent = () => {
 		const cookies = new Cookies();
 		cookies.remove('accessToken');
 		setLoggedIn(false);
+		dispatchUserData(
+			setUser({
+				_id: '',
+				email: '',
+				username: '',
+				avatarUrl: '',
+				role: ''
+			})
+		);
+		dispatchTeamRiders(setTeamRiders([]));
 		push('/login');
 	};
 
@@ -207,7 +225,10 @@ const Header: FunctionComponent = () => {
 				<Toolbar className="header__toolbar">
 					{!isAdmin && (
 						<Hidden mdUp={loggedIn} smUp={!loggedIn}>
-							<IconButton onClick={handleDrawerToggle} className="header__mobileIconButton">
+							<IconButton
+								onClick={handleDrawerToggle}
+								className="header__mobileIconButton"
+							>
 								<FiMenu className="header__mobileIcon" />
 							</IconButton>
 						</Hidden>
@@ -215,14 +236,22 @@ const Header: FunctionComponent = () => {
 					<Hidden mdDown={loggedIn} smDown={!loggedIn}>
 						<div className="header__logo">
 							<Link to="/" className="header__logo-link">
-								<img src='img/logo41.png' alt="logo-small-header" className="header__logo-img"/>
+								<img
+									src="img/logo41.png"
+									alt="logo-small-header"
+									className="header__logo-img"
+								/>
 							</Link>
 						</div>
 					</Hidden>
 					<Hidden lgUp={loggedIn} smDown={loggedIn} xsUp={!loggedIn}>
 						<div className="header__logo-bike">
 							<Link to="/" className="header__logo-link">
-								<img src='img/motologo.png' alt="logo-big-header" className="header__logo-bike-img"/>
+								<img
+									src="img/motologo.png"
+									alt="logo-big-header"
+									className="header__logo-bike-img"
+								/>
 							</Link>
 						</div>
 					</Hidden>
