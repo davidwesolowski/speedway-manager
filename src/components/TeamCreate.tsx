@@ -330,6 +330,9 @@ const TeamCreate: FunctionComponent<IProps> = ({
 					</Grid>
 					<Grid item xs={12} md={4}>
 						<div className="team-create-container__img-box">
+							<span className="team-create-container__requiredStar">
+								*
+							</span>
 							<input
 								type="file"
 								accept="image/*"
