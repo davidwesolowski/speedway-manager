@@ -135,7 +135,7 @@ const Users: FunctionComponent<RouteProps> = () => {
 						firstName: rider.firstName,
 						lastName: rider.lastName,
 						dateOfBirth: rider.dateOfBirth,
-						ksm: Math.round(rider.KSM*100)/100,
+						ksm: Math.round(rider.KSM * 100) / 100,
 						image: rider.image,
 						nationality,
 						age,
@@ -279,6 +279,7 @@ const Users: FunctionComponent<RouteProps> = () => {
 					className="users__container"
 					justify="center"
 					alignItems="flex-start"
+					spacing={1}
 				>
 					{!loading && (
 						<CSSTransition

@@ -46,13 +46,13 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 }) => {
 	const [editOpen, setEditOpen] = useState<boolean>(false);
 	const [removeOpen, setRemoveOpen] = useState<boolean>(false);
-	const [teamName, setTeamName] = useState<string>('');
+	const [teamName, setTeamName] = useState<string>(team.name);
 	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
 	const { push } = useHistory();
 	const { setLoggedIn, teamRiders } = useStateValue();
 
 	const handleEditClose = () => {
-		setTeamName('');
+		setTeamName(team.name);
 		setEditOpen(false);
 		setImageData(defaultImageData);
 	};

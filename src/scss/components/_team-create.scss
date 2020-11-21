@@ -64,6 +64,10 @@
 		width: 100%;
 	}
 
+	&__requiredStar {
+		align-self: flex-start;
+	}
+
 	&__teamImgLabel {
 		display: flex;
 		justify-content: center;
