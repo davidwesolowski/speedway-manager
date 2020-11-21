@@ -95,7 +95,6 @@ const defaultAccountData: IState = {
 const Account: FunctionComponent<RouteComponentProps> = ({
 	history: { push }
 }) => {
-	const [accountData, setAccountData] = useState<IState>(defaultAccountData);
 	const [validateData, setValidateData] = useState<IValidateData>(
 		defaultValidateData
 	);
@@ -105,11 +104,15 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
 	const { userData, dispatchUserData, setLoggedIn } = useContext(AppContext);
+	const [accountData, setAccountData] = useState<IState>(defaultAccountData);
 
 	const handleEditOpen = () => setEditDialogOpen(true);
 	const handleEditClose = () => {
 		setValidateData(defaultValidateData);
-		setAccountData(defaultAccountData);
+		setAccountData({
+			...defaultAccountData,
+			username: accountData.username
+		});
 		setImageData(defaultImageData);
 		setEditDialogOpen(false);
 		setShowPassword(false);
@@ -180,7 +183,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 					Authorization: `Bearer ${accessToken}`
 				}
 			};
-			if (username && password && newPassword) {
+			if (username !== userData.username && password && newPassword) {
 				await axios.patch(
 					'https://fantasy-league-eti.herokuapp.com/users/self',
 					{ username, password, newPassword },
@@ -188,7 +191,11 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 				);
 				message = 'Pomyślna zmiana danych!';
 				addNotification(title, message, type, duration);
-			} else if (password && newPassword && !username) {
+			} else if (
+				password &&
+				newPassword &&
+				username === userData.username
+			) {
 				await axios.patch(
 					'https://fantasy-league-eti.herokuapp.com/users/self',
 					{ password, newPassword },
@@ -196,7 +203,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 				);
 				message = 'Pomyślna zmiana hasła!';
 				addNotification(title, message, type, duration);
-			} else if (username) {
+			} else if (username !== userData.username) {
 				await axios.patch(
 					'https://fantasy-league-eti.herokuapp.com/users/self',
 					{ username },
@@ -206,7 +213,8 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 				addNotification(title, message, type, duration);
 			}
 
-			if (username) dispatchUserData(updateUser({ username }));
+			if (username !== userData.username)
+				dispatchUserData(updateUser({ username }));
 
 			const { name: filename, imageBuffer } = imageData;
 			if (filename && imageBuffer) {
@@ -224,9 +232,12 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 				};
 				await axios.put(signedUrl, imageBuffer, awsOptions);
 				message = 'Pomyślna zmiana awataru!';
-				addNotification(title, message, type, duration);
+				addNotification(title, message, 'success', duration);
 				dispatchUserData(updateUser({ avatarUrl: imageUrl }));
 			}
+			setTimeout(() => {
+				handleEditClose();
+			}, duration);
 		} catch (e) {
 			const {
 				response: { data }
@@ -311,7 +322,9 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 					rankingItem => rankingItem.userid === _id
 				);
 				const uniqueRanking = scoreboard
-					.map(rankingItem => rankingItem.score ? rankingItem.score : 0)
+					.map(rankingItem =>
+						rankingItem.score ? rankingItem.score : 0
+					)
 					.filter(
 						(score, index, self) => self.indexOf(score) === index
 					)
@@ -323,19 +336,19 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 					});
 				if (team) {
 					const position = uniqueRanking.indexOf(team.score) + 1;
-					setAccountData({
-						...accountData,
+					setAccountData(prev => ({
+						...prev,
 						position,
 						club: team.teamname,
 						points: team.score || 0
-					});
+					}));
 				} else {
-					setAccountData({
-						...accountData,
+					setAccountData(prev => ({
+						...prev,
 						position: -1,
 						club: 'BRAK',
 						points: 0
-					});
+					}));
 				}
 			}
 		};
@@ -346,6 +359,10 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 			document.body.style.overflow = 'auto';
 		}, 2000);
 	}, []);
+
+	useEffect(() => {
+		setAccountData(prev => ({ ...prev, username: userData.username }));
+	}, [userData]);
 
 	return (
 		<>
