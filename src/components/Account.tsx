@@ -279,7 +279,7 @@ const Account: FunctionComponent<RouteComponentProps> = ({
 								...prevState,
 								[errorItem.path[0]]: {
 									message:
-										'Hasło musi mieć przynajmniej 8 znaków, zawierać co najmniej jedną wielką literę i jeden znak specjalny!',
+										'Hasło musi mieć przynajmniej 8 znaków, zawierać co najmniej jedną wielką literę, jeden znak specjalny i jedną cyfrę!',
 									error: true
 								}
 							};
