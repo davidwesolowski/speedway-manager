@@ -91,7 +91,7 @@ const checkTeamMatch = (riders: IRider[]): boolean => {
 		addNotification(title, message, type, duration);
 		alert = true;
 	}
-	if (riders.length >= 6 && result.u21 < 2) {
+	if (riders.length > 7 && result.u21 < 2) {
 		message = `Drużyna musi składać się przynajmniej z 2 polskich juniorów!`;
 		addNotification(title, message, type, duration);
 		alert = true;
