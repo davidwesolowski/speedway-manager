@@ -17,7 +17,10 @@ import {
 	TableHead,
 	TableRow,
 	TableCell,
-	TableBody
+	TableBody,
+	Dialog,
+	DialogTitle,
+	DialogContent
 } from '@material-ui/core';
 import { FiSearch, FiX } from 'react-icons/fi';
 import { RouteProps, useHistory } from 'react-router-dom';
@@ -45,6 +48,8 @@ const Users: FunctionComponent<RouteProps> = () => {
 	const [users, setUsers] = useState<IUsers[]>([]);
 	const [userTeamRiders, setUserTeamRiders] = useState<IRider[]>([]);
 	const [inputUserName, setInputUserName] = useState('');
+	const [ridersOpen, setRidersOpen] = useState(false);
+	const [usernameOfOwner, setUsernameOfOwner] = useState('');
 	const [loading, setLoading] = useState(false);
 	const { userData, dispatchUserData, setLoggedIn } = useStateValue();
 	const { push } = useHistory();
@@ -61,13 +66,22 @@ const Users: FunctionComponent<RouteProps> = () => {
 		return [];
 	};
 
+	const handleRidersOpen = () => setRidersOpen(true);
+	const handleRidersClose = () => {
+		setRidersOpen(false);
+		handleCloseRiders();
+	};
+
 	const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
 		if (event.target) {
 			setInputUserName(event.target.value);
 		}
 	};
 
-	const handleCloseRiders = () => setUserTeamRiders([]);
+	const handleCloseRiders = () => {
+		setUsernameOfOwner('');
+		setUserTeamRiders([]);
+	};
 
 	const handleAcceptInvitation = async (userId: string) => {
 		const accessToken = getToken();
@@ -97,13 +111,14 @@ const Users: FunctionComponent<RouteProps> = () => {
 		return club ? club.name : 'BRAK';
 	};
 
-	const handleFetchTeamRiders = async (teamId: string) => {
+	const handleFetchTeamRiders = async (teamId: string, username: string) => {
 		const accessToken = getToken();
 		const options = {
 			headers: {
 				Authorization: `Bearer ${accessToken}`
 			}
 		};
+		setUsernameOfOwner(username);
 		try {
 			const { data: clubs } = await axios.get(
 				'https://fantasy-league-eti.herokuapp.com/clubs',
@@ -114,6 +129,7 @@ const Users: FunctionComponent<RouteProps> = () => {
 				options
 			);
 			if (riders.length > 0) {
+				handleRidersOpen();
 				const newRiders = riders.map(({ rider }) => {
 					const riderAgeYear = new Date(
 						rider.dateOfBirth
@@ -343,25 +359,31 @@ const Users: FunctionComponent<RouteProps> = () => {
 							/>
 						</Grid>
 					</CSSTransition>
-					<CSSTransition
-						in={userTeamRiders.length > 0}
-						timeout={300}
-						classNames="animationScaleUp"
-						unmountOnExit
-					>
-						<Grid item>
-							<Grid container alignItems="flex-start">
-								<Grid item xs={11}>
-									<TeamRiders riders={userTeamRiders} />
-								</Grid>
-								<Grid item xs={1}>
-									<IconButton onClick={handleCloseRiders}>
-										<FiX className="users__xIcon" />
-									</IconButton>
-								</Grid>
-							</Grid>
-						</Grid>
-					</CSSTransition>
+					<Dialog open={ridersOpen} onClose={handleRidersClose}>
+						<DialogTitle>
+							<div className="dialog__header">
+								<Typography
+									variant="h4"
+									className="dialog__title"
+								>
+									{`Skład użytkownika: ${usernameOfOwner}`}
+								</Typography>
+								<IconButton onClick={handleRidersClose}>
+									<FiX className="users__xIcon" />
+								</IconButton>
+							</div>
+						</DialogTitle>
+						<DialogContent dividers>
+							<CSSTransition
+								in={userTeamRiders.length > 0}
+								timeout={300}
+								classNames="animationScaleUp"
+								unmountOnExit
+							>
+								<TeamRiders riders={userTeamRiders} />
+							</CSSTransition>
+						</DialogContent>
+					</Dialog>
 				</Grid>
 			</Paper>
 		</div>
