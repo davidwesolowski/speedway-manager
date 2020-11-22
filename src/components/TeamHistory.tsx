@@ -3,7 +3,6 @@ import axios from 'axios';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
-import { setUser } from '../actions/userActions';
 import addNotification from '../utils/addNotification';
 import { checkBadAuthorization } from '../utils/checkCookies';
 import fetchUserData from '../utils/fetchUserData';
@@ -193,7 +192,7 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
                     Authorization: `Bearer ${accessToken}`
                 }
             };
-            const {data} = await axios.post(
+            await axios.post(
                 'https://fantasy-league-eti.herokuapp.com/rounds/resolve-current',
                 options
             );
@@ -201,6 +200,7 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
             const {
                 response: { data }
             } = e;
+            //console.log(e.response);
             if (data.statusCode == 401) {
                 checkBadAuthorization(setLoggedIn, push);
             } else {
@@ -211,7 +211,7 @@ const TeamHistory : FunctionComponent<RouteComponentProps> = ({history: { push }
                     3000
                 );
             }
-            throw new Error('Error in getting rounds');
+            throw new Error('Error in assigning points');
         }
     }
 
