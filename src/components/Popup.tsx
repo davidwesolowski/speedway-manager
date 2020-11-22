@@ -19,7 +19,7 @@ const Popup: FunctionComponent<IPopup> = props => {
 	const { open, handleClose, title, component } = props;
 
 	return (
-		<Dialog open={open} onClose={handleClose}>
+		<Dialog open={open} onClose={handleClose} className="popup">
 			<DialogTitle>
 				<div className="dialog__header">
 					<Typography variant="h4" className="dialog__title">
