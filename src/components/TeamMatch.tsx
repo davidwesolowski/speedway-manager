@@ -91,7 +91,7 @@ const checkTeamMatch = (riders: IRider[]): boolean => {
 		addNotification(title, message, type, duration);
 		alert = true;
 	}
-	if (riders.length >= 6 && result.u21 < 2) {
+	if (riders.length > 7 && result.u21 < 2) {
 		message = `Drużyna musi składać się przynajmniej z 2 polskich juniorów!`;
 		addNotification(title, message, type, duration);
 		alert = true;
@@ -228,16 +228,16 @@ const TeamMatch: FunctionComponent<IProps> = ({ teamId }) => {
 					disableRipple
 				/>
 			</Grid>
-			<Grid item xs={1}>
+			<Grid item xs={2}>
 				<Avatar src={rider.image} alt="rider-avatar" />
 			</Grid>
 			<Grid item xs={2}>
 				{`${rider.firstName} ${rider.lastName}`}
 			</Grid>
-			<Grid item xs={2}>
+			<Grid item xs={3}>
 				{rider.nationality}
 			</Grid>
-			<Grid item xs={1}>
+			<Grid item xs={2}>
 				{rider.age}
 			</Grid>
 			<Grid item xs={1}>

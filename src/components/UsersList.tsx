@@ -7,7 +7,16 @@ import {
 	TableContainer,
 	Table,
 	TableHead,
-	TableBody, Dialog, DialogTitle, Typography, DialogContent, Grid, FormControl, TextField, Select, MenuItem, Button
+	TableBody,
+	Dialog,
+	DialogTitle,
+	Typography,
+	DialogContent,
+	Grid,
+	FormControl,
+	Select,
+	MenuItem,
+	Button
 } from '@material-ui/core';
 import { FiArrowRightCircle, FiPlus, FiX } from 'react-icons/fi';
 import axios from 'axios';
@@ -27,7 +36,7 @@ import addNotification from '../utils/addNotification';
 
 interface IProps {
 	users: IUsers[];
-	handleFetchTeamRiders?: (teamId: string) => Promise<void>;
+	handleFetchTeamRiders?: (teamId: string, username: string) => Promise<void>;
 	handleAcceptInvitation?: (userId: string) => Promise<void>;
 	handleRemoveFriendOrInvitation?: (userId: string) => Promise<void>;
 	columns: number;
@@ -184,10 +193,19 @@ const UsersList: FunctionComponent<IProps> = ({
 							<IconButton
 								disabled={!user.teamId}
 								onClick={() =>
-									handleFetchTeamRiders(user.teamId)
+									handleFetchTeamRiders(
+										user.teamId,
+										user.username
+									)
 								}
 							>
-								<FiArrowRightCircle className="users__iconButton" />
+								<FiArrowRightCircle
+									className={
+										user.teamId
+											? 'users__iconButton users__iconButton-active'
+											: 'users__iconButton'
+									}
+								/>
 							</IconButton>
 						</TableCell>
 					) : null}
@@ -199,9 +217,7 @@ const UsersList: FunctionComponent<IProps> = ({
 					{!handleFetchTeamRiders ? (
 						<TableCell align="center">
 							<IconButton
-								onClick={() =>
-									openAddToLeagueDialog(user._id)
-								}
+								onClick={() => openAddToLeagueDialog(user._id)}
 							>
 								<FiPlus className="users__addToLeague" />
 							</IconButton>
@@ -232,31 +248,32 @@ const UsersList: FunctionComponent<IProps> = ({
 		</TableRow>
 	);
 
-	const [openAddLeagueDialog, setOpenAddLeagueDialog] = useState<boolean>(false);
+	const [openAddLeagueDialog, setOpenAddLeagueDialog] = useState<boolean>(
+		false
+	);
 	const [friendToLeague, setFriendToLeague] = useState<string>('');
 	const [leagueToAddFriend, setLeagueToAddFriend] = useState<string>('');
 	const [userLeagues, setUserLeagues] = useState([]);
 
 	const handleOnChangeSelectLeague = () => event => {
 		event.persist();
-		if(event.target){
+		if (event.target) {
 			setLeagueToAddFriend(event.target.value);
 		}
-	}
+	};
 
-	const openAddToLeagueDialog = (userId) => {
+	const openAddToLeagueDialog = userId => {
 		setFriendToLeague(userId);
 		setOpenAddLeagueDialog(true);
-	}
+	};
 
 	const closeAddToLeagueDialog = () => {
 		setFriendToLeague('');
 		setOpenAddLeagueDialog(false);
-	}
+	};
 
 	const handleOnSubmit = async () => {
-		//submit dodania znajomego do ligi
-		if(leagueToAddFriend !== ''){
+		if (leagueToAddFriend !== '') {
 			const accessToken = getToken();
 			const options = {
 				headers: {
@@ -264,11 +281,9 @@ const UsersList: FunctionComponent<IProps> = ({
 				}
 			};
 			try {
-				const {
-					data
-				} = await axios.post(
+				await axios.post(
 					`https://fantasy-league-eti.herokuapp.com/rankings/${leagueToAddFriend}`,
-					{userId: friendToLeague},
+					{ userId: friendToLeague },
 					options
 				);
 				addNotification(
@@ -283,111 +298,141 @@ const UsersList: FunctionComponent<IProps> = ({
 				} = e;
 				if (data.statusCode == 401) {
 					checkBadAuthorization(setLoggedIn, push);
-				} else if(data.statusCode == 503){
-					addNotification('Błąd', 'Znajomy już jest przypisany do tego rankingu', 'danger', 1000);
+				} else if (data.statusCode == 503) {
+					addNotification(
+						'Błąd',
+						'Znajomy już jest przypisany do tego rankingu',
+						'danger',
+						1000
+					);
 				}
 			}
 		}
-	}
+	};
 
 	const generateUsersLeagues = () => {
-		//tworzenie MenuItems z lig uzytkownika
-		if(userLeagues){
-            return userLeagues.map((ranking, index) => {
-                return (
-                    <MenuItem key={ranking._id} value={ranking._id}>
-                        {ranking.name}
-                    </MenuItem>
-                );
-            });
-        }
-	}
+		if (userLeagues) {
+			return userLeagues.map((ranking, index) => {
+				return (
+					<MenuItem key={ranking._id} value={ranking._id}>
+						{ranking.name}
+					</MenuItem>
+				);
+			});
+		}
+	};
 
 	const getUsersLeagues = async () => {
-		//pobranie lig użytkownika
 		const accessToken = getToken();
-        const options = {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        };
-        try {
-            const {
-                data
-            } = await axios.get(
-                `https://fantasy-league-eti.herokuapp.com/rankings`,
-                options
-            );
-            setUserLeagues(data.owns);
-        } catch (e) {
-            const {
-                response: { data }
-            } = e;
-            if (data.statusCode == 401) {
-                checkBadAuthorization(setLoggedIn, push);
-            }
-        }
-	}
+		const options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
+			}
+		};
+		try {
+			const { data } = await axios.get(
+				`https://fantasy-league-eti.herokuapp.com/rankings`,
+				options
+			);
+			setUserLeagues(data.owns);
+		} catch (e) {
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
+			}
+		}
+	};
 
 	return (
 		<>
-		<Dialog className="users-dialog" onClose={closeAddToLeagueDialog} open={openAddLeagueDialog}>
-			<DialogTitle>
-				<div className="users-dialog__header">
-					<Typography variant="h4" className="users-dialog__title">
-						Dodawanie znajomego do ligi
-					</Typography>
-					<IconButton
-						onClick={closeAddToLeagueDialog}
-						className="users-dialog__fix"
+			<Dialog
+				className="users-dialog"
+				onClose={closeAddToLeagueDialog}
+				open={openAddLeagueDialog}
+			>
+				<DialogTitle>
+					<div className="users-dialog__header">
+						<Typography
+							variant="h4"
+							className="users-dialog__title"
+						>
+							Dodawanie znajomego do ligi
+						</Typography>
+						<IconButton
+							onClick={closeAddToLeagueDialog}
+							className="users-dialog__fix"
+						>
+							<FiX />
+						</IconButton>
+					</div>
+				</DialogTitle>
+				<DialogContent dividers>
+					<form
+						className="users-dialog__form"
+						onSubmit={handleOnSubmit}
 					>
-						<FiX />
-					</IconButton>
-				</div>
-			</DialogTitle>
-			<DialogContent dividers>
-				<form className="users-dialog__form" onSubmit={handleOnSubmit}>
-					<Grid container>
-						<Grid item xs={7} className="users-dialog__form_fields">
-							<FormControl className="users-dialog__form_field">
-								<Select onChange={handleOnChangeSelectLeague()} value={leagueToAddFriend || ''} className="users-dialog__select">
-									{generateUsersLeagues()}
-								</Select>
-							</FormControl>
+						<Grid container>
+							<Grid
+								item
+								xs={7}
+								className="users-dialog__form_fields"
+							>
+								<FormControl className="users-dialog__form_field">
+									<Select
+										onChange={handleOnChangeSelectLeague()}
+										value={leagueToAddFriend || ''}
+										className="users-dialog__select"
+									>
+										{generateUsersLeagues()}
+									</Select>
+								</FormControl>
+							</Grid>
+							<Grid item xs={12}>
+								<Button
+									type="submit"
+									className="btn dialog__form_button"
+								>
+									Dodaj
+								</Button>
+							</Grid>
 						</Grid>
-						<Grid item xs={12}>
-							<Button type="submit" className="btn dialog__form_button">
-								Dodaj
-							</Button>
-						</Grid>
-					</Grid>
-				</form>
-			</DialogContent>	
-		</Dialog>
-		<TableContainer>
-			<Table>
-				<TableHead>
-					<TableRow>
-						<TableCell />
-						<TableCell align="center">Nazwa użytkownika</TableCell>
-						<TableCell align="center">Nazwa drużyny</TableCell>
-						{handleFetchTeamRiders ? (
-							<TableCell align="center">Sprawdź skład</TableCell>
-						) : null}
-						<TableCell align="center">
-							{handleFetchTeamRiders ? 'Dodaj' : 'Status'}
-						</TableCell>
-						{!handleFetchTeamRiders ? (
-							<TableCell align="center">Dodaj do ligi</TableCell>
-						) : null}
-						{!handleFetchTeamRiders ? (
-							<TableCell align="center">Usuń</TableCell>
-						) : null}
-					</TableRow>
-				</TableHead>
-				<TableBody>{users.length > 0 ? isFound : notFound}</TableBody>
-			</Table>
-		</TableContainer>
+					</form>
+				</DialogContent>
+			</Dialog>
+			<TableContainer>
+				<Table>
+					<TableHead>
+						<TableRow>
+							<TableCell />
+							<TableCell align="center">
+								Nazwa użytkownika
+							</TableCell>
+							<TableCell align="center">Nazwa drużyny</TableCell>
+							{handleFetchTeamRiders ? (
+								<TableCell align="center">
+									Sprawdź skład
+								</TableCell>
+							) : null}
+							<TableCell align="center">
+								{handleFetchTeamRiders ? 'Dodaj' : 'Status'}
+							</TableCell>
+							{!handleFetchTeamRiders ? (
+								<TableCell align="center">
+									Dodaj do ligi
+								</TableCell>
+							) : null}
+							{!handleFetchTeamRiders ? (
+								<TableCell align="center">Usuń</TableCell>
+							) : null}
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{users.length > 0 ? isFound : notFound}
+					</TableBody>
+				</Table>
+			</TableContainer>
 		</>
 	);
 };

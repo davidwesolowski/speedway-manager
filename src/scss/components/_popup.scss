@@ -1,0 +1,7 @@
+.popup {
+	& .MuiDialog-paperWidthSm {
+		max-width: none !important;
+		min-width: 55vw !important;
+		min-height: 70% !important;
+	}
+}

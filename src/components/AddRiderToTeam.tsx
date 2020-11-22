@@ -151,27 +151,23 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				const currentYear = new Date().getFullYear();
 				const diffYear = currentYear - riderAgeYear;
 				const age =
-					diffYear <= 21
-						? 'U21'
-						: diffYear <= 23
-						? 'U23'
-						: 'Senior';
+					diffYear <= 21 ? 'U21' : diffYear <= 23 ? 'U23' : 'Senior';
 				const nationality = tuple.rider.isForeigner
 					? 'Zagraniczny'
 					: 'Krajowy';
-				return ({
+				return {
 					_id: tuple.rider._id,
 					firstName: tuple.rider.firstName,
 					lastName: tuple.rider.lastName,
 					nickname: tuple.rider.nickname,
 					dateOfBirth: tuple.rider.dateOfBirth,
 					isForeigner: tuple.rider.isForeigner,
-					ksm: Math.round(tuple.assignedKSM*100)/100,
+					ksm: Math.round(tuple.assignedKSM * 100) / 100,
 					image: tuple.rider.image,
 					clubId: tuple.rider.clubId,
 					age,
 					nationality
-				});
+				};
 			});
 			if (data !== undefined) {
 				data.map(tuple => {
@@ -197,7 +193,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 							nickname: tuple.rider.nickname,
 							dateOfBirth: tuple.rider.dateOfBirth,
 							isForeigner: tuple.rider.isForeigner,
-							ksm: Math.round(tuple.assignedKSM*100)/100,
+							ksm: Math.round(tuple.assignedKSM * 100) / 100,
 							image: tuple.rider.image,
 							clubId: tuple.rider.clubId,
 							age,
@@ -268,9 +264,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 		);
 		setRightPolish(
 			teamRiders.filter(
-				rider =>
-					!rider.isForeigner &&
-					!isJunior(rider.dateOfBirth)
+				rider => !rider.isForeigner && !isJunior(rider.dateOfBirth)
 			)
 		);
 		setLeftForeign(
@@ -278,11 +272,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				rider => !teamRiderIDs.includes(rider._id) && rider.isForeigner
 			)
 		);
-		setRightForeign(
-			teamRiders.filter(
-				rider => rider.isForeigner
-			)
-		);
+		setRightForeign(teamRiders.filter(rider => rider.isForeigner));
 		setLeftU21(
 			riders.filter(
 				rider =>
@@ -293,9 +283,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 		);
 		setRightU21(
 			teamRiders.filter(
-				rider =>
-					!rider.isForeigner &&
-					isJunior(rider.dateOfBirth)
+				rider => !rider.isForeigner && isJunior(rider.dateOfBirth)
 			)
 		);
 	};
@@ -565,8 +553,8 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	const countChosenRiders = () => {
-		return (rightForeign.length + rightPolish.length + rightU21.length);
-	}
+		return rightForeign.length + rightPolish.length + rightU21.length;
+	};
 
 	useEffect(() => {
 		setLoading(true);
@@ -874,7 +862,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 							<div className="add-rider-to-team__summary">
 								Wybrano {countChosenRiders()}/10 zawodników
 							</div>
-							<br/>
+							<br />
 							<Button
 								size="large"
 								disabled={

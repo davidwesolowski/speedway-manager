@@ -183,7 +183,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		setShowDialog(false);
 		setRiderData(defaultRiderData);
 		setImageData(defaultImageData);
-		setTempKSM("");
+		setTempKSM('');
 	};
 
 	const handleOnChange = (name: string) => (
@@ -292,7 +292,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 						przydomek: rider.nickname,
 						data_urodzenia: rider.dateOfBirth,
 						zagraniczny: rider.isForeigner,
-						ksm: Math.round(rider.KSM*100)/100,
+						ksm: Math.round(rider.KSM * 100) / 100,
 						klubId: rider.clubId,
 						image: rider.image
 					})
@@ -481,7 +481,11 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 							<FiPlus />
 						</IconButton>
 					)}
-					<RidersList riders={riders} deleteRider={deleteRider} numberOfRiders={ridersLength}/> 
+					<RidersList
+						riders={riders}
+						deleteRider={deleteRider}
+						numberOfRiders={ridersLength}
+					/>
 				</Paper>
 			</div>
 			<Dialog open={showDialog} onClose={handleClose} className="dialog">
