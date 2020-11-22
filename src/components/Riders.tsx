@@ -545,7 +545,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 									/>
 								</FormControl>
 								<FormControl className="dialog__form_field_date">
-									Data urodzenia:
+									Data urodzenia *
 									<MuiPickersUtilsProvider
 										utils={DateFnsUtils}
 									>
@@ -565,7 +565,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 								</FormControl>
 								<br />
 								<FormControl className="dialog__checkbox">
-									Polak:
+									Czy Polak *
 									<Checkbox
 										onChange={handleOnChangeCheckbox}
 										size="small"
@@ -585,7 +585,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 									/>
 								</FormControl>
 								<FormControl className="dialog__form_field_club">
-									Klub:
+									Klub *
 									<Select
 										value={riderData.clubId || ''}
 										onChange={handleOnChangeClub('clubId')}
