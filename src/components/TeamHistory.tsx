@@ -149,7 +149,7 @@ const TeamHistory: FunctionComponent<RouteComponentProps> = ({
 		return rounds.map((round, index) => {
 			return (
 				<MenuItem key={index} value={round._id}>
-					{round.number}
+					Kolejka {round.number}
 				</MenuItem>
 			);
 		});
@@ -244,7 +244,7 @@ const TeamHistory: FunctionComponent<RouteComponentProps> = ({
 					}`}
 				</Typography>
 			);
-		} else if (selectedRound === 'all') {
+		} else if (selectedRound === 'all' && fullScore !== 0) {
 			return (
 				<Typography variant="h1" className="history__fullScoreText">
 					{`Łączny wynik: ${fullScore}`}
@@ -318,6 +318,19 @@ const TeamHistory: FunctionComponent<RouteComponentProps> = ({
 						</Grid>
 					)}
 					<CSSTransition
+						in={historyRiders.length > 0}
+						timeout={300}
+						classNames="animationScaleUp"
+						unmountOnExit
+					>
+						<div>
+							<br />
+							<div className="history__riders-list">
+									{generateTable()}
+							</div>
+						</div>
+					</CSSTransition>
+					<CSSTransition
 						in={historyRiders.length >= 0}
 						timeout={300}
 						classNames="animationScaleUp"
@@ -328,11 +341,6 @@ const TeamHistory: FunctionComponent<RouteComponentProps> = ({
 							<div className="history__full-score">
 								{getTotalScore()}
 							</div>
-							{historyRiders.length ? (
-								<div className="history__riders-list">
-									{generateTable()}
-								</div>
-							) : null}
 						</div>
 					</CSSTransition>
 				</Paper>
