@@ -51,6 +51,9 @@
 
 	&__iconButton {
 		font-size: 2.5rem !important;
+		&-active {
+			color: #0099cc !important;
+		}
 	}
 
 	&__list {
@@ -80,7 +83,7 @@
 		font-size: 3rem !important;
 	}
 
-	&__addToLeague{
+	&__addToLeague {
 		color: green;
 		font-size: x-large;
 	}
@@ -138,28 +141,28 @@
 	}
 }
 
-.users-dialog{
-	&__fix{
-        float: right;
-    }
-
-    &__header{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    &__title{
-        font-family: "Bebas Neue", cursive !important;
+.users-dialog {
+	&__fix {
+		float: right;
 	}
-	
-	&__select{
+
+	&__header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	&__title {
+		font-family: 'Bebas Neue', cursive !important;
+	}
+
+	&__select {
 		margin-top: 14px !important;
 		font-size: large !important;
 		width: 20rem;
 	}
 
-	.MuiButton-label{
+	.MuiButton-label {
 		width: 100%;
 		display: inherit;
 		align-items: inherit;

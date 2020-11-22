@@ -36,6 +36,10 @@ import addNotification from '../utils/addNotification';
 import { CSSTransition } from 'react-transition-group';
 import { FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
 import checkAdminRole from '../utils/checkAdminRole';
+import { FiArrowRightCircle } from 'react-icons/fi';
+import RemoveDialog from './RemoveDialog';
+import Popup from './Popup';
+import TeamRiders, { IRider } from './TeamRiders';
 
 interface ILeague {
 	_id: string;
@@ -71,6 +75,9 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 	const [loading, setLoading] = useState(true);
 	const [removeDialog, setRemoveDialog] = useState(false);
 	const [updateClub, setUpdateClub] = useState(false);
+	const [ridersOfClub, setRidersOfClub] = useState<IRider[]>([]);
+	const [clubName, setCLubName] = useState('');
+	const [ridersDialog, setRidersDialog] = useState(false);
 	const { dispatchUserData, setLoggedIn, userData } = useStateValue();
 	const { push } = useHistory();
 	const isAdmin = checkCookies() && checkAdminRole(userData.role);
@@ -83,6 +90,14 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 	const handleCloseRemoveDialog = () => {
 		setRemoveDialog(false);
 		setClub(defaultClub);
+	};
+
+	const handleRidersOpen = () => setRidersDialog(true);
+
+	const handleRidersClose = () => {
+		setRidersOfClub([]);
+		setCLubName('');
+		setRidersDialog(false);
 	};
 
 	const handleShowEdit = (id: string) => () => {
@@ -187,6 +202,47 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 		}
 	};
 
+	const fetchRidersOfTeam = (id: string, clubName: string) => async () => {
+		try {
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			const { data } = await axios.get(
+				`https://fantasy-league-eti.herokuapp.com/clubs/${id}/riders`,
+				options
+			);
+			if (data.length) {
+				const riders: IRider[] = data.map(({ rider }) => ({
+					_id: rider._id,
+					firstName: rider.firstName,
+					lastName: rider.lastName,
+					dateOfBirth: rider.dateOfBirth,
+					ksm: Math.round(rider.KSM * 100) / 100,
+					image: rider.image
+				}));
+				setRidersOfClub(riders);
+			}
+			setCLubName(clubName);
+			handleRidersOpen();
+		} catch (e) {
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
+			} else {
+				const title = 'Błąd!';
+				const message = 'Nie udało się pobrać zawodników z klubu!';
+				const type = 'danger';
+				const duration = 1500;
+				addNotification(title, message, type, duration);
+			}
+		}
+	};
+
 	const clubsRender = (
 		<CSSTransition
 			in={clubs.length > 0}
@@ -200,6 +256,7 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 						<TableCell />
 						<TableCell align="center">Nazwa</TableCell>
 						<TableCell align="center">Liga</TableCell>
+						<TableCell align="center">Sprawdź skład</TableCell>
 						{isAdmin && (
 							<>
 								<TableCell align="center">Edytuj</TableCell>
@@ -217,6 +274,16 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 							<TableCell align="center">{club.name}</TableCell>
 							<TableCell align="center">
 								{club.leagueName}
+							</TableCell>
+							<TableCell align="center">
+								<IconButton
+									onClick={fetchRidersOfTeam(
+										club._id,
+										club.name
+									)}
+								>
+									<FiArrowRightCircle className="clubLeague__rightArrowButton" />
+								</IconButton>
 							</TableCell>
 							{isAdmin && (
 								<>
@@ -407,26 +474,33 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 					</Grid>
 				</Paper>
 			</div>
-			<Dialog open={removeDialog} onClose={handleCloseRemoveDialog}>
-				<DialogTitle>
-					<div>
-						<Typography variant="h4" className="dialog__title">
-							Czy na pewno chcesz usunąć drużynę?
-						</Typography>
-					</div>
-				</DialogTitle>
-				<DialogActions>
-					<Button className="btn" onClick={handleCloseRemoveDialog}>
-						Anuluj
-					</Button>
-					<Button
-						className="btn dialog__button-approve"
-						onClick={removeClub}
-					>
-						Usuń
-					</Button>
-				</DialogActions>
-			</Dialog>
+			<RemoveDialog
+				removeDialog={removeDialog}
+				handleRemoveClose={handleCloseRemoveDialog}
+				title="Czy na pewno chcesz usunąć drużynę?"
+				removeFunction={removeClub}
+			/>
+			<Popup
+				open={ridersDialog}
+				handleClose={handleRidersClose}
+				title={`Skład klubu: ${clubName}`}
+				component={
+					ridersOfClub.length ? (
+						<CSSTransition
+							in={ridersOfClub.length > 0}
+							timeout={300}
+							classNames="animationScaleUp"
+							unmountOnExit
+						>
+							<TeamRiders riders={ridersOfClub} clubRirders />
+						</CSSTransition>
+					) : (
+						<p className="clubLeague__noRiders">
+							Klub nie ma zawodników!
+						</p>
+					)
+				}
+			/>
 		</>
 	);
 };

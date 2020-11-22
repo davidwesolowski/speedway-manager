@@ -11,7 +11,6 @@ import {
 	InputAdornment,
 	Grid,
 	CircularProgress,
-	IconButton,
 	TableContainer,
 	Table,
 	TableHead,
@@ -30,6 +29,7 @@ import TeamRiders, { IRider } from './TeamRiders';
 import addNotification from '../utils/addNotification';
 import { CSSTransition } from 'react-transition-group';
 import fetchUserData from '../utils/fetchUserData';
+import Popup from './Popup';
 
 export interface IUsers {
 	_id: string;
@@ -45,6 +45,8 @@ const Users: FunctionComponent<RouteProps> = () => {
 	const [users, setUsers] = useState<IUsers[]>([]);
 	const [userTeamRiders, setUserTeamRiders] = useState<IRider[]>([]);
 	const [inputUserName, setInputUserName] = useState('');
+	const [ridersOpen, setRidersOpen] = useState(false);
+	const [usernameOfOwner, setUsernameOfOwner] = useState('');
 	const [loading, setLoading] = useState(false);
 	const { userData, dispatchUserData, setLoggedIn } = useStateValue();
 	const { push } = useHistory();
@@ -61,13 +63,22 @@ const Users: FunctionComponent<RouteProps> = () => {
 		return [];
 	};
 
+	const handleRidersOpen = () => setRidersOpen(true);
+	const handleRidersClose = () => {
+		setRidersOpen(false);
+		handleCloseRiders();
+	};
+
 	const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
 		if (event.target) {
 			setInputUserName(event.target.value);
 		}
 	};
 
-	const handleCloseRiders = () => setUserTeamRiders([]);
+	const handleCloseRiders = () => {
+		setUsernameOfOwner('');
+		setUserTeamRiders([]);
+	};
 
 	const handleAcceptInvitation = async (userId: string) => {
 		const accessToken = getToken();
@@ -97,13 +108,14 @@ const Users: FunctionComponent<RouteProps> = () => {
 		return club ? club.name : 'BRAK';
 	};
 
-	const handleFetchTeamRiders = async (teamId: string) => {
+	const handleFetchTeamRiders = async (teamId: string, username: string) => {
 		const accessToken = getToken();
 		const options = {
 			headers: {
 				Authorization: `Bearer ${accessToken}`
 			}
 		};
+		setUsernameOfOwner(username);
 		try {
 			const { data: clubs } = await axios.get(
 				'https://fantasy-league-eti.herokuapp.com/clubs',
@@ -114,6 +126,7 @@ const Users: FunctionComponent<RouteProps> = () => {
 				options
 			);
 			if (riders.length > 0) {
+				handleRidersOpen();
 				const newRiders = riders.map(({ rider }) => {
 					const riderAgeYear = new Date(
 						rider.dateOfBirth
@@ -240,131 +253,139 @@ const Users: FunctionComponent<RouteProps> = () => {
 	}, []);
 
 	return (
-		<div className="users">
-			<div className="users__background"></div>
-			<Paper className="users__box">
-				<Grid container justify="center" alignItems="center">
-					<Grid item>
-						<Typography variant="h3" className="users__headerText">
-							Znajdź użytkownika
-						</Typography>
+		<>
+			<div className="users">
+				<div className="users__background"></div>
+				<Paper className="users__box">
+					<Grid container justify="center" alignItems="center">
+						<Grid item>
+							<Typography
+								variant="h3"
+								className="users__headerText"
+							>
+								Znajdź użytkownika
+							</Typography>
+						</Grid>
+						<Grid item>
+							<TextField
+								placeholder="Użytkownik..."
+								value={inputUserName}
+								onChange={handleOnChange}
+								InputProps={{
+									startAdornment: (
+										<InputAdornment position="start">
+											<FiSearch className="users__searchIcon" />
+										</InputAdornment>
+									)
+								}}
+							/>
+						</Grid>
 					</Grid>
-					<Grid item>
-						<TextField
-							placeholder="Użytkownik..."
-							value={inputUserName}
-							onChange={handleOnChange}
-							InputProps={{
-								startAdornment: (
-									<InputAdornment position="start">
-										<FiSearch className="users__searchIcon" />
-									</InputAdornment>
-								)
-							}}
-						/>
-					</Grid>
-				</Grid>
-				{loading && (
+					{loading && (
+						<Grid
+							container
+							justify="center"
+							alignItems="center"
+							className="users__loading"
+						>
+							<CircularProgress />
+						</Grid>
+					)}
 					<Grid
 						container
+						className="users__container"
 						justify="center"
-						alignItems="center"
-						className="users__loading"
+						alignItems="flex-start"
+						spacing={1}
 					>
-						<CircularProgress />
-					</Grid>
-				)}
-				<Grid
-					container
-					className="users__container"
-					justify="center"
-					alignItems="flex-start"
-					spacing={1}
-				>
-					{!loading && (
+						{!loading && (
+							<CSSTransition
+								in={users.length == 0}
+								timeout={300}
+								classNames="animationScaleUp"
+								unmountOnExit
+							>
+								<Grid item>
+									<TableContainer>
+										<Table>
+											<TableHead>
+												<TableRow>
+													<TableCell />
+													<TableCell align="center">
+														Nazwa użytkownika
+													</TableCell>
+													<TableCell align="center">
+														Nazwa drużyny
+													</TableCell>
+													<TableCell align="center">
+														Sprawdź skład
+													</TableCell>
+													<TableCell align="center">
+														Dodaj
+													</TableCell>
+												</TableRow>
+											</TableHead>
+											<TableBody>
+												<TableRow>
+													<TableCell
+														colSpan={5}
+														align="center"
+													>
+														Nie znalezniono
+														użytkowniów.
+													</TableCell>
+												</TableRow>
+											</TableBody>
+										</Table>
+									</TableContainer>
+								</Grid>
+							</CSSTransition>
+						)}
 						<CSSTransition
-							in={users.length == 0}
+							in={users.length > 0}
 							timeout={300}
 							classNames="animationScaleUp"
 							unmountOnExit
 						>
-							<Grid item>
-								<TableContainer>
-									<Table>
-										<TableHead>
-											<TableRow>
-												<TableCell />
-												<TableCell align="center">
-													Nazwa użytkownika
-												</TableCell>
-												<TableCell align="center">
-													Nazwa drużyny
-												</TableCell>
-												<TableCell align="center">
-													Sprawdź skład
-												</TableCell>
-												<TableCell align="center">
-													Dodaj
-												</TableCell>
-											</TableRow>
-										</TableHead>
-										<TableBody>
-											<TableRow>
-												<TableCell
-													colSpan={5}
-													align="center"
-												>
-													Nie znalezniono użytkowniów.
-												</TableCell>
-											</TableRow>
-										</TableBody>
-									</Table>
-								</TableContainer>
+							<Grid
+								item
+								className={
+									userTeamRiders.length > 0
+										? 'users__list'
+										: ''
+								}
+							>
+								<UsersList
+									users={filterUsers(users)}
+									handleFetchTeamRiders={
+										handleFetchTeamRiders
+									}
+									handleAcceptInvitation={
+										handleAcceptInvitation
+									}
+									columns={5}
+								/>
 							</Grid>
 						</CSSTransition>
-					)}
-					<CSSTransition
-						in={users.length > 0}
-						timeout={300}
-						classNames="animationScaleUp"
-						unmountOnExit
-					>
-						<Grid
-							item
-							className={
-								userTeamRiders.length > 0 ? 'users__list' : ''
-							}
-						>
-							<UsersList
-								users={filterUsers(users)}
-								handleFetchTeamRiders={handleFetchTeamRiders}
-								handleAcceptInvitation={handleAcceptInvitation}
-								columns={5}
-							/>
-						</Grid>
-					</CSSTransition>
+					</Grid>
+				</Paper>
+			</div>
+			<Popup
+				open={ridersOpen}
+				handleClose={handleRidersClose}
+				title={`Skład użytkownika: ${usernameOfOwner}`}
+				component={
 					<CSSTransition
 						in={userTeamRiders.length > 0}
 						timeout={300}
 						classNames="animationScaleUp"
 						unmountOnExit
 					>
-						<Grid item>
-							<Grid container alignItems="flex-start">
-								<Grid item xs={11}>
-									<TeamRiders riders={userTeamRiders} />
-								</Grid>
-								<Grid item xs={1}>
-									<IconButton onClick={handleCloseRiders}>
-										<FiX className="users__xIcon" />
-									</IconButton>
-								</Grid>
-							</Grid>
-						</Grid>
+						<TeamRiders riders={userTeamRiders} />
 					</CSSTransition>
-				</Grid>
-			</Paper>
-		</div>
+				}
+			/>
+		</>
 	);
 };
 

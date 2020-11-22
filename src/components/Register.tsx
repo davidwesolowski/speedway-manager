@@ -130,7 +130,6 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 				push('/druzyna');
 			}, duration);
 		} catch (e) {
-			console.log(e.response)
 			const title = 'Błąd!';
 			const message = 'Rejstracja zakończona niepowodzeniem!';
 			const type = 'danger';
@@ -153,7 +152,7 @@ const Register: FunctionComponent<RouteComponentProps> = ({
 								...prevState,
 								[errorItem.path[0]]: {
 									message:
-										'Hasło musi mieć przynajmniej 8 znaków, zawierać co najmniej jedną wielką literę i jeden znak specjalny!',
+										'Hasło musi mieć przynajmniej 8 znaków, zawierać co najmniej jedną wielką literę, jeden znak specjalny i jedną cyfrę!',
 									error: true
 								}
 							};

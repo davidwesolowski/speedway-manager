@@ -1,6 +1,5 @@
 import React, { FunctionComponent } from 'react';
 import {
-	Typography,
 	TableContainer,
 	Table,
 	TableHead,
@@ -14,17 +13,18 @@ export interface IRider {
 	_id: string;
 	firstName: string;
 	lastName: string;
-	club: string;
-	nationality: string;
+	club?: string;
+	nationality?: string;
 	ksm: number;
 	dateOfBirth: string;
-	age: string;
+	age?: string;
 	image: string | null;
-	isActive: boolean;
+	isActive?: boolean;
 }
 
 interface IProps {
 	riders: IRider[];
+	clubRirders?: boolean;
 }
 
 const displayDate = (date: string): string => {
@@ -38,7 +38,7 @@ const displayDate = (date: string): string => {
 	return `${day}.${month}.${year}`;
 };
 
-const TeamRiders: FunctionComponent<IProps> = ({ riders }) => {
+const TeamRiders: FunctionComponent<IProps> = ({ riders, clubRirders }) => {
 	return (
 		<div className="teamRiders">
 			<TableContainer>
@@ -49,7 +49,9 @@ const TeamRiders: FunctionComponent<IProps> = ({ riders }) => {
 							<TableCell align="center">Imię</TableCell>
 							<TableCell align="center">Nazwisko</TableCell>
 							<TableCell align="center">Data urodzenia</TableCell>
-							<TableCell align="center">Klub</TableCell>
+							{!clubRirders ? (
+								<TableCell align="center">Klub</TableCell>
+							) : null}
 							<TableCell align="center">KSM</TableCell>
 						</TableRow>
 					</TableHead>
@@ -71,9 +73,11 @@ const TeamRiders: FunctionComponent<IProps> = ({ riders }) => {
 								<TableCell align="center">
 									{displayDate(rider.dateOfBirth)}
 								</TableCell>
-								<TableCell align="center">
-									{rider.club}
-								</TableCell>
+								{!clubRirders ? (
+									<TableCell align="center">
+										{rider.club}
+									</TableCell>
+								) : null}
 								<TableCell align="center">
 									{rider.ksm}
 								</TableCell>

@@ -1,55 +1,59 @@
-.riders-list-div{
-    text-align: center;
+.riders-list-div {
+	text-align: center;
 
-    .MuiTableCell-head {
-        background-color: $color-primary !important;
-        color: #fff !important;
-        font-size: 1.7rem;
-        font-family: $bebas !important;
-        border: 1px solid $color-primary-light;
-        text-align: center;
-    }
-    
-    .MuiTableRow-root:nth-child(even) .MuiTableCell-body {
-        background-color: $color-primary-light;
-        color: #fff;
-    }
-    
-    .MuiTableCell-body {
-        font-size: 1.6rem;
-        font-family: $bebas !important;
-        border: 1px solid $color-primary;
-        text-align: center;
-    }
-    
-    .MuiTable-root {
-        border: 1px solid $color-primary;
-    }
+	.MuiAvatar-root {
+		margin: 0 auto !important;
+	}
 
-    .delete-button{
-        color: red;
-    }
+	.MuiTableCell-head {
+		background-color: $color-primary !important;
+		color: #fff !important;
+		font-size: 1.7rem;
+		font-family: $bebas !important;
+		border: 1px solid $color-primary-light;
+		text-align: center;
+	}
+
+	.MuiTableRow-root:nth-child(even) .MuiTableCell-body {
+		background-color: $color-primary-light;
+		color: #fff;
+	}
+
+	.MuiTableCell-body {
+		font-size: 1.6rem;
+		font-family: $bebas !important;
+		border: 1px solid $color-primary;
+		text-align: center;
+	}
+
+	.MuiTable-root {
+		border: 1px solid $color-primary;
+	}
+
+	.delete-button {
+		color: red;
+	}
 }
 
-.riders-list{
-    &__delete-rider-button{
-        font-size: x-large !important;
-        color: red !important;
-    }
+.riders-list {
+	&__delete-rider-button {
+		font-size: x-large !important;
+		color: red !important;
+	}
 }
 
-.NoX{
-    font-size: x-large !important;
-    color: red !important;
+.NoX {
+	font-size: x-large !important;
+	color: red !important;
 }
 
-.YesPlus{
-    font-size: x-large !important;
-    color: green !important;
+.YesPlus {
+	font-size: x-large !important;
+	color: green !important;
 }
 
-.find-rider{
-    &__search {
+.find-rider {
+	&__search {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
