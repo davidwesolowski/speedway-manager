@@ -80,7 +80,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 					age,
 					nationality
 				};
-			});
+			}).sort(compare);
 			setRiders(newRiders);
 			getTeams(newRiders);
 		} catch (e) {
@@ -168,7 +168,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 					age,
 					nationality
 				};
-			});
+			}).sort(compare);
 			if (data !== undefined) {
 				data.map(tuple => {
 					setTeamRiders(teamRiders => {
@@ -198,7 +198,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 							clubId: tuple.rider.clubId,
 							age,
 							nationality
-						});
+						}).sort(compare);
 					});
 				});
 				setLists(riders, tr);
@@ -249,6 +249,11 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 			return false;
 		}
 	};
+
+	const compare = (riderA, riderB): number => {
+		if(riderA.ksm <= riderB.ksm) return 1;
+		else return -1;
+	}
 
 	const setLists = (riders, teamRiders) => {
 		const teamRiderIDs = teamRiders.map(val => {
@@ -542,6 +547,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				'success',
 				1000
 			);
+			setTeamRiders(chosenRiders);
 		} catch (e) {
 			addNotification(
 				'Błąd',

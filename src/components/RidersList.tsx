@@ -492,7 +492,7 @@ const RidersList: FunctionComponent<IProps> = ({ riders, deleteRider, numberOfRi
 
 	useEffect(() => {
 		filtr();
-	}, [phrase, selects.age, selects.nationality]);
+	}, [phrase, selects.age, selects.nationality, riders]);
 
 	return (
 		<>

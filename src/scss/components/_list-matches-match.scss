@@ -75,10 +75,9 @@
 		padding: $m-margin !important;
 		width: 50vw !important;
 		max-width: none !important;
-	}
-
-	& .MuiDialog-paper {
-		overflow-y: hidden;
+		@media only screen and (max-width: $bp-md) {
+			width: 90vw !important;
+		}
 	}
 
 	&__clubName {
@@ -109,6 +108,7 @@
 
 	&__club-score {
 		font-size: xxx-large;
+		margin-bottom: 2%;
 	}
 
 	&__home {
@@ -126,6 +126,11 @@
 	&__rider-score-div {
 		display: block;
 		overflow: auto;
+		font-size: x-large;
+
+		@media only screen and (max-width: $bp-md) {
+			font-size: large;
+		}
 	}
 
 	&__rider {
@@ -134,6 +139,10 @@
 
 	&__score {
 		float: right;
+	}
+
+	&__clubLogo{
+		width: 100%;
 	}
 
 	&__club-image {

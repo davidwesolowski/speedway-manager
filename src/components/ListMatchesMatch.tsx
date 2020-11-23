@@ -538,17 +538,19 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							>
 								{away ? away.name : ''}
 							</Typography>
-							<img
-								src={
-									away
-										? away.logoUrl
-											? (away.logoUrl as string)
+							<div className="scores-dialog__clubLogo">
+								<img
+									src={
+										away
+											? away.logoUrl
+												? (away.logoUrl as string)
+												: '/img/warsaw_venue.jpg'
 											: '/img/warsaw_venue.jpg'
-										: '/img/warsaw_venue.jpg'
-								}
-								alt="club-logo"
-								className="scores-dialog__club-image"
-							/>
+									}
+									alt="club-logo"
+									className="scores-dialog__club-image"
+								/>
+							</div>
 							<div className="scores-dialog__club-score">
 								{awayScoreEdit}
 							</div>
@@ -609,17 +611,19 @@ const ListMatchesMatch: FunctionComponent<IProps> = ({
 							>
 								{home ? home.name : ''}
 							</Typography>
-							<img
-								src={
-									home
-										? home.logoUrl
-											? (home.logoUrl as string)
+							<div className="scores-dialog__clubLogo">
+								<img
+									src={
+										home
+											? home.logoUrl
+												? (home.logoUrl as string)
+												: '/img/warsaw_venue.jpg'
 											: '/img/warsaw_venue.jpg'
-										: '/img/warsaw_venue.jpg'
-								}
-								alt="club-logo"
-								className="scores-dialog__club-image"
-							/>
+									}
+									alt="club-logo"
+									className="scores-dialog__club-image"
+								/>
+							</div>
 							<div className="scores-dialog__club-score">
 								{homeScoreEdit}
 							</div>

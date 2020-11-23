@@ -17,7 +17,9 @@ import {
 	FormControl,
 	Grid,
 	IconButton,
+	MenuItem,
 	Paper,
+	Select,
 	Table,
 	TableBody,
 	TableCell,
@@ -243,6 +245,16 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 		}
 	};
 
+	const handleOnChangeCountry = (fieldName: string) => event => {
+		event.persist();
+		if (event.target) {
+			setLeague(prev => ({
+				...prev,
+				[fieldName]: event.target.value
+			}));
+		}
+	};
+
 	const clubsRender = (
 		<CSSTransition
 			in={clubs.length > 0}
@@ -444,17 +456,25 @@ const ClubLeagueCreate: FunctionComponent<RouteProps> = () => {
 													</FormControl>
 												</Grid>
 												<Grid item xs={12} md={10}>
-													<FormControl className="clubLeague__form-field">
-														<TextField
-															label="Kraj"
-															required
-															value={
-																league.country
-															}
-															onChange={handleOnChange(
-																'country'
-															)}
-														/>
+													<FormControl className="leagues-dialog__select-field">
+														Kraj:
+														<Select
+															value={league.country || ''}
+															onChange={handleOnChangeCountry("country")}
+														>
+															<MenuItem value="Polska">
+																Polska
+															</MenuItem>
+															<MenuItem value="Wielka Brytania">
+																Wielka Brytania
+															</MenuItem>
+															<MenuItem value="Szwecja">
+																Szwecja
+															</MenuItem>
+															<MenuItem value="Dania">
+																Dania
+															</MenuItem>
+														</Select>
 													</FormControl>
 												</Grid>
 												<Grid item xs={12} md={10}>

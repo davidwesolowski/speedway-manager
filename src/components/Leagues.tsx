@@ -24,7 +24,7 @@ import {
 import axios from 'axios';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { FiPlus, FiX, FiXCircle } from 'react-icons/fi';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { Redirect, RouteComponentProps, useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import addNotification from '../utils/addNotification';
 import checkAdminRole from '../utils/checkAdminRole';
@@ -61,6 +61,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = () => {
 	const [removeDialog, setRemoveDialog] = useState(false);
 	const [league, setLeague] = useState<ILeague>();
 	const [loading, setLoading] = useState<boolean>(true);
+	const [clubs, setClubs] = useState([]);
 	const isAdmin = checkAdminRole(userData.role) && checkCookies();
 	const { push } = useHistory();
 
@@ -95,6 +96,37 @@ const Leagues: FunctionComponent<RouteComponentProps> = () => {
 	};
 
 	const handleRemoveClose = () => setRemoveDialog(false);
+
+	const getClubs = async () => {
+		try {
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			const { data } = await axios.get(
+				'https://fantasy-league-eti.herokuapp.com/clubs',
+				options
+			);
+
+			setClubs(data);
+		} catch (e) {
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
+			} else {
+				addNotification(
+					'Błąd',
+					'Nie udało się pobrać klubów z bazy',
+					'danger',
+					3000
+				);
+			}
+		}
+	}
 
 	const getLeagues = async () => {
 		try {
@@ -209,6 +241,15 @@ const Leagues: FunctionComponent<RouteComponentProps> = () => {
 		}
 	};
 
+	const checkIfCanDeleteLeague = id => {
+		const tempClubs = clubs.filter(club => club.leagueId === id);
+		if(tempClubs.length === 0){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	const renderTableData = () => {
 		return leagues.map(league => {
 			return (
@@ -216,7 +257,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = () => {
 					<TableCell>{league.name}</TableCell>
 					<TableCell>{league.country}</TableCell>
 					<TableCell className="table-X">
-						{isAdmin && (
+					{isAdmin && checkIfCanDeleteLeague(league._id) ? 
 							<IconButton
 								onClick={handleRemoveOpen({
 									_id: league._id,
@@ -225,8 +266,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = () => {
 								className="leagues__delete-button"
 							>
 								<FiXCircle />
-							</IconButton>
-						)}
+							</IconButton> : null}
 					</TableCell>
 				</TableRow>
 			);
@@ -242,7 +282,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = () => {
 							<TableRow>
 								<TableCell>NAZWA</TableCell>
 								<TableCell>KRAJ</TableCell>
-								<TableCell>USUŃ</TableCell>
+								{isAdmin && <TableCell>USUŃ</TableCell>}
 							</TableRow>
 						</TableHead>
 						<TableBody>{renderTableData()}</TableBody>
@@ -300,6 +340,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = () => {
 		(async function () {
 			try {
 				await getLeagues();
+				await getClubs();
 				if (!userData.username)
 					await fetchUserData(dispatchUserData, setLoggedIn, push);
 			} catch (e) {
@@ -424,12 +465,12 @@ const Leagues: FunctionComponent<RouteComponentProps> = () => {
 					</Typography>
 					<Divider />
 					<br />
-					<IconButton
+					{isAdmin && <IconButton
 						onClick={handleOpenDialog}
 						className="leagues__fiplus"
 					>
 						<FiPlus />
-					</IconButton>
+					</IconButton>}
 					{loading && (
 						<Grid container justify="center" alignItems="center">
 							<CircularProgress />

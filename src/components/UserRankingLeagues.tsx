@@ -63,11 +63,13 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = () => {
 	const { setLoggedIn, dispatchUserData, userData } = useStateValue();
 	const [openDialog, setOpenDialog] = useState<boolean>(false);
 	const [removeDialog, setRemoveDialog] = useState(false);
+	const [removeMeDialog, setRemoveMeDialog] = useState(false);
 	const [addUserLeagueName, setAddUserLeagueName] = useState<string>('');
 	const [owns, setOwns] = useState([]);
 	const [participates, setParticipates] = useState([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [league, setLeague] = useState<ILeague>();
+	const [meLeague, setMeLeague] = useState<ILeague>();
 	const { push } = useHistory();
 
 	const [validatedData, setValidatedData] = useState<IValidatedData>(
@@ -89,6 +91,13 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = () => {
 	};
 
 	const handleRemoveClose = () => setRemoveDialog(false);
+
+	const handleRemoveMeOpen = (league: ILeague) => () => {
+		setRemoveMeDialog(true);
+		setMeLeague(league);
+	}
+
+	const handleRemoveMeClose = () => setRemoveMeDialog(false);
 
 	const getUserLeagues = async () => {
 		const accessToken = getToken();
@@ -146,6 +155,43 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = () => {
 			}
 		}
 	};
+
+	const deleteMeFromLeague = async id => {
+		try{
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			await axios.delete(
+				`https://fantasy-league-eti.herokuapp.com/rankings/${id}/${userData._id}`,
+				options
+			);
+			addNotification(
+				'Sukces!',
+				'Udało się usunąć ranking!',
+				'success',
+				1000
+			);
+			setParticipates(participates.filter(league => league._id !== id));
+		} catch (e) {
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				console.log(e.response);
+				//checkBadAuthorization(setLoggedIn, push);
+			} else {
+				addNotification(
+					'Błąd',
+					'Nie udało się usunąć Ciebie z rankingu',
+					'danger',
+					3000
+				);
+			}
+		}
+	}
 
 	const deleteUserLeague = async id => {
 		try {
@@ -205,7 +251,14 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = () => {
 			return (
 				<TableRow key={_id}>
 					<TableCell>{name}</TableCell>
-					<TableCell className="table-X"></TableCell>
+					<TableCell className="table-X">
+						<IconButton
+							onClick={handleRemoveMeOpen({ _id, name })}
+							className="user-leagues__delete-button"
+						>
+							<FiX />
+						</IconButton>
+					</TableCell>
 				</TableRow>
 			);
 		});
@@ -402,6 +455,12 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = () => {
 				handleRemoveClose={handleRemoveClose}
 				title="Czy chcesz usunąć ligę?"
 				removeFunction={async () => deleteUserLeague(league._id)}
+			/>
+			<RemoveDialog
+				removeDialog={removeMeDialog}
+				handleRemoveClose={handleRemoveMeClose}
+				title="Czy chcesz opuścić ligę?"
+				removeFunction={async () => deleteMeFromLeague(meLeague._id)}
 			/>
 		</>
 	);

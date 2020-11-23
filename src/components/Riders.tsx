@@ -192,10 +192,10 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		event.persist();
 		if (event.target) {
 			if (name === 'KSM') {
-				setTempKSM(event.target.value);
+				setTempKSM(event.target.value)
 				setRiderData((prevState: IRider) => ({
 					...prevState,
-					[name]: parseFloat(tempKSM)
+					[name]: parseFloat(event.target.value)
 				}));
 			} else {
 				setRiderData((prevState: IRider) => ({
@@ -241,6 +241,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 					Authorization: `Bearer ${accessToken}`
 				}
 			};
+			console.log(id);
 			const { data } = await axios.delete(
 				`https://fantasy-league-eti.herokuapp.com/riders/${id}`,
 				options
@@ -252,6 +253,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 				1000
 			);
 			setRiders(riders.filter(rider => rider.id !== id));
+			setRidersLength(ridersLength - 1);
 		} catch (e) {
 			const {
 				response: { data }
@@ -269,6 +271,23 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
+	const compare = (riderA: IRiderPass, riderB: IRiderPass): number => {
+		if(riderA.ksm <= riderB.ksm) return 1;
+		else return -1;
+	}
+
+	const tempRiders = [{
+		id: "1",
+		imię: "Imie",
+		nazwisko: "Nazwisko",
+		przydomek: "Przydomek",
+		data_urodzenia: new Date(),
+		zagraniczny: true,
+		ksm: 5.55,
+		klubId: '',
+		image: ''
+	}]
+
 	const getRiders = async () => {
 		try {
 			const accessToken = getToken();
@@ -283,6 +302,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 			);
 			await setRidersLength(data.length);
 			setRiders([]);
+			console.log(data);
 			await data.map(rider => {
 				setRiders(riders =>
 					riders.concat({
@@ -295,7 +315,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 						ksm: Math.round(rider.KSM * 100) / 100,
 						klubId: rider.clubId,
 						image: rider.image
-					})
+					}).sort(compare)
 				);
 			});
 		} catch (e) {
@@ -331,6 +351,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 			);
 			const id = data._id;
 			const { name: filename, imageBuffer } = imageData;
+			let temp = '';
 			if (filename && imageBuffer) {
 				const {
 					data: { signedUrl, imageUrl, type }
@@ -345,6 +366,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 					}
 				};
 				await axios.put(signedUrl, imageBuffer, awsOptions);
+				temp = imageUrl;
 			}
 			addNotification(
 				'Sukces',
@@ -369,9 +391,10 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 					zagraniczny: riderData.isForeigner,
 					ksm: riderData.KSM,
 					klubId: riderData.clubId,
-					image: ''
-				})
+					image: temp
+				}).sort(compare)
 			);
+			setRidersLength(ridersLength + 1);
 		} catch (e) {
 			const {
 				response: { data }
@@ -545,7 +568,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 									/>
 								</FormControl>
 								<FormControl className="dialog__form_field_date">
-									Data urodzenia:
+									Data urodzenia *
 									<MuiPickersUtilsProvider
 										utils={DateFnsUtils}
 									>
@@ -565,7 +588,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 								</FormControl>
 								<br />
 								<FormControl className="dialog__checkbox">
-									Polak:
+									Czy Polak *
 									<Checkbox
 										onChange={handleOnChangeCheckbox}
 										size="small"
@@ -585,7 +608,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 									/>
 								</FormControl>
 								<FormControl className="dialog__form_field_club">
-									Klub:
+									Klub *
 									<Select
 										value={riderData.clubId || ''}
 										onChange={handleOnChangeClub('clubId')}
