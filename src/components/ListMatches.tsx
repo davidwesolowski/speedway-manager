@@ -39,7 +39,7 @@ const ListMatches: FunctionComponent<RouteComponentProps> = () => {
 		return rounds.map((round, index) => {
 			return (
 				<MenuItem key={index} value={round._id}>
-					Runda {round.number}
+					Kolejka {round.number}
 				</MenuItem>
 			);
 		});
