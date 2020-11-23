@@ -269,6 +269,11 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		}
 	};
 
+	const compare = (riderA: IRiderPass, riderB: IRiderPass): number => {
+		if(riderA.ksm <= riderB.ksm) return 1;
+		else return -1;
+	}
+
 	const getRiders = async () => {
 		try {
 			const accessToken = getToken();
@@ -295,7 +300,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 						ksm: Math.round(rider.KSM * 100) / 100,
 						klubId: rider.clubId,
 						image: rider.image
-					})
+					}).sort(compare)
 				);
 			});
 		} catch (e) {
@@ -370,7 +375,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 					ksm: riderData.KSM,
 					klubId: riderData.clubId,
 					image: ''
-				})
+				}).sort(compare)
 			);
 		} catch (e) {
 			const {
