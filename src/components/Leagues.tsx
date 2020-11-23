@@ -61,6 +61,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = () => {
 	const [removeDialog, setRemoveDialog] = useState(false);
 	const [league, setLeague] = useState<ILeague>();
 	const [loading, setLoading] = useState<boolean>(true);
+	const [clubs, setClubs] = useState([]);
 	const isAdmin = checkAdminRole(userData.role) && checkCookies();
 	const { push } = useHistory();
 
@@ -95,6 +96,37 @@ const Leagues: FunctionComponent<RouteComponentProps> = () => {
 	};
 
 	const handleRemoveClose = () => setRemoveDialog(false);
+
+	const getClubs = async () => {
+		try {
+			const accessToken = getToken();
+			const options = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			};
+			const { data } = await axios.get(
+				'https://fantasy-league-eti.herokuapp.com/clubs',
+				options
+			);
+
+			setClubs(data);
+		} catch (e) {
+			const {
+				response: { data }
+			} = e;
+			if (data.statusCode == 401) {
+				checkBadAuthorization(setLoggedIn, push);
+			} else {
+				addNotification(
+					'Błąd',
+					'Nie udało się pobrać klubów z bazy',
+					'danger',
+					3000
+				);
+			}
+		}
+	}
 
 	const getLeagues = async () => {
 		try {
@@ -209,13 +241,23 @@ const Leagues: FunctionComponent<RouteComponentProps> = () => {
 		}
 	};
 
+	const checkIfCanDeleteLeague = id => {
+		const tempClubs = clubs.filter(club => club.leagueId === id);
+		if(tempClubs.length === 0){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	const renderTableData = () => {
 		return leagues.map(league => {
 			return (
 				<TableRow key={league._id}>
 					<TableCell>{league.name}</TableCell>
 					<TableCell>{league.country}</TableCell>
-					{isAdmin && <TableCell className="table-X">
+					<TableCell className="table-X">
+					{isAdmin && checkIfCanDeleteLeague(league._id) ? 
 							<IconButton
 								onClick={handleRemoveOpen({
 									_id: league._id,
@@ -224,8 +266,8 @@ const Leagues: FunctionComponent<RouteComponentProps> = () => {
 								className="leagues__delete-button"
 							>
 								<FiXCircle />
-							</IconButton>
-					</TableCell>}
+							</IconButton> : null}
+					</TableCell>
 				</TableRow>
 			);
 		});
@@ -298,6 +340,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = () => {
 		(async function () {
 			try {
 				await getLeagues();
+				await getClubs();
 				if (!userData.username)
 					await fetchUserData(dispatchUserData, setLoggedIn, push);
 			} catch (e) {
