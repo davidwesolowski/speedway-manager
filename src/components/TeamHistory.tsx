@@ -284,7 +284,7 @@ const TeamHistory: FunctionComponent<RouteComponentProps> = ({
 			}
 			setLoading(false);
 		})();
-		//postToUpdateAssigns();
+		postToUpdateAssigns();
 		setTimeout(() => {
 			document.body.style.overflow = 'auto';
 		}, 2000);

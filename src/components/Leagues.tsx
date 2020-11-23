@@ -24,7 +24,7 @@ import {
 import axios from 'axios';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { FiPlus, FiX, FiXCircle } from 'react-icons/fi';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { Redirect, RouteComponentProps, useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import addNotification from '../utils/addNotification';
 import checkAdminRole from '../utils/checkAdminRole';
@@ -215,8 +215,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = () => {
 				<TableRow key={league._id}>
 					<TableCell>{league.name}</TableCell>
 					<TableCell>{league.country}</TableCell>
-					<TableCell className="table-X">
-						{isAdmin && (
+					{isAdmin && <TableCell className="table-X">
 							<IconButton
 								onClick={handleRemoveOpen({
 									_id: league._id,
@@ -226,8 +225,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = () => {
 							>
 								<FiXCircle />
 							</IconButton>
-						)}
-					</TableCell>
+					</TableCell>}
 				</TableRow>
 			);
 		});
@@ -242,7 +240,7 @@ const Leagues: FunctionComponent<RouteComponentProps> = () => {
 							<TableRow>
 								<TableCell>NAZWA</TableCell>
 								<TableCell>KRAJ</TableCell>
-								<TableCell>USUŃ</TableCell>
+								{isAdmin && <TableCell>USUŃ</TableCell>}
 							</TableRow>
 						</TableHead>
 						<TableBody>{renderTableData()}</TableBody>
@@ -424,12 +422,12 @@ const Leagues: FunctionComponent<RouteComponentProps> = () => {
 					</Typography>
 					<Divider />
 					<br />
-					<IconButton
+					{isAdmin && <IconButton
 						onClick={handleOpenDialog}
 						className="leagues__fiplus"
 					>
 						<FiPlus />
-					</IconButton>
+					</IconButton>}
 					{loading && (
 						<Grid container justify="center" alignItems="center">
 							<CircularProgress />

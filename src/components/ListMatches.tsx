@@ -188,7 +188,7 @@ const ListMatches: FunctionComponent<RouteComponentProps> = () => {
 						variant="h2"
 						className="heading-1 list-matches__heading"
 					>
-						Rozegrane mecze
+						Mecze
 					</Typography>
 					<Divider />
 					<br />
