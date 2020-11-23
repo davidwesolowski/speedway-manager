@@ -214,7 +214,7 @@ const UsersList: FunctionComponent<IProps> = ({
 							? usersIcons(user)
 							: friendsIcons(user)}
 					</TableCell>
-					{!handleFetchTeamRiders ? (
+					{!handleFetchTeamRiders && !user.invited ?(
 						<TableCell align="center">
 							<IconButton
 								onClick={() => openAddToLeagueDialog(user._id)}
@@ -222,7 +222,7 @@ const UsersList: FunctionComponent<IProps> = ({
 								<FiPlus className="users__addToLeague" />
 							</IconButton>
 						</TableCell>
-					) : null}
+					) : <TableCell></TableCell>}
 					{!handleFetchTeamRiders ? (
 						<TableCell align="center">
 							<IconButton
