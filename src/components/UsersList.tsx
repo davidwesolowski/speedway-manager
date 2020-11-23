@@ -263,6 +263,7 @@ const UsersList: FunctionComponent<IProps> = ({
 	};
 
 	const openAddToLeagueDialog = userId => {
+		event.preventDefault();
 		setFriendToLeague(userId);
 		setOpenAddLeagueDialog(true);
 	};
@@ -272,7 +273,12 @@ const UsersList: FunctionComponent<IProps> = ({
 		setOpenAddLeagueDialog(false);
 	};
 
-	const handleOnSubmit = async () => {
+	const handleOnSubmit = (event: React.FormEvent) => {
+		event.preventDefault();
+		addFriendToLeague();
+	}
+
+	const addFriendToLeague = async () => {
 		if (leagueToAddFriend !== '') {
 			const accessToken = getToken();
 			const options = {
@@ -312,7 +318,7 @@ const UsersList: FunctionComponent<IProps> = ({
 
 	const generateUsersLeagues = () => {
 		if (userLeagues) {
-			return userLeagues.map((ranking, index) => {
+			return userLeagues.map((ranking) => {
 				return (
 					<MenuItem key={ranking._id} value={ranking._id}>
 						{ranking.name}

@@ -192,10 +192,10 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		event.persist();
 		if (event.target) {
 			if (name === 'KSM') {
-				setTempKSM(event.target.value);
+				setTempKSM(event.target.value)
 				setRiderData((prevState: IRider) => ({
 					...prevState,
-					[name]: parseFloat(tempKSM)
+					[name]: parseFloat(event.target.value)
 				}));
 			} else {
 				setRiderData((prevState: IRider) => ({
@@ -241,6 +241,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 					Authorization: `Bearer ${accessToken}`
 				}
 			};
+			console.log(id);
 			const { data } = await axios.delete(
 				`https://fantasy-league-eti.herokuapp.com/riders/${id}`,
 				options
@@ -252,6 +253,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 				1000
 			);
 			setRiders(riders.filter(rider => rider.id !== id));
+			setRidersLength(ridersLength - 1);
 		} catch (e) {
 			const {
 				response: { data }
@@ -274,6 +276,18 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 		else return -1;
 	}
 
+	const tempRiders = [{
+		id: "1",
+		imię: "Imie",
+		nazwisko: "Nazwisko",
+		przydomek: "Przydomek",
+		data_urodzenia: new Date(),
+		zagraniczny: true,
+		ksm: 5.55,
+		klubId: '',
+		image: ''
+	}]
+
 	const getRiders = async () => {
 		try {
 			const accessToken = getToken();
@@ -288,6 +302,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 			);
 			await setRidersLength(data.length);
 			setRiders([]);
+			console.log(data);
 			await data.map(rider => {
 				setRiders(riders =>
 					riders.concat({
@@ -336,6 +351,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 			);
 			const id = data._id;
 			const { name: filename, imageBuffer } = imageData;
+			let temp = '';
 			if (filename && imageBuffer) {
 				const {
 					data: { signedUrl, imageUrl, type }
@@ -350,6 +366,7 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 					}
 				};
 				await axios.put(signedUrl, imageBuffer, awsOptions);
+				temp = imageUrl;
 			}
 			addNotification(
 				'Sukces',
@@ -374,9 +391,10 @@ const Riders: FunctionComponent<RouteComponentProps> = ({
 					zagraniczny: riderData.isForeigner,
 					ksm: riderData.KSM,
 					klubId: riderData.clubId,
-					image: ''
+					image: temp
 				}).sort(compare)
 			);
+			setRidersLength(ridersLength + 1);
 		} catch (e) {
 			const {
 				response: { data }
