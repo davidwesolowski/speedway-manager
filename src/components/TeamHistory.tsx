@@ -67,10 +67,15 @@ const TeamHistory: FunctionComponent<RouteComponentProps> = ({
 		getHistoryRiders(data, selectedRound);
 	};
 
+	const compare = (riderA, riderB): number => {
+		if(riderA.score <= riderB.score) return 1;
+		else return -1;
+	}
+
 	const getHistoryRiders = (results, round) => {
 		if (results.find(result => result.round._id === round)) {
 			setHistoryRiders(
-				results.find(result => result.round._id === round).riders
+				results.find(result => result.round._id === round).riders.sort(compare)
 			);
 		} else if (round === 'all') {
 			const resultsAll = results.reduce((prev, curr) => {
@@ -121,7 +126,7 @@ const TeamHistory: FunctionComponent<RouteComponentProps> = ({
 					lastName: resultsAll[key].lastName,
 					score: resultsAll[key].score,
 					image: resultsAll[key].image
-				}));
+				})).sort(compare);
 			setHistoryRiders(historyRiders);
 			setFullScore(resultsAll.score ? resultsAll.score : 0);
 		} else {
@@ -284,7 +289,7 @@ const TeamHistory: FunctionComponent<RouteComponentProps> = ({
 			}
 			setLoading(false);
 		})();
-		postToUpdateAssigns();
+		//postToUpdateAssigns();
 		setTimeout(() => {
 			document.body.style.overflow = 'auto';
 		}, 2000);
