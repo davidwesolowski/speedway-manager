@@ -547,6 +547,7 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				'success',
 				1000
 			);
+			setTeamRiders(chosenRiders);
 		} catch (e) {
 			addNotification(
 				'Błąd',
