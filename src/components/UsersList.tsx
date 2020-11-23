@@ -222,7 +222,7 @@ const UsersList: FunctionComponent<IProps> = ({
 								<FiPlus className="users__addToLeague" />
 							</IconButton>
 						</TableCell>
-					) : <TableCell></TableCell>}
+					) : !handleFetchTeamRiders ? <TableCell></TableCell>: null}
 					{!handleFetchTeamRiders ? (
 						<TableCell align="center">
 							<IconButton
