@@ -24,6 +24,8 @@ interface IAppContext {
 	setLoggedIn: Dispatch<SetStateAction<boolean>>;
 	teamRiders: IRider[];
 	dispatchTeamRiders: Dispatch<TeamRidersAction>;
+	teamChanges: boolean;
+	setTeamChanges: Dispatch<SetStateAction<boolean>>;
 }
 
 const defaultUserData: IUser = {
@@ -40,7 +42,9 @@ const defaultUserContext: IAppContext = {
 	loggedIn: false,
 	setLoggedIn: () => false,
 	teamRiders: [],
-	dispatchTeamRiders: () => null
+	dispatchTeamRiders: () => null,
+	teamChanges: true,
+	setTeamChanges: () => null
 };
 
 export const AppContext = createContext<IAppContext>(defaultUserContext);
@@ -53,7 +57,8 @@ const AppProvider: FunctionComponent<IChildren> = ({ children }) => {
 		defaultUserData
 	);
 	const [teamRiders, dispatchTeamRiders] = useReducer(teamRidersReducer, []);
-	const [loggedIn, setLoggedIn] = useState<boolean>(false);
+	const [loggedIn, setLoggedIn] = useState(false);
+	const [teamChanges, setTeamChanges] = useState(true);
 
 	return (
 		<AppContext.Provider
@@ -63,7 +68,9 @@ const AppProvider: FunctionComponent<IChildren> = ({ children }) => {
 				loggedIn,
 				setLoggedIn,
 				teamRiders,
-				dispatchTeamRiders
+				dispatchTeamRiders,
+				teamChanges,
+				setTeamChanges
 			}}
 		>
 			{children}

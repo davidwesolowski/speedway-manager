@@ -19,6 +19,7 @@ import { useStateValue } from './AppProvider';
 import fetchUserData from '../utils/fetchUserData';
 import { checkBadAuthorization } from '../utils/checkCookies';
 import { CSSTransition } from 'react-transition-group';
+import checkLockState from '../utils/checkLockState';
 
 interface IRider {
 	_id: string;
@@ -37,7 +38,13 @@ interface IRider {
 const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 	history: { push }
 }) => {
-	const { setLoggedIn, dispatchUserData, userData } = useStateValue();
+	const {
+		setLoggedIn,
+		dispatchUserData,
+		userData,
+		teamChanges,
+		setTeamChanges
+	} = useStateValue();
 	const [riders, setRiders] = useState([]);
 	const [teamId, setTeamId] = useState<string>('');
 	const [teamRiders, setTeamRiders] = useState([]);
@@ -58,29 +65,37 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				options
 			);
 			setRiders([]);
-			const newRiders = data.map(rider => {
-				const riderAgeYear = new Date(rider.dateOfBirth).getFullYear();
-				const currentYear = new Date().getFullYear();
-				const diffYear = currentYear - riderAgeYear;
-				const age =
-					diffYear <= 21 ? 'U21' : diffYear <= 23 ? 'U23' : 'Senior';
-				const nationality = rider.isForeigner
-					? 'Zagraniczny'
-					: 'Krajowy';
-				return {
-					_id: rider._id,
-					firstName: rider.firstName,
-					lastName: rider.lastName,
-					nickname: rider.nickname,
-					dateOfBirth: rider.dateOfBirth,
-					isForeigner: rider.isForeigner,
-					ksm: Math.round(rider.KSM * 100) / 100,
-					image: rider.image,
-					clubId: rider.clubId,
-					age,
-					nationality
-				};
-			}).sort(compare);
+			const newRiders = data
+				.map(rider => {
+					const riderAgeYear = new Date(
+						rider.dateOfBirth
+					).getFullYear();
+					const currentYear = new Date().getFullYear();
+					const diffYear = currentYear - riderAgeYear;
+					const age =
+						diffYear <= 21
+							? 'U21'
+							: diffYear <= 23
+							? 'U23'
+							: 'Senior';
+					const nationality = rider.isForeigner
+						? 'Zagraniczny'
+						: 'Krajowy';
+					return {
+						_id: rider._id,
+						firstName: rider.firstName,
+						lastName: rider.lastName,
+						nickname: rider.nickname,
+						dateOfBirth: rider.dateOfBirth,
+						isForeigner: rider.isForeigner,
+						ksm: Math.round(rider.KSM * 100) / 100,
+						image: rider.image,
+						clubId: rider.clubId,
+						age,
+						nationality
+					};
+				})
+				.sort(compare);
 			setRiders(newRiders);
 			getTeams(newRiders);
 		} catch (e) {
@@ -144,31 +159,37 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 				options
 			);
 			setTeamRiders([]);
-			const tr = data.map(tuple => {
-				const riderAgeYear = new Date(
-					tuple.rider.dateOfBirth
-				).getFullYear();
-				const currentYear = new Date().getFullYear();
-				const diffYear = currentYear - riderAgeYear;
-				const age =
-					diffYear <= 21 ? 'U21' : diffYear <= 23 ? 'U23' : 'Senior';
-				const nationality = tuple.rider.isForeigner
-					? 'Zagraniczny'
-					: 'Krajowy';
-				return {
-					_id: tuple.rider._id,
-					firstName: tuple.rider.firstName,
-					lastName: tuple.rider.lastName,
-					nickname: tuple.rider.nickname,
-					dateOfBirth: tuple.rider.dateOfBirth,
-					isForeigner: tuple.rider.isForeigner,
-					ksm: Math.round(tuple.assignedKSM * 100) / 100,
-					image: tuple.rider.image,
-					clubId: tuple.rider.clubId,
-					age,
-					nationality
-				};
-			}).sort(compare);
+			const tr = data
+				.map(tuple => {
+					const riderAgeYear = new Date(
+						tuple.rider.dateOfBirth
+					).getFullYear();
+					const currentYear = new Date().getFullYear();
+					const diffYear = currentYear - riderAgeYear;
+					const age =
+						diffYear <= 21
+							? 'U21'
+							: diffYear <= 23
+							? 'U23'
+							: 'Senior';
+					const nationality = tuple.rider.isForeigner
+						? 'Zagraniczny'
+						: 'Krajowy';
+					return {
+						_id: tuple.rider._id,
+						firstName: tuple.rider.firstName,
+						lastName: tuple.rider.lastName,
+						nickname: tuple.rider.nickname,
+						dateOfBirth: tuple.rider.dateOfBirth,
+						isForeigner: tuple.rider.isForeigner,
+						ksm: Math.round(tuple.assignedKSM * 100) / 100,
+						image: tuple.rider.image,
+						clubId: tuple.rider.clubId,
+						age,
+						nationality
+					};
+				})
+				.sort(compare);
 			if (data !== undefined) {
 				data.map(tuple => {
 					setTeamRiders(teamRiders => {
@@ -186,19 +207,21 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 						const nationality = tuple.rider.isForeigner
 							? 'Zagraniczny'
 							: 'Krajowy';
-						return teamRiders.concat({
-							_id: tuple.rider._id,
-							firstName: tuple.rider.firstName,
-							lastName: tuple.rider.lastName,
-							nickname: tuple.rider.nickname,
-							dateOfBirth: tuple.rider.dateOfBirth,
-							isForeigner: tuple.rider.isForeigner,
-							ksm: Math.round(tuple.assignedKSM * 100) / 100,
-							image: tuple.rider.image,
-							clubId: tuple.rider.clubId,
-							age,
-							nationality
-						}).sort(compare);
+						return teamRiders
+							.concat({
+								_id: tuple.rider._id,
+								firstName: tuple.rider.firstName,
+								lastName: tuple.rider.lastName,
+								nickname: tuple.rider.nickname,
+								dateOfBirth: tuple.rider.dateOfBirth,
+								isForeigner: tuple.rider.isForeigner,
+								ksm: Math.round(tuple.assignedKSM * 100) / 100,
+								image: tuple.rider.image,
+								clubId: tuple.rider.clubId,
+								age,
+								nationality
+							})
+							.sort(compare);
 					});
 				});
 				setLists(riders, tr);
@@ -251,9 +274,9 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 	};
 
 	const compare = (riderA, riderB): number => {
-		if(riderA.ksm <= riderB.ksm) return 1;
+		if (riderA.ksm <= riderB.ksm) return 1;
 		else return -1;
-	}
+	};
 
 	const setLists = (riders, teamRiders) => {
 		const teamRiderIDs = teamRiders.map(val => {
@@ -524,6 +547,20 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 
 	const submitRiders = async () => {
 		try {
+			const changesEnabled = checkLockState(
+				setTeamChanges,
+				setLoggedIn,
+				push
+			);
+			if (!changesEnabled) {
+				addNotification(
+					'Informacja',
+					'Zmiana kadry jest zablokowana',
+					'info',
+					2000
+				);
+				return;
+			}
 			const chosenRiders = rightU21.concat(
 				rightForeign.concat(rightPolish)
 			);
@@ -872,10 +909,12 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 							<Button
 								size="large"
 								disabled={
+									!teamChanges ||
 									rightForeign.length +
 										rightPolish.length +
 										rightU21.length !==
-										10 || rightU21.length < 3
+										10 ||
+									rightU21.length < 3
 								}
 								onClick={submitRiders}
 								className="submit-riders-button"

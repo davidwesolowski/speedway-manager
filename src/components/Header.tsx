@@ -2,9 +2,11 @@ import React, {
 	FunctionComponent,
 	useContext,
 	useState,
-	MouseEvent
+	MouseEvent,
+	useEffect
 } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
+import axios from 'axios';
 import {
 	AppBar,
 	Toolbar,
@@ -16,8 +18,7 @@ import {
 	Divider,
 	List,
 	ListItem,
-	Drawer,
-	ListItemText
+	Drawer
 } from '@material-ui/core';
 import { FaUserCircle } from 'react-icons/fa';
 import { AppContext } from './AppProvider';
@@ -26,6 +27,10 @@ import { FiChevronLeft, FiMenu } from 'react-icons/fi';
 import checkAdminRole from '../utils/checkAdminRole';
 import { setTeamRiders } from '../actions/teamRidersActions';
 import { setUser } from '../actions/userActions';
+import getToken from '../utils/getToken';
+import addNotification from '../utils/addNotification';
+import { checkBadAuthorization, checkCookies } from '../utils/checkCookies';
+import checkLockState from '../utils/checkLockState';
 
 const unauthorizedMenuItems = [
 	{
@@ -122,10 +127,13 @@ const Header: FunctionComponent = () => {
 		dispatchTeamRiders,
 		dispatchUserData,
 		loggedIn,
-		setLoggedIn
+		setLoggedIn,
+		teamChanges,
+		setTeamChanges
 	} = useContext(AppContext);
 	const isMenuOpen = Boolean(anchorEl);
-	const isAdmin = checkAdminRole(userData.role) && loggedIn;
+	const location = useLocation();
+	const isAdmin = checkAdminRole(userData.role) && checkCookies();
 
 	const handleProfileMenuOpen = (event: MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -149,6 +157,12 @@ const Header: FunctionComponent = () => {
 	};
 
 	const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
+
+	useEffect(() => {
+		if (checkCookies()) {
+			checkLockState(setTeamChanges, setLoggedIn, push);
+		}
+	}, [location, userData.role]);
 
 	const unauthorized = (
 		<Hidden xsDown>
@@ -189,19 +203,63 @@ const Header: FunctionComponent = () => {
 	);
 
 	const menuItemsList = (menuItems: { name: string; link: string }[]) =>
-		menuItems.map(({ link, name }, index) => (
-			<ListItem
-				key={link}
-				divider={index + 1 == menuItems.length ? false : true}
-				button
-				onClick={() => setMobileOpen(false)}
-			>
-				<Link to={link} className="header__mobileLink">
-					{name}
-				</Link>
-			</ListItem>
-		));
+		menuItems.map(({ link, name }, index) => {
+			if (link === '') {
+				const relock = async () => {
+					const accessToken = getToken();
+					const options = {
+						headers: {
+							Authorization: `Bearer ${accessToken}`
+						}
+					};
+					const {
+						data: { teamChanges: changes }
+					} = await axios.post(
+						'https://fantasy-league-eti.herokuapp.com/state',
+						{ teamChanges: !teamChanges },
+						options
+					);
+					setTeamChanges(changes);
+				};
+				const handleClick = () =>
+					relock()
+						.then(() => setMobileOpen(false))
+						.catch(e => {
+							const {
+								response: { data }
+							} = e;
+							if (data.statusCode == 401) {
+								checkBadAuthorization(setLoggedIn, push);
+							}
+						});
 
+				return (
+					<ListItem
+						key={link}
+						divider={index + 1 == menuItems.length ? false : true}
+						button
+						onClick={handleClick}
+					>
+						<span className="header__mobileLink">{name}</span>
+					</ListItem>
+				);
+			}
+			return (
+				<ListItem
+					key={link}
+					divider={index + 1 == menuItems.length ? false : true}
+					button
+					onClick={() => setMobileOpen(false)}
+				>
+					<Link to={link} className="header__mobileLink">
+						{name}
+					</Link>
+				</ListItem>
+			);
+		});
+
+	const lock = { name: 'Blokuj zmianę drużyny', link: '' };
+	const unlock = { name: 'Odblokuj zmianę drużyny', link: '' };
 	const drawer = (
 		<div>
 			<div className="header__drawerClose">
@@ -212,7 +270,11 @@ const Header: FunctionComponent = () => {
 			<Divider />
 			<List>
 				{isAdmin
-					? menuItemsList(adminMenuItems)
+					? menuItemsList(
+							teamChanges
+								? [lock, ...adminMenuItems]
+								: [unlock, ...adminMenuItems]
+					  )
 					: loggedIn
 					? menuItemsList(authorizedMenuItems)
 					: menuItemsList(unauthorizedMenuItems)}

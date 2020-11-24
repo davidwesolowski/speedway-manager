@@ -18,6 +18,7 @@ import getToken from '../utils/getToken';
 import { checkBadAuthorization } from '../utils/checkCookies';
 import { useHistory } from 'react-router-dom';
 import { setTeamRiders } from '../actions/teamRidersActions';
+import checkLockState from '../utils/checkLockState';
 
 interface IProps {
 	teamId: string;
@@ -100,7 +101,13 @@ const checkTeamMatch = (riders: IRider[]): boolean => {
 };
 
 const TeamMatch: FunctionComponent<IProps> = ({ teamId }) => {
-	const { teamRiders, dispatchTeamRiders, setLoggedIn } = useStateValue();
+	const {
+		teamRiders,
+		dispatchTeamRiders,
+		setLoggedIn,
+		teamChanges,
+		setTeamChanges
+	} = useStateValue();
 	const [checked, setChecked] = useState<IRider[]>([]);
 	const [left, setLeft] = useState<IRider[]>(
 		teamRiders.filter((rider: IRider) => rider.isActive === false)
@@ -127,6 +134,20 @@ const TeamMatch: FunctionComponent<IProps> = ({ teamId }) => {
 	const handleSubmitTeam = () => {
 		if (right.length > 0) {
 			try {
+				const changesEnabled = checkLockState(
+					setTeamChanges,
+					setLoggedIn,
+					push
+				);
+				if (!changesEnabled) {
+					addNotification(
+						'Informacja',
+						'Zmiana kadry jest zablokowana',
+						'info',
+						2000
+					);
+					return;
+				}
 				const accessToken = getToken();
 				const options = {
 					headers: {
@@ -319,7 +340,11 @@ const TeamMatch: FunctionComponent<IProps> = ({ teamId }) => {
 			<Grid item xs={12} lg={5} style={{ alignSelf: 'flex-start' }}>
 				{customList('Chosen', right, 'Kadra meczowa')}
 			</Grid>
-			<Button onClick={handleSubmitTeam} className="btn">
+			<Button
+				onClick={handleSubmitTeam}
+				className="btn"
+				disabled={!teamChanges}
+			>
 				Zgłoś drużynę
 			</Button>
 		</Grid>

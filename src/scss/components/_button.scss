@@ -6,3 +6,7 @@
 	font-size: 2rem !important;
 	letter-spacing: 0.5rem;
 }
+
+.btn:disabled {
+	background-color: #cccccc !important;
+}
