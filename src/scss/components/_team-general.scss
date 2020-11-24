@@ -12,6 +12,13 @@
 		}
 	}
 
+	&__lock {
+		font-family: $bebas !important;
+		word-wrap: break-word !important;
+		word-break: break-word !important;
+		margin: $xs-margin 0 !important;
+	}
+
 	&__logo {
 		object-fit: contain;
 		width: 100%;

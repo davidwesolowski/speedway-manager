@@ -49,7 +49,7 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 	const [teamName, setTeamName] = useState<string>(team.name);
 	const [imageData, setImageData] = useState<IImageData>(defaultImageData);
 	const { push } = useHistory();
-	const { setLoggedIn, teamRiders } = useStateValue();
+	const { setLoggedIn, teamRiders, teamChanges } = useStateValue();
 
 	const handleEditClose = () => {
 		setTeamName(team.name);
@@ -171,6 +171,18 @@ const TeamGeneral: FunctionComponent<IProps> = ({
 
 	return (
 		<>
+			<CSSTransition
+				in={!teamChanges}
+				timeout={300}
+				classNames="animationScaleUp"
+				unmountOnExit
+			>
+				<Grid container justify="center">
+					<Typography className="heading-1 team-container__lock">
+						Zmiany w drużynie są wyłączone!
+					</Typography>
+				</Grid>
+			</CSSTransition>
 			<Grid
 				container
 				spacing={2}

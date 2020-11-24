@@ -141,7 +141,7 @@ const Team: FunctionComponent<RouteComponentProps> = () => {
 							lastName: rider.lastName,
 							dateOfBirth: rider.dateOfBirth,
 							image: rider.image,
-							ksm: Math.round(assignedKSM*100)/100,
+							ksm: Math.round(assignedKSM * 100) / 100,
 							isActive,
 							nationality,
 							age,
