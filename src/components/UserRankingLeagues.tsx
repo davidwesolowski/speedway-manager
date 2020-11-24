@@ -459,7 +459,7 @@ const UserRankingLeagues: FunctionComponent<RouteComponentProps> = () => {
 			<RemoveDialog
 				removeDialog={removeMeDialog}
 				handleRemoveClose={handleRemoveMeClose}
-				title="Czy chcesz opuścić ligę?"
+				title="Czy chcesz usunąć się z ligi?"
 				removeFunction={async () => deleteMeFromLeague(meLeague._id)}
 			/>
 		</>
