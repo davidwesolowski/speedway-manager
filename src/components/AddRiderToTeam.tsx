@@ -547,11 +547,8 @@ const AddRiderToTeam: FunctionComponent<RouteComponentProps> = ({
 
 	const submitRiders = async () => {
 		try {
-			const changesEnabled = checkLockState(
-				setTeamChanges,
-				setLoggedIn,
-				push
-			);
+			const changesEnabled = await checkLockState(setTeamChanges)();
+			console.log("Changes enabled: " + changesEnabled);
 			if (!changesEnabled) {
 				addNotification(
 					'Informacja',

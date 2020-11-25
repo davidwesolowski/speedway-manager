@@ -131,14 +131,10 @@ const TeamMatch: FunctionComponent<IProps> = ({ teamId }) => {
 		setChecked(newChecked);
 	};
 
-	const handleSubmitTeam = () => {
+	const handleSubmitTeam = async () => {
 		if (right.length > 0) {
 			try {
-				const changesEnabled = checkLockState(
-					setTeamChanges,
-					setLoggedIn,
-					push
-				);
+				const changesEnabled = await checkLockState(setTeamChanges)();
 				if (!changesEnabled) {
 					addNotification(
 						'Informacja',

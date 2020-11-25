@@ -160,7 +160,14 @@ const Header: FunctionComponent = () => {
 
 	useEffect(() => {
 		if (checkCookies()) {
-			checkLockState(setTeamChanges, setLoggedIn, push);
+			checkLockState(setTeamChanges)().then().catch(e => {
+				const {
+					response: { data }
+				} = e;
+				if (data.statusCode == 401) {
+					checkBadAuthorization(setLoggedIn, push);
+				}
+			});
 		}
 	}, [location, userData.role]);
 
